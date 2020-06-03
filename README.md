@@ -5,9 +5,9 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 ## Contents
 
 - [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Configuration](#configuration)
-  - [Proguard](#proguard)
+    - [Requirements](#requirements)
+    - [Configuration](#configuration)
+    - [Proguard](#proguard)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Examples](#examples)
