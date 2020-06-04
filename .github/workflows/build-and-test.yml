@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-test-sdk:
-    name: SDK Unit Tests
+    name: Build and Test SDK Project
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
