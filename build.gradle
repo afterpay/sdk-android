@@ -1,5 +1,15 @@
 buildscript {
-    ext.kotlin_version = "1.3.72"
+    ext.versions = [
+        'compile_sdk': 29,
+        'min_sdk': 21,
+        'java': '1.8',
+        'build_tools': '29.0.3',
+        'android_gradle_plugin': '4.0.0',
+        'kotlin': '1.3.72',
+        'app_compat': '1.1.0',
+        'core_ktx': '1.3.0',
+        'ktlint': '0.37.0'
+    ]
 
     repositories {
         google()
@@ -7,15 +17,37 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:4.0.0"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.android.tools.build:gradle:${versions.android_gradle_plugin}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
     }
 }
 
-allprojects {
+subprojects {
     repositories {
         google()
         jcenter()
+    }
+
+    configurations {
+        ktlint
+    }
+
+    dependencies {
+        ktlint "com.pinterest:ktlint:${versions.ktlint}"
+    }
+
+    task ktlint(type: JavaExec, group: "verification") {
+        description = "Check Kotlin code style."
+        classpath = configurations.ktlint
+        main = "com.pinterest.ktlint.Main"
+        args "src/**/*.kt"
+    }
+
+    task ktlintFormat(type: JavaExec, group: "formatting") {
+        description = "Fix Kotlin code style deviations."
+        classpath = configurations.ktlint
+        main = "com.pinterest.ktlint.Main"
+        args "-F", "src/**/*.kt"
     }
 }
 
