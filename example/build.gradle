@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion versions.compile_sdk
+    buildToolsVersion versions.build_tools
 
     defaultConfig {
         applicationId "com.example.afterpay"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion versions.min_sdk
+        targetSdkVersion versions.compile_sdk
         versionCode 1
         versionName "1.0"
     }
@@ -24,6 +24,6 @@ android {
 
 dependencies {
     implementation project(':afterpay')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "androidx.appcompat:appcompat:${versions.app_compat}"
 }
