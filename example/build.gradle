@@ -32,5 +32,3 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
 }
-
-apply from: '../lint.gradle'
