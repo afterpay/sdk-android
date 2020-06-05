@@ -21,6 +21,9 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Lint
+        run: ./gradlew afterpay:lintDebug afterpay:ktlint
+
       - name: Unit Tests
         run: ./gradlew afterpay:testDebugUnitTest
 
@@ -36,5 +39,5 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Build Example
-        run: ./gradlew example:buildDebug
+      - name: Build and Lint
+        run: ./gradlew example:buildDebug example:lintDebug example:ktlint
