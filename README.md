@@ -101,12 +101,17 @@ class ExampleActivity: Activity {
 
 ## Examples
 
-The [example project](./example) demonstrates how to include an Afterpay payment flow using our prebuilt UI components.
+The [example project][example] demonstrates how to include an Afterpay payment flow using our prebuilt UI components.
 
 ## Contributing
 
-Contributions are welcome! Please read our [contributing guidelines](./CONTRIBUTING.md).
+Contributions are welcome! Please read our [contributing guidelines][contributing].
 
 ## License
 
-This project is licensed under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the terms of the Apache 2.0 license. See the [LICENSE][license] file for more information.
+
+<!-- Links: -->
+[contributing]: CONTRIBUTING.md
+[example]: example
+[license]: LICENSE
