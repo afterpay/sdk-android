@@ -14,6 +14,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 - [Getting Started](#getting-started)
 - [Examples](#examples)
 - [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
@@ -105,3 +106,7 @@ The [example project](./example) demonstrates how to include an Afterpay payment
 ## Contributing
 
 Contributions are welcome! Please read our [contributing guidelines](./CONTRIBUTING.md).
+
+## License
+
+This project is licensed under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for more information.
