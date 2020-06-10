@@ -41,3 +41,5 @@ dependencies {
     implementation "androidx.core:core-ktx:${versions.core_ktx}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
 }
+
+apply plugin: 'com.vanniktech.maven.publish'
