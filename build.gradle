@@ -32,6 +32,9 @@ subprojects {
         jcenter()
     }
 
+    group = GROUP
+    version = VERSION_NAME
+
     configurations {
         ktlint
     }
