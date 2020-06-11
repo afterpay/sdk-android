@@ -53,3 +53,7 @@ signing {
         findProperty('signingPassword')
     )
 }
+
+task removeSnapshot {
+    version -= '-SNAPSHOT'
+}
