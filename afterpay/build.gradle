@@ -41,3 +41,19 @@ dependencies {
 }
 
 apply plugin: 'com.vanniktech.maven.publish'
+
+tasks.withType(Sign) {
+    onlyIf { !version.endsWith("SNAPSHOT") }
+}
+
+signing {
+    useInMemoryPgpKeys(
+        findProperty('signingKeyId'),
+        findProperty('signingKey'),
+        findProperty('signingPassword')
+    )
+}
+
+task removeSnapshot {
+    version -= '-SNAPSHOT'
+}
