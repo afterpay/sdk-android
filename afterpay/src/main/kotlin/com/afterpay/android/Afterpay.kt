@@ -1,3 +1,7 @@
 package com.afterpay.android
 
-object Afterpay
+import android.content.Context
+
+object Afterpay {
+    fun createClient(context: Context): AfterpayClient = RealAfterpayClient(context)
+}
