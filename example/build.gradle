@@ -38,5 +38,15 @@ android {
 dependencies {
     implementation project(':afterpay')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
+    implementation "androidx.core:core-ktx:${versions.core_ktx}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
+    implementation "androidx.activity:activity-ktx:${versions.androidx_activity}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
+    implementation "com.squareup.moshi:moshi:${versions.moshi}"
+    implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
 }
