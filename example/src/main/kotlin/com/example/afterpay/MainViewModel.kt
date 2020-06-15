@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.afterpay.android.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.data.Result
@@ -16,11 +15,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
-    val checkoutRequest: LiveData<Result<CheckoutRequest>>
+    val checkoutRequest: LiveData<Result<String>>
     val canSubmit: LiveData<Boolean>
 
     private val emailAddress = MutableLiveData("")
-    private val request = MutableLiveData<Result<CheckoutRequest>>(Result.Idle)
+    private val request = MutableLiveData<Result<String>>(Result.Idle)
 
     init {
         canSubmit = emailAddress.combineWith(request) { email, request ->
@@ -47,7 +46,7 @@ class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
             request.value = Result.Loading
             try {
                 val response = merchantApi.checkout(MerchantCheckoutRequest(email))
-                request.value = Result.Success(CheckoutRequest(checkoutUrl = response.url))
+                request.value = Result.Success(response.url)
             } catch (error: Error) {
                 request.value = Result.Failure(error.message ?: "Failed to fetch checkout url.")
             }

@@ -10,15 +10,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CheckoutStatus
-import com.afterpay.android.getCheckoutRequestExtra
-import com.afterpay.android.putExtra
+import com.afterpay.android.getCheckoutUrlExtra
+import com.afterpay.android.putCheckoutStatusExtra
 
 class WebCheckoutActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val request = intent.getCheckoutRequestExtra() ?: throw IllegalStateException("Missing URL")
+        val checkoutUrl = intent.getCheckoutUrlExtra() ?: throw IllegalStateException("Missing URL")
 
         val webView = WebView(this).apply {
             settings.javaScriptEnabled = true
@@ -26,11 +26,11 @@ class WebCheckoutActivity : AppCompatActivity() {
                 if (status == CheckoutStatus.CANCELLED) {
                     setResult(Activity.RESULT_CANCELED)
                 } else {
-                    setResult(Activity.RESULT_OK, Intent().putExtra(status))
+                    setResult(Activity.RESULT_OK, Intent().putCheckoutStatusExtra(status))
                 }
                 finish()
             }
-            loadUrl(request.checkoutUrl)
+            loadUrl(checkoutUrl)
         }
 
         setContentView(webView)

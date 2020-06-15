@@ -7,15 +7,13 @@ private object AfterpayIntent {
     const val STATUS = "AFTERPAY_CHECKOUT_SUCCESS"
 }
 
-internal fun Intent.putExtra(request: CheckoutRequest): Intent =
-    putExtra(AfterpayIntent.CHECKOUT_URL, request.checkoutUrl)
+internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
+    putExtra(AfterpayIntent.CHECKOUT_URL, url)
 
-internal fun Intent.getCheckoutRequestExtra(): CheckoutRequest? {
-    val url = getStringExtra(AfterpayIntent.CHECKOUT_URL) ?: return null
-    return CheckoutRequest(checkoutUrl = url)
-}
+internal fun Intent.getCheckoutUrlExtra(): String? =
+    getStringExtra(AfterpayIntent.CHECKOUT_URL)
 
-internal fun Intent.putExtra(status: CheckoutStatus): Intent =
+internal fun Intent.putCheckoutStatusExtra(status: CheckoutStatus): Intent =
     putExtra(AfterpayIntent.STATUS, status.name)
 
 internal fun Intent.getCheckoutStatusExtra(): CheckoutStatus? {
