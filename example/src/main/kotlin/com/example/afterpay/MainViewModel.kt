@@ -10,9 +10,12 @@ import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.data.Result
 import com.example.afterpay.util.combineWith
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.lang.Exception
 
 class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
     val checkoutRequest: LiveData<Result<String>>
@@ -45,9 +48,11 @@ class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
         viewModelScope.launch {
             request.value = Result.Loading
             try {
-                val response = merchantApi.checkout(MerchantCheckoutRequest(email))
+                val response = withContext(Dispatchers.IO) {
+                    merchantApi.checkout(MerchantCheckoutRequest(email))
+                }
                 request.value = Result.Success(response.url)
-            } catch (error: Error) {
+            } catch (error: Exception) {
                 request.value = Result.Failure(error.message ?: "Failed to fetch checkout url.")
             }
         }
