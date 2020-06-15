@@ -3,6 +3,9 @@
     package="com.afterpay.android">
 
     <application>
-        <activity android:name=".view.WebCheckoutActivity" />
+        <activity
+            android:name=".view.WebCheckoutActivity"
+            android:theme="@style/AfterpayDialog" />
     </application>
+
 </manifest>
