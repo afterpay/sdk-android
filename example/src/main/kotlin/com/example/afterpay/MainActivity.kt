@@ -57,16 +57,14 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == CHECKOUT_WITH_AFTERPAY) {
-            when (resultCode) {
-                RESULT_OK -> {
-                    val intent = data ?: return
-                    val status = Afterpay.parseCheckoutResponse(intent)
-                    Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
-                }
-                RESULT_CANCELED -> {
-                    Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
-                }
+        when (requestCode to resultCode) {
+            CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
+                val intent = data ?: return
+                val status = Afterpay.parseCheckoutResponse(intent)
+                Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
+            }
+            CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
     }
