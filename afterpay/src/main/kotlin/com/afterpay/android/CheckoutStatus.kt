@@ -1,5 +1,5 @@
 package com.afterpay.android
 
 enum class CheckoutStatus {
-    SUCCESS, ERROR
+    SUCCESS, ERROR, CANCELLED
 }

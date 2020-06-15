@@ -1,20 +1,57 @@
 package com.afterpay.android.view
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.afterpay.android.R
+import com.afterpay.android.CheckoutStatus
 import com.afterpay.android.getCheckoutRequestExtra
+import com.afterpay.android.putExtra
 
 class WebCheckoutActivity : AppCompatActivity() {
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_checkout)
 
-        intent.getCheckoutRequestExtra()?.let {
-            findViewById<WebView>(R.id.checkout_webView).apply {
-                loadUrl(it.checkoutUrl)
+        val request = intent.getCheckoutRequestExtra() ?: throw IllegalStateException("Missing URL")
+
+        val webView = WebView(this).apply {
+            settings.javaScriptEnabled = true
+            webViewClient = AfterpayWebViewClient { status ->
+                if (status == CheckoutStatus.CANCELLED) {
+                    setResult(Activity.RESULT_CANCELED)
+                } else {
+                    setResult(Activity.RESULT_OK, Intent().putExtra(status))
+                }
+                finish()
             }
+            loadUrl(request.checkoutUrl)
         }
+
+        setContentView(webView)
     }
 }
+
+private class AfterpayWebViewClient(
+    private val completion: (CheckoutStatus) -> Unit
+) : WebViewClient() {
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+        if (request?.url?.host == "www.afterpay-merchant.com") {
+            completion(request.url.checkoutStatus)
+            return true
+        }
+        return super.shouldOverrideUrlLoading(view, request)
+    }
+}
+
+private val Uri.checkoutStatus: CheckoutStatus
+    get() = try {
+        enumValueOf(getQueryParameter("status") ?: throw IllegalStateException("No status"))
+    } catch (error: Exception) {
+        CheckoutStatus.ERROR
+    }
