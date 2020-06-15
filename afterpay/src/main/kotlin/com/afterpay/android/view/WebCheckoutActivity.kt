@@ -50,8 +50,11 @@ private class AfterpayWebViewClient(
 }
 
 private val Uri.checkoutStatus: CheckoutStatus
-    get() = try {
-        enumValueOf(getQueryParameter("status") ?: throw IllegalStateException("No status"))
-    } catch (error: Exception) {
-        CheckoutStatus.ERROR
+    get() {
+        val checkoutStatus = getQueryParameter("status") ?: return CheckoutStatus.ERROR
+        return try {
+            enumValueOf(checkoutStatus)
+        } catch (error: Exception) {
+            CheckoutStatus.ERROR
+        }
     }
