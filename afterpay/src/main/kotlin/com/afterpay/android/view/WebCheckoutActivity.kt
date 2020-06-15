@@ -13,7 +13,7 @@ import com.afterpay.android.CheckoutStatus
 import com.afterpay.android.getCheckoutUrlExtra
 import com.afterpay.android.putCheckoutStatusExtra
 
-class WebCheckoutActivity : AppCompatActivity() {
+internal class WebCheckoutActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
