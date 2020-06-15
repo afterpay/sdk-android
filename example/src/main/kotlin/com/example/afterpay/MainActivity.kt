@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val viewModel: MainViewModel by viewModels { MainViewModelFactory() }
-    private val afterpay = Afterpay.createClient(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = if (result is Result.Loading) View.VISIBLE else View.INVISIBLE
             when (result) {
                 is Result.Success -> {
-                    val intent = afterpay.createCheckoutIntent(result.data)
+                    val intent = Afterpay.createCheckoutIntent(this, result.data)
                     startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                 }
                 is Result.Failure -> {
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
             when (resultCode) {
                 RESULT_OK -> {
                     val intent = data ?: return
-                    val status = afterpay.parseCheckoutResponse(intent)
+                    val status = Afterpay.parseCheckoutResponse(intent)
                     Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
                 }
                 RESULT_CANCELED -> {
