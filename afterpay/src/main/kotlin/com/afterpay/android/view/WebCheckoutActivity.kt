@@ -3,6 +3,7 @@ package com.afterpay.android.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
@@ -23,14 +24,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
         val webView = WebView(this).apply {
             settings.javaScriptEnabled = true
-            webViewClient = AfterpayWebViewClient { status ->
-                if (status == CheckoutStatus.CANCELLED) {
-                    setResult(Activity.RESULT_CANCELED)
-                } else {
-                    setResult(Activity.RESULT_OK, Intent().putCheckoutStatusExtra(status))
-                }
-                finish()
-            }
+            webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
             loadUrl(checkoutUrl)
         }
 
@@ -38,15 +32,35 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
+
+    private fun open(url: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW, url)
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        }
+    }
+
+    private fun finish(status: CheckoutStatus) {
+        setResult(status.resultCode, Intent().putCheckoutStatusExtra(status))
+        finish()
+    }
 }
 
 private class AfterpayWebViewClient(
-    private val completion: (CheckoutStatus) -> Unit
+    private val openExternalLink: (Uri) -> Unit,
+    private val completed: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        val rawStatus = request?.url?.getQueryParameter("status") ?: return false
-        val status = tryOrNull { enumValueOf<CheckoutStatus>(rawStatus) } ?: CheckoutStatus.ERROR
-        completion(status)
+        val url = request?.url ?: return false
+        val status = url.getQueryParameter("status")
+        if (status != null) {
+            completed(tryOrNull { enumValueOf<CheckoutStatus>(status) } ?: CheckoutStatus.ERROR)
+        } else {
+            openExternalLink(url)
+        }
         return true
     }
 }
+
+private val CheckoutStatus.resultCode: Int
+    get() = if (this == CheckoutStatus.CANCELLED) Activity.RESULT_CANCELED else Activity.RESULT_OK
