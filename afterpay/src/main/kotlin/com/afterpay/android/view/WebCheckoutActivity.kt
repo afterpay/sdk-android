@@ -41,11 +41,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
     }
 
     private fun finish(status: CheckoutStatus) {
-        if (status == CheckoutStatus.CANCELLED) {
-            setResult(Activity.RESULT_CANCELED)
-        } else {
-            setResult(Activity.RESULT_OK, Intent().putCheckoutStatusExtra(status))
-        }
+        setResult(status.resultCode, Intent().putCheckoutStatusExtra(status))
         finish()
     }
 }
@@ -65,3 +61,6 @@ private class AfterpayWebViewClient(
         return true
     }
 }
+
+private val CheckoutStatus.resultCode: Int
+    get() = if (this == CheckoutStatus.CANCELLED) Activity.RESULT_CANCELED else Activity.RESULT_OK
