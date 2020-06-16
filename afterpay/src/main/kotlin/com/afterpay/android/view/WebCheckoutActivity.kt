@@ -3,7 +3,6 @@ package com.afterpay.android.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
@@ -45,15 +44,9 @@ private class AfterpayWebViewClient(
     private val completion: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if (request?.url?.host == "www.afterpay-merchant.com") {
-            completion(request.url.checkoutStatus ?: CheckoutStatus.ERROR)
-            return true
-        }
-        return super.shouldOverrideUrlLoading(view, request)
+        val rawStatus = request?.url?.getQueryParameter("status") ?: return false
+        val status = tryOrNull { enumValueOf<CheckoutStatus>(rawStatus) } ?: CheckoutStatus.ERROR
+        completion(status)
+        return true
     }
 }
-
-private val Uri.checkoutStatus: CheckoutStatus?
-    get() = getQueryParameter("status")?.let {
-        tryOrNull { enumValueOf<CheckoutStatus>(it) }
-    }
