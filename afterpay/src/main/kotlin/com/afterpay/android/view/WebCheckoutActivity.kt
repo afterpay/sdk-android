@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CheckoutStatus
 import com.afterpay.android.getCheckoutUrlExtra
 import com.afterpay.android.putCheckoutStatusExtra
+import com.afterpay.android.util.tryOrNull
 
 internal class WebCheckoutActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
@@ -45,19 +46,14 @@ private class AfterpayWebViewClient(
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         if (request?.url?.host == "www.afterpay-merchant.com") {
-            completion(request.url.checkoutStatus)
+            completion(request.url.checkoutStatus ?: CheckoutStatus.ERROR)
             return true
         }
         return super.shouldOverrideUrlLoading(view, request)
     }
 }
 
-private val Uri.checkoutStatus: CheckoutStatus
-    get() {
-        val checkoutStatus = getQueryParameter("status") ?: return CheckoutStatus.ERROR
-        return try {
-            enumValueOf(checkoutStatus)
-        } catch (error: Exception) {
-            CheckoutStatus.ERROR
-        }
+private val Uri.checkoutStatus: CheckoutStatus?
+    get() = getQueryParameter("status")?.let {
+        tryOrNull { enumValueOf<CheckoutStatus>(it) }
     }

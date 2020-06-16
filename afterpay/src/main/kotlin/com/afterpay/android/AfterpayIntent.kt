@@ -1,6 +1,7 @@
 package com.afterpay.android
 
 import android.content.Intent
+import com.afterpay.android.util.tryOrNull
 
 private object AfterpayIntent {
     const val CHECKOUT_URL = "AFTERPAY_CHECKOUT_URL"
@@ -16,11 +17,7 @@ internal fun Intent.getCheckoutUrlExtra(): String? =
 internal fun Intent.putCheckoutStatusExtra(status: CheckoutStatus): Intent =
     putExtra(AfterpayIntent.STATUS, status.name)
 
-internal fun Intent.getCheckoutStatusExtra(): CheckoutStatus? {
-    val status = getStringExtra(AfterpayIntent.STATUS) ?: return null
-    return try {
-        enumValueOf<CheckoutStatus>(status)
-    } catch (error: IllegalAccessException) {
-        null
+internal fun Intent.getCheckoutStatusExtra(): CheckoutStatus? =
+    getStringExtra(AfterpayIntent.STATUS)?.let {
+        tryOrNull { enumValueOf<CheckoutStatus>(it) }
     }
-}
