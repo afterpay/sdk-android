@@ -10,6 +10,8 @@ import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.data.Result
 import com.example.afterpay.util.combineWith
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,7 +68,13 @@ class MainViewModelFactory : ViewModelProvider.Factory {
             MainViewModel(
                 merchantApi = Retrofit.Builder()
                     .baseUrl("http://10.0.2.2:3000")
-                    .addConverterFactory(MoshiConverterFactory.create())
+                    .addConverterFactory(
+                        MoshiConverterFactory.create(
+                            Moshi.Builder()
+                                .add(KotlinJsonAdapterFactory())
+                                .build()
+                        )
+                    )
                     .build()
                     .create(MerchantApi::class.java)
             ) as T
