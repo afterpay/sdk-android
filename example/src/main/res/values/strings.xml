@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Afterpay Integration</string>
+    <string name="checkout_with_afterpay">Checkout with Afterpay</string>
+    <string name="example_email_address">email@afterpay.com</string>
 </resources>

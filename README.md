@@ -28,7 +28,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ```gradle
 dependencies {
-  implementation 'com.afterpay:afterpay-android:1.0.0'
+  implementation 'com.afterpay:afterpay-android:0.0.1'
 }
 ```
 
@@ -62,8 +62,8 @@ Launch the Afterpay payment flow from your activity.
 
 ```kotlin
 class ExampleActivity: Activity {
-    companion object {
-        private const val PAY_WITH_AFTERPAY = 1
+    private companion object {
+        const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
     override fun onCreate(savedInstanceState: Bundle) {
@@ -73,26 +73,21 @@ class ExampleActivity: Activity {
         payWithAfterpay.totalPrice = cart.totalPrice
         payWithAfterpay.setOnClickListener {
             val checkoutUrl = merchantServer.checkoutWithAfterpay(cart)
-            val intent = Intent(this@ExampleActivity, ExampleActivity::class.java).apply {
-                putExtra(AfterpayIntent.CHECKOUT_URL, checkoutUrl)
-            }
-            startActivityForResult(intent, PAY_WITH_AFTERPAY)
+            val intent = Afterpay.createCheckoutIntent(this, checkoutUrl)
+            startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         // ...
 
-        if (requestCode == PAY_WITH_AFTERPAY) {
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    val token = data?.getParcelableExtra(AfterpayIntent.CHECKOUT_TOKEN)
-                    merchantServer.purchaseCompleted(token)
-                }
-                Activity.RESULT_CANCELED -> {
-                    Toast.makeText(this@ExampleActivity, "Cancelled", Toast.LENGTH_SHORT).show()
-                }
-                else -> {}
+        when (requestCode to resultCode) {
+            CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
+                val status = Afterpay.parseCheckoutResponse(data!!)
+                Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
+            }
+            CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
             }
         }
     }
