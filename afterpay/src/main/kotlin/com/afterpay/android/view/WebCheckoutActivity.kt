@@ -11,8 +11,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CheckoutStatus
-import com.afterpay.android.getCheckoutUrlExtra
-import com.afterpay.android.putCheckoutStatusExtra
+import com.afterpay.android.util.getCheckoutUrlExtra
+import com.afterpay.android.util.putCheckoutStatusExtra
 import com.afterpay.android.util.tryOrNull
 
 internal class WebCheckoutActivity : AppCompatActivity() {

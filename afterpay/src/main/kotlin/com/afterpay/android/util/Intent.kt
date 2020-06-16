@@ -1,7 +1,7 @@
-package com.afterpay.android
+package com.afterpay.android.util
 
 import android.content.Intent
-import com.afterpay.android.util.tryOrNull
+import com.afterpay.android.CheckoutStatus
 
 private object AfterpayIntent {
     const val CHECKOUT_URL = "AFTERPAY_CHECKOUT_URL"

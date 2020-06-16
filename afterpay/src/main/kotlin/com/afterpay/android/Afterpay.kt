@@ -2,6 +2,8 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import com.afterpay.android.util.getCheckoutStatusExtra
+import com.afterpay.android.util.putCheckoutUrlExtra
 import com.afterpay.android.view.WebCheckoutActivity
 
 object Afterpay {
