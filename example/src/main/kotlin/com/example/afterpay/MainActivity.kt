@@ -47,13 +47,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.events().collectLatest { event ->
+            viewModel.commands().collectLatest { event ->
                 when (event) {
-                    is MainViewModel.Event.StartAfterpayCheckout -> {
+                    is MainViewModel.Command.StartAfterpayCheckout -> {
                         val intent = Afterpay.createCheckoutIntent(this@MainActivity, event.url)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
-                    is MainViewModel.Event.CheckoutFailed -> {
+                    is MainViewModel.Command.DisplayError -> {
                         Toast.makeText(this@MainActivity, event.message, Toast.LENGTH_SHORT).show()
                     }
                 }
