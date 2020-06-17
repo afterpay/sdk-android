@@ -1,62 +1,74 @@
 package com.example.afterpay
 
 import android.util.Patterns
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.data.MerchantCheckoutRequest
-import com.example.afterpay.data.Result
-import com.example.afterpay.util.combineWith
+import com.example.afterpay.util.update
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.lang.Exception
 
 class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
-    val checkoutRequest: LiveData<Result<String>>
-    val canSubmit: LiveData<Boolean>
+    data class State(
+        val emailAddress: String,
+        private val isLoading: Boolean
+    ) {
+        val showProgressBar: Boolean
+            get() = isLoading
 
-    private val emailAddress = MutableLiveData("")
-    private val request = MutableLiveData<Result<String>>(Result.Idle)
-
-    init {
-        canSubmit = emailAddress.combineWith(request) { email, request ->
-            if (request is Result.Loading) {
-                false
-            } else {
-                email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-            }
-        }
-        checkoutRequest = request
+        val enableCheckoutButton: Boolean
+            get() = !isLoading && Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
     }
 
+    sealed class Command {
+        data class StartAfterpayCheckout(val url: String) : Command()
+        data class DisplayError(val message: String) : Command()
+    }
+
+    private val state = MutableLiveData(State(emailAddress = "", isLoading = false))
+    private val commandChannel = Channel<Command>(Channel.Factory.CONFLATED)
+
+    fun state(): Flow<State> = state.asFlow()
+
+    fun commands(): Flow<Command> = commandChannel.receiveAsFlow()
+
     fun enterEmailAddress(email: String) {
-        emailAddress.value = email
+        state.update { copy(emailAddress = email) }
     }
 
     fun checkoutWithAfterpay() {
-        val email = emailAddress.value ?: return
-        if (canSubmit.value != true) {
+        val email = state.value?.emailAddress
+        if (email == null) {
+            commandChannel.offer(Command.DisplayError("No email address provided"))
             return
         }
 
         viewModelScope.launch {
-            request.value = Result.Loading
+            state.update { copy(isLoading = true) }
+
             try {
                 val response = withContext(Dispatchers.IO) {
                     merchantApi.checkout(MerchantCheckoutRequest(email))
                 }
-                request.value = Result.Success(response.url)
+                commandChannel.offer(Command.StartAfterpayCheckout(response.url))
             } catch (error: Exception) {
-                request.value = Result.Failure(error.message ?: "Failed to fetch checkout url.")
+                val message = error.message ?: "Failed to fetch checkout url"
+                commandChannel.offer(Command.DisplayError(message))
             }
+
+            state.update { copy(isLoading = false) }
         }
     }
 }
