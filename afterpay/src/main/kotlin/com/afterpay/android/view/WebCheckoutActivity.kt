@@ -20,7 +20,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val checkoutUrl = intent.getCheckoutUrlExtra() ?: error("Checkout URL is missing")
+        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
 
         val webView = WebView(this).apply {
             settings.javaScriptEnabled = true

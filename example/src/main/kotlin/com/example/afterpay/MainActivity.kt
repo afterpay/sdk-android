@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
-                val intent = data ?: error("Intent should always be populated by the Afterpay SDK")
+                val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
                 val status = Afterpay.parseCheckoutResponse(intent)
                 Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
             }
