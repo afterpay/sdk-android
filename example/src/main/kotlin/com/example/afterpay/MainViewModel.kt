@@ -23,9 +23,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
     data class State(
         val emailAddress: String,
-        val isLoading: Boolean
+        private val isLoading: Boolean
     ) {
-        val canSubmit: Boolean
+        val showProgressBar: Boolean
+            get() = isLoading
+
+        val enableCheckoutButton: Boolean
             get() = !isLoading && Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
     }
 

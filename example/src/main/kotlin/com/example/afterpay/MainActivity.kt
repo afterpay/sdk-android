@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
-                checkoutButton.isEnabled = state.canSubmit
-                progressBar.visibility = if (state.isLoading) View.VISIBLE else View.INVISIBLE
+                checkoutButton.isEnabled = state.enableCheckoutButton
+                progressBar.visibility = if (state.showProgressBar) View.VISIBLE else View.INVISIBLE
             }
         }
         lifecycleScope.launchWhenStarted {
