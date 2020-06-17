@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
-import com.example.afterpay.data.Result
-import com.example.afterpay.util.observe
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
     private companion object {
@@ -37,18 +37,22 @@ class MainActivity : AppCompatActivity() {
 
         val progressBar = findViewById<ProgressBar>(R.id.main_progressBar)
 
-        viewModel.canSubmit.observe(this) { canSubmit ->
-            checkoutButton.isEnabled = canSubmit
+        lifecycleScope.launchWhenCreated {
+            viewModel.state().collectLatest { state ->
+                checkoutButton.isEnabled = state.canSubmit
+                progressBar.visibility = if (state.isLoading) View.VISIBLE else View.INVISIBLE
+            }
         }
-        viewModel.checkoutRequest.observe(this) { result ->
-            progressBar.visibility = if (result is Result.Loading) View.VISIBLE else View.INVISIBLE
-            when (result) {
-                is Result.Success -> {
-                    val intent = Afterpay.createCheckoutIntent(this, result.data)
-                    startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
-                }
-                is Result.Failure -> {
-                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launchWhenStarted {
+            viewModel.events().collectLatest { event ->
+                when (event) {
+                    is MainViewModel.Event.StartAfterpayCheckout -> {
+                        val intent = Afterpay.createCheckoutIntent(this@MainActivity, event.url)
+                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+                    }
+                    is MainViewModel.Event.CheckoutFailed -> {
+                        Toast.makeText(this@MainActivity, event.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
