@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,11 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
-            webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
+            webViewClient = AfterpayWebViewClient(
+                openExternalLink = ::open,
+                receivedError = {},
+                completed = ::finish
+            )
             loadUrl(checkoutUrl)
         }
     }
@@ -66,6 +71,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
 private class AfterpayWebViewClient(
     private val openExternalLink: (Uri) -> Unit,
+    private val receivedError: () -> Unit,
     private val completed: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
     private val linksToOpenExternally = listOf("privacy-policy", "terms-of-service")
@@ -86,6 +92,16 @@ private class AfterpayWebViewClient(
             }
 
             else -> false
+        }
+    }
+
+    override fun onReceivedHttpError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        errorResponse: WebResourceResponse?
+    ) {
+        if (request?.isForMainFrame == true) {
+            receivedError()
         }
     }
 }
