@@ -10,10 +10,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.afterpay.android.CheckoutStatus
 import com.afterpay.android.util.getCheckoutUrlExtra
-import com.afterpay.android.util.putCheckoutStatusExtra
-import com.afterpay.android.util.tryOrNull
+import com.afterpay.android.util.putOrderTokenExtra
 
 internal class WebCheckoutActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
@@ -41,7 +39,14 @@ internal class WebCheckoutActivity : AppCompatActivity() {
     }
 
     private fun finish(status: CheckoutStatus) {
-        setResult(status.resultCode, Intent().putCheckoutStatusExtra(status))
+        when (status) {
+            is CheckoutStatus.Success -> {
+                setResult(Activity.RESULT_OK, Intent().putOrderTokenExtra(status.orderToken))
+            }
+            CheckoutStatus.Cancelled -> {
+                setResult(Activity.RESULT_CANCELED)
+            }
+        }
         finish()
     }
 }
@@ -54,11 +59,11 @@ private class AfterpayWebViewClient(
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
-        val status = url.getQueryParameter("status")
+        val status = CheckoutStatus.fromUrl(url)
 
         return when {
             status != null -> {
-                completed(tryOrNull { enumValueOf<CheckoutStatus>(status) } ?: CheckoutStatus.ERROR)
+                completed(status)
                 true
             }
 
@@ -72,5 +77,15 @@ private class AfterpayWebViewClient(
     }
 }
 
-private val CheckoutStatus.resultCode: Int
-    get() = if (this == CheckoutStatus.CANCELLED) Activity.RESULT_CANCELED else Activity.RESULT_OK
+private sealed class CheckoutStatus {
+    data class Success(val orderToken: String) : CheckoutStatus()
+    object Cancelled : CheckoutStatus()
+
+    companion object {
+        fun fromUrl(url: Uri): CheckoutStatus? = when (url.getQueryParameter("status")) {
+            "SUCCESS" -> url.getQueryParameter("orderToken")?.let(::Success)
+            "CANCELLED" -> Cancelled
+            else -> null
+        }
+    }
+}

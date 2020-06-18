@@ -67,8 +67,8 @@ class MainActivity : AppCompatActivity() {
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
-                val status = Afterpay.parseCheckoutResponse(intent)
-                Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
+                val token = Afterpay.parseCheckoutResponse(intent)
+                Toast.makeText(this, "Success: Completed order $token", Toast.LENGTH_SHORT).show()
             }
             CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()

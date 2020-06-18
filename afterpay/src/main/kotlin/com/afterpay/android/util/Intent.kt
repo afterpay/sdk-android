@@ -1,11 +1,10 @@
 package com.afterpay.android.util
 
 import android.content.Intent
-import com.afterpay.android.CheckoutStatus
 
 private object AfterpayIntent {
     const val CHECKOUT_URL = "AFTERPAY_CHECKOUT_URL"
-    const val STATUS = "AFTERPAY_CHECKOUT_SUCCESS"
+    const val ORDER_TOKEN = "AFTERPAY_ORDER_TOKEN"
 }
 
 internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
@@ -14,10 +13,8 @@ internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
 internal fun Intent.getCheckoutUrlExtra(): String? =
     getStringExtra(AfterpayIntent.CHECKOUT_URL)
 
-internal fun Intent.putCheckoutStatusExtra(status: CheckoutStatus): Intent =
-    putExtra(AfterpayIntent.STATUS, status.name)
+internal fun Intent.putOrderTokenExtra(token: String): Intent =
+    putExtra(AfterpayIntent.ORDER_TOKEN, token)
 
-internal fun Intent.getCheckoutStatusExtra(): CheckoutStatus? =
-    getStringExtra(AfterpayIntent.STATUS)?.let {
-        tryOrNull { enumValueOf<CheckoutStatus>(it) }
-    }
+internal fun Intent.getOrderTokenExtra(): String? =
+    getStringExtra(AfterpayIntent.ORDER_TOKEN)
