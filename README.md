@@ -83,8 +83,8 @@ class ExampleActivity: Activity {
 
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
-                val status = Afterpay.parseCheckoutResponse(data!!)
-                Toast.makeText(this, "Result: $status", Toast.LENGTH_SHORT).show()
+                val token = Afterpay.parseCheckoutResponse(data!!)
+                Toast.makeText(this, "Success: Completed order $token", Toast.LENGTH_SHORT).show()
             }
             CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
