@@ -5,11 +5,13 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.R
 import com.afterpay.android.util.getCheckoutUrlExtra
@@ -17,6 +19,7 @@ import com.afterpay.android.util.putOrderTokenExtra
 
 internal class WebCheckoutActivity : AppCompatActivity() {
     private lateinit var webView: WebView
+    private lateinit var errorTextView: TextView
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +30,12 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
         val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
 
+        errorTextView = findViewById(R.id.afterpay_errorMessage)
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
             webViewClient = AfterpayWebViewClient(
                 openExternalLink = ::open,
-                receivedError = {},
+                receivedError = ::receivedError,
                 completed = ::finish
             )
             loadUrl(checkoutUrl)
@@ -54,6 +58,11 @@ internal class WebCheckoutActivity : AppCompatActivity() {
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
+    }
+
+    private fun receivedError() {
+        errorTextView.visibility = View.VISIBLE
+        webView.visibility = View.GONE
     }
 
     private fun finish(status: CheckoutStatus) {
