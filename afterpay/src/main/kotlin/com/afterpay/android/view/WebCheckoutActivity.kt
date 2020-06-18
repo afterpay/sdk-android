@@ -23,12 +23,13 @@ internal class WebCheckoutActivity : AppCompatActivity() {
         val webView = WebView(this).apply {
             settings.javaScriptEnabled = true
             webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
-            loadUrl(checkoutUrl)
         }
 
         setContentView(webView)
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+        webView.loadUrl(checkoutUrl)
     }
 
     private fun open(url: Uri) {
