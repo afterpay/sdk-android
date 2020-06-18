@@ -50,15 +50,25 @@ private class AfterpayWebViewClient(
     private val openExternalLink: (Uri) -> Unit,
     private val completed: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
+    private val linksToOpenExternally = listOf("privacy-policy", "terms-of-service")
+
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
         val status = url.getQueryParameter("status")
-        if (status != null) {
-            completed(tryOrNull { enumValueOf<CheckoutStatus>(status) } ?: CheckoutStatus.ERROR)
-        } else {
-            openExternalLink(url)
+
+        return when {
+            status != null -> {
+                completed(tryOrNull { enumValueOf<CheckoutStatus>(status) } ?: CheckoutStatus.ERROR)
+                true
+            }
+
+            linksToOpenExternally.contains(url.lastPathSegment) -> {
+                openExternalLink(url)
+                true
+            }
+
+            else -> false
         }
-        return true
     }
 }
 
