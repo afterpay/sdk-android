@@ -10,26 +10,38 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.R
 import com.afterpay.android.util.getCheckoutUrlExtra
 import com.afterpay.android.util.putOrderTokenExtra
 
 internal class WebCheckoutActivity : AppCompatActivity() {
+    private lateinit var webView: WebView
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
-
-        val webView = WebView(this).apply {
-            settings.javaScriptEnabled = true
-            webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
-        }
-
-        setContentView(webView)
+        setContentView(R.layout.activity_web_checkout)
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        webView.loadUrl(checkoutUrl)
+        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
+
+        webView = findViewById<WebView>(R.id.afterpay_webView).apply {
+            settings.javaScriptEnabled = true
+            webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
+            loadUrl(checkoutUrl)
+        }
+    }
+
+    override fun onDestroy() {
+        // Prevent WebView from leaking memory when the Activity is destroyed.
+        // The leak appears when enabling JavaScript and is fixed by disabling it.
+        webView.apply {
+            stopLoading()
+            settings.javaScriptEnabled = false
+        }
+
+        super.onDestroy()
     }
 
     private fun open(url: Uri) {
