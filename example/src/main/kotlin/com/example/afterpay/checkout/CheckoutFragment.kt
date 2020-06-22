@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.example.afterpay.R
@@ -24,7 +25,7 @@ class CheckoutFragment : Fragment() {
         const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
-    private val viewModel by activityViewModels<CheckoutViewModel> { CheckoutViewModelFactory() }
+    private val viewModel by activityViewModels<CheckoutViewModel> { CheckoutViewModel.factory() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,12 +75,11 @@ class CheckoutFragment : Fragment() {
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
-                val token = Afterpay.parseCheckoutResponse(intent)
-                Toast.makeText(
-                    requireContext(),
-                    "Success: Completed order $token",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
+                requireActivity().supportFragmentManager.commit {
+                    replace(R.id.fragment_container, SuccessFragment(token), null)
+                    addToBackStack(null)
+                }
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()

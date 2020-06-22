@@ -3,12 +3,12 @@ package com.example.afterpay.checkout
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.util.update
+import com.example.afterpay.util.viewModelFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
@@ -71,12 +71,9 @@ class CheckoutViewModel(private val merchantApi: MerchantApi) : ViewModel() {
             state.update { copy(isLoading = false) }
         }
     }
-}
 
-class CheckoutViewModelFactory : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        if (modelClass.isAssignableFrom(CheckoutViewModel::class.java)) {
+    companion object {
+        fun factory() = viewModelFactory {
             CheckoutViewModel(
                 merchantApi = Retrofit.Builder()
                     .baseUrl("http://10.0.2.2:3000")
@@ -89,8 +86,7 @@ class CheckoutViewModelFactory : ViewModelProvider.Factory {
                     )
                     .build()
                     .create(MerchantApi::class.java)
-            ) as T
-        } else {
-            throw IllegalArgumentException("ViewModel Not Found")
+            )
         }
+    }
 }
