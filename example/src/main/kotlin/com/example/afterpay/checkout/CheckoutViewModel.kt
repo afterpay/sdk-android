@@ -1,4 +1,4 @@
-package com.example.afterpay
+package com.example.afterpay.checkout
 
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
+class CheckoutViewModel(private val merchantApi: MerchantApi) : ViewModel() {
     data class State(
         val emailAddress: String,
         private val isLoading: Boolean
@@ -38,7 +38,7 @@ class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
     }
 
     private val state = MutableLiveData(State(emailAddress = "", isLoading = false))
-    private val commandChannel = Channel<Command>(Channel.Factory.CONFLATED)
+    private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
     fun state(): Flow<State> = state.asFlow()
 
@@ -73,11 +73,11 @@ class MainViewModel(private val merchantApi: MerchantApi) : ViewModel() {
     }
 }
 
-class MainViewModelFactory : ViewModelProvider.Factory {
+class CheckoutViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            MainViewModel(
+        if (modelClass.isAssignableFrom(CheckoutViewModel::class.java)) {
+            CheckoutViewModel(
                 merchantApi = Retrofit.Builder()
                     .baseUrl("http://10.0.2.2:3000")
                     .addConverterFactory(
