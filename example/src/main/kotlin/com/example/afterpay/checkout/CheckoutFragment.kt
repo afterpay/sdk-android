@@ -12,8 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.example.afterpay.R
@@ -25,7 +25,7 @@ class CheckoutFragment : Fragment() {
         const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
-    private val viewModel by activityViewModels<CheckoutViewModel> { CheckoutViewModel.factory() }
+    private val viewModel by viewModels<CheckoutViewModel> { CheckoutViewModel.factory() }
 
     override fun onCreateView(
         inflater: LayoutInflater,

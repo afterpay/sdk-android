@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.afterpay.R
 
 class SuccessFragment() : Fragment() {
@@ -19,7 +19,7 @@ class SuccessFragment() : Fragment() {
         arguments = bundleOf(TOKEN_KEY to token)
     }
 
-    private val viewModel by activityViewModels<SuccessViewModel> {
+    private val viewModel by viewModels<SuccessViewModel> {
         SuccessViewModel.factory(requireNotNull(arguments?.getString(TOKEN_KEY)))
     }
 
