@@ -11,13 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.Product
 import com.example.afterpay.shopping.ShoppingViewModel.Command
+import com.example.afterpay.shopping.ShoppingViewModel.ShoppingItem
 import kotlinx.coroutines.flow.collectLatest
 
 class ShoppingFragment : Fragment() {
@@ -25,7 +29,7 @@ class ShoppingFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var checkoutButton: Button
-    private lateinit var viewAdapter: ShoppingAdapter
+    private lateinit var viewAdapter: ShoppingListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
@@ -38,8 +42,7 @@ class ShoppingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewManager = LinearLayoutManager(requireContext())
-        viewAdapter = ShoppingAdapter(
-            arrayOf(),
+        viewAdapter = ShoppingListAdapter(
             onAddProduct = viewModel::add,
             onRemoveProduct = viewModel::remove
         )
@@ -49,6 +52,7 @@ class ShoppingFragment : Fragment() {
             addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             layoutManager = viewManager
             adapter = viewAdapter
+            itemAnimator = DefaultItemAnimator().apply { supportsChangeAnimations = false }
         }
 
         checkoutButton = view.findViewById<Button>(R.id.shopping_button_viewCart).apply {
@@ -61,7 +65,7 @@ class ShoppingFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             viewModel.state.collectLatest { state ->
-                viewAdapter.update(state.shoppingItems.toTypedArray())
+                viewAdapter.submitList(state.shoppingItems)
                 checkoutButton.isEnabled = state.enableCheckoutButton
                 totalCost.text = state.totalCost
             }
@@ -81,11 +85,10 @@ class ShoppingFragment : Fragment() {
     }
 }
 
-class ShoppingAdapter(
-    private var items: Array<ShoppingViewModel.ShoppingItem>,
+class ShoppingListAdapter(
     private val onAddProduct: (Product) -> Unit,
     private val onRemoveProduct: (Product) -> Unit
-) : RecyclerView.Adapter<ShoppingAdapter.ViewHolder>() {
+) : ListAdapter<ShoppingItem, ShoppingListAdapter.ViewHolder>(itemDiff) {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.shoppingItem_title)
         val description: TextView = view.findViewById(R.id.shoppingItem_description)
@@ -100,7 +103,7 @@ class ShoppingAdapter(
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position)
         holder.name.text = item.name
         holder.description.text = item.description
         holder.price.text = item.price
@@ -110,10 +113,13 @@ class ShoppingAdapter(
         holder.removeButton.visibility = if (item.isInCart) View.VISIBLE else View.GONE
     }
 
-    override fun getItemCount() = items.size
+    private companion object {
+        val itemDiff = object : DiffUtil.ItemCallback<ShoppingItem>() {
+            override fun areItemsTheSame(oldItem: ShoppingItem, newItem: ShoppingItem): Boolean =
+                oldItem.product.id == newItem.product.id
 
-    fun update(items: Array<ShoppingViewModel.ShoppingItem>) {
-        this.items = items
-        notifyDataSetChanged()
+            override fun areContentsTheSame(oldItem: ShoppingItem, newItem: ShoppingItem): Boolean =
+                oldItem.quantityInCart == newItem.quantityInCart
+        }
     }
 }

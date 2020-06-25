@@ -39,7 +39,7 @@ private val allProducts = listOf(
 )
 
 class ShoppingViewModel(val cart: Cart) : ViewModel() {
-    data class ShoppingItem(val product: Product, private val quantityInCart: Int) {
+    data class ShoppingItem(val product: Product, val quantityInCart: Int) {
         val name: String get() = product.name
         val description: String get() = product.description
         val price: String get() = product.price.asCurrency()
