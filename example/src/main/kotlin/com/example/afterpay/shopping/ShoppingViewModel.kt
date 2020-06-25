@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import com.example.afterpay.data.Cart
 import com.example.afterpay.data.Product
 import com.example.afterpay.util.asCurrency
+import com.example.afterpay.util.sumByBigDecimal
 import com.example.afterpay.util.viewModelFactory
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import java.math.BigDecimal
 import java.util.UUID
 
 private val allProducts = listOf(
@@ -16,25 +18,25 @@ private val allProducts = listOf(
         id = UUID.randomUUID(),
         name = "Coffee",
         description = "Ground 250g",
-        price = 12.99
+        price = BigDecimal(12.99)
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Milk",
         description = "Full Cream 2L",
-        price = 3.49
+        price = BigDecimal(3.49)
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Nestle Milo",
         description = "Malted Drinking Chocolate 460g",
-        price = 7.00
+        price = BigDecimal(7.00)
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Coca-cola",
         description = "Bottle 600ml",
-        price = 3.75
+        price = BigDecimal(3.75)
     )
 )
 
@@ -57,14 +59,14 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
             }
 
         val totalCost: String
-            get() = items.sumByDouble { it.product.price * it.quantity }.asCurrency()
+            get() = items.sumByBigDecimal { it.totalCost }.asCurrency()
 
         val enableCheckoutButton: Boolean
             get() = items.isNotEmpty()
     }
 
     sealed class Command {
-        data class Checkout(val totalCost: Double) : Command()
+        data class Checkout(val totalCost: BigDecimal) : Command()
     }
 
     private val commandChannel = Channel<Command>(Channel.CONFLATED)

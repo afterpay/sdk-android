@@ -19,14 +19,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.math.BigDecimal
 
 class CheckoutViewModel(
-    totalCost: Double,
+    totalCost: BigDecimal,
     private val merchantApi: MerchantApi
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
-        private val total: Double,
+        private val total: BigDecimal,
         private val isLoading: Boolean
     ) {
         val totalCost: String
@@ -78,7 +79,7 @@ class CheckoutViewModel(
     }
 
     companion object {
-        fun factory(totalCost: Double) = viewModelFactory {
+        fun factory(totalCost: BigDecimal) = viewModelFactory {
             CheckoutViewModel(
                 totalCost = totalCost,
                 merchantApi = Retrofit.Builder()

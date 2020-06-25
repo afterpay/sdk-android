@@ -21,6 +21,7 @@ import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import kotlinx.coroutines.flow.collectLatest
+import java.math.BigDecimal
 
 class CheckoutFragment() : Fragment() {
     private companion object {
@@ -28,12 +29,12 @@ class CheckoutFragment() : Fragment() {
         const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
-    constructor(totalCost: Double) : this() {
+    constructor(totalCost: BigDecimal) : this() {
         arguments = bundleOf(TOTAL_COST_KEY to totalCost)
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
-        CheckoutViewModel.factory(totalCost = requireNotNull(arguments?.getDouble(TOTAL_COST_KEY)))
+        CheckoutViewModel.factory(totalCost = requireNotNull(arguments?.get(TOTAL_COST_KEY) as? BigDecimal))
     }
 
     override fun onCreateView(

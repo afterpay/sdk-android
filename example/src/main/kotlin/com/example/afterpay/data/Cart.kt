@@ -1,8 +1,10 @@
 package com.example.afterpay.data
 
+import com.example.afterpay.util.sumByBigDecimal
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import java.math.BigDecimal
 import java.util.Date
 import java.util.UUID
 
@@ -15,15 +17,18 @@ class Cart {
     data class Item(
         val product: Product,
         var quantity: Int
-    )
+    ) {
+        val totalCost: BigDecimal
+            get() = product.price * quantity.toBigDecimal()
+    }
 
     private val state = MutableStateFlow(State(items = mutableMapOf(), lastUpdated = Date()))
 
     val items: Flow<List<Item>>
         get() = state.map { it.items.values.toList() }
 
-    val totalCost: Double
-        get() = state.value.items.values.sumByDouble { it.product.price * it.quantity }
+    val totalCost: BigDecimal
+        get() = state.value.items.values.sumByBigDecimal { it.totalCost }
 
     fun contains(product: Product): Boolean =
         state.value.items.containsKey(product.id)
