@@ -1,6 +1,5 @@
 package com.example.afterpay.data
 
-import com.example.afterpay.util.update
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -30,27 +29,25 @@ class Cart {
         state.value.items.containsKey(product.id)
 
     fun add(product: Product) {
-        val item = state.value.items[product.id] ?: Item(product, 0)
+        val items = state.value.items
+        val item = items[product.id] ?: Item(product, 0)
         item.quantity += 1
-        state.update {
-            copy(
-                items = items.plus(product.id to item),
-                lastUpdated = Date()
-            )
-        }
+        state.value = State(
+            items = items.plus(product.id to item),
+            lastUpdated = Date()
+        )
     }
 
     fun remove(product: Product) {
-        val item = state.value.items[product.id] ?: return
+        val items = state.value.items
+        val item = items[product.id] ?: return
         item.quantity -= 1
-        state.update {
-            copy(
-                items = if (item.quantity > 0)
-                    items.plus(product.id to item)
-                else
-                    items.minus(product.id),
-                lastUpdated = Date()
-            )
-        }
+        state.value = State(
+            items = if (item.quantity > 0)
+                items.plus(product.id to item)
+            else
+                items.minus(product.id),
+            lastUpdated = Date()
+        )
     }
 }
