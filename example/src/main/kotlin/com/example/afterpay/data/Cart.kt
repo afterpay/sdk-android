@@ -30,8 +30,7 @@ class Cart {
 
     fun add(product: Product) {
         val items = state.value.items
-        val item = items[product.id] ?: Item(product, 0)
-        item.quantity += 1
+        val item = items[product.id]?.apply { quantity += 1 } ?: Item(product, quantity = 1)
         state.value = State(
             items = items.plus(product.id to item),
             lastUpdated = Date()
@@ -40,8 +39,7 @@ class Cart {
 
     fun remove(product: Product) {
         val items = state.value.items
-        val item = items[product.id] ?: return
-        item.quantity -= 1
+        val item = items[product.id]?.apply { quantity -= 1 } ?: return
         state.value = State(
             items = if (item.quantity > 0)
                 items.plus(product.id to item)
