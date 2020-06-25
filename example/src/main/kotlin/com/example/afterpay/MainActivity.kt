@@ -3,9 +3,10 @@ package com.example.afterpay
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import com.example.afterpay.shopping.ShoppingFragment
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,9 +15,13 @@ class MainActivity : AppCompatActivity() {
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
-        if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                add<ShoppingFragment>(R.id.fragment_container, null)
+        val navController = findNavController(R.id.nav_host_fragment)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+        findViewById<Toolbar>(R.id.main_toolbar).apply {
+            setupWithNavController(navController, appBarConfiguration)
+            setNavigationOnClickListener {
+                onBackPressed()
             }
         }
     }

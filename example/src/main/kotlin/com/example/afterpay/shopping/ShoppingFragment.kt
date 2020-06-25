@@ -8,9 +8,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -74,11 +74,10 @@ class ShoppingFragment : Fragment() {
             viewModel.commands.collectLatest { command ->
                 when (command) {
                     is Command.Checkout ->
-                        requireActivity().supportFragmentManager.commit {
-                            val fragment = CheckoutFragment(totalCost = command.totalCost)
-                            replace(R.id.fragment_container, fragment, null)
-                            addToBackStack(null)
-                        }
+                        findNavController().navigate(
+                            R.id.action_shoppingFragment_to_checkoutFragment,
+                            CheckoutFragment.arguments(command.totalCost)
+                        )
                 }
             }
         }

@@ -14,23 +14,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
 
-class CheckoutFragment() : Fragment() {
-    private companion object {
-        const val TOTAL_COST_KEY = "totalCost"
-        const val CHECKOUT_WITH_AFTERPAY = 1234
-    }
+class CheckoutFragment : Fragment() {
+    companion object {
+        private const val TOTAL_COST_KEY = "totalCost"
+        private const val CHECKOUT_WITH_AFTERPAY = 1234
 
-    constructor(totalCost: BigDecimal) : this() {
-        arguments = bundleOf(TOTAL_COST_KEY to totalCost)
+        fun arguments(totalCost: BigDecimal): Bundle = bundleOf(TOTAL_COST_KEY to totalCost)
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
@@ -88,10 +86,10 @@ class CheckoutFragment() : Fragment() {
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
                 val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
-                requireActivity().supportFragmentManager.commit {
-                    replace(R.id.fragment_container, SuccessFragment(token), null)
-                    addToBackStack(null)
-                }
+                findNavController().navigate(
+                    R.id.action_checkoutFragment_to_successFragment,
+                    SuccessFragment.arguments(token)
+                )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()

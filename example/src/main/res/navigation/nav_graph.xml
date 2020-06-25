@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/shoppingFragment">
+
+    <fragment
+        android:id="@+id/shoppingFragment"
+        android:name="com.example.afterpay.shopping.ShoppingFragment"
+        android:label="Afterpay Example">
+
+        <action
+            android:id="@+id/action_shoppingFragment_to_checkoutFragment"
+            app:destination="@id/checkoutFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/checkoutFragment"
+        android:name="com.example.afterpay.checkout.CheckoutFragment"
+        android:label="Checkout">
+
+        <action
+            android:id="@+id/action_checkoutFragment_to_successFragment"
+            app:destination="@id/successFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.example.afterpay.checkout.SuccessFragment"
+        android:label="Checkout Receipt">
+
+        <action
+            android:id="@+id/action_successFragment_to_shoppingFragment"
+            app:destination="@id/shoppingFragment"
+            app:popUpTo="@id/shoppingFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+</navigation>
