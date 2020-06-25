@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -20,12 +22,19 @@ import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import kotlinx.coroutines.flow.collectLatest
 
-class CheckoutFragment : Fragment() {
+class CheckoutFragment() : Fragment() {
     private companion object {
+        const val TOTAL_COST_KEY = "totalCost"
         const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
-    private val viewModel by viewModels<CheckoutViewModel> { CheckoutViewModel.factory() }
+    constructor(totalCost: Double) : this() {
+        arguments = bundleOf(TOTAL_COST_KEY to totalCost)
+    }
+
+    private val viewModel by viewModels<CheckoutViewModel> {
+        CheckoutViewModel.factory(totalCost = requireNotNull(arguments?.getDouble(TOTAL_COST_KEY)))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +55,12 @@ class CheckoutFragment : Fragment() {
             viewModel.checkoutWithAfterpay()
         }
 
+        val totalCost = view.findViewById<TextView>(R.id.cart_totalCost)
         val progressBar = view.findViewById<ProgressBar>(R.id.cart_progressBar)
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
+                totalCost.text = state.totalCost
                 checkoutButton.isEnabled = state.enableCheckoutButton
                 progressBar.visibility = if (state.showProgressBar) View.VISIBLE else View.INVISIBLE
             }

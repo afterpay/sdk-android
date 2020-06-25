@@ -35,6 +35,12 @@ android {
     }
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
+    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
+}
+
 dependencies {
     implementation project(':afterpay')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
@@ -46,6 +52,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.recyclerview:recyclerview:${versions.androidx_recycler_view}"
     implementation "com.squareup.moshi:moshi:${versions.moshi}"
     implementation "com.squareup.moshi:moshi-kotlin:${versions.moshi}"
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"

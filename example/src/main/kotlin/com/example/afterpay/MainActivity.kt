@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import com.example.afterpay.checkout.CheckoutFragment
+import com.example.afterpay.shopping.ShoppingFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
-                add<CheckoutFragment>(R.id.fragment_container, null)
+                add<ShoppingFragment>(R.id.fragment_container, null)
             }
         }
     }
