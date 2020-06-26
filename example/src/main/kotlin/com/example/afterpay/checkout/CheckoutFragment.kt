@@ -20,19 +20,19 @@ import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.nav_graph
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
 
 class CheckoutFragment : Fragment() {
-    companion object {
-        private const val TOTAL_COST_KEY = "totalCost"
-        private const val CHECKOUT_WITH_AFTERPAY = 1234
-
-        fun arguments(totalCost: BigDecimal): Bundle = bundleOf(TOTAL_COST_KEY to totalCost)
+    private companion object {
+        const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
-        CheckoutViewModel.factory(totalCost = requireNotNull(arguments?.get(TOTAL_COST_KEY) as? BigDecimal))
+        CheckoutViewModel.factory(
+            totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal)
+        )
     }
 
     override fun onCreateView(
@@ -87,8 +87,8 @@ class CheckoutFragment : Fragment() {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
                 val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
                 findNavController().navigate(
-                    R.id.action_checkoutFragment_to_successFragment,
-                    SuccessFragment.arguments(token)
+                    nav_graph.action.to_success,
+                    bundleOf(nav_graph.args.checkout_token to token)
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {

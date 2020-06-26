@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.afterpay.R
-import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.Product
+import com.example.afterpay.nav_graph
 import com.example.afterpay.shopping.ShoppingViewModel.Command
 import com.example.afterpay.shopping.ShoppingViewModel.ShoppingItem
 import kotlinx.coroutines.flow.collectLatest
@@ -75,8 +76,8 @@ class ShoppingFragment : Fragment() {
                 when (command) {
                     is Command.Checkout ->
                         findNavController().navigate(
-                            R.id.action_shoppingFragment_to_checkoutFragment,
-                            CheckoutFragment.arguments(command.totalCost)
+                            nav_graph.action.to_checkout,
+                            bundleOf(nav_graph.args.total_cost to command.totalCost)
                         )
                 }
             }
