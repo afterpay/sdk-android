@@ -9,7 +9,7 @@ import java.util.UUID
 class Cart {
     private data class State(
         val lastUpdated: Date,
-        val items: Map<UUID, Item>
+        val items: MutableMap<UUID, Item>
     )
 
     data class Item(
@@ -17,7 +17,7 @@ class Cart {
         var quantity: Int
     )
 
-    private val state = MutableStateFlow(State(items = mapOf(), lastUpdated = Date()))
+    private val state = MutableStateFlow(State(items = mutableMapOf(), lastUpdated = Date()))
 
     val items: Flow<List<Item>>
         get() = state.map { it.items.values.toList() }
@@ -31,21 +31,18 @@ class Cart {
     fun add(product: Product) {
         val items = state.value.items
         val item = items[product.id]?.apply { quantity += 1 } ?: Item(product, quantity = 1)
-        state.value = State(
-            items = items.plus(product.id to item),
-            lastUpdated = Date()
-        )
+        items[product.id] = item
+        state.value = State(items = items, lastUpdated = Date())
     }
 
     fun remove(product: Product) {
         val items = state.value.items
         val item = items[product.id]?.apply { quantity -= 1 } ?: return
-        state.value = State(
-            items = if (item.quantity > 0)
-                items.plus(product.id to item)
-            else
-                items.minus(product.id),
-            lastUpdated = Date()
-        )
+        if (item.quantity > 0) {
+            items[product.id] = item
+        } else {
+            items.remove(product.id)
+        }
+        state.value = State(items = items, lastUpdated = Date())
     }
 }
