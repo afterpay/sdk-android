@@ -1,15 +1,17 @@
 package com.example.afterpay.shopping
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.afterpay.data.Cart
 import com.example.afterpay.data.Product
 import com.example.afterpay.util.asCurrency
-import com.example.afterpay.util.sumByBigDecimal
 import com.example.afterpay.util.viewModelFactory
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -49,20 +51,17 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
         val isInCart: Boolean get() = quantityInCart > 0
     }
 
-    data class State(private val items: List<Cart.Item>) {
+    data class State(private val summary: Cart.Summary) {
         val shoppingItems: List<ShoppingItem>
             get() = allProducts.map { product ->
-                ShoppingItem(
-                    product,
-                    quantityInCart = items.firstOrNull { it.product == product }?.quantity ?: 0
-                )
+                ShoppingItem(product, quantityInCart = summary.quantityOf(product))
             }
 
         val totalCost: String
-            get() = items.sumByBigDecimal { it.totalCost }.asCurrency()
+            get() = summary.totalCost.asCurrency()
 
         val enableCheckoutButton: Boolean
-            get() = items.isNotEmpty()
+            get() = summary.items.isNotEmpty()
     }
 
     sealed class Command {
@@ -72,7 +71,7 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
     val state: Flow<State>
-        get() = cart.items.map { State(it) }
+        get() = cart.summary.map { State(it) }
 
     val commands: Flow<Command>
         get() = commandChannel.receiveAsFlow()
@@ -86,7 +85,10 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
     }
 
     fun checkout() {
-        commandChannel.offer(Command.Checkout(totalCost = cart.totalCost))
+        viewModelScope.launch {
+            val summary = cart.summary.first()
+            commandChannel.offer(Command.Checkout(totalCost = summary.totalCost))
+        }
     }
 
     companion object {
