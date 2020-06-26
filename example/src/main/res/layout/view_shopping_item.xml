@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shoppingItem_container"
@@ -8,71 +8,72 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/shoppingItem_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Product" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/shoppingItem_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                tools:text="My Product" />
-
-            <TextView
-                android:id="@+id/shoppingItem_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Description of product" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <TextView
-            android:id="@+id/shoppingItem_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
-            android:textAlignment="textEnd"
-            tools:text="$100.00" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/shoppingItem_description"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/shoppingItem_barrier"
+        app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shoppingItem_title"
+        tools:text="Description" />
 
-        <ImageButton
-            android:id="@+id/shoppingItem_button_removeFromCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Remove from Cart"
-            app:srcCompat="@android:drawable/ic_delete" />
+    <TextView
+        android:id="@+id/shoppingItem_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="textEnd"
+        app:layout_constraintBaseline_toBaselineOf="@id/shoppingItem_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="$100.00" />
 
-        <TextView
-            android:id="@+id/shoppingItem_quantityInCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingHorizontal="16dp"
-            tools:text="10" />
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/shoppingItem_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom" />
 
-        <ImageButton
-            android:id="@+id/shoppingItem_button_addToCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Add to Cart"
-            app:srcCompat="@android:drawable/ic_input_add" />
+    <ImageButton
+        android:id="@+id/shoppingItem_button_removeFromCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/remove_from_cart_button"
+        app:layout_constraintEnd_toStartOf="@id/shoppingItem_quantityInCart"
+        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
+        app:srcCompat="@android:drawable/ic_delete" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    <TextView
+        android:id="@+id/shoppingItem_quantityInCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@id/shoppingItem_button_addToCart"
+        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
+        tools:text="10" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    <ImageButton
+        android:id="@+id/shoppingItem_button_addToCart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/add_to_cart_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
