@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -18,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.afterpay.R
-import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.Product
+import com.example.afterpay.nav_graph
 import com.example.afterpay.shopping.ShoppingViewModel.Command
 import com.example.afterpay.shopping.ShoppingViewModel.ShoppingItem
 import kotlinx.coroutines.flow.collectLatest
@@ -74,11 +75,10 @@ class ShoppingFragment : Fragment() {
             viewModel.commands.collectLatest { command ->
                 when (command) {
                     is Command.Checkout ->
-                        requireActivity().supportFragmentManager.commit {
-                            val fragment = CheckoutFragment(totalCost = command.totalCost)
-                            replace(R.id.fragment_container, fragment, null)
-                            addToBackStack(null)
-                        }
+                        findNavController().navigate(
+                            nav_graph.action.to_checkout,
+                            bundleOf(nav_graph.args.total_cost to command.totalCost)
+                        )
                 }
             }
         }

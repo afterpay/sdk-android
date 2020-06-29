@@ -5,4 +5,7 @@
     <string name="view_cart">View Cart</string>
     <string name="total_cost">Total Cost</string>
     <string name="email">Email</string>
+    <string name="title_checkout">Checkout</string>
+    <string name="title_shopping">Aftersnack</string>
+    <string name="title_checkout_success">Receipt</string>
 </resources>

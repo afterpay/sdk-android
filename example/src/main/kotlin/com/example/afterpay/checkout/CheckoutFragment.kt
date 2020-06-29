@@ -14,27 +14,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.nav_graph
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
 
-class CheckoutFragment() : Fragment() {
+class CheckoutFragment : Fragment() {
     private companion object {
-        const val TOTAL_COST_KEY = "totalCost"
         const val CHECKOUT_WITH_AFTERPAY = 1234
     }
 
-    constructor(totalCost: BigDecimal) : this() {
-        arguments = bundleOf(TOTAL_COST_KEY to totalCost)
-    }
-
     private val viewModel by viewModels<CheckoutViewModel> {
-        CheckoutViewModel.factory(totalCost = requireNotNull(arguments?.get(TOTAL_COST_KEY) as? BigDecimal))
+        CheckoutViewModel.factory(
+            totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal)
+        )
     }
 
     override fun onCreateView(
@@ -88,10 +86,10 @@ class CheckoutFragment() : Fragment() {
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
                 val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
-                requireActivity().supportFragmentManager.commit {
-                    replace(R.id.fragment_container, SuccessFragment(token), null)
-                    addToBackStack(null)
-                }
+                findNavController().navigate(
+                    nav_graph.action.to_success,
+                    bundleOf(nav_graph.args.checkout_token to token)
+                )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
                 Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()

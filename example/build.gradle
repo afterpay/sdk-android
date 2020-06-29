@@ -52,6 +52,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidx_navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.androidx_navigation}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx_recycler_view}"
     implementation "com.squareup.moshi:moshi:${versions.moshi}"
     implementation "com.squareup.moshi:moshi-kotlin:${versions.moshi}"

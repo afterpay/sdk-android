@@ -68,6 +68,7 @@ obj/
 .idea/encodings.xml
 .idea/misc.xml
 .idea/modules.xml
+.idea/navEditor.xml
 .idea/scopes/scope_settings.xml
 .idea/dictionaries
 .idea/vcs.xml
