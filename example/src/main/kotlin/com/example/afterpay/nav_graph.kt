@@ -1,18 +1,21 @@
 package com.example.afterpay
 
 object nav_graph {
-    const val id = 1
+    private var uniqueId = 1
+        get() = field++
+
+    val id = uniqueId
 
     object dest {
-        const val shopping = 2
-        const val checkout = 3
-        const val success = 4
+        val shopping = uniqueId
+        val checkout = uniqueId
+        val success = uniqueId
     }
 
     object action {
-        const val to_checkout = 5
-        const val to_success = 6
-        const val back_to_shopping = 7
+        val to_checkout = uniqueId
+        val to_success = uniqueId
+        val back_to_shopping = uniqueId
     }
 
     object args {
