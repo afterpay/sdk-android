@@ -11,7 +11,7 @@ import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.afterpay.checkout.CheckoutFragment
-import com.example.afterpay.checkout.SuccessFragment
+import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
 import java.math.BigDecimal
 
@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
                     argument(nav_graph.args.total_cost) {
                         type = NavType.ParcelableType(BigDecimal::class.java)
                     }
-                    action(nav_graph.action.to_success) {
-                        destinationId = nav_graph.dest.success
+                    action(nav_graph.action.to_receipt) {
+                        destinationId = nav_graph.dest.receipt
                     }
                 }
-                fragment<SuccessFragment>(nav_graph.dest.success) {
-                    label = getString(R.string.title_checkout_success)
+                fragment<ReceiptFragment>(nav_graph.dest.receipt) {
+                    label = getString(R.string.title_receipt)
                     argument(nav_graph.args.checkout_token) {
                         type = NavType.StringType
                     }

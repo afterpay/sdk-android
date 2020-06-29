@@ -9,12 +9,12 @@ object nav_graph {
     object dest {
         val shopping = uniqueId
         val checkout = uniqueId
-        val success = uniqueId
+        val receipt = uniqueId
     }
 
     object action {
         val to_checkout = uniqueId
-        val to_success = uniqueId
+        val to_receipt = uniqueId
         val back_to_shopping = uniqueId
     }
 

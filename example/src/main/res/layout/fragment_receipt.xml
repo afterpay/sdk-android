@@ -6,11 +6,11 @@
     android:padding="8dp">
 
     <TextView
-        android:id="@+id/checkoutSuccess_text_successMessage"
+        android:id="@+id/receipt_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
-        tools:text="Success!" />
+        tools:text="Checkout successful with token:\n1234" />
 
 </FrameLayout>

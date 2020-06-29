@@ -7,7 +7,7 @@
     <string name="remove_from_cart_button">Remove from Cart</string>
     <string name="total_cost">Total Cost</string>
     <string name="email">Email</string>
-    <string name="title_checkout">Checkout</string>
     <string name="title_shopping">Aftersnack</string>
-    <string name="title_checkout_success">Receipt</string>
+    <string name="title_checkout">Checkout</string>
+    <string name="title_receipt">Receipt</string>
 </resources>

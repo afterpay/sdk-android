@@ -87,7 +87,7 @@ class CheckoutFragment : Fragment() {
                 val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
                 val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
                 findNavController().navigate(
-                    nav_graph.action.to_success,
+                    nav_graph.action.to_receipt,
                     bundleOf(nav_graph.args.checkout_token to token)
                 )
             }
