@@ -1,4 +1,4 @@
-package com.example.afterpay.checkout
+package com.example.afterpay.receipt
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.afterpay.R
 import com.example.afterpay.nav_graph
 
-class SuccessFragment : Fragment() {
-    private val viewModel by viewModels<SuccessViewModel> {
-        SuccessViewModel.factory(
+class ReceiptFragment : Fragment() {
+    private val viewModel by viewModels<ReceiptViewModel> {
+        ReceiptViewModel.factory(
             token = requireNotNull(arguments?.getString(nav_graph.args.checkout_token))
         )
     }
@@ -23,7 +23,7 @@ class SuccessFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_checkout_success, container, false)
+    ): View? = inflater.inflate(R.layout.fragment_receipt, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +32,7 @@ class SuccessFragment : Fragment() {
             findNavController().navigate(nav_graph.action.back_to_shopping)
         }
 
-        view.findViewById<TextView>(R.id.checkoutSuccess_text_successMessage).apply {
+        view.findViewById<TextView>(R.id.receipt_message).apply {
             text = viewModel.message
         }
     }
