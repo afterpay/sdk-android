@@ -20,6 +20,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.math.BigDecimal
+import java.text.DecimalFormat
 
 class CheckoutViewModel(
     totalCost: BigDecimal,
@@ -27,7 +28,7 @@ class CheckoutViewModel(
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
-        private val total: BigDecimal,
+        val total: BigDecimal,
         private val isLoading: Boolean
     ) {
         val totalCost: String
@@ -59,14 +60,15 @@ class CheckoutViewModel(
     }
 
     fun checkoutWithAfterpay() {
-        val email = state.value.emailAddress
+        val (email, total) = state.value
+        val amount = DecimalFormat("0.00").format(total)
 
         viewModelScope.launch {
             state.update { copy(isLoading = true) }
 
             try {
                 val response = withContext(Dispatchers.IO) {
-                    merchantApi.checkout(MerchantCheckoutRequest(email))
+                    merchantApi.checkout(MerchantCheckoutRequest(email, amount))
                 }
                 commandChannel.offer(Command.StartAfterpayCheckout(response.url))
             } catch (error: Exception) {
