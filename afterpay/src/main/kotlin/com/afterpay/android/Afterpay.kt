@@ -16,7 +16,7 @@ object Afterpay {
      * @param checkoutUrl The URL used to initiate the transaction.
      * @return An intent to initiate the Afterpay transaction.
      */
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
+    @JvmStatic fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
         Intent(context, WebCheckoutActivity::class.java)
             .putCheckoutUrlExtra(checkoutUrl)
 
@@ -27,6 +27,6 @@ object Afterpay {
      * [startActivityForResult][android.app.Activity.startActivityForResult].
      * @return The order token associated with the transaction.
      */
-    fun parseCheckoutResponse(intent: Intent): String? =
+    @JvmStatic fun parseCheckoutResponse(intent: Intent): String? =
         intent.getOrderTokenExtra()
 }
