@@ -16,8 +16,11 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Remove SNAPSHOT from version
+        run: sed -i 's/-SNAPSHOT//g' gradle.properties
+
       - name: Publish to the Maven Central Repository
-        run: ./gradlew clean removeSnapshot uploadArchives closeAndReleaseRepository --no-daemon --no-parallel
+        run: ./gradlew clean afterpay:uploadArchives afterpay:closeAndReleaseRepository --no-daemon --no-parallel
         env:
           SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
