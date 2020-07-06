@@ -34,7 +34,7 @@ dependencies {
 
 ### Proguard
 
-The Afterpay Android SDK will configure your app's Proguard rules using `proguard-rules.txt`.
+The Afterpay Android SDK will configure your app's Proguard rules using [`proguard-rules.pro`][proguard-rules].
 
 ## Features
 
@@ -113,3 +113,4 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [example]: example
 [ktlint]: https://ktlint.github.io
 [license]: LICENSE
+[proguard-rules]: afterpay/proguard-rules.pro
