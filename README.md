@@ -38,6 +38,8 @@ The Afterpay Android SDK will configure your app's Proguard rules using [`progua
 
 ## Features
 
+The initial release of the SDK contains the web login and checkout process with more features to come in subsequent releases.
+
 ## Getting Started
 
 Include the Afterpay payment button in you layout.
