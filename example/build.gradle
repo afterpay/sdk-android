@@ -56,6 +56,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidx_navigation}"
     implementation "androidx.navigation:navigation-ui-ktx:${versions.androidx_navigation}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidx_recycler_view}"
+    implementation "com.google.android.material:material:${versions.material_design_components}"
     implementation "com.squareup.moshi:moshi:${versions.moshi}"
     implementation "com.squareup.moshi:moshi-kotlin:${versions.moshi}"
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
