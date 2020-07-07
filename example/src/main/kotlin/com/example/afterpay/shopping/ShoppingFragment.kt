@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +48,6 @@ class ShoppingFragment : Fragment() {
 
         recyclerView = view.findViewById<RecyclerView>(R.id.shopping_recyclerView).apply {
             setHasFixedSize(true)
-            addItemDecoration(DividerItemDecoration(context, RecyclerView.VERTICAL))
             layoutManager = viewManager
             adapter = viewAdapter
             itemAnimator = DefaultItemAnimator().apply { supportsChangeAnimations = false }
@@ -94,8 +91,8 @@ class ShoppingListAdapter(
         val description: TextView = view.findViewById(R.id.shoppingItem_description)
         val price: TextView = view.findViewById(R.id.shoppingItem_price)
         val quantity: TextView = view.findViewById(R.id.shoppingItem_quantityInCart)
-        val addButton: ImageButton = view.findViewById(R.id.shoppingItem_button_addToCart)
-        val removeButton: ImageButton = view.findViewById(R.id.shoppingItem_button_removeFromCart)
+        val addButton: Button = view.findViewById(R.id.shoppingItem_button_addToCart)
+        val removeButton: Button = view.findViewById(R.id.shoppingItem_button_removeFromCart)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
