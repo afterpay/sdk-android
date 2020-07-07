@@ -70,11 +70,12 @@
 
         <TextView
             android:id="@+id/shoppingItem_quantityInCart"
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:textAlignment="center"
             app:layout_constraintEnd_toStartOf="@id/shoppingItem_button_addToCart"
             app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
             tools:text="10" />

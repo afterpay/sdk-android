@@ -107,7 +107,7 @@ class ShoppingListAdapter(
         holder.quantity.text = item.quantity
         holder.addButton.setOnClickListener { onAddProduct(item.product) }
         holder.removeButton.setOnClickListener { onRemoveProduct(item.product) }
-        holder.removeButton.visibility = if (item.isInCart) View.VISIBLE else View.GONE
+        holder.removeButton.isEnabled = item.isInCart
     }
 
     private companion object {
