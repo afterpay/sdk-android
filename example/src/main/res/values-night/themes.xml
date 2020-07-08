@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Afterpay.DayNight" parent="Theme.Afterpay.Night" />
+
+    <style name="Theme.Afterpay.Night" parent="Theme.Afterpay">
+        <item name="colorPrimary">@color/afterpay_black_800</item>
+        <item name="colorPrimaryVariant">@color/afterpay_blue_600</item>
+
+        <item name="android:colorBackground">@color/afterpay_black_900</item>
+        <item name="colorSurface">@color/afterpay_black_800</item>
+
+        <item name="colorOnPrimary">@color/afterpay_white_50</item>
+        <item name="colorOnSecondary">@color/afterpay_black_900</item>
+        <item name="colorOnBackground">@color/afterpay_white_50</item>
+        <item name="colorOnSurface">@color/afterpay_white_50</item>
+
+        <item name="elevationOverlayEnabled">true</item>
+
+        <item name="android:statusBarColor">@color/afterpay_black_900</item>
+        <item name="android:navigationBarColor">@color/afterpay_black_900</item>
+
+        <item name="materialButtonStyle">@style/Afterpay.Button</item>
+    </style>
+
+    <style name="Afterpay.Button" parent="@style/Widget.MaterialComponents.Button">
+        <item name="materialThemeOverlay">@style/AfterpayButtonOverlay</item>
+    </style>
+
+    <style name="AfterpayButtonOverlay">
+        <item name="colorPrimary">@color/afterpay_blue_600</item>
+        <item name="colorOnSurface">@color/afterpay_white_50</item>
+    </style>
+
+</resources>
