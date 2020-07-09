@@ -63,12 +63,12 @@ All contributions to this project are also under this license as per [GitHub's T
 [code-of-conduct]: CODE_OF_CONDUCT.md
 [code-owners]: .github/CODEOWNERS
 [commit-messages]: https://chris.beams.io/posts/git-commit/
-[fork-repo]: https://github.com/ittybittyapps/afterpay-android/fork
+[fork-repo]: https://github.com/AfterpayTouch/afterpay-android/fork
 [fork-docs]: https://help.github.com/articles/working-with-forks/
 [github-terms-contribution]: https://help.github.com/en/github/site-policy/github-terms-of-service#6-contributions-under-repository-license
-[issues]: https://github.com/ittybittyapps/afterpay-android/issues
+[issues]: https://github.com/AfterpayTouch/afterpay-android/issues
 [license]: LICENSE
-[new-issue]: https://github.com/ittybittyapps/afterpay-android/issues/new/choose
+[new-issue]: https://github.com/AfterpayTouch/afterpay-android/issues/new/choose
 [pr-template]: .github/PULL_REQUEST_TEMPLATE.md
 [pr-docs]: https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/requesting-a-pull-request-review
 [readme]: README.md
