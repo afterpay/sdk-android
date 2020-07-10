@@ -1,79 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/shoppingItem_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_margin="8dp"
+    android:focusable="true">
 
-    <TextView
-        android:id="@+id/shoppingItem_title"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/shoppingItem_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Product" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/shoppingItem_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/shoppingItem_barrier"
-        app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shoppingItem_title"
-        tools:text="Description" />
+        <TextView
+            android:id="@+id/shoppingItem_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Product" />
 
-    <TextView
-        android:id="@+id/shoppingItem_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="textEnd"
-        app:layout_constraintBaseline_toBaselineOf="@id/shoppingItem_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="$100.00" />
+        <TextView
+            android:id="@+id/shoppingItem_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/shoppingItem_barrier"
+            app:layout_constraintEnd_toStartOf="@id/shoppingItem_price"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shoppingItem_title"
+            tools:text="Description" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/shoppingItem_barrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom" />
+        <TextView
+            android:id="@+id/shoppingItem_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            app:layout_constraintBaseline_toBaselineOf="@id/shoppingItem_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="$100.00" />
 
-    <ImageButton
-        android:id="@+id/shoppingItem_button_removeFromCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/remove_from_cart_button"
-        app:layout_constraintEnd_toStartOf="@id/shoppingItem_quantityInCart"
-        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
-        app:srcCompat="@android:drawable/ic_delete" />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/shoppingItem_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom" />
 
-    <TextView
-        android:id="@+id/shoppingItem_quantityInCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@id/shoppingItem_button_addToCart"
-        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
-        tools:text="10" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shoppingItem_button_removeFromCart"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/add_to_cart_button"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="–"
+            android:textSize="24sp"
+            app:cornerRadius="24dp"
+            app:layout_constraintEnd_toStartOf="@id/shoppingItem_quantityInCart"
+            app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier" />
 
-    <ImageButton
-        android:id="@+id/shoppingItem_button_addToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/add_to_cart_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <TextView
+            android:id="@+id/shoppingItem_quantityInCart"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@id/shoppingItem_button_addToCart"
+            app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier"
+            tools:text="10" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/shoppingItem_button_addToCart"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/add_to_cart_button"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:text="+"
+            android:textSize="24sp"
+            app:cornerRadius="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shoppingItem_barrier" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
