@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Afterpay" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="Theme.Afterpay.DayNight" parent="Theme.Afterpay" />
+
+    <style name="Theme.Afterpay" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/afterpay_navy</item>
+        <item name="colorPrimaryVariant">@color/afterpay_navy_dark</item>
+        <item name="colorSecondary">@color/afterpay_blue</item>
+
+        <item name="android:statusBarColor">@color/afterpay_navy_dark</item>
+        <item name="android:navigationBarColor">@color/afterpay_navy_dark</item>
+    </style>
 
 </resources>

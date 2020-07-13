@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources />
+<resources>
+    <color name="afterpay_white">#FFFFFF</color>
+    <color name="afterpay_grey">#373737</color>
+    <color name="afterpay_black">#000000</color>
+    <color name="afterpay_blue">#16A0D5</color>
+    <color name="afterpay_navy">#074578</color>
+    <color name="afterpay_navy_dark">#001F4C</color>
+</resources>
