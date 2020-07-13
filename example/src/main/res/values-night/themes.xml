@@ -4,21 +4,21 @@
     <style name="Theme.Afterpay.DayNight" parent="Theme.Afterpay.Night" />
 
     <style name="Theme.Afterpay.Night" parent="Theme.Afterpay">
-        <item name="colorPrimary">@color/afterpay_black_800</item>
-        <item name="colorPrimaryVariant">@color/afterpay_blue_600</item>
+        <item name="colorPrimary">@color/afterpay_grey</item>
+        <item name="colorPrimaryVariant">@color/afterpay_blue</item>
 
-        <item name="android:colorBackground">@color/afterpay_black_900</item>
-        <item name="colorSurface">@color/afterpay_black_800</item>
+        <item name="android:colorBackground">@color/afterpay_black</item>
+        <item name="colorSurface">@color/afterpay_grey</item>
 
-        <item name="colorOnPrimary">@color/afterpay_white_50</item>
-        <item name="colorOnSecondary">@color/afterpay_black_900</item>
-        <item name="colorOnBackground">@color/afterpay_white_50</item>
-        <item name="colorOnSurface">@color/afterpay_white_50</item>
+        <item name="colorOnPrimary">@color/afterpay_white</item>
+        <item name="colorOnSecondary">@color/afterpay_black</item>
+        <item name="colorOnBackground">@color/afterpay_white</item>
+        <item name="colorOnSurface">@color/afterpay_white</item>
 
         <item name="elevationOverlayEnabled">true</item>
 
-        <item name="android:statusBarColor">@color/afterpay_black_900</item>
-        <item name="android:navigationBarColor">@color/afterpay_black_900</item>
+        <item name="android:statusBarColor">@color/afterpay_black</item>
+        <item name="android:navigationBarColor">@color/afterpay_black</item>
 
         <item name="materialButtonStyle">@style/Afterpay.Button</item>
     </style>
@@ -28,8 +28,8 @@
     </style>
 
     <style name="AfterpayButtonOverlay">
-        <item name="colorPrimary">@color/afterpay_blue_600</item>
-        <item name="colorOnSurface">@color/afterpay_white_50</item>
+        <item name="colorPrimary">@color/afterpay_blue</item>
+        <item name="colorOnSurface">@color/afterpay_white</item>
     </style>
 
 </resources>

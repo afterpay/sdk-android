@@ -4,13 +4,12 @@
     <style name="Theme.Afterpay.DayNight" parent="Theme.Afterpay" />
 
     <style name="Theme.Afterpay" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/afterpay_blue_700</item>
-        <item name="colorPrimaryVariant">@color/afterpay_blue_800</item>
-        <item name="colorSecondary">@color/afterpay_blue_500</item>
-        <item name="colorSecondaryVariant">@color/afterpay_blue_600</item>
+        <item name="colorPrimary">@color/afterpay_navy</item>
+        <item name="colorPrimaryVariant">@color/afterpay_navy_dark</item>
+        <item name="colorSecondary">@color/afterpay_blue</item>
 
-        <item name="android:statusBarColor">@color/afterpay_blue_800</item>
-        <item name="android:navigationBarColor">@color/afterpay_blue_800</item>
+        <item name="android:statusBarColor">@color/afterpay_navy_dark</item>
+        <item name="android:navigationBarColor">@color/afterpay_navy_dark</item>
     </style>
 
 </resources>
