@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceBody1"
         tools:text="Checkout successful with token:\n1234" />
 
 </FrameLayout>
