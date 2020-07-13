@@ -42,25 +42,7 @@ The initial release of the SDK contains the web login and checkout process with 
 
 ## Getting Started
 
-Include the Afterpay payment button in you layout.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.afterpay.android.view.PayWithAfterpay
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/button_afterpay" />
-
-</FrameLayout>
-```
-
-Launch the Afterpay payment flow from your activity.
+Launch the Afterpay payment flow by starting the intent provided by the SDK for a given checkout URL.
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -71,9 +53,8 @@ class ExampleActivity: Activity {
     override fun onCreate(savedInstanceState: Bundle) {
         // ...
 
-        val payWithAfterpay = findViewById<PayWithAfterpay>(R.id.button_afterpay)
-        payWithAfterpay.totalPrice = cart.totalPrice
-        payWithAfterpay.setOnClickListener {
+        val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
+        afterpayCheckoutButton.setOnClickListener {
             val checkoutUrl = merchantServer.checkoutWithAfterpay(cart)
             val intent = Afterpay.createCheckoutIntent(this, checkoutUrl)
             startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
