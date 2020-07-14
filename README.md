@@ -90,7 +90,7 @@ Contributions are welcome! Please read our [contributing guidelines][contributin
 This project is licensed under the terms of the Apache 2.0 license. See the [LICENSE][license] file for more information.
 
 <!-- Links: -->
-[badge-ci]: https://github.com/afterpay/afterpay-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
+[badge-ci]: https://github.com/afterpay/sdk-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
 [contributing]: CONTRIBUTING.md
 [example]: example

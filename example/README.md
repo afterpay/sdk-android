@@ -43,7 +43,7 @@ The receipt screen displays the transaction token return by the SDK for a succes
 [activity-result]: https://developer.android.com/reference/android/app/Activity#onActivityResult(int,%20int,%20android.content.Intent)
 [kotlin-coroutines]: https://developer.android.com/kotlin/coroutines
 [kotlin-flow]: https://kotlinlang.org/docs/reference/coroutines/flow.html
-[sample-server]: https://github.com/afterpay/afterpay-example-server
-[sample-server-instructions]: https://github.com/afterpay/afterpay-example-server#getting-started
-[sdk-create-checkout]: https://github.com/afterpay/afterpay-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L19
-[sdk-parse-response]: https://github.com/afterpay/afterpay-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L30
+[sample-server]: https://github.com/afterpay/sdk-example-server
+[sample-server-instructions]: https://github.com/afterpay/sdk-example-server#getting-started
+[sdk-create-checkout]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L19
+[sdk-parse-response]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L30

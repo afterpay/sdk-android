@@ -5,7 +5,7 @@ appropriately.
 
 Bug fixes and new features should include tests and documentation.
 
-Contributors guide: https://github.com/afterpay/afterpay-android/blob/master/CONTRIBUTING.md
+Contributors guide: https://github.com/afterpay/sdk-android/blob/master/CONTRIBUTING.md
 -->
 
 ## Summary of Changes
