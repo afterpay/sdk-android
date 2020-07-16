@@ -85,7 +85,7 @@ class CheckoutViewModel(
             CheckoutViewModel(
                 totalCost = totalCost,
                 merchantApi = Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:3000")
+                    .baseUrl("https://10.0.2.2:3001")
                     .addConverterFactory(
                         MoshiConverterFactory.create(
                             Moshi.Builder()
