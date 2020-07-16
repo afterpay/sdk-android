@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <!-- This is the default base configuration for all applications targeting Android 9 (API level 28) or above. -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Enable certificate pinning for the Afterpay portal. This should be included in network_security_config of your application. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">portal.afterpay.com</domain>
+        <pin-set
+            expiration="2022-05-25"
+            tools:ignore="MissingBackupPin">
+            <pin digest="SHA-256">nQ1Tu17lpJ/Hsr3545eCkig+X9ZPcxRQoe5WMSyyqJI=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- The following configuration is only required for the example application. -->
+
+    <!-- Enable certificate pinning for the Afterpay sandbox portal. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="false">portal.sandbox.afterpay.com</domain>
+        <pin-set
+            expiration="2021-07-05"
+            tools:ignore="MissingBackupPin">
+            <pin digest="SHA-256">15mVY9KpcF6J/UzKCS2AfUjUWPVsIvxi9PW0XuFnvH4=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- For local web server. -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">10.0.2.2</domain>
+    </domain-config>
+</network-security-config>
