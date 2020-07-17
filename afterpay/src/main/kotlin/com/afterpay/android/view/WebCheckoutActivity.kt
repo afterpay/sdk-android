@@ -56,8 +56,14 @@ internal class WebCheckoutActivity : AppCompatActivity() {
     }
 
     private fun loadCheckoutUrl() {
-        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
-        webView.loadUrl(checkoutUrl)
+        val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
+        val checkoutUrl = checkNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
+        val url = Uri.parse(checkoutUrl)
+        if (validCheckoutUrls.contains(url.host)) {
+            webView.loadUrl(checkoutUrl)
+        } else {
+            finish(CancellationStatus.INVALID_CHECKOUT_URL)
+        }
     }
 
     private fun open(url: Uri) {
