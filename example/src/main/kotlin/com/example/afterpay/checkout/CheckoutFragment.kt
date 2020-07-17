@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -21,6 +20,7 @@ import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.nav_graph
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
 
@@ -72,7 +72,7 @@ class CheckoutFragment : Fragment() {
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
                     is Command.DisplayError -> {
-                        Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -102,7 +102,7 @@ class CheckoutFragment : Fragment() {
                 val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
                     "A cancelled Afterpay transaction always contains a status"
                 }
-                Toast.makeText(requireContext(), "Cancelled: $status", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
