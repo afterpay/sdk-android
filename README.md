@@ -70,7 +70,8 @@ class ExampleActivity: Activity {
                 Toast.makeText(this, "Success: Completed order $token", Toast.LENGTH_SHORT).show()
             }
             CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()
+                val status = Afterpay.parseCheckoutCancellationResponse(data!!)
+                Toast.makeText(this, "Cancelled: $status", Toast.LENGTH_SHORT).show()
             }
         }
     }

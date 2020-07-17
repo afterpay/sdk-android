@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -21,6 +20,7 @@ import com.afterpay.android.Afterpay
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.nav_graph
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
 
@@ -72,7 +72,7 @@ class CheckoutFragment : Fragment() {
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
                     is Command.DisplayError -> {
-                        Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -84,15 +84,25 @@ class CheckoutFragment : Fragment() {
 
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
-                val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
-                val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
+                val intent = checkNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val token = checkNotNull(Afterpay.parseCheckoutSuccessResponse(intent)) {
+                    "A token is always associated with a successful Afterpay transaction"
+                }
                 findNavController().navigate(
                     nav_graph.action.to_receipt,
                     bundleOf(nav_graph.args.checkout_token to token)
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
-                Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                val intent = requireNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
+                    "A cancelled Afterpay transaction always contains a status"
+                }
+                Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
