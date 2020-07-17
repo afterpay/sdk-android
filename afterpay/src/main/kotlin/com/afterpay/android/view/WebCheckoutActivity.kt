@@ -6,9 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.ViewGroup
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.R
 import com.afterpay.android.util.getCheckoutUrlExtra
@@ -24,13 +26,16 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
-
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
-            webViewClient = AfterpayWebViewClient(openExternalLink = ::open, completed = ::finish)
-            loadUrl(checkoutUrl)
+            webViewClient = AfterpayWebViewClient(
+                openExternalLink = ::open,
+                receivedError = ::handleError,
+                completed = ::finish
+            )
         }
+
+        loadCheckoutUrl()
     }
 
     override fun onDestroy() {
@@ -44,11 +49,36 @@ internal class WebCheckoutActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    private fun loadCheckoutUrl() {
+        val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
+        webView.loadUrl(checkoutUrl)
+    }
+
     private fun open(url: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, url)
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
+    }
+
+    private fun handleError() {
+        // Clear default system error from the web view.
+        webView.loadUrl("about:blank")
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.load_error_title)
+            .setMessage(R.string.load_error_message)
+            .setPositiveButton(R.string.load_error_retry) { dialog, _ ->
+                loadCheckoutUrl()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.load_error_cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .setOnCancelListener {
+                finish(CheckoutStatus.Cancelled)
+            }
+            .show()
     }
 
     private fun finish(status: CheckoutStatus) {
@@ -66,6 +96,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
 
 private class AfterpayWebViewClient(
     private val openExternalLink: (Uri) -> Unit,
+    private val receivedError: () -> Unit,
     private val completed: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
     private val linksToOpenExternally = listOf("privacy-policy", "terms-of-service")
@@ -86,6 +117,16 @@ private class AfterpayWebViewClient(
             }
 
             else -> false
+        }
+    }
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        if (request?.isForMainFrame == true) {
+            receivedError()
         }
     }
 }
