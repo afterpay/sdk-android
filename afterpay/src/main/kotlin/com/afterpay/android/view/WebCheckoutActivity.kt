@@ -12,8 +12,10 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.util.getCheckoutUrlExtra
+import com.afterpay.android.util.putCancellationStatusExtra
 import com.afterpay.android.util.putOrderTokenExtra
 
 internal class WebCheckoutActivity : AppCompatActivity() {
@@ -49,6 +51,10 @@ internal class WebCheckoutActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    override fun onBackPressed() {
+        finish(CancellationStatus.USER_INITIATED)
+    }
+
     private fun loadCheckoutUrl() {
         val checkoutUrl = requireNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
         webView.loadUrl(checkoutUrl)
@@ -76,7 +82,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
                 dialog.cancel()
             }
             .setOnCancelListener {
-                finish(CheckoutStatus.Cancelled)
+                finish(CancellationStatus.USER_INITIATED)
             }
             .show()
     }
@@ -85,11 +91,16 @@ internal class WebCheckoutActivity : AppCompatActivity() {
         when (status) {
             is CheckoutStatus.Success -> {
                 setResult(Activity.RESULT_OK, Intent().putOrderTokenExtra(status.orderToken))
+                finish()
             }
             CheckoutStatus.Cancelled -> {
-                setResult(Activity.RESULT_CANCELED)
+                finish(CancellationStatus.USER_INITIATED)
             }
         }
+    }
+
+    private fun finish(status: CancellationStatus) {
+        setResult(Activity.RESULT_CANCELED, Intent().putCancellationStatusExtra(status))
         finish()
     }
 }

@@ -84,15 +84,25 @@ class CheckoutFragment : Fragment() {
 
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
-                val intent = requireNotNull(data) { "Intent should always be populated by the SDK" }
-                val token = Afterpay.parseCheckoutResponse(intent) ?: error("Should have a token")
+                val intent = checkNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val token = checkNotNull(Afterpay.parseCheckoutSuccessResponse(intent)) {
+                    "A token is always associated with a successful Afterpay transaction"
+                }
                 findNavController().navigate(
                     nav_graph.action.to_receipt,
                     bundleOf(nav_graph.args.checkout_token to token)
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
-                Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                val intent = requireNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
+                    "A cancelled Afterpay transaction always contains a status"
+                }
+                Toast.makeText(requireContext(), "Cancelled: $status", Toast.LENGTH_SHORT).show()
             }
         }
     }
