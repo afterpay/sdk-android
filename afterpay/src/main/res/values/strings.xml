@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="load_error_title">Error</string>
+    <string name="load_error_message">Failed to load Afterpay checkout</string>
+    <string name="load_error_retry">Retry</string>
+    <string name="load_error_cancel">Cancel</string>
+
+</resources>
