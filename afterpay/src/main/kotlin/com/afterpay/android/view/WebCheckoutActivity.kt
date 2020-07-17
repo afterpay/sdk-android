@@ -19,6 +19,10 @@ import com.afterpay.android.util.putCancellationStatusExtra
 import com.afterpay.android.util.putOrderTokenExtra
 
 internal class WebCheckoutActivity : AppCompatActivity() {
+    private companion object {
+        val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
+    }
+
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -56,10 +60,10 @@ internal class WebCheckoutActivity : AppCompatActivity() {
     }
 
     private fun loadCheckoutUrl() {
-        val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
-        val checkoutUrl = checkNotNull(intent.getCheckoutUrlExtra()) { "Checkout URL is missing" }
-        val url = Uri.parse(checkoutUrl)
-        if (validCheckoutUrls.contains(url.host)) {
+        val checkoutUrl = intent.getCheckoutUrlExtra()
+            ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
+
+        if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
             webView.loadUrl(checkoutUrl)
         } else {
             finish(CancellationStatus.INVALID_CHECKOUT_URL)
