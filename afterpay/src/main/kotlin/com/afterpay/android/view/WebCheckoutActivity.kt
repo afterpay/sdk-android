@@ -12,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.BuildConfig
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.util.getCheckoutUrlExtra
@@ -21,6 +22,7 @@ import com.afterpay.android.util.putOrderTokenExtra
 internal class WebCheckoutActivity : AppCompatActivity() {
     private companion object {
         val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
+        const val versionHeader = "${BuildConfig.VERSION_NAME}-android"
     }
 
     private lateinit var webView: WebView
@@ -64,7 +66,7 @@ internal class WebCheckoutActivity : AppCompatActivity() {
             ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
 
         if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
-            webView.loadUrl(checkoutUrl)
+            webView.loadUrl(checkoutUrl, mapOf("X-Afterpay-SDK" to versionHeader))
         } else {
             finish(CancellationStatus.INVALID_CHECKOUT_URL)
         }
