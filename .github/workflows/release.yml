@@ -19,11 +19,17 @@ jobs:
       - name: Remove SNAPSHOT from version
         run: sed -i 's/-SNAPSHOT//g' gradle.properties
 
-      - name: Publish to the Maven Central Repository
-        run: ./gradlew clean afterpay:uploadArchives afterpay:closeAndReleaseRepository --no-daemon --no-parallel
+      - name: Upload archives to the Maven Central Repository
+        run: ./gradlew clean afterpay:uploadArchives --no-daemon --no-parallel
         env:
           SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.PGP_SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.PGP_SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
+
+      - name: Publish release to the Maven Central Repository
+        run: ./gradlew afterpay:closeAndReleaseRepository
+        env:
+          SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
