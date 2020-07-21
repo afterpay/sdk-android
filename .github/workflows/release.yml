@@ -19,8 +19,11 @@ jobs:
       - name: Remove SNAPSHOT from version
         run: sed -i 's/-SNAPSHOT//g' gradle.properties
 
-      - name: Upload archives to the Maven Central Repository
-        run: ./gradlew clean afterpay:uploadArchives --no-daemon --no-parallel
+      - name: Clean repository before building SDK
+        run: ./gradlew clean
+
+      - name: Build and upload archives to the Maven Central Repository
+        run: ./gradlew afterpay:uploadArchives --no-daemon --no-parallel
         env:
           SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
