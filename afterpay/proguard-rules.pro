@@ -1,1 +1,2 @@
 -keep class com.afterpay.android.Afterpay { *; }
+-keep class com.afterpay.android.CancellationStatus { *; }
