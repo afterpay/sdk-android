@@ -1,0 +1,2 @@
+-keep class com.afterpay.android.** { *; }
+-dontwarn com.afterpay.android.**
