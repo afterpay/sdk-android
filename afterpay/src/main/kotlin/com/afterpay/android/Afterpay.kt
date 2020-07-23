@@ -8,6 +8,8 @@ import com.afterpay.android.util.putCheckoutUrlExtra
 import com.afterpay.android.view.WebCheckoutActivity
 
 object Afterpay {
+    internal var configuration: Configuration? = null
+
     /**
      * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the
      * new [Intent] in [startActivityForResult][android.app.Activity.startActivityForResult]
@@ -43,4 +45,14 @@ object Afterpay {
     @JvmStatic
     fun parseCheckoutCancellationResponse(intent: Intent): CancellationStatus? =
         intent.getCancellationStatusExtra()
+
+    /**
+     * Sets the global payment limit configuration for a merchant account.
+     *
+     * @param configuration The merchant account payment limit configuration.
+     */
+    @JvmStatic
+    fun setConfiguration(configuration: Configuration) {
+        this.configuration = configuration
+    }
 }
