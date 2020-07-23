@@ -9,7 +9,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 - [Installation](#installation)
     - [Requirements](#requirements)
     - [Configuration](#configuration)
-    - [Proguard](#proguard)
+    - [ProGuard](#proguard)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Security](#security)
@@ -33,9 +33,11 @@ dependencies {
 }
 ```
 
-### Proguard
+### ProGuard
 
-The Afterpay Android SDK will configure your app's Proguard rules using [`proguard-rules.pro`][proguard-rules].
+If you are using R8 the shrinking and obfuscation rules are included automatically.
+
+Proguard users will need to manually apply the rules defined in [`consumer-rules.pro`][proguard-rules].
 
 ## Features
 
@@ -119,4 +121,4 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [ktlint]: https://ktlint.github.io
 [license]: LICENSE
 [network-config]: https://developer.android.com/training/articles/security-config#CertificatePinning
-[proguard-rules]: afterpay/proguard-rules.pro
+[proguard-rules]: afterpay/consumer-rules.pro
