@@ -29,8 +29,15 @@
         </pin-set>
     </domain-config>
 
-    <!-- For local web server. -->
-    <domain-config cleartextTrafficPermitted="true">
+    <!-- Use self-signed SSL certificate for the local web server. -->
+    <domain-config>
         <domain includeSubdomains="false">10.0.2.2</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/server" />
+        </trust-anchors>
+        <pin-set tools:ignore="MissingBackupPin">
+            <pin digest="SHA-256">X26H4Fk74VAorroA6MAaD6ix8DURyxK2/2vr1GEkOW4=</pin>
+        </pin-set>
     </domain-config>
 </network-security-config>
