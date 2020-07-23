@@ -36,5 +36,8 @@
             <certificates src="system" />
             <certificates src="@raw/server" />
         </trust-anchors>
+        <pin-set tools:ignore="MissingBackupPin">
+            <pin digest="SHA-256">X26H4Fk74VAorroA6MAaD6ix8DURyxK2/2vr1GEkOW4=</pin>
+        </pin-set>
     </domain-config>
 </network-security-config>
