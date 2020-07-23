@@ -12,6 +12,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [Proguard](#proguard)
 - [Features](#features)
 - [Getting Started](#getting-started)
+- [Security](#security)
 - [Examples](#examples)
 - [Contributing](#contributing)
 - [License](#license)
@@ -78,6 +79,26 @@ class ExampleActivity: Activity {
 }
 ```
 
+## Security
+
+To limit the possibility of a man-in-the-middle attack during the checkout process, certificate pinning can be configured for the Afterpay portal. Please refer to the Android [Network Security Configuration][network-config] documentation for more information.
+
+Add the following configuration to your `res/xml/network_security_configuration.xml` to enforce certificate pinning for the Afterpay portal.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config xmlns:tools="http://schemas.android.com/tools">
+    <domain-config cleartextTrafficPermitted="false">
+        <domain>portal.afterpay.com</domain>
+        <pin-set expiration="2022-05-25">
+            <pin digest="SHA-256">nQ1Tu17lpJ/Hsr3545eCkig+X9ZPcxRQoe5WMSyyqJI=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>
+```
+
+> **NOTE:** It is necessary to keep the certificate PINs updated to ensure pinning will not be bypassed beyond the expiry date of the certificate.
+
 ## Examples
 
 The [example project][example] demonstrates how to include an Afterpay payment flow using our prebuilt UI components.
@@ -97,4 +118,5 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [example]: example
 [ktlint]: https://ktlint.github.io
 [license]: LICENSE
+[network-config]: https://developer.android.com/training/articles/security-config#CertificatePinning
 [proguard-rules]: afterpay/proguard-rules.pro
