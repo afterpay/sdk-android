@@ -20,6 +20,7 @@ buildscript {
         'moshi': '1.9.3',
         'okhttp': '4.8.0',
         'retrofit': '2.9.0',
+        'junit': '4.13',
         'ktlint': '0.37.2'
     ]
 
