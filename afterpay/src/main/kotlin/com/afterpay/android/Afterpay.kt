@@ -9,6 +9,7 @@ import com.afterpay.android.util.putCheckoutUrlExtra
 import com.afterpay.android.view.WebCheckoutActivity
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
+import java.math.BigDecimal
 import java.util.Currency
 
 object Afterpay {
@@ -66,6 +67,15 @@ object Afterpay {
             minimumAmount = minimumAmount?.toBigDecimal(),
             maximumAmount = maximumAmount.toBigDecimal(),
             currency = Currency.getInstance(currencyCode)
-        )
+        ).also { configuration ->
+            if (configuration.maximumAmount < BigDecimal.ZERO) {
+                throw IllegalArgumentException("Maximum order amount is invalid")
+            }
+            configuration.minimumAmount?.let { minimumAmount ->
+                if (minimumAmount < BigDecimal.ZERO || minimumAmount > configuration.maximumAmount) {
+                    throw IllegalArgumentException("Minimum order amount is invalid")
+                }
+            }
+        }
     }
 }
