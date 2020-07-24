@@ -2,10 +2,14 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import com.afterpay.android.internal.Configuration
 import com.afterpay.android.util.getCancellationStatusExtra
 import com.afterpay.android.util.getOrderTokenExtra
 import com.afterpay.android.util.putCheckoutUrlExtra
 import com.afterpay.android.view.WebCheckoutActivity
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
+import java.util.Currency
 
 object Afterpay {
     internal var configuration: Configuration? = null
@@ -47,12 +51,21 @@ object Afterpay {
         intent.getCancellationStatusExtra()
 
     /**
-     * Sets the global payment limit configuration for a merchant account.
+     * Sets global payment configuration for the merchant account.
      *
-     * @param configuration The merchant account payment limit configuration.
+     * @param minimumAmount The minimum order amount.
+     * @param maximumAmount The maximum order amount.
+     * @param currencyCode The currency code in ISO 4217 format.
+     *
+     * @throws NumberFormatException if the amount is not a valid representation of a number.
+     * @throws IllegalArgumentException if the currency is not a valid ISO 4217 currency code.
      */
     @JvmStatic
-    fun setConfiguration(configuration: Configuration) {
-        this.configuration = configuration
+    fun setConfiguration(minimumAmount: String?, maximumAmount: String, currencyCode: String) {
+        configuration = Configuration(
+            minimumAmount = minimumAmount?.toBigDecimal(),
+            maximumAmount = maximumAmount.toBigDecimal(),
+            currency = Currency.getInstance(currencyCode)
+        )
     }
 }
