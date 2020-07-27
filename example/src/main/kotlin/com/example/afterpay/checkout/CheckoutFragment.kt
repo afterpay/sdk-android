@@ -65,14 +65,14 @@ class CheckoutFragment : Fragment() {
             }
         }
         lifecycleScope.launchWhenStarted {
-            viewModel.commands().collectLatest { event ->
-                when (event) {
+            viewModel.commands().collectLatest { command ->
+                when (command) {
                     is Command.StartAfterpayCheckout -> {
-                        val intent = Afterpay.createCheckoutIntent(requireContext(), event.url)
+                        val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
                     is Command.DisplayError -> {
-                        Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), command.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
