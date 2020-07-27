@@ -71,11 +71,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cart_totalCostLabel" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.afterpay.android.view.AfterpayButton
         android:id="@+id/cart_button_checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/checkout_with_afterpay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
