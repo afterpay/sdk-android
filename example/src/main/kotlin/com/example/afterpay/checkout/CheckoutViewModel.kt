@@ -3,8 +3,8 @@ package com.example.afterpay.checkout
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
-import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.util.asCurrency
 import com.example.afterpay.util.update
 import com.example.afterpay.util.viewModelFactory
@@ -68,7 +68,7 @@ class CheckoutViewModel(
 
             try {
                 val response = withContext(Dispatchers.IO) {
-                    merchantApi.checkout(MerchantCheckoutRequest(email, amount))
+                    merchantApi.checkout(CheckoutRequest(email, amount))
                 }
                 commandChannel.offer(Command.StartAfterpayCheckout(response.url))
             } catch (error: Exception) {

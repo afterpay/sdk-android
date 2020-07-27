@@ -5,5 +5,5 @@ import retrofit2.http.POST
 
 interface MerchantApi {
     @POST("checkouts")
-    suspend fun checkout(@Body request: MerchantCheckoutRequest): MerchantCheckoutResponse
+    suspend fun checkout(@Body request: CheckoutRequest): CheckoutResponse
 }
