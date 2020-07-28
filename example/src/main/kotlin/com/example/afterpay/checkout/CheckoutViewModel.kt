@@ -8,8 +8,6 @@ import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.util.asCurrency
 import com.example.afterpay.util.update
 import com.example.afterpay.util.viewModelFactory
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -43,15 +39,8 @@ class CheckoutViewModel(
 
     sealed class Command {
         data class StartAfterpayCheckout(val url: String) : Command()
-        data class ApplyAfterpayConfiguration(val configuration: Configuration) : Command()
         data class DisplayError(val message: String) : Command()
     }
-
-    data class Configuration(
-        val minimumAmount: String?,
-        val maximumAmount: String,
-        val currency: String
-    )
 
     private val state = MutableStateFlow(
         State(emailAddress = "", total = totalCost, isLoading = false)
@@ -64,25 +53,6 @@ class CheckoutViewModel(
 
     fun enterEmailAddress(email: String) {
         state.update { copy(emailAddress = email) }
-    }
-
-    fun fetchConfiguration() {
-        viewModelScope.launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    merchantApi.configuration()
-                }
-                val configuration = Configuration(
-                    minimumAmount = response.minimumAmount?.amount,
-                    maximumAmount = response.maximumAmount.amount,
-                    currency = response.maximumAmount.currency
-                )
-                commandChannel.offer(Command.ApplyAfterpayConfiguration(configuration))
-            } catch (error: Exception) {
-                val message = error.message ?: "Failed to fetch configuration"
-                commandChannel.offer(Command.DisplayError(message))
-            }
-        }
     }
 
     fun checkoutWithAfterpay() {
@@ -107,21 +77,8 @@ class CheckoutViewModel(
     }
 
     companion object {
-        fun factory(totalCost: BigDecimal) = viewModelFactory {
-            CheckoutViewModel(
-                totalCost = totalCost,
-                merchantApi = Retrofit.Builder()
-                    .baseUrl("https://10.0.2.2:3001")
-                    .addConverterFactory(
-                        MoshiConverterFactory.create(
-                            Moshi.Builder()
-                                .add(KotlinJsonAdapterFactory())
-                                .build()
-                        )
-                    )
-                    .build()
-                    .create(MerchantApi::class.java)
-            )
+        fun factory(totalCost: BigDecimal, merchantApi: MerchantApi) = viewModelFactory {
+            CheckoutViewModel(totalCost = totalCost, merchantApi = merchantApi)
         }
     }
 }

@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
+import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.nav_graph
@@ -31,7 +32,8 @@ class CheckoutFragment : Fragment() {
 
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
-            totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal)
+            totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal),
+            merchantApi = Dependencies.merchantApi
         )
     }
 
@@ -71,18 +73,11 @@ class CheckoutFragment : Fragment() {
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
-                    is Command.ApplyAfterpayConfiguration -> {
-                        val (minimumAmount, maximumAmount, currency) = command.configuration
-                        Afterpay.setConfiguration(minimumAmount, maximumAmount, currency)
-                    }
                     is Command.DisplayError -> {
                         Snackbar.make(requireView(), command.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
-        }
-        lifecycleScope.launchWhenStarted {
-            viewModel.fetchConfiguration()
         }
     }
 

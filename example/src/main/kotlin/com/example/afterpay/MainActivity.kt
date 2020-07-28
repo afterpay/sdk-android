@@ -4,15 +4,20 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.afterpay.android.Afterpay
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
@@ -61,6 +66,33 @@ class MainActivity : AppCompatActivity() {
             setupWithNavController(navController, AppBarConfiguration(navController.graph))
             setNavigationOnClickListener {
                 onBackPressed()
+            }
+        }
+
+        fetchAfterpayConfiguration()
+    }
+
+    private fun fetchAfterpayConfiguration() {
+        lifecycleScope.launchWhenStarted {
+            try {
+                val configuration = withContext(Dispatchers.IO) {
+                    Dependencies.merchantApi.configuration()
+                }
+                Afterpay.setConfiguration(
+                    minimumAmount = configuration.minimumAmount?.amount,
+                    maximumAmount = configuration.maximumAmount.amount,
+                    currencyCode = configuration.maximumAmount.currency
+                )
+            } catch (_: Exception) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    R.string.configuration_error_message,
+                    Snackbar.LENGTH_INDEFINITE
+                )
+                    .setAction(R.string.configuration_error_action_retry) {
+                        fetchAfterpayConfiguration()
+                    }
+                    .show()
             }
         }
     }
