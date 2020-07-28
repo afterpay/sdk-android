@@ -3,13 +3,11 @@ package com.example.afterpay.checkout
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
-import com.example.afterpay.data.MerchantCheckoutRequest
 import com.example.afterpay.util.asCurrency
 import com.example.afterpay.util.update
 import com.example.afterpay.util.viewModelFactory
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -17,8 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
@@ -68,7 +64,7 @@ class CheckoutViewModel(
 
             try {
                 val response = withContext(Dispatchers.IO) {
-                    merchantApi.checkout(MerchantCheckoutRequest(email, amount))
+                    merchantApi.checkout(CheckoutRequest(email, amount))
                 }
                 commandChannel.offer(Command.StartAfterpayCheckout(response.url))
             } catch (error: Exception) {
@@ -81,21 +77,8 @@ class CheckoutViewModel(
     }
 
     companion object {
-        fun factory(totalCost: BigDecimal) = viewModelFactory {
-            CheckoutViewModel(
-                totalCost = totalCost,
-                merchantApi = Retrofit.Builder()
-                    .baseUrl("https://10.0.2.2:3001")
-                    .addConverterFactory(
-                        MoshiConverterFactory.create(
-                            Moshi.Builder()
-                                .add(KotlinJsonAdapterFactory())
-                                .build()
-                        )
-                    )
-                    .build()
-                    .create(MerchantApi::class.java)
-            )
+        fun factory(totalCost: BigDecimal, merchantApi: MerchantApi) = viewModelFactory {
+            CheckoutViewModel(totalCost = totalCost, merchantApi = merchantApi)
         }
     }
 }
