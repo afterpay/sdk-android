@@ -71,11 +71,18 @@ class CheckoutFragment : Fragment() {
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
+                    is Command.ApplyAfterpayConfiguration -> {
+                        val (minimumAmount, maximumAmount, currency) = command.configuration
+                        Afterpay.setConfiguration(minimumAmount, maximumAmount, currency)
+                    }
                     is Command.DisplayError -> {
                         Snackbar.make(requireView(), command.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
+        }
+        lifecycleScope.launchWhenStarted {
+            viewModel.fetchConfiguration()
         }
     }
 

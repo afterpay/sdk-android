@@ -43,8 +43,15 @@ class CheckoutViewModel(
 
     sealed class Command {
         data class StartAfterpayCheckout(val url: String) : Command()
+        data class ApplyAfterpayConfiguration(val configuration: Configuration) : Command()
         data class DisplayError(val message: String) : Command()
     }
+
+    data class Configuration(
+        val minimumAmount: String?,
+        val maximumAmount: String,
+        val currency: String
+    )
 
     private val state = MutableStateFlow(
         State(emailAddress = "", total = totalCost, isLoading = false)
@@ -57,6 +64,25 @@ class CheckoutViewModel(
 
     fun enterEmailAddress(email: String) {
         state.update { copy(emailAddress = email) }
+    }
+
+    fun fetchConfiguration() {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    merchantApi.configuration()
+                }
+                val configuration = Configuration(
+                    minimumAmount = response.minimumAmount?.amount,
+                    maximumAmount = response.maximumAmount.amount,
+                    currency = response.maximumAmount.currency
+                )
+                commandChannel.offer(Command.ApplyAfterpayConfiguration(configuration))
+            } catch (error: Exception) {
+                val message = error.message ?: "Failed to fetch configuration"
+                commandChannel.offer(Command.DisplayError(message))
+            }
+        }
     }
 
     fun checkoutWithAfterpay() {
