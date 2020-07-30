@@ -99,11 +99,12 @@ class MainActivity : AppCompatActivity() {
                 currencyCode = configuration.currency
             )
         } catch (e: Exception) {
-            Snackbar.make(
-                findViewById(android.R.id.content),
-                R.string.configuration_error_message,
-                Snackbar.LENGTH_INDEFINITE
-            )
+            Snackbar
+                .make(
+                    findViewById(android.R.id.content),
+                    R.string.configuration_error_message,
+                    Snackbar.LENGTH_INDEFINITE
+                )
                 .setAction(R.string.configuration_error_action_retry) {
                     lifecycleScope.launch {
                         applyAfterpayConfiguration()
