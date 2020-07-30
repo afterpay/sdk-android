@@ -12,6 +12,8 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [ProGuard](#proguard)
 - [Features](#features)
 - [Getting Started](#getting-started)
+    - [Configurating the SDK](#configuring-the-sdk)
+    - [Launching the Checkout](launching-the-checkout)
 - [Security](#security)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -45,6 +47,26 @@ The initial release of the SDK contains the web login and checkout process with 
 
 ## Getting Started
 
+### Configuring the SDK
+
+Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
+
+The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API.
+
+```kotlin
+val configuration = api.getConfiguration()
+
+Afterpay.setConfiguration(
+    minimumAmount = configuration.minimum?.amount,
+    maximumAmount = configuration.maximum.amount,
+    currency = configuration.maximum.currency
+)
+```
+
+> **NOTE:** The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
+
+### Launching the Checkout
+
 Launch the Afterpay payment flow by starting the intent provided by the SDK for a given checkout URL.
 
 ```kotlin
@@ -58,7 +80,7 @@ class ExampleActivity: Activity {
 
         val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
         afterpayCheckoutButton.setOnClickListener {
-            val checkoutUrl = merchantServer.checkoutWithAfterpay(cart)
+            val checkoutUrl = api.checkoutWithAfterpay(cart)
             val intent = Afterpay.createCheckoutIntent(this, checkoutUrl)
             startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
         }
@@ -117,7 +139,9 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [badge-ci]: https://github.com/afterpay/sdk-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
 [contributing]: CONTRIBUTING.md
+[docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
 [example]: example
+[example-configuration]: https://github.com/afterpay/sdk-android/blob/master/example/src/main/kotlin/com/example/afterpay/MainActivity.kt#L92-L100
 [ktlint]: https://ktlint.github.io
 [license]: LICENSE
 [network-config]: https://developer.android.com/training/articles/security-config#CertificatePinning

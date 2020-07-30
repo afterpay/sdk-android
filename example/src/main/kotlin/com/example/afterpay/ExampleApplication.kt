@@ -2,6 +2,7 @@ package com.example.afterpay
 
 import android.app.Application
 import android.os.StrictMode
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Suppress("unused")
 class ExampleApplication : Application() {
@@ -24,5 +25,7 @@ class ExampleApplication : Application() {
                     .build()
             )
         }
+
+        AndroidThreeTen.init(this)
     }
 }

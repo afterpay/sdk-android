@@ -12,4 +12,5 @@
     <string name="title_receipt">Receipt</string>
     <string name="configuration_error_message">Failed to fetch Afterpay configuration</string>
     <string name="configuration_error_action_retry">Retry</string>
+    <string name="preferences">com.example.afterpay.preferences</string>
 </resources>

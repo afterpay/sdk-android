@@ -1,5 +1,6 @@
 package com.example.afterpay
 
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,14 +14,26 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.afterpay.android.Afterpay
 import com.example.afterpay.checkout.CheckoutFragment
+import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
+    private val afterpayRepository by lazy {
+        AfterpayRepository(
+            merchantApi = Dependencies.merchantApi,
+            preferences = getSharedPreferences(
+                getString(R.string.preferences),
+                Context.MODE_PRIVATE
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -69,31 +82,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fetchAfterpayConfiguration()
+        lifecycleScope.launchWhenStarted {
+            applyAfterpayConfiguration()
+        }
     }
 
-    private fun fetchAfterpayConfiguration() {
-        lifecycleScope.launchWhenStarted {
-            try {
-                val configuration = withContext(Dispatchers.IO) {
-                    Dependencies.merchantApi.configuration()
-                }
-                Afterpay.setConfiguration(
-                    minimumAmount = configuration.minimumAmount?.amount,
-                    maximumAmount = configuration.maximumAmount.amount,
-                    currencyCode = configuration.maximumAmount.currency
-                )
-            } catch (_: Exception) {
-                Snackbar.make(
+    private suspend fun applyAfterpayConfiguration() {
+        try {
+            val configuration = withContext(Dispatchers.IO) {
+                afterpayRepository.fetchConfiguration()
+            }
+
+            Afterpay.setConfiguration(
+                minimumAmount = configuration.minimumAmount,
+                maximumAmount = configuration.maximumAmount,
+                currencyCode = configuration.currency
+            )
+        } catch (e: Exception) {
+            Snackbar
+                .make(
                     findViewById(android.R.id.content),
                     R.string.configuration_error_message,
                     Snackbar.LENGTH_INDEFINITE
                 )
-                    .setAction(R.string.configuration_error_action_retry) {
-                        fetchAfterpayConfiguration()
+                .setAction(R.string.configuration_error_action_retry) {
+                    lifecycleScope.launch {
+                        applyAfterpayConfiguration()
                     }
-                    .show()
-            }
+                }
+                .show()
         }
     }
 }
