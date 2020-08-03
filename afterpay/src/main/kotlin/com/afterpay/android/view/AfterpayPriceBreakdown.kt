@@ -82,7 +82,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
                 .append(" ")
                 .append(
                     resources.getString(R.string.price_breakdown_info_link),
-                    URLSpan("https://www.afterpay.com"),
+                    URLSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
             contentDescription = resources.getString(R.string.price_breakdown_content_description)
