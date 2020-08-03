@@ -3,8 +3,10 @@
     <string name="checkout_with_afterpay">Checkout with Afterpay</string>
     <string name="example_email_address">email@afterpay.com</string>
     <string name="view_cart">View Cart</string>
-    <string name="add_to_cart_button">Add to Cart</string>
-    <string name="remove_from_cart_button">Remove from Cart</string>
+    <string name="add_to_cart_button">+</string>
+    <string name="add_to_cart_button_content_description">Add to Cart</string>
+    <string name="remove_from_cart_button">-</string>
+    <string name="remove_from_cart_button_content_description">Remove from Cart</string>
     <string name="total_cost">Total Cost</string>
     <string name="email">Email</string>
     <string name="title_shopping">Aftersnack</string>
