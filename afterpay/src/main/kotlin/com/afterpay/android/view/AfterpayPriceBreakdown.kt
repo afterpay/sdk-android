@@ -33,6 +33,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
 
     private val textView: TextView = TextView(context).apply {
         setTextColor(context.resolveColorAttr(android.R.attr.textColorPrimary))
+        setLinkTextColor(context.resolveColorAttr(android.R.attr.textColorSecondary))
         setLineSpacing(0f, 1.2f)
         textSize = 14f
         movementMethod = LinkMovementMethod.getInstance()
