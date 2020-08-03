@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -17,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.view.AfterpayBadge
 import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
@@ -51,7 +51,7 @@ class CheckoutFragment : Fragment() {
             viewModel.enterEmailAddress(email = text.toString())
         }
 
-        val checkoutButton = view.findViewById<Button>(R.id.cart_button_checkout)
+        val checkoutButton = view.findViewById<AfterpayBadge>(R.id.cart_button_checkout)
         checkoutButton.setOnClickListener {
             viewModel.checkoutWithAfterpay()
         }

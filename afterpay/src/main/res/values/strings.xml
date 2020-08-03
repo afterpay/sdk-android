@@ -6,4 +6,6 @@
     <string name="load_error_retry">Retry</string>
     <string name="load_error_cancel">Cancel</string>
 
+    <string name="badge_content_description">After pay</string>
+
 </resources>
