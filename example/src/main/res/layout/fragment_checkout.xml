@@ -72,9 +72,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cart_totalCostLabel" />
 
-    <com.afterpay.android.view.AfterpayBadge
+    <com.afterpay.android.view.AfterpayPaymentButton
         android:id="@+id/cart_button_checkout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
