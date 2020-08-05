@@ -49,6 +49,7 @@
             tools:text="$10.00" />
 
         <com.afterpay.android.view.AfterpayPriceBreakdown
+            android:id="@+id/shopping_afterpayPriceBreakdown"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"

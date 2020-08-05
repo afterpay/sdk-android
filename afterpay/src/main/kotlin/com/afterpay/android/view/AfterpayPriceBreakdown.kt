@@ -19,9 +19,24 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayInstalment
+import java.math.BigDecimal
 
 class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     constructor(context: Context) : this(context, attrs = null)
+
+    private data class Content(
+        val text: String,
+        val description: String
+    )
+
+    var totalCost: BigDecimal = BigDecimal.ZERO
+        set(value) {
+            field = value
+            updateText()
+            invalidate()
+            requestLayout()
+        }
 
     var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
         set(value) {
@@ -75,9 +90,11 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
         }
 
+        val content = generateContent(AfterpayInstalment.of(totalCost))
+
         textView.apply {
             text = SpannableStringBuilder()
-                .append(resources.getString(R.string.price_breakdown_total_cost))
+                .append(content.text)
                 .append(" ")
                 .append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 .append(" ")
@@ -86,8 +103,25 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
                     URLSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
-            contentDescription = resources.getString(R.string.price_breakdown_content_description)
+            contentDescription = content.description
         }
+    }
+
+    private fun generateContent(breakdown: AfterpayInstalment): Content = when (breakdown) {
+        is AfterpayInstalment.Available -> Content(
+            text = String.format(
+                resources.getString(R.string.price_breakdown_total_cost),
+                breakdown.instalmentCost
+            ),
+            description = String.format(
+                resources.getString(R.string.price_breakdown_total_cost_description),
+                breakdown.instalmentCost
+            )
+        )
+        AfterpayInstalment.NoConfiguration -> Content(
+            text = resources.getString(R.string.price_breakdown_no_configuration),
+            description = resources.getString(R.string.price_breakdown_no_configuration_description)
+        )
     }
 }
 

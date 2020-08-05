@@ -57,7 +57,10 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
                 ShoppingItem(product, quantityInCart = summary.quantityOf(product))
             }
 
-        val totalCost: String
+        val totalCost: BigDecimal
+            get() = summary.totalCost
+
+        val totalCostFormatted: String
             get() = summary.totalCost.asCurrency()
 
         val enableCheckoutButton: Boolean
