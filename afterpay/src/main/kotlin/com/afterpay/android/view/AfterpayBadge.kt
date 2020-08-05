@@ -25,7 +25,7 @@ class AfterpayBadge(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         adjustViewBounds = true
         scaleType = ImageView.ScaleType.FIT_CENTER
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, 48.dp).apply {
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
             gravity = Gravity.CENTER
         }
     }
@@ -34,6 +34,7 @@ class AfterpayBadge(context: Context, attrs: AttributeSet?) : FrameLayout(contex
         contentDescription = resources.getString(R.string.badge_content_description)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        minimumWidth = 64.dp
         isFocusable = true
 
         addView(badgeView)
