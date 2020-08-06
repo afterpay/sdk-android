@@ -8,17 +8,14 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
-import android.text.style.URLSpan
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
+import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
 
 class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
@@ -103,7 +100,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
                 append(" ")
                 append(
                     resources.getString(R.string.price_breakdown_info_link),
-                    URLSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
+                    AfterpayInfoSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
             }
@@ -204,13 +201,4 @@ private class CenteredImageSpan(drawable: Drawable) : ImageSpan(drawable) {
         drawable.draw(canvas)
         canvas.restore()
     }
-}
-
-@ColorInt
-private fun Context.resolveColorAttr(@AttrRes colorAttr: Int): Int {
-    val attribute = TypedValue().also {
-        theme.resolveAttribute(colorAttr, it, true)
-    }
-    val colorRes = if (attribute.resourceId != 0) attribute.resourceId else attribute.data
-    return ContextCompat.getColor(this, colorRes)
 }

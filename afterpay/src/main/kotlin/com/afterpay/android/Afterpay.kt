@@ -3,9 +3,9 @@ package com.afterpay.android
 import android.content.Context
 import android.content.Intent
 import com.afterpay.android.internal.Configuration
-import com.afterpay.android.util.getCancellationStatusExtra
-import com.afterpay.android.util.getOrderTokenExtra
-import com.afterpay.android.util.putCheckoutUrlExtra
+import com.afterpay.android.internal.getCancellationStatusExtra
+import com.afterpay.android.internal.getOrderTokenExtra
+import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.view.WebCheckoutActivity
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
