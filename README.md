@@ -14,6 +14,10 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 - [Getting Started](#getting-started)
     - [Configurating the SDK](#configuring-the-sdk)
     - [Launching the Checkout](launching-the-checkout)
+- [UI Components](#ui-components)
+    - [Badge](#badge)
+    - [Pay Now Button](#pay-now-button)
+    - [Price Breakdown](#price-breakdown)
 - [Security](#security)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -103,6 +107,49 @@ class ExampleActivity: Activity {
 }
 ```
 
+## UI Components
+
+### Badge
+
+![Black on Mint badge][badge-black-on-mint] ![Mint on Black badge][badge-mint-on-black] ![White on Black badge][badge-white-on-black] ![Black on White badge][badge-black-on-white]
+
+### Pay Now Button
+
+![Black on Mint pay now button][button-black-on-mint]
+![Mint on Black pay now button][button-mint-on-black]
+![White on Black pay now button][button-white-on-black]
+
+### Price Breakdown
+
+The price breakdown component displays information about Afterpay instalments and handles a number of common configurations.
+
+A total payment amount (represented as a `BigDecimal`) must be programatically set on the component to display Afterpay instalment information.
+
+```kotlin
+val totalAmount: BigDecimal = getTotalAmount()
+
+val paymentBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.priceBreakdown)
+paymentBreakdown.totalAmount = totalAmount
+```
+
+When the breakdown component is assigned a total amount that is valid for the merchant account, the 4 instalment amounts will be displayed.
+
+![Price breakdown Afterpay instalments are available][breakdown-available]
+
+When the total amount is not within the minimum and maximum payment values for the merchant account, the amounts available for Afterpay will be shown in the component.
+
+![Price breakdown Afterpay instalments are unavailable][breakdown-unavailable-min-max]
+
+When no minimum amount is set and the total amount is greater than the maximum payment values for the merchant account, the maximum amount available for Afterpay will be shown in the component.
+
+![Price breakdown Afterpay instalments are unavailable][breakdown-unavailable-max]
+
+When no payment amount has been set or the merchant account configuration has not been applied to the SDK, the component will default to a message stating Afterpay is available.
+
+![Price breakdown no merchant account configuration][breakdown-no-configuration]
+
+The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
+
 ## Security
 
 To limit the possibility of a man-in-the-middle attack during the checkout process, certificate pinning can be configured for the Afterpay portal. Please refer to the Android [Network Security Configuration][network-config] documentation for more information.
@@ -138,6 +185,17 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 <!-- Links: -->
 [badge-ci]: https://github.com/afterpay/sdk-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
+[badge-black-on-mint]: images/badge_black_on_mint.png
+[badge-mint-on-black]: images/badge_mint_on_black.png
+[badge-white-on-black]: images/badge_white_on_black.png
+[badge-black-on-white]: images/badge_black_on_white.png
+[breakdown-available]: images/price_breakdown_available.png
+[breakdown-no-configuration]: images/price_breakdown_no_configuration.png
+[breakdown-unavailable-min-max]: images/price_breakdown_unavailable_min_max.png
+[breakdown-unavailable-max]: images/price_breakdown_unavailable_max.png
+[button-black-on-mint]: images/button_black_on_mint.png
+[button-mint-on-black]: images/button_mint_on_black.png
+[button-white-on-black]: images/button_white_on_black.png
 [contributing]: CONTRIBUTING.md
 [docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
 [example]: example
