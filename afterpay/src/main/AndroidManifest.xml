@@ -6,7 +6,7 @@
 
     <application>
         <activity
-            android:name=".view.WebCheckoutActivity"
+            android:name=".view.AfterpayCheckoutActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/AfterpayDialog" />
         <activity

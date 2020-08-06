@@ -19,7 +19,7 @@ import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
 
-internal class WebCheckoutActivity : AppCompatActivity() {
+internal class AfterpayCheckoutActivity : AppCompatActivity() {
     private companion object {
         val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
         const val versionHeader = "${BuildConfig.VERSION_NAME}-android"
