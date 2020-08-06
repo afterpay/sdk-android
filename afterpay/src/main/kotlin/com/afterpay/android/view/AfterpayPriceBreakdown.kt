@@ -30,7 +30,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         val description: String
     )
 
-    var totalCost: BigDecimal = BigDecimal.ZERO
+    var totalAmount: BigDecimal = BigDecimal.ZERO
         set(value) {
             field = value
             updateText()
@@ -90,7 +90,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
         }
 
-        val instalment = AfterpayInstalment.of(totalCost)
+        val instalment = AfterpayInstalment.of(totalAmount)
         val content = generateContent(instalment)
 
         textView.apply {
@@ -119,11 +119,11 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         is AfterpayInstalment.Available -> Content(
             text = String.format(
                 resources.getString(R.string.price_breakdown_total_cost),
-                breakdown.instalmentCost
+                breakdown.instalmentAmount
             ),
             description = String.format(
                 resources.getString(R.string.price_breakdown_total_cost_description),
-                breakdown.instalmentCost
+                breakdown.instalmentAmount
             )
         )
         is AfterpayInstalment.NotAvailable ->

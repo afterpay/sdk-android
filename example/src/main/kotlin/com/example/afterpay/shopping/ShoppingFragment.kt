@@ -68,7 +68,7 @@ class ShoppingFragment : Fragment() {
                 viewAdapter.submitList(state.shoppingItems)
                 checkoutButton.isEnabled = state.enableCheckoutButton
                 totalCost.text = state.totalCostFormatted
-                afterpayBreakdown.totalCost = state.totalCost
+                afterpayBreakdown.totalAmount = state.totalCost
             }
         }
         lifecycleScope.launchWhenStarted {

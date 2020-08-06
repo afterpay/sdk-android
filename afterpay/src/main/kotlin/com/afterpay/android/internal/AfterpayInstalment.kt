@@ -6,7 +6,9 @@ import java.math.RoundingMode
 import java.text.NumberFormat
 
 internal sealed class AfterpayInstalment {
-    data class Available(val instalmentCost: String) : AfterpayInstalment()
+    data class Available(
+        val instalmentAmount: String
+    ) : AfterpayInstalment()
 
     data class NotAvailable(
         val minimumAmount: String?,
@@ -32,7 +34,7 @@ internal sealed class AfterpayInstalment {
             }
 
             val instalment = (totalCost / 4.toBigDecimal()).setScale(2, RoundingMode.HALF_EVEN)
-            return Available(instalmentCost = currencyFormatter.format(instalment))
+            return Available(instalmentAmount = currencyFormatter.format(instalment))
         }
     }
 }
