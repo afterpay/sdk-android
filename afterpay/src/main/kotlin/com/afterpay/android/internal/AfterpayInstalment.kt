@@ -7,15 +7,30 @@ import java.text.NumberFormat
 
 internal sealed class AfterpayInstalment {
     data class Available(val instalmentCost: String) : AfterpayInstalment()
+
+    data class NotAvailable(
+        val minimumAmount: String?,
+        val maximumAmount: String
+    ) : AfterpayInstalment()
+
     object NoConfiguration : AfterpayInstalment()
 
     companion object {
         fun of(totalCost: BigDecimal): AfterpayInstalment {
-            val currency = Afterpay.configuration?.currency ?: return NoConfiguration
+            val configuration = Afterpay.configuration ?: return NoConfiguration
 
             val currencyFormatter = NumberFormat.getCurrencyInstance().apply {
-                this.currency = currency
+                currency = configuration.currency
             }
+
+            val minimumAmount = configuration.minimumAmount ?: BigDecimal.ZERO
+            if (totalCost < minimumAmount || totalCost > configuration.maximumAmount) {
+                return NotAvailable(
+                    minimumAmount = configuration.minimumAmount.let(currencyFormatter::format),
+                    maximumAmount = currencyFormatter.format(configuration.maximumAmount)
+                )
+            }
+
             val instalment = (totalCost / 4.toBigDecimal()).setScale(2, RoundingMode.HALF_EVEN)
             return Available(instalmentCost = currencyFormatter.format(instalment))
         }
