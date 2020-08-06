@@ -115,46 +115,48 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         }
     }
 
-    private fun generateContent(breakdown: AfterpayInstalment): Content = when (breakdown) {
-        is AfterpayInstalment.Available -> Content(
-            text = String.format(
-                resources.getString(R.string.price_breakdown_total_cost),
-                breakdown.instalmentAmount
-            ),
-            description = String.format(
-                resources.getString(R.string.price_breakdown_total_cost_description),
-                breakdown.instalmentAmount
+    private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
+        is AfterpayInstalment.Available ->
+            Content(
+                text = String.format(
+                    resources.getString(R.string.price_breakdown_total_cost),
+                    afterpay.instalmentAmount
+                ),
+                description = String.format(
+                    resources.getString(R.string.price_breakdown_total_cost_description),
+                    afterpay.instalmentAmount
+                )
             )
-        )
         is AfterpayInstalment.NotAvailable ->
-            if (breakdown.minimumAmount != null)
+            if (afterpay.minimumAmount != null)
                 Content(
                     text = String.format(
                         resources.getString(R.string.price_breakdown_limit),
-                        breakdown.minimumAmount,
-                        breakdown.maximumAmount
+                        afterpay.minimumAmount,
+                        afterpay.maximumAmount
                     ),
                     description = String.format(
                         resources.getString(R.string.price_breakdown_limit_description),
-                        breakdown.minimumAmount,
-                        breakdown.maximumAmount
+                        afterpay.minimumAmount,
+                        afterpay.maximumAmount
                     )
                 )
             else
                 Content(
                     text = String.format(
                         resources.getString(R.string.price_breakdown_upper_limit),
-                        breakdown.maximumAmount
+                        afterpay.maximumAmount
                     ),
                     description = String.format(
                         resources.getString(R.string.price_breakdown_upper_limit_description),
-                        breakdown.maximumAmount
+                        afterpay.maximumAmount
                     )
                 )
-        AfterpayInstalment.NoConfiguration -> Content(
-            text = resources.getString(R.string.price_breakdown_no_configuration),
-            description = resources.getString(R.string.price_breakdown_no_configuration_description)
-        )
+        AfterpayInstalment.NoConfiguration ->
+            Content(
+                text = resources.getString(R.string.price_breakdown_no_configuration),
+                description = resources.getString(R.string.price_breakdown_no_configuration_description)
+            )
     }
 }
 
