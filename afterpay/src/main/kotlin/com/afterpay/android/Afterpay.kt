@@ -3,6 +3,7 @@ package com.afterpay.android
 import android.content.Context
 import android.content.Intent
 import com.afterpay.android.internal.Configuration
+import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
@@ -14,6 +15,13 @@ import java.util.Currency
 
 object Afterpay {
     internal var configuration: Configuration? = null
+        private set(value) {
+            val hasUpdatedConfiguration = field != value
+            field = value
+            if (hasUpdatedConfiguration) {
+                ConfigurationObservable.configurationChanged(value)
+            }
+        }
 
     /**
      * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the

@@ -15,8 +15,10 @@ import android.widget.TextView
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
+import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
+import java.util.Observer
 
 class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     constructor(context: Context) : this(context, attrs = null)
@@ -67,6 +69,22 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             }
 
         updateText()
+    }
+
+    private val configurationObserver = Observer { _, _ ->
+        updateText()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        ConfigurationObservable.addObserver(configurationObserver)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+
+        ConfigurationObservable.deleteObserver(configurationObserver)
     }
 
     private fun updateText() {
