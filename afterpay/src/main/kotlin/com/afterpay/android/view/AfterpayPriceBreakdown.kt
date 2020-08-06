@@ -30,16 +30,12 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         set(value) {
             field = value
             updateText()
-            invalidate()
-            requestLayout()
         }
 
     var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
         set(value) {
             field = value
             updateText()
-            invalidate()
-            requestLayout()
         }
 
     private val textView: TextView = TextView(context).apply {
