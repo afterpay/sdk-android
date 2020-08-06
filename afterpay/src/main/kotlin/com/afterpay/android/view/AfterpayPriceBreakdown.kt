@@ -11,7 +11,6 @@ import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -52,11 +51,8 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         setLineSpacing(0f, 1.2f)
         textSize = 14f
         movementMethod = LinkMovementMethod.getInstance()
-        gravity = Gravity.CENTER
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-            gravity = Gravity.CENTER
-        }
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
     init {
