@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.example.afterpay.R
 import com.example.afterpay.data.Product
 import com.example.afterpay.nav_graph
@@ -60,12 +61,14 @@ class ShoppingFragment : Fragment() {
         }
 
         val totalCost = view.findViewById<TextView>(R.id.shopping_totalCost)
+        val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
 
         lifecycleScope.launchWhenCreated {
             viewModel.state.collectLatest { state ->
                 viewAdapter.submitList(state.shoppingItems)
                 checkoutButton.isEnabled = state.enableCheckoutButton
-                totalCost.text = state.totalCost
+                totalCost.text = state.totalCostFormatted
+                afterpayBreakdown.totalAmount = state.totalCost
             }
         }
         lifecycleScope.launchWhenStarted {

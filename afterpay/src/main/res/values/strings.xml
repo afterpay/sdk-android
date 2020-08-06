@@ -8,9 +8,15 @@
 
     <string name="badge_content_description">After pay</string>
 
-    <string name="price_breakdown_total_cost">or 4 payments of $40.00 with</string>
+    <string name="price_breakdown_total_cost">or 4 payments of %1$s with</string>
+    <string name="price_breakdown_total_cost_description">Or four payments of %1$s with After pay.</string>
+    <string name="price_breakdown_limit">is available between %1$s–%2$s.</string>
+    <string name="price_breakdown_limit_description">After pay is available between %1$s–%2$s.</string>
+    <string name="price_breakdown_upper_limit">is available under %1$s.</string>
+    <string name="price_breakdown_upper_limit_description">After pay is available under %1$s.</string>
+    <string name="price_breakdown_no_configuration">or pay with</string>
+    <string name="price_breakdown_no_configuration_description">Or pay with After pay.</string>
     <string name="price_breakdown_info_link">Info</string>
-    <string name="price_breakdown_content_description">Or four payments of $40.00 with Afterpay.</string>
 
     <string name="payment_button_content_description">Pay now with After pay</string>
 

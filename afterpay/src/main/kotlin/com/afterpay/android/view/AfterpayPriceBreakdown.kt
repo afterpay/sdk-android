@@ -11,7 +11,6 @@ import android.text.style.ImageSpan
 import android.text.style.URLSpan
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -19,9 +18,24 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayInstalment
+import java.math.BigDecimal
 
 class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     constructor(context: Context) : this(context, attrs = null)
+
+    private data class Content(
+        val text: String,
+        val description: String
+    )
+
+    var totalAmount: BigDecimal = BigDecimal.ZERO
+        set(value) {
+            field = value
+            updateText()
+            invalidate()
+            requestLayout()
+        }
 
     var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
         set(value) {
@@ -37,11 +51,8 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         setLineSpacing(0f, 1.2f)
         textSize = 14f
         movementMethod = LinkMovementMethod.getInstance()
-        gravity = Gravity.CENTER
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-            gravity = Gravity.CENTER
-        }
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
     init {
@@ -75,19 +86,73 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
         }
 
+        val instalment = AfterpayInstalment.of(totalAmount)
+        val content = generateContent(instalment)
+
         textView.apply {
-            text = SpannableStringBuilder()
-                .append(resources.getString(R.string.price_breakdown_total_cost))
-                .append(" ")
-                .append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                .append(" ")
-                .append(
+            text = SpannableStringBuilder().apply {
+                if (instalment is AfterpayInstalment.NotAvailable) {
+                    append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    append(" ")
+                    append(content.text)
+                } else {
+                    append(content.text)
+                    append(" ")
+                    append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                }
+                append(" ")
+                append(
                     resources.getString(R.string.price_breakdown_info_link),
                     URLSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
-            contentDescription = resources.getString(R.string.price_breakdown_content_description)
+            }
+            contentDescription = content.description
         }
+    }
+
+    private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
+        is AfterpayInstalment.Available ->
+            Content(
+                text = String.format(
+                    resources.getString(R.string.price_breakdown_total_cost),
+                    afterpay.instalmentAmount
+                ),
+                description = String.format(
+                    resources.getString(R.string.price_breakdown_total_cost_description),
+                    afterpay.instalmentAmount
+                )
+            )
+        is AfterpayInstalment.NotAvailable ->
+            if (afterpay.minimumAmount != null)
+                Content(
+                    text = String.format(
+                        resources.getString(R.string.price_breakdown_limit),
+                        afterpay.minimumAmount,
+                        afterpay.maximumAmount
+                    ),
+                    description = String.format(
+                        resources.getString(R.string.price_breakdown_limit_description),
+                        afterpay.minimumAmount,
+                        afterpay.maximumAmount
+                    )
+                )
+            else
+                Content(
+                    text = String.format(
+                        resources.getString(R.string.price_breakdown_upper_limit),
+                        afterpay.maximumAmount
+                    ),
+                    description = String.format(
+                        resources.getString(R.string.price_breakdown_upper_limit_description),
+                        afterpay.maximumAmount
+                    )
+                )
+        AfterpayInstalment.NoConfiguration ->
+            Content(
+                text = resources.getString(R.string.price_breakdown_no_configuration),
+                description = resources.getString(R.string.price_breakdown_no_configuration_description)
+            )
     }
 }
 
