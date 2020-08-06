@@ -12,4 +12,6 @@
     <string name="price_breakdown_info_link">Info</string>
     <string name="price_breakdown_content_description">Or four payments of $40.00 with Afterpay.</string>
 
+    <string name="payment_button_content_description">Pay now with After pay</string>
+
 </resources>

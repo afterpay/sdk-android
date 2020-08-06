@@ -16,7 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
-import com.afterpay.android.view.AfterpayBadge
+import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
@@ -51,7 +51,7 @@ class CheckoutFragment : Fragment() {
             viewModel.enterEmailAddress(email = text.toString())
         }
 
-        val checkoutButton = view.findViewById<AfterpayBadge>(R.id.cart_button_checkout)
+        val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
         checkoutButton.setOnClickListener {
             viewModel.checkoutWithAfterpay()
         }
