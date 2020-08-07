@@ -12,16 +12,15 @@ import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.util.Currency
+import kotlin.properties.Delegates.observable
 
 object Afterpay {
-    internal var configuration: Configuration? = null
-        private set(value) {
-            val hasUpdatedConfiguration = field != value
-            field = value
-            if (hasUpdatedConfiguration) {
-                ConfigurationObservable.configurationChanged(value)
-            }
+    internal var configuration by observable<Configuration?>(initialValue = null) { _, old, new ->
+        if (new != old) {
+            ConfigurationObservable.configurationChanged(new)
         }
+    }
+        private set
 
     /**
      * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the
