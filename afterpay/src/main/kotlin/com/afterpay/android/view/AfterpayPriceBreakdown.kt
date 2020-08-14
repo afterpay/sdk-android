@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
@@ -49,6 +50,16 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
+
+    // The terms and conditions are currently strongly tied to the configuration currency however
+    // this may change in the future to enable accounts paying in a foreign currency
+    private val infoUrl: String
+        get() = when (Afterpay.configuration?.currency?.currencyCode) {
+            "AUD" -> "https://static-us.afterpay.com/javascript/modal/au_rebrand_modal.html"
+            "NZD" -> "https://static-us.afterpay.com/javascript/modal/nz_rebrand_modal.html"
+            "CAD" -> "https://static-us.afterpay.com/javascript/modal/ca_rebrand_modal.html"
+            else -> "https://static-us.afterpay.com/javascript/modal/us_rebrand_modal.html"
+        }
 
     init {
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -114,7 +125,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
                 append(" ")
                 append(
                     resources.getString(R.string.price_breakdown_info_link),
-                    AfterpayInfoSpan("https://static-us.afterpay.com/javascript/modal/us_modal.html"),
+                    AfterpayInfoSpan(infoUrl),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
             }
