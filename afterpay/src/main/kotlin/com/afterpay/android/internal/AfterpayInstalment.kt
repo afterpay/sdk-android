@@ -3,6 +3,7 @@ package com.afterpay.android.internal
 import com.afterpay.android.Afterpay
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.NumberFormat
 
 internal sealed class AfterpayInstalment {
@@ -21,8 +22,16 @@ internal sealed class AfterpayInstalment {
         fun of(totalCost: BigDecimal): AfterpayInstalment {
             val configuration = Afterpay.configuration ?: return NoConfiguration
 
-            val currencyFormatter = NumberFormat.getCurrencyInstance().apply {
+            val currencyFormatter = (NumberFormat.getCurrencyInstance() as DecimalFormat).apply {
                 currency = configuration.currency
+                decimalFormatSymbols = decimalFormatSymbols.apply {
+                    currencySymbol = when (configuration.currency.currencyCode) {
+                        "AUD" -> "A$"
+                        "NZD" -> "NZ$"
+                        "CAD" -> "CA$"
+                        else -> "$"
+                    }
+                }
             }
 
             val minimumAmount = configuration.minimumAmount ?: BigDecimal.ZERO
