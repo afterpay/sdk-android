@@ -22,18 +22,16 @@ internal sealed class AfterpayInstalment {
         fun of(totalCost: BigDecimal): AfterpayInstalment {
             val configuration = Afterpay.configuration ?: return NoConfiguration
 
-            val currencyFormatter = NumberFormat.getCurrencyInstance().apply {
+            val currencyFormatter = (NumberFormat.getCurrencyInstance() as DecimalFormat).apply {
                 currency = configuration.currency
-
-                val symbols = (this as DecimalFormat).decimalFormatSymbols
-                symbols.currencySymbol = when (configuration.currency.currencyCode) {
-                    "AUD" -> "A$"
-                    "NZD" -> "NZ$"
-                    "CAD" -> "CA$"
-                    else -> "$"
+                decimalFormatSymbols = decimalFormatSymbols.apply {
+                    currencySymbol = when (configuration.currency.currencyCode) {
+                        "AUD" -> "A$"
+                        "NZD" -> "NZ$"
+                        "CAD" -> "CA$"
+                        else -> "$"
+                    }
                 }
-
-                decimalFormatSymbols = symbols
             }
 
             val minimumAmount = configuration.minimumAmount ?: BigDecimal.ZERO
