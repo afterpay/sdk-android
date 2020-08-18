@@ -35,7 +35,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ```gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:1.0.2'
+    implementation 'com.afterpay:afterpay-android:1.1.0'
 }
 ```
 
