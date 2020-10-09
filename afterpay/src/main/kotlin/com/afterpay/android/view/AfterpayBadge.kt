@@ -31,7 +31,7 @@ class AfterpayBadge(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     }
 
     init {
-        contentDescription = resources.getString(R.string.badge_content_description)
+        contentDescription = resources.getString(R.string.afterpay_badge_content_description)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         minimumWidth = 64.dp

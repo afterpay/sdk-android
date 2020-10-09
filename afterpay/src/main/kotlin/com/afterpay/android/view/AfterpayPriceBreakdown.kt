@@ -124,7 +124,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
                 }
                 append(" ")
                 append(
-                    resources.getString(R.string.price_breakdown_info_link),
+                    resources.getString(R.string.afterpay_price_breakdown_info_link),
                     AfterpayInfoSpan(infoUrl),
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
@@ -137,11 +137,11 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         is AfterpayInstalment.Available ->
             Content(
                 text = String.format(
-                    resources.getString(R.string.price_breakdown_total_cost),
+                    resources.getString(R.string.afterpay_price_breakdown_total_cost),
                     afterpay.instalmentAmount
                 ),
                 description = String.format(
-                    resources.getString(R.string.price_breakdown_total_cost_description),
+                    resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
                     afterpay.instalmentAmount
                 )
             )
@@ -149,12 +149,12 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             if (afterpay.minimumAmount != null)
                 Content(
                     text = String.format(
-                        resources.getString(R.string.price_breakdown_limit),
+                        resources.getString(R.string.afterpay_price_breakdown_limit),
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
                     ),
                     description = String.format(
-                        resources.getString(R.string.price_breakdown_limit_description),
+                        resources.getString(R.string.afterpay_price_breakdown_limit_description),
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
                     )
@@ -162,18 +162,18 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             else
                 Content(
                     text = String.format(
-                        resources.getString(R.string.price_breakdown_upper_limit),
+                        resources.getString(R.string.afterpay_price_breakdown_upper_limit),
                         afterpay.maximumAmount
                     ),
                     description = String.format(
-                        resources.getString(R.string.price_breakdown_upper_limit_description),
+                        resources.getString(R.string.afterpay_price_breakdown_upper_limit_description),
                         afterpay.maximumAmount
                     )
                 )
         AfterpayInstalment.NoConfiguration ->
             Content(
-                text = resources.getString(R.string.price_breakdown_no_configuration),
-                description = resources.getString(R.string.price_breakdown_no_configuration_description)
+                text = resources.getString(R.string.afterpay_price_breakdown_no_configuration),
+                description = resources.getString(R.string.afterpay_price_breakdown_no_configuration_description)
             )
     }
 }

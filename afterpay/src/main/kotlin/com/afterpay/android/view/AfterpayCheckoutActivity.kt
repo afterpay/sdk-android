@@ -84,13 +84,13 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         webView.loadUrl("about:blank")
 
         AlertDialog.Builder(this)
-            .setTitle(R.string.load_error_title)
-            .setMessage(R.string.load_error_message)
-            .setPositiveButton(R.string.load_error_retry) { dialog, _ ->
+            .setTitle(R.string.afterpay_load_error_title)
+            .setMessage(R.string.afterpay_load_error_message)
+            .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
                 loadCheckoutUrl()
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.load_error_cancel) { dialog, _ ->
+            .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
                 dialog.cancel()
             }
             .setOnCancelListener {

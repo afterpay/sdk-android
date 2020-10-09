@@ -20,7 +20,7 @@ class AfterpayPaymentButton(
         }
 
     init {
-        contentDescription = resources.getString(R.string.payment_button_content_description)
+        contentDescription = resources.getString(R.string.afterpay_payment_button_content_description)
         adjustViewBounds = true
         background = null
 
