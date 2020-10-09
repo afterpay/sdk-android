@@ -26,7 +26,7 @@ class AfterpayPaymentButton(
 
         context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).apply {
             try {
-                val value = getInteger(R.styleable.Afterpay_colorScheme, 0)
+                val value = getInteger(R.styleable.Afterpay_afterpayColorScheme, 0)
                 colorScheme = AfterpayColorScheme.values()[value]
             } finally {
                 recycle()
