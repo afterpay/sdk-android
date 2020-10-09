@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Afterpay">
-        <attr name="colorScheme" format="enum">
+        <attr name="afterpayColorScheme" format="enum">
             <enum name="blackOnMint" value="0" />
             <enum name="mintOnBlack" value="1" />
             <enum name="whiteOnBlack" value="2" />

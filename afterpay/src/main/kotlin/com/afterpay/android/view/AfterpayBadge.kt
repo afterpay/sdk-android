@@ -31,7 +31,7 @@ class AfterpayBadge(context: Context, attrs: AttributeSet?) : FrameLayout(contex
     }
 
     init {
-        contentDescription = resources.getString(R.string.badge_content_description)
+        contentDescription = resources.getString(R.string.afterpay_badge_content_description)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         minimumWidth = 64.dp
@@ -41,7 +41,7 @@ class AfterpayBadge(context: Context, attrs: AttributeSet?) : FrameLayout(contex
 
         context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).apply {
             try {
-                val value = getInteger(R.styleable.Afterpay_colorScheme, 0)
+                val value = getInteger(R.styleable.Afterpay_afterpayColorScheme, 0)
                 colorScheme = AfterpayColorScheme.values()[value]
             } finally {
                 recycle()

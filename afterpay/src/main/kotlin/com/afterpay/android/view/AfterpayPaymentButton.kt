@@ -20,13 +20,13 @@ class AfterpayPaymentButton(
         }
 
     init {
-        contentDescription = resources.getString(R.string.payment_button_content_description)
+        contentDescription = resources.getString(R.string.afterpay_payment_button_content_description)
         adjustViewBounds = true
         background = null
 
         context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).apply {
             try {
-                val value = getInteger(R.styleable.Afterpay_colorScheme, 0)
+                val value = getInteger(R.styleable.Afterpay_afterpayColorScheme, 0)
                 colorScheme = AfterpayColorScheme.values()[value]
             } finally {
                 recycle()
