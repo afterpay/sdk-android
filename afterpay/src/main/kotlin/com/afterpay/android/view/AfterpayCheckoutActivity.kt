@@ -22,7 +22,7 @@ import com.afterpay.android.internal.putOrderTokenExtra
 internal class AfterpayCheckoutActivity : AppCompatActivity() {
     private companion object {
         val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
-        const val versionHeader = "${BuildConfig.VERSION_NAME}-android"
+        const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
     }
 
     private lateinit var webView: WebView
