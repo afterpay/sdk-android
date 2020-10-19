@@ -20,8 +20,16 @@ import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
 
 internal class AfterpayCheckoutActivity : AppCompatActivity() {
+
     private companion object {
-        val validCheckoutUrls = listOf("portal.afterpay.com", "portal.sandbox.afterpay.com")
+
+        val validCheckoutUrls = listOf(
+            "portal.afterpay.com",
+            "portal.sandbox.afterpay.com",
+            "portal.clearpay.co.uk",
+            "portal.sandbox.clearpay.co.uk"
+        )
+
         const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
     }
 
