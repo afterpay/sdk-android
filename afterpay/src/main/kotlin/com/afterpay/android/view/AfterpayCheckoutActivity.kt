@@ -31,7 +31,6 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         )
 
         const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
-
     }
 
     private lateinit var webView: WebView
