@@ -4,6 +4,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
+import java.util.Locale
 
 class AfterpayTest {
     @Test
@@ -11,7 +12,8 @@ class AfterpayTest {
         Afterpay.setConfiguration(
             minimumAmount = "10.00",
             maximumAmount = "100.00",
-            currencyCode = "AUD"
+            currencyCode = "AUD",
+            locale = Locale.US
         )
     }
 
@@ -20,7 +22,8 @@ class AfterpayTest {
         Afterpay.setConfiguration(
             minimumAmount = null,
             maximumAmount = "100.00",
-            currencyCode = "AUD"
+            currencyCode = "AUD",
+            locale = Locale.US
         )
     }
 
@@ -30,7 +33,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = "10.00",
                 maximumAmount = "100.00",
-                currencyCode = "foo"
+                currencyCode = "foo",
+                locale = Locale.US
             )
         }
     }
@@ -41,7 +45,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = "foo",
                 maximumAmount = "100.00",
-                currencyCode = "AUD"
+                currencyCode = "AUD",
+                locale = Locale.US
             )
         }
     }
@@ -52,7 +57,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = "10.00",
                 maximumAmount = "foo",
-                currencyCode = "AUD"
+                currencyCode = "AUD",
+                locale = Locale.US
             )
         }
     }
@@ -63,7 +69,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = "-10.00",
                 maximumAmount = "100.00",
-                currencyCode = "AUD"
+                currencyCode = "AUD",
+                locale = Locale.US
             )
         }
     }
@@ -74,7 +81,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = "110.00",
                 maximumAmount = "100.00",
-                currencyCode = "AUD"
+                currencyCode = "AUD",
+                locale = Locale.US
             )
         }
     }
@@ -85,7 +93,8 @@ class AfterpayTest {
             Afterpay.setConfiguration(
                 minimumAmount = null,
                 maximumAmount = "-2.00",
-                currencyCode = "AUD"
+                currencyCode = "AUD",
+                locale = Locale.US
             )
         }
     }

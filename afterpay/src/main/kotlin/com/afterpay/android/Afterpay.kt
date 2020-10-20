@@ -12,6 +12,7 @@ import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.util.Currency
+import java.util.Locale
 import kotlin.properties.Delegates.observable
 
 object Afterpay {
@@ -69,11 +70,17 @@ object Afterpay {
      * @throws IllegalArgumentException if the currency is not a valid ISO 4217 currency code.
      */
     @JvmStatic
-    fun setConfiguration(minimumAmount: String?, maximumAmount: String, currencyCode: String) {
+    fun setConfiguration(
+        minimumAmount: String?,
+        maximumAmount: String,
+        currencyCode: String,
+        locale: Locale
+    ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),
             maximumAmount = maximumAmount.toBigDecimal(),
-            currency = Currency.getInstance(currencyCode)
+            currency = Currency.getInstance(currencyCode),
+            locale = locale.clone() as Locale
         ).also { configuration ->
             if (configuration.maximumAmount < BigDecimal.ZERO) {
                 throw IllegalArgumentException("Maximum order amount is invalid")
