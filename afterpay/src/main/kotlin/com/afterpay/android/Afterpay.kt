@@ -65,6 +65,7 @@ object Afterpay {
      * @param minimumAmount The minimum order amount.
      * @param maximumAmount The maximum order amount.
      * @param currencyCode The currency code in ISO 4217 format.
+     * @param locale The locale of the merchant for terms and conditions and currency formatting.
      *
      * @throws NumberFormatException if the amount is not a valid representation of a number.
      * @throws IllegalArgumentException if the currency is not a valid ISO 4217 currency code.
