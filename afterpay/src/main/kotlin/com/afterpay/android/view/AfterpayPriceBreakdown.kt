@@ -55,8 +55,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
     // The terms and conditions are tied to the configured locale on the configuration
     private val infoUrl: String
         get() {
-            val locale = Afterpay.configuration?.locale ?: Locale.US
-            val country = locale.country.toLowerCase(Locale.ROOT)
+            val country = Afterpay.locale.country.toLowerCase(Locale.ROOT)
             return "https://static-us.afterpay.com/javascript/modal/${country}_rebrand_modal.html"
         }
 

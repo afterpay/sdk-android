@@ -24,6 +24,9 @@ object Afterpay {
     }
         private set
 
+    internal val locale: Locale
+        get() = configuration?.locale ?: Locales.US
+
     private val validLocaleCountries = setOf(
         Locales.AUSTRALIA.country,
         Locales.CANADA.country,

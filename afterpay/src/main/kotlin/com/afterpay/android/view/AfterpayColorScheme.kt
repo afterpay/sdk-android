@@ -15,11 +15,8 @@ enum class AfterpayColorScheme {
     }
 }
 
-private val locale: Locale
-    get() = Afterpay.configuration?.locale ?: Locale.US
-
 internal val AfterpayColorScheme.badgeDrawable: Int
-    get() = if (locale == Locale.UK) {
+    get() = if (Afterpay.locale == Locale.UK) {
         when (this) {
             AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.clearpay_badge_black_on_mint
             AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.clearpay_badge_mint_on_black
@@ -36,7 +33,7 @@ internal val AfterpayColorScheme.badgeDrawable: Int
     }
 
 internal val AfterpayColorScheme.payNowButtonDrawable: Int
-    get() = if (locale == Locale.UK) {
+    get() = if (Afterpay.locale == Locale.UK) {
         when (this) {
             AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.clearpay_button_pay_now_black_on_mint
             AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.clearpay_button_pay_now_mint_on_black
