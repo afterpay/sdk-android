@@ -107,7 +107,7 @@ object Afterpay {
             if (!validLocaleCountries.contains(configuration.locale.country)) {
                 throw IllegalArgumentException(
                     "Locale contains an unsupported country: ${configuration.locale.country}. " +
-                    "Supported countries include: ${validLocaleCountries.joinToString(",")}"
+                        "Supported countries include: ${validLocaleCountries.joinToString(",")}"
                 )
             }
         }

@@ -9,5 +9,4 @@ object Locales {
     val NEW_ZEALAND = Locale("en", "NZ")
     val UK = Locale.UK
     val US = Locale.US
-
 }
