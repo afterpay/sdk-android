@@ -19,6 +19,7 @@ import com.afterpay.android.internal.AfterpayInstalment
 import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
+import java.util.Locale
 import java.util.Observer
 
 class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
@@ -51,14 +52,11 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
     }
 
-    // The terms and conditions are currently strongly tied to the configuration currency however
-    // this may change in the future to enable accounts paying in a foreign currency
+    // The terms and conditions are tied to the configured locale on the configuration
     private val infoUrl: String
-        get() = when (Afterpay.configuration?.currency?.currencyCode) {
-            "AUD" -> "https://static-us.afterpay.com/javascript/modal/au_rebrand_modal.html"
-            "NZD" -> "https://static-us.afterpay.com/javascript/modal/nz_rebrand_modal.html"
-            "CAD" -> "https://static-us.afterpay.com/javascript/modal/ca_rebrand_modal.html"
-            else -> "https://static-us.afterpay.com/javascript/modal/us_rebrand_modal.html"
+        get() {
+            val country = Afterpay.locale.country.toLowerCase(Locale.ROOT)
+            return "https://static-us.afterpay.com/javascript/modal/${country}_rebrand_modal.html"
         }
 
     init {

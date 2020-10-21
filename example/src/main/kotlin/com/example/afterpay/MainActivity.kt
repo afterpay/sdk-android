@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
@@ -96,7 +97,8 @@ class MainActivity : AppCompatActivity() {
             Afterpay.setConfiguration(
                 minimumAmount = configuration.minimumAmount,
                 maximumAmount = configuration.maximumAmount,
-                currencyCode = configuration.currency
+                currencyCode = configuration.currency,
+                locale = Locale.US
             )
         } catch (e: Exception) {
             Snackbar
