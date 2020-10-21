@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.afterpay.android.internal.Configuration
 import com.afterpay.android.internal.ConfigurationObservable
+import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
@@ -24,11 +25,11 @@ object Afterpay {
         private set
 
     private val validLocaleCountries = setOf(
-        Locale("en", "AU").country,
-        Locale.CANADA.country,
-        Locale.UK.country,
-        Locale("en", "NZ").country,
-        Locale.US.country
+        Locales.AUSTRALIA.country,
+        Locales.CANADA.country,
+        Locales.UK.country,
+        Locales.NEW_ZEALAND.country,
+        Locales.US.country
     )
 
     /**
