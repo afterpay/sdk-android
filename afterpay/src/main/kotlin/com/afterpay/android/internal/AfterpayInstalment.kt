@@ -1,6 +1,5 @@
 package com.afterpay.android.internal
 
-import com.afterpay.android.Afterpay
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -19,8 +18,10 @@ internal sealed class AfterpayInstalment {
     object NoConfiguration : AfterpayInstalment()
 
     companion object {
-        fun of(totalCost: BigDecimal): AfterpayInstalment {
-            val configuration = Afterpay.configuration ?: return NoConfiguration
+        fun of(totalCost: BigDecimal, configuration: Configuration?): AfterpayInstalment {
+            if (configuration == null) {
+                return NoConfiguration
+            }
 
             val currencyFormatter = (NumberFormat.getCurrencyInstance() as DecimalFormat).apply {
                 currency = configuration.currency
