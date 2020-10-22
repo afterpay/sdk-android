@@ -24,43 +24,31 @@ internal sealed class AfterpayInstalment {
                 return NoConfiguration
             }
 
-            val locale = configuration.locale
-            val currency = configuration.currency
-            val currencyFormatter: NumberFormat
-            val isLocalCurrency = currency == Currency.getInstance(locale)
+            val currencyLocale = Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
+            val currencySymbol = configuration.currency.getSymbol(currencyLocale)
+            val usCurrencySymbol = Currency.getInstance(Locales.US).getSymbol(Locales.US)
+            val localCurrency = Currency.getInstance(configuration.locale)
 
-            if (locale == Locales.US || isLocalCurrency) {
-                currencyFormatter = NumberFormat.getCurrencyInstance(locale)
+            val currencyFormatter = (NumberFormat.getCurrencyInstance(currencyLocale) as DecimalFormat).apply {
+                this.currency = configuration.currency
+            }
 
-                (currencyFormatter as DecimalFormat).apply {
-                    this.currency = currency
-
-                    if (locale == Locales.US) {
-                        decimalFormatSymbols = decimalFormatSymbols.apply {
-                            currencySymbol = when (currency.currencyCode) {
-                                "AUD" -> "A$"
-                                "NZD" -> "NZ$"
-                                "CAD" -> "CA$"
-                                "GBP" -> "£"
-                                else -> currency.getSymbol(locale)
-                            }
+            if (configuration.locale == Locales.US) {
+                currencyFormatter.apply {
+                    decimalFormatSymbols = decimalFormatSymbols.apply {
+                        this.currencySymbol = when (configuration.currency) {
+                            Currency.getInstance(Locales.AUSTRALIA) -> "A$"
+                            Currency.getInstance(Locales.NEW_ZEALAND) -> "NZ$"
+                            Currency.getInstance(Locales.CANADA) -> "CA$"
+                            else -> currencySymbol
                         }
                     }
                 }
-            } else {
-                val currencyLocale = Locales.validSet.first { Currency.getInstance(it) == currency }
-                currencyFormatter = NumberFormat.getCurrencyInstance(currencyLocale)
-
-                (currencyFormatter as DecimalFormat).apply {
-                    this.currency = currency
-
-                    if (!isLocalCurrency && currency.getSymbol(currencyLocale) == Currency.getInstance(Locales.US).getSymbol(Locales.US)) {
-                        this.applyPattern("¤#,##0.00 ¤¤")
-                    }
+            } else if (currencySymbol == usCurrencySymbol && configuration.currency != localCurrency) {
+                currencyFormatter.apply {
+                    this.applyPattern("¤#,##0.00 ¤¤")
                 }
             }
-
-
 
             val minimumAmount = configuration.minimumAmount ?: BigDecimal.ZERO
             if (totalCost < minimumAmount || totalCost > configuration.maximumAmount) {
