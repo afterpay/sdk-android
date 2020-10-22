@@ -96,10 +96,8 @@ object Afterpay {
                     throw IllegalArgumentException("Minimum order amount is invalid")
                 }
             }
-
-            val validCountries = Locales.validSet.map { it.country }
-
-            if (!validCountries.contains(configuration.locale.country)) {
+            if (!Locales.validSet.contains(configuration.locale)) {
+                val validCountries = Locales.validSet.map { it.country }
                 throw IllegalArgumentException(
                     "Locale contains an unsupported country: ${configuration.locale.country}. " +
                         "Supported countries include: ${validCountries.joinToString(",")}"
