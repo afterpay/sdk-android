@@ -98,4 +98,16 @@ class AfterpayTest {
             )
         }
     }
+
+    @Test
+    fun `setConfiguration throws for a locale not in the valid set`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            Afterpay.setConfiguration(
+                minimumAmount = "10.00",
+                maximumAmount = "100.00",
+                currencyCode = "AUD",
+                locale = Locale.JAPAN
+            )
+        }
+    }
 }
