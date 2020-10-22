@@ -10,7 +10,6 @@ import java.util.Currency
 import java.util.Locale
 
 class AfterpayInstalmentTest {
-
     private val australianDollar: Currency = Currency.getInstance("AUD")
     private val canadianDollar: Currency = Currency.getInstance("CAD")
     private val poundSterling: Currency = Currency.getInstance("GBP")
@@ -112,5 +111,4 @@ class AfterpayInstalmentTest {
         val configuration = Configuration(50.toBigDecimal(), 1000.toBigDecimal(), currency, locale)
         return AfterpayInstalment.of(amount, configuration) as AfterpayInstalment.Available
     }
-
 }
