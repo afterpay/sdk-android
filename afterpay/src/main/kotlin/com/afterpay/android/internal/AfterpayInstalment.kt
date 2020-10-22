@@ -1,10 +1,10 @@
 package com.afterpay.android.internal
 
-import com.afterpay.android.Afterpay
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.Currency
 
 internal sealed class AfterpayInstalment {
     data class Available(
@@ -19,18 +19,34 @@ internal sealed class AfterpayInstalment {
     object NoConfiguration : AfterpayInstalment()
 
     companion object {
-        fun of(totalCost: BigDecimal): AfterpayInstalment {
-            val configuration = Afterpay.configuration ?: return NoConfiguration
+        fun of(totalCost: BigDecimal, configuration: Configuration?): AfterpayInstalment {
+            if (configuration == null) {
+                return NoConfiguration
+            }
 
-            val currencyFormatter = (NumberFormat.getCurrencyInstance() as DecimalFormat).apply {
-                currency = configuration.currency
-                decimalFormatSymbols = decimalFormatSymbols.apply {
-                    currencySymbol = when (configuration.currency.currencyCode) {
-                        "AUD" -> "A$"
-                        "NZD" -> "NZ$"
-                        "CAD" -> "CA$"
-                        else -> "$"
+            val currencyLocale = Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
+            val currencySymbol = configuration.currency.getSymbol(currencyLocale)
+            val usCurrencySymbol = Currency.getInstance(Locales.US).getSymbol(Locales.US)
+            val localCurrency = Currency.getInstance(configuration.locale)
+
+            val currencyFormatter = (NumberFormat.getCurrencyInstance(currencyLocale) as DecimalFormat).apply {
+                this.currency = configuration.currency
+            }
+
+            if (configuration.locale == Locales.US) {
+                currencyFormatter.apply {
+                    decimalFormatSymbols = decimalFormatSymbols.apply {
+                        this.currencySymbol = when (configuration.currency) {
+                            Currency.getInstance(Locales.AUSTRALIA) -> "A$"
+                            Currency.getInstance(Locales.NEW_ZEALAND) -> "NZ$"
+                            Currency.getInstance(Locales.CANADA) -> "CA$"
+                            else -> currencySymbol
+                        }
                     }
+                }
+            } else if (currencySymbol == usCurrencySymbol && configuration.currency != localCurrency) {
+                currencyFormatter.apply {
+                    this.applyPattern("¤#,##0.00 ¤¤")
                 }
             }
 

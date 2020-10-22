@@ -2,11 +2,13 @@ package com.afterpay.android.internal
 
 import java.util.Locale
 
-object Locales {
+internal object Locales {
 
     val AUSTRALIA = Locale("en", "AU")
-    val CANADA = Locale.CANADA
+    val CANADA: Locale = Locale.CANADA
     val NEW_ZEALAND = Locale("en", "NZ")
-    val UK = Locale.UK
-    val US = Locale.US
+    val UK: Locale = Locale.UK
+    val US: Locale = Locale.US
+
+    val validSet = setOf(AUSTRALIA, CANADA, UK, NEW_ZEALAND, US)
 }

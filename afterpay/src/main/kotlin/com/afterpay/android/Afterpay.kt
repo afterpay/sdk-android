@@ -27,14 +27,6 @@ object Afterpay {
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
 
-    private val validLocaleCountries = setOf(
-        Locales.AUSTRALIA.country,
-        Locales.CANADA.country,
-        Locales.UK.country,
-        Locales.NEW_ZEALAND.country,
-        Locales.US.country
-    )
-
     /**
      * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the
      * new [Intent] in [startActivityForResult][android.app.Activity.startActivityForResult]
@@ -104,10 +96,13 @@ object Afterpay {
                     throw IllegalArgumentException("Minimum order amount is invalid")
                 }
             }
-            if (!validLocaleCountries.contains(configuration.locale.country)) {
+
+            val validCountries = Locales.validSet.map { it.country }
+
+            if (!validCountries.contains(configuration.locale.country)) {
                 throw IllegalArgumentException(
                     "Locale contains an unsupported country: ${configuration.locale.country}. " +
-                        "Supported countries include: ${validLocaleCountries.joinToString(",")}"
+                        "Supported countries include: ${validCountries.joinToString(",")}"
                 )
             }
         }

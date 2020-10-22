@@ -106,7 +106,7 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
             setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
         }
 
-        val instalment = AfterpayInstalment.of(totalAmount)
+        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
         val content = generateContent(instalment)
 
         textView.apply {
