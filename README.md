@@ -55,7 +55,7 @@ The initial release of the SDK contains the web login and checkout process with 
 
 Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
 
-The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API.
+The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how to best supply the locale which will determine the terms and conditions provided and currency formatting of the SDK.
 
 ```kotlin
 val configuration = api.getConfiguration()
@@ -63,7 +63,8 @@ val configuration = api.getConfiguration()
 Afterpay.setConfiguration(
     minimumAmount = configuration.minimum?.amount,
     maximumAmount = configuration.maximum.amount,
-    currency = configuration.maximum.currency
+    currency = configuration.maximum.currency,
+    locale = Locale.US
 )
 ```
 
@@ -119,6 +120,8 @@ class ExampleActivity: Activity {
 ![Mint on Black pay now button][button-mint-on-black]
 ![White on Black pay now button][button-white-on-black]
 
+> **NOTE:** Setting the configured locale to `Locale.UK` (`"en_GB"`) will display Clearpay assets and branding.
+
 ### Price Breakdown
 
 The price breakdown component displays information about Afterpay instalments and handles a number of common configurations.
@@ -149,6 +152,8 @@ When no payment amount has been set or the merchant account configuration has no
 ![Price breakdown no merchant account configuration][breakdown-no-configuration]
 
 The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
+
+> **NOTE:** The way the configured currency is formatted and the destination for the info link is determined by the configured locale.
 
 ## Security
 
