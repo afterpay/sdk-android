@@ -177,7 +177,7 @@ Add the following configuration to your `res/xml/network_security_configuration.
 
 ## Examples
 
-The [example project][example] demonstrates how to include an Afterpay payment flow using our prebuilt UI components.
+The [example project][example] demonstrates how to include an Afterpay payment flow using our prebuilt UI components. This project is powered by the [example server][example-server] which shows a simple example of integration with the Afterpay API.
 
 ## Contributing
 
@@ -205,6 +205,7 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
 [example]: example
 [example-configuration]: https://github.com/afterpay/sdk-android/blob/master/example/src/main/kotlin/com/example/afterpay/MainActivity.kt#L92-L100
+[example-server]: https://github.com/afterpay/sdk-example-server
 [ktlint]: https://ktlint.github.io
 [license]: LICENSE
 [network-config]: https://developer.android.com/training/articles/security-config#CertificatePinning
