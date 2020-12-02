@@ -9,6 +9,7 @@ import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
+import com.afterpay.android.view.AfterpayExpressCheckoutActivity
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
@@ -38,7 +39,7 @@ object Afterpay {
      */
     @JvmStatic
     fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
-        Intent(context, AfterpayCheckoutActivity::class.java)
+        Intent(context, AfterpayExpressCheckoutActivity::class.java)
             .putCheckoutUrlExtra(checkoutUrl)
 
     /**
