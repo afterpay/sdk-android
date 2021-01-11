@@ -2,16 +2,21 @@ package com.afterpay.android.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
+import android.util.Log
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebView.WebViewTransport
 import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CancellationStatus
@@ -19,6 +24,8 @@ import com.afterpay.android.R
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -28,20 +35,39 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_checkout)
 
+        WebView.setWebContentsDebuggingEnabled(true)
+
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+        val checkoutUrl = intent.getCheckoutUrlExtra()
+            ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
+
+        val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
 
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
             settings.setSupportMultipleWindows(true)
             webViewClient = AfterpayExpressWebViewClient(
+                checkoutUrl = checkoutUrl,
                 openExternalLink = ::open,
                 receivedError = ::handleError,
                 completed = ::finish
             )
-            webChromeClient = AfterpayExpressWebChromeClient()
+            webChromeClient = AfterpayExpressWebChromeClient(
+                context = this@AfterpayExpressCheckoutActivity,
+                viewGroup = frameLayout
+            )
+            addJavascriptInterface(
+                AfterpayExpressJavascriptInterface(
+                    this@AfterpayExpressCheckoutActivity,
+                    this
+                ),
+                "Android"
+            )
         }
 
-        loadCheckoutUrl()
+        webView.loadUrl("https://afterpay.github.io/sdk-example-server/")
     }
 
     override fun onDestroy() {
@@ -117,7 +143,78 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
     }
 }
 
+private data class AfterpayExpressMessageMeta(
+    val requestId: String
+)
+
+private data class AfterpayExpressPayload(
+    val name: String
+)
+
+private data class AfterpayExpressMessage(
+    val type: String,
+    val meta: AfterpayExpressMessageMeta,
+    val payload: AfterpayExpressPayload
+)
+
+private class AfterpayExpressJavascriptInterface(
+    val activity: Activity,
+    val webView: WebView
+) {
+    @JavascriptInterface
+    fun postMessage(json: String) {
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        val adapter = moshi.adapter(AfterpayExpressMessage::class.java)
+        val message = adapter.fromJson(json) ?: return
+
+        val javascript =
+            """
+            someSpecialName(
+            {
+              meta: {
+                requestId: "${message.meta.requestId}"
+              },
+              payload: [
+                {
+                  id: "standard",
+                  name: "Standard",
+                  description: "3 - 5 days",
+                  shippingAmount: {
+                    amount: "0.00",
+                    currency: "AUD"
+                  },
+                  orderAmount: {
+                    amount: "50.00",
+                    currency: "AUD"
+                  }
+                },
+                {
+                  id: "priority",
+                  name: "Priority",
+                  description: "Next business day",
+                  shippingAmount: {
+                    amount: "10.00",
+                    currency: "AUD"
+                  },
+                  orderAmount: {
+                    amount: "60.00",
+                    currency: "AUD"
+                  }
+                }
+              ]
+            },
+            "https://portal.sandbox.afterpay.com"
+            )
+            """
+
+        activity.runOnUiThread {
+            webView.evaluateJavascript(javascript) {}
+        }
+    }
+}
+
 private class AfterpayExpressWebViewClient(
+    private val checkoutUrl: String,
     private val openExternalLink: (Uri) -> Unit,
     private val receivedError: () -> Unit,
     private val completed: (ExpressCheckoutStatus) -> Unit
@@ -143,6 +240,12 @@ private class AfterpayExpressWebViewClient(
         }
     }
 
+    override fun onPageFinished(view: WebView?, url: String?) {
+        view?.evaluateJavascript("openAfterpay('$checkoutUrl');") { result ->
+            print(result)
+        }
+    }
+
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
@@ -154,14 +257,29 @@ private class AfterpayExpressWebViewClient(
     }
 }
 
-private class AfterpayExpressWebChromeClient : WebChromeClient() {
+private class AfterpayExpressWebChromeClient(
+    private val context: Context,
+    private val viewGroup: ViewGroup
+) : WebChromeClient() {
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateWindow(
         view: WebView?,
         isDialog: Boolean,
         isUserGesture: Boolean,
         resultMsg: Message?
     ): Boolean {
-        return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg)
+        val newWebView = WebView(context).apply {
+            settings.javaScriptEnabled = true
+            webViewClient = WebViewClient()
+        }
+
+        viewGroup.addView(newWebView)
+
+        val transport = resultMsg?.obj as? WebViewTransport ?: return false
+        transport.webView = newWebView
+        resultMsg.sendToTarget()
+
+        return true
     }
 }
 
