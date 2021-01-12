@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -39,8 +38,14 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        val checkoutUrl = intent.getCheckoutUrlExtra()
+        var checkoutUrl = intent.getCheckoutUrlExtra()
             ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
+
+        checkoutUrl = Uri.parse(checkoutUrl)
+            .buildUpon()
+            .appendQueryParameter("isWindowed", "true")
+            .build()
+            .toString()
 
         val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
 
