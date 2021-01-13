@@ -20,10 +20,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayCheckoutMessage
+import com.afterpay.android.internal.ShippingAddressMessage
+import com.afterpay.android.internal.ShippingOptionMessage
+import com.afterpay.android.internal.ShippingOptionsMessage
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
+import com.afterpay.android.model.Money
+import com.afterpay.android.model.ShippingOption
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
@@ -66,7 +73,8 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
             addJavascriptInterface(
                 AfterpayExpressJavascriptInterface(
                     this@AfterpayExpressCheckoutActivity,
-                    this
+                    this,
+                    checkoutUrl
                 ),
                 "Android"
             )
@@ -148,72 +156,59 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
     }
 }
 
-private data class AfterpayExpressMessageMeta(
-    val requestId: String
-)
-
-private data class AfterpayExpressPayload(
-    val name: String
-)
-
-private data class AfterpayExpressMessage(
-    val type: String,
-    val meta: AfterpayExpressMessageMeta,
-    val payload: AfterpayExpressPayload
-)
-
 private class AfterpayExpressJavascriptInterface(
     val activity: Activity,
-    val webView: WebView
+    val webView: WebView,
+    val checkoutUrl: String
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
-        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val adapter = moshi.adapter(AfterpayExpressMessage::class.java)
+        val polymorphicJsonAdapterFactory = PolymorphicJsonAdapterFactory
+            .of(AfterpayCheckoutMessage::class.java, "type")
+            .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
+            .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
+            .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
+
+        val moshi = Moshi.Builder()
+            .add(polymorphicJsonAdapterFactory)
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+        val adapter = moshi.adapter(AfterpayCheckoutMessage::class.java)
         val message = adapter.fromJson(json) ?: return
 
-        val javascript =
-            """
-            someSpecialName(
-            {
-              meta: {
-                requestId: "${message.meta.requestId}"
-              },
-              payload: [
-                {
-                  id: "standard",
-                  name: "Standard",
-                  description: "3 - 5 days",
-                  shippingAmount: {
-                    amount: "0.00",
-                    currency: "AUD"
-                  },
-                  orderAmount: {
-                    amount: "50.00",
-                    currency: "AUD"
-                  }
-                },
-                {
-                  id: "priority",
-                  name: "Priority",
-                  description: "Next business day",
-                  shippingAmount: {
-                    amount: "10.00",
-                    currency: "AUD"
-                  },
-                  orderAmount: {
-                    amount: "60.00",
-                    currency: "AUD"
-                  }
-                }
-              ]
-            },
-            "https://portal.sandbox.afterpay.com"
-            )
-            """
+        when (message) {
+            is ShippingAddressMessage -> {
+                val shippingOptions = listOf(
+                    ShippingOption(
+                        "standard",
+                        "Standard",
+                        "",
+                        Money("0.00", "AUD"),
+                        Money("50.00", "AUD"),
+                        null
+                    ),
+                    ShippingOption(
+                        "priority",
+                        "Priority",
+                        "Next business day",
+                        Money("10.00", "AUD"),
+                        Money("60.00", "AUD"),
+                        null
+                    )
+                )
 
-        activity.runOnUiThread {
-            webView.evaluateJavascript(javascript) {}
+                val shippingOptionsMessage = ShippingOptionsMessage(message.meta, shippingOptions)
+                val shippingOptionsJson = adapter.toJson(shippingOptionsMessage)
+                val targetUrl = Uri.parse(checkoutUrl).buildUpon().clearQuery().build().toString()
+                val javascript = "postCheckoutMessage('${shippingOptionsJson}', '${targetUrl}');"
+
+                activity.runOnUiThread {
+                    webView.evaluateJavascript(javascript) {}
+                }
+            }
+            else -> {
+            }
         }
     }
 }
