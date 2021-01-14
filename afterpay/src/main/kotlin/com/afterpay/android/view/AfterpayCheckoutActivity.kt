@@ -5,7 +5,9 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -44,11 +46,12 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
+            settings.setSupportMultipleWindows(true)
             webViewClient = AfterpayWebViewClient(
-                openExternalLink = ::open,
                 receivedError = ::handleError,
                 completed = ::finish
             )
+            webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
 
         loadCheckoutUrl()
@@ -126,12 +129,9 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 }
 
 private class AfterpayWebViewClient(
-    private val openExternalLink: (Uri) -> Unit,
     private val receivedError: () -> Unit,
     private val completed: (CheckoutStatus) -> Unit
 ) : WebViewClient() {
-    private val linksToOpenExternally = listOf("privacy-policy", "terms-of-service")
-
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
         val status = CheckoutStatus.fromUrl(url)
@@ -139,11 +139,6 @@ private class AfterpayWebViewClient(
         return when {
             status != null -> {
                 completed(status)
-                true
-            }
-
-            linksToOpenExternally.contains(url.lastPathSegment) -> {
-                openExternalLink(url)
                 true
             }
 
@@ -159,6 +154,26 @@ private class AfterpayWebViewClient(
         if (request?.isForMainFrame == true) {
             receivedError()
         }
+    }
+}
+
+private class AfterpayWebChromeClient(
+    private val openExternalLink: (Uri) -> Unit
+) : WebChromeClient() {
+    override fun onCreateWindow(
+        view: WebView?,
+        isDialog: Boolean,
+        isUserGesture: Boolean,
+        resultMsg: Message?
+    ): Boolean {
+        val hrefMessage = view?.handler?.obtainMessage()
+        view?.requestFocusNodeHref(hrefMessage)
+
+        hrefMessage?.data?.getString("url")?.let {
+            openExternalLink(Uri.parse(it))
+        }
+
+        return false
     }
 }
 
