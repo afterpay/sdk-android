@@ -160,6 +160,10 @@ private class AfterpayWebViewClient(
 private class AfterpayWebChromeClient(
     private val openExternalLink: (Uri) -> Unit
 ) : WebChromeClient() {
+    companion object {
+        const val URL_KEY = "url"
+    }
+
     override fun onCreateWindow(
         view: WebView?,
         isDialog: Boolean,
@@ -169,9 +173,8 @@ private class AfterpayWebChromeClient(
         val hrefMessage = view?.handler?.obtainMessage()
         view?.requestFocusNodeHref(hrefMessage)
 
-        hrefMessage?.data?.getString("url")?.let {
-            openExternalLink(Uri.parse(it))
-        }
+        val url = hrefMessage?.data?.getString(URL_KEY)
+        url?.let { openExternalLink(Uri.parse(it)) }
 
         return false
     }
