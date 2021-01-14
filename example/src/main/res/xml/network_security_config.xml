@@ -26,6 +26,7 @@
             expiration="2021-07-05"
             tools:ignore="MissingBackupPin">
             <pin digest="SHA-256">15mVY9KpcF6J/UzKCS2AfUjUWPVsIvxi9PW0XuFnvH4=</pin>
+            <pin digest="SHA-256">FEzVOUp4dF3gI0ZVPRJhFbSJVXR+uQmMH65xhs1glH4=</pin>
         </pin-set>
     </domain-config>
 
