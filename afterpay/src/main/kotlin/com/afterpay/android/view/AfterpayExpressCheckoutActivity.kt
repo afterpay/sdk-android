@@ -7,12 +7,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
+import android.util.Base64
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebView.INVISIBLE
+import android.webkit.WebView.VISIBLE
 import android.webkit.WebView.WebViewTransport
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
@@ -21,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutMessage
+import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
 import com.afterpay.android.internal.ShippingOptionsMessage
@@ -34,59 +38,58 @@ import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
-    private lateinit var webView: WebView
+    private lateinit var bootstrapWebView: WebView
+    private lateinit var loadingWebView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_checkout)
+        setContentView(R.layout.activity_express_web_checkout)
 
         WebView.setWebContentsDebuggingEnabled(true)
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        var checkoutUrl = intent.getCheckoutUrlExtra()
+        val checkoutUrl = intent.getCheckoutUrlExtra()
             ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
 
-        checkoutUrl = Uri.parse(checkoutUrl)
+        val checkoutUri = Uri.parse(checkoutUrl)
             .buildUpon()
             .appendQueryParameter("isWindowed", "true")
             .build()
-            .toString()
 
         val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
 
-        webView = findViewById<WebView>(R.id.afterpay_webView).apply {
+        loadingWebView = findViewById<WebView>(R.id.afterpay_loadingWebView).apply {
+            val htmlData = Base64.encodeToString(Html.loading.toByteArray(), Base64.NO_PADDING)
+            loadData(htmlData, "text/html", "base64")
+        }
+
+        val activity = this
+
+        bootstrapWebView = findViewById<WebView>(R.id.afterpay_webView).apply {
             settings.javaScriptEnabled = true
             settings.javaScriptCanOpenWindowsAutomatically = true
             settings.setSupportMultipleWindows(true)
-            webViewClient = AfterpayExpressWebViewClient(
-                checkoutUrl = checkoutUrl,
-                openExternalLink = ::open,
-                receivedError = ::handleError,
-                completed = ::finish
-            )
-            webChromeClient = AfterpayExpressWebChromeClient(
-                context = this@AfterpayExpressCheckoutActivity,
-                viewGroup = frameLayout
-            )
-            addJavascriptInterface(
-                AfterpayExpressJavascriptInterface(
-                    this@AfterpayExpressCheckoutActivity,
-                    this,
-                    checkoutUrl
-                ),
-                "Android"
-            )
-        }
 
-        webView.loadUrl("https://afterpay.github.io/sdk-example-server/")
+            webViewClient = BootstrapWebViewClient(checkoutUri, ::handleError)
+            webChromeClient = BootstrapWebChromeClient(
+                context = activity,
+                viewGroup = frameLayout,
+                onPageFinished = { frameLayout.removeView(loadingWebView) }
+            )
+
+            val javascriptInterface = BootstrapJavascriptInterface(activity, this, checkoutUri)
+            addJavascriptInterface(javascriptInterface, "Android")
+
+            loadUrl("https://afterpay.github.io/sdk-example-server/")
+        }
     }
 
     override fun onDestroy() {
         // Prevent WebView from leaking memory when the Activity is destroyed.
         // The leak appears when enabling JavaScript and is fixed by disabling it.
-        webView.apply {
+        bootstrapWebView.apply {
             stopLoading()
             settings.javaScriptEnabled = false
         }
@@ -102,7 +105,7 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
         val checkoutUrl = intent.getCheckoutUrlExtra()
             ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
 
-        webView.loadUrl(checkoutUrl)
+        bootstrapWebView.loadUrl(checkoutUrl)
 
         // if (AfterpayCheckoutActivity.validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
         //     webView.loadUrl(checkoutUrl, mapOf("X-Afterpay-SDK" to AfterpayCheckoutActivity.versionHeader))
@@ -120,7 +123,7 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
 
     private fun handleError() {
         // Clear default system error from the web view.
-        webView.loadUrl("about:blank")
+        bootstrapWebView.loadUrl("about:blank")
 
         AlertDialog.Builder(this)
             .setTitle(R.string.afterpay_load_error_title)
@@ -156,10 +159,63 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
     }
 }
 
-private class AfterpayExpressJavascriptInterface(
+private class BootstrapWebViewClient(
+    private val checkoutUri: Uri,
+    private val receivedError: () -> Unit
+) : WebViewClient() {
+    override fun onPageFinished(view: WebView?, url: String?) {
+        view?.evaluateJavascript("openAfterpay('$checkoutUri');") { result ->
+            print(result)
+        }
+    }
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        if (request?.isForMainFrame == true) {
+            receivedError()
+        }
+    }
+}
+
+private class BootstrapWebChromeClient(
+    private val context: Context,
+    private val viewGroup: ViewGroup,
+    private val onPageFinished: () -> Unit
+) : WebChromeClient() {
+    @SuppressLint("SetJavaScriptEnabled")
+    override fun onCreateWindow(
+        view: WebView?,
+        isDialog: Boolean,
+        isUserGesture: Boolean,
+        resultMsg: Message?
+    ): Boolean {
+        val webView = WebView(context)
+        webView.visibility = INVISIBLE
+        webView.settings.javaScriptEnabled = true
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                webView.visibility = VISIBLE
+                onPageFinished()
+            }
+        }
+
+        viewGroup.addView(webView)
+
+        val transport = resultMsg?.obj as? WebViewTransport ?: return false
+        transport.webView = webView
+        resultMsg.sendToTarget()
+
+        return true
+    }
+}
+
+private class BootstrapJavascriptInterface(
     val activity: Activity,
     val webView: WebView,
-    val checkoutUrl: String
+    val checkoutUri: Uri
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
@@ -200,7 +256,7 @@ private class AfterpayExpressJavascriptInterface(
 
                 val shippingOptionsMessage = ShippingOptionsMessage(message.meta, shippingOptions)
                 val shippingOptionsJson = adapter.toJson(shippingOptionsMessage)
-                val targetUrl = Uri.parse(checkoutUrl).buildUpon().clearQuery().build().toString()
+                val targetUrl = checkoutUri.buildUpon().clearQuery().build().toString()
                 val javascript = "postCheckoutMessage('${shippingOptionsJson}', '${targetUrl}');"
 
                 activity.runOnUiThread {
@@ -210,76 +266,6 @@ private class AfterpayExpressJavascriptInterface(
             else -> {
             }
         }
-    }
-}
-
-private class AfterpayExpressWebViewClient(
-    private val checkoutUrl: String,
-    private val openExternalLink: (Uri) -> Unit,
-    private val receivedError: () -> Unit,
-    private val completed: (ExpressCheckoutStatus) -> Unit
-) : WebViewClient() {
-    private val linksToOpenExternally = listOf("privacy-policy", "terms-of-service")
-
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        val url = request?.url ?: return false
-        val status = ExpressCheckoutStatus.fromUrl(url)
-
-        return when {
-            status != null -> {
-                completed(status)
-                true
-            }
-
-            linksToOpenExternally.contains(url.lastPathSegment) -> {
-                openExternalLink(url)
-                true
-            }
-
-            else -> false
-        }
-    }
-
-    override fun onPageFinished(view: WebView?, url: String?) {
-        view?.evaluateJavascript("openAfterpay('$checkoutUrl');") { result ->
-            print(result)
-        }
-    }
-
-    override fun onReceivedError(
-        view: WebView?,
-        request: WebResourceRequest?,
-        error: WebResourceError?
-    ) {
-        if (request?.isForMainFrame == true) {
-            receivedError()
-        }
-    }
-}
-
-private class AfterpayExpressWebChromeClient(
-    private val context: Context,
-    private val viewGroup: ViewGroup
-) : WebChromeClient() {
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreateWindow(
-        view: WebView?,
-        isDialog: Boolean,
-        isUserGesture: Boolean,
-        resultMsg: Message?
-    ): Boolean {
-        val newWebView = WebView(context).apply {
-            settings.javaScriptEnabled = true
-            webViewClient = WebViewClient()
-        }
-
-        viewGroup.addView(newWebView)
-
-        val transport = resultMsg?.obj as? WebViewTransport ?: return false
-        transport.webView = newWebView
-        resultMsg.sendToTarget()
-
-        return true
     }
 }
 
