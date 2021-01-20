@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayCheckoutCompletion
 import com.afterpay.android.internal.AfterpayCheckoutMessage
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
@@ -79,9 +80,14 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
                 onPageFinished = { frameLayout.removeView(loadingWebView) }
             )
 
-            val javascriptInterface = BootstrapJavascriptInterface(activity, this, checkoutUri)
-            addJavascriptInterface(javascriptInterface, "Android")
+            val javascriptInterface = BootstrapJavascriptInterface(
+                activity,
+                this,
+                checkoutUri,
+                ::finish
+            )
 
+            addJavascriptInterface(javascriptInterface, "Android")
             loadUrl("https://afterpay.github.io/sdk-example-server/")
         }
     }
@@ -141,13 +147,13 @@ internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun finish(status: ExpressCheckoutStatus) {
-        when (status) {
-            is ExpressCheckoutStatus.Success -> {
-                setResult(Activity.RESULT_OK, Intent().putOrderTokenExtra(status.orderToken))
+    private fun finish(completion: AfterpayCheckoutCompletion) {
+        when (completion.status) {
+            AfterpayCheckoutCompletion.Status.SUCCESS -> {
+                setResult(Activity.RESULT_OK, Intent().putOrderTokenExtra(completion.orderToken))
                 finish()
             }
-            ExpressCheckoutStatus.Cancelled -> {
+            AfterpayCheckoutCompletion.Status.CANCELLED -> {
                 finish(CancellationStatus.USER_INITIATED)
             }
         }
@@ -215,23 +221,28 @@ private class BootstrapWebChromeClient(
 private class BootstrapJavascriptInterface(
     val activity: Activity,
     val webView: WebView,
-    val checkoutUri: Uri
+    val checkoutUri: Uri,
+    val finish: (AfterpayCheckoutCompletion) -> Unit
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
-        val polymorphicJsonAdapterFactory = PolymorphicJsonAdapterFactory
+        val checkoutMessageAdapterFactory = PolymorphicJsonAdapterFactory
             .of(AfterpayCheckoutMessage::class.java, "type")
             .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
             .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
             .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
 
         val moshi = Moshi.Builder()
-            .add(polymorphicJsonAdapterFactory)
+            .add(checkoutMessageAdapterFactory)
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        val adapter = moshi.adapter(AfterpayCheckoutMessage::class.java)
-        val message = adapter.fromJson(json) ?: return
+        val messageAdapter = moshi.adapter(AfterpayCheckoutMessage::class.java)
+        val message = try {
+            messageAdapter.fromJson(json)
+        } catch (e: Throwable) {
+            null
+        }
 
         when (message) {
             is ShippingAddressMessage -> {
@@ -255,7 +266,7 @@ private class BootstrapJavascriptInterface(
                 )
 
                 val shippingOptionsMessage = ShippingOptionsMessage(message.meta, shippingOptions)
-                val shippingOptionsJson = adapter.toJson(shippingOptionsMessage)
+                val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)
                 val targetUrl = checkoutUri.buildUpon().clearQuery().build().toString()
                 val javascript = "postCheckoutMessage('${shippingOptionsJson}', '${targetUrl}');"
 
@@ -266,18 +277,13 @@ private class BootstrapJavascriptInterface(
             else -> {
             }
         }
-    }
-}
 
-private sealed class ExpressCheckoutStatus {
-    data class Success(val orderToken: String) : ExpressCheckoutStatus()
-    object Cancelled : ExpressCheckoutStatus()
-
-    companion object {
-        fun fromUrl(url: Uri): ExpressCheckoutStatus? = when (url.getQueryParameter("status")) {
-            "SUCCESS" -> url.getQueryParameter("orderToken")?.let(::Success)
-            "CANCELLED" -> Cancelled
-            else -> null
+        val completion = try {
+            moshi.adapter(AfterpayCheckoutCompletion::class.java).fromJson(json)
+        } catch (e: Throwable) {
+            null
         }
+
+        completion?.let { finish(it) }
     }
 }
