@@ -21,6 +21,7 @@ import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
@@ -32,8 +33,6 @@ import com.afterpay.android.internal.ShippingOptionsMessage
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
-import com.afterpay.android.model.Money
-import com.afterpay.android.model.ShippingOption
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -246,36 +245,28 @@ private class BootstrapJavascriptInterface(
 
         when (message) {
             is ShippingAddressMessage -> {
-                val shippingOptions = listOf(
-                    ShippingOption(
-                        "standard",
-                        "Standard",
-                        "",
-                        Money("0.00", "AUD"),
-                        Money("50.00", "AUD"),
-                        null
-                    ),
-                    ShippingOption(
-                        "priority",
-                        "Priority",
-                        "Next business day",
-                        Money("10.00", "AUD"),
-                        Money("60.00", "AUD"),
-                        null
-                    )
-                )
+                val handler = Afterpay.interactiveCheckoutHandler ?: return
 
-                val shippingOptionsMessage = ShippingOptionsMessage(message.meta, shippingOptions)
-                val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)
-                val targetUrl = checkoutUri.buildUpon().clearQuery().build().toString()
-                val javascript = "postCheckoutMessage('${shippingOptionsJson}', '${targetUrl}');"
+                handler.shippingAddressDidChange(message.payload) {
+                    val shippingOptionsMessage = ShippingOptionsMessage(message.meta, it)
+                    val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)
+                    val targetUrl = checkoutUri.buildUpon().clearQuery().build().toString()
+                    val javascript = "postCheckoutMessage" +
+                        "('${shippingOptionsJson}', '${targetUrl}');"
 
-                activity.runOnUiThread {
-                    webView.evaluateJavascript(javascript) {}
+                    activity.runOnUiThread {
+                        webView.evaluateJavascript(javascript) {}
+                    }
                 }
             }
-            else -> {
+
+            is ShippingOptionMessage -> {
+                val handler = Afterpay.interactiveCheckoutHandler ?: return
+
+                handler.shippingOptionDidChange(message.payload)
             }
+
+            else -> {}
         }
 
         val completion = try {

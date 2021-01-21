@@ -1,6 +1,7 @@
 package com.example.afterpay.checkout
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.AfterpayInteractiveCheckoutHandler
+import com.afterpay.android.model.ShippingAddress
+import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.Dependencies
 import com.example.afterpay.R
@@ -66,10 +70,49 @@ class CheckoutFragment : Fragment() {
                 progressBar.visibility = if (state.showProgressBar) View.VISIBLE else View.INVISIBLE
             }
         }
+
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
                     is Command.StartAfterpayCheckout -> {
+                        Afterpay.setInteractiveCheckoutHandler(
+                            object : AfterpayInteractiveCheckoutHandler {
+                                override fun didCommenceCheckout(
+                                    completion: (Result<Uri>) -> Unit
+                                ) {}
+
+                                override fun shippingAddressDidChange(
+                                    address: ShippingAddress,
+                                    completion: (List<ShippingOption>) -> Unit
+                                ) {
+                                    completion(
+                                        listOf(
+                                            ShippingOption(
+                                                "standard",
+                                                "Standard",
+                                                "",
+                                                ShippingOption.Money("0.00", "AUD"),
+                                                ShippingOption.Money("50.00", "AUD"),
+                                                null
+                                            ),
+                                            ShippingOption(
+                                                "priority",
+                                                "Priority",
+                                                "Next business day",
+                                                ShippingOption.Money("10.00", "AUD"),
+                                                ShippingOption.Money("60.00", "AUD"),
+                                                null
+                                            )
+                                        )
+                                    )
+                                }
+
+                                override fun shippingOptionDidChange(
+                                    shippingOption: ShippingOption
+                                ) {}
+                            }
+                        )
+
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }

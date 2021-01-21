@@ -27,6 +27,9 @@ object Afterpay {
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
 
+    internal var interactiveCheckoutHandler: AfterpayInteractiveCheckoutHandler? = null
+        private set
+
     /**
      * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the
      * new [Intent] in [startActivityForResult][android.app.Activity.startActivityForResult]
@@ -104,5 +107,9 @@ object Afterpay {
                 )
             }
         }
+    }
+
+    fun setInteractiveCheckoutHandler(handler: AfterpayInteractiveCheckoutHandler?) {
+        interactiveCheckoutHandler = handler
     }
 }
