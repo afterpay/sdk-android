@@ -38,7 +38,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
-internal class AfterpayExpressCheckoutActivity : AppCompatActivity() {
+internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
     private lateinit var bootstrapWebView: WebView
     private lateinit var loadingWebView: WebView
 
