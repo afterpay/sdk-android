@@ -38,41 +38,37 @@ import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
+
     private lateinit var bootstrapWebView: WebView
     private lateinit var loadingWebView: WebView
+    private lateinit var checkoutWebView: WebView
+    private lateinit var checkoutUri: Uri
+
+    private val bootstrapUrl = "https://afterpay.github.io/sdk-example-server/"
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_express_web_checkout)
-
-        WebView.setWebContentsDebuggingEnabled(true)
-
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-
-        val checkoutUrl = intent.getCheckoutUrlExtra()
-            ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
-
-        val checkoutUri = Uri.parse(checkoutUrl)
-            .buildUpon()
-            .appendQueryParameter("isWindowed", "true")
-            .build()
-
-        val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
 
         loadingWebView = findViewById<WebView>(R.id.afterpay_loadingWebView).apply {
             val htmlData = Base64.encodeToString(Html.loading.toByteArray(), Base64.NO_PADDING)
             loadData(htmlData, "text/html", "base64")
         }
 
-        val activity = this
+        bootstrapWebView = findViewById(R.id.afterpay_webView)
 
-        bootstrapWebView = findViewById<WebView>(R.id.afterpay_webView).apply {
+        val activity = this
+        val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
+
+        bootstrapWebView.apply {
             settings.javaScriptEnabled = true
             settings.javaScriptCanOpenWindowsAutomatically = true
             settings.setSupportMultipleWindows(true)
 
-            webViewClient = BootstrapWebViewClient(checkoutUri, ::handleError)
+            webViewClient = BootstrapWebViewClient(::loadCheckoutUri, ::handleBootstrapError)
             webChromeClient = BootstrapWebChromeClient(
                 context = activity,
                 viewGroup = frameLayout,
@@ -82,12 +78,12 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             val javascriptInterface = BootstrapJavascriptInterface(
                 activity,
                 this,
-                checkoutUri,
+                { this@AfterpayInteractiveCheckoutActivity.checkoutUri },
                 ::finish
             )
 
             addJavascriptInterface(javascriptInterface, "Android")
-            loadUrl("https://afterpay.github.io/sdk-example-server/")
+            loadUrl(bootstrapUrl)
         }
     }
 
@@ -106,11 +102,26 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
         finish(CancellationStatus.USER_INITIATED)
     }
 
-    private fun loadCheckoutUrl() {
+    private fun loadCheckoutUri() {
         val checkoutUrl = intent.getCheckoutUrlExtra()
-            ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
 
-        bootstrapWebView.loadUrl(checkoutUrl)
+        val openAfterpay: (String) -> Unit = { url ->
+            this.checkoutUri = Uri.parse(url).buildUpon().appendQueryParameter("isWindowed", "true").build()
+            bootstrapWebView.evaluateJavascript("openAfterpay('${this.checkoutUri}');", null)
+        }
+
+        if (checkoutUrl != null) {
+            openAfterpay(checkoutUrl)
+        } else {
+            val handler = Afterpay.interactiveCheckoutHandler ?:
+                return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
+
+            handler.didCommenceCheckout { result ->
+                val uri = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
+                this.runOnUiThread { openAfterpay(uri) }
+            }
+        }
+
 
         // if (AfterpayCheckoutActivity.validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
         //     webView.loadUrl(checkoutUrl, mapOf("X-Afterpay-SDK" to AfterpayCheckoutActivity.versionHeader))
@@ -126,15 +137,12 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleError() {
-        // Clear default system error from the web view.
-        bootstrapWebView.loadUrl("about:blank")
-
+    private fun errorAlert(retryAction: () -> Unit) =
         AlertDialog.Builder(this)
             .setTitle(R.string.afterpay_load_error_title)
             .setMessage(R.string.afterpay_load_error_message)
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
-                loadCheckoutUrl()
+                retryAction()
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
@@ -143,7 +151,16 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             .setOnCancelListener {
                 finish(CancellationStatus.USER_INITIATED)
             }
-            .show()
+
+    private fun handleBootstrapError() {
+        errorAlert { bootstrapWebView.loadUrl(bootstrapUrl) }.show()
+    }
+
+    private fun handleCheckoutError() {
+        // Clear default system error from the web view.
+        checkoutWebView.loadUrl("about:blank")
+
+        errorAlert { loadCheckoutUri() }.show()
     }
 
     private fun finish(completion: AfterpayCheckoutCompletion) {
@@ -165,13 +182,11 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
 }
 
 private class BootstrapWebViewClient(
-    private val checkoutUri: Uri,
+    private val onPageFinished: () -> Unit,
     private val receivedError: () -> Unit
 ) : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
-        view?.evaluateJavascript("openAfterpay('$checkoutUri');") { result ->
-            print(result)
-        }
+        onPageFinished()
     }
 
     override fun onReceivedError(
@@ -220,7 +235,7 @@ private class BootstrapWebChromeClient(
 private class BootstrapJavascriptInterface(
     val activity: Activity,
     val webView: WebView,
-    val checkoutUri: Uri,
+    val checkoutUri: () -> Uri,
     val finish: (AfterpayCheckoutCompletion) -> Unit
 ) {
     @JavascriptInterface
@@ -250,7 +265,7 @@ private class BootstrapJavascriptInterface(
                 handler.shippingAddressDidChange(message.payload) {
                     val shippingOptionsMessage = ShippingOptionsMessage(message.meta, it)
                     val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)
-                    val targetUrl = checkoutUri.buildUpon().clearQuery().build().toString()
+                    val targetUrl = checkoutUri().buildUpon().clearQuery().build().toString()
                     val javascript = "postCheckoutMessage" +
                         "('${shippingOptionsJson}', '${targetUrl}');"
 

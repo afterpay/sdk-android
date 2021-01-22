@@ -1,13 +1,11 @@
 package com.example.afterpay.checkout
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -41,6 +39,18 @@ class CheckoutFragment : Fragment() {
         )
     }
 
+    private val checkoutHandler = CheckoutHandler(
+        onDidCommenceCheckout = { viewModel.loadCheckout() },
+        onShippingAddressDidChange = { viewModel.selectAddress(it) },
+        onShippingOptionDidChange = { }
+    )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Afterpay.setInteractiveCheckoutHandler(checkoutHandler)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,68 +67,28 @@ class CheckoutFragment : Fragment() {
 
         val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
         checkoutButton.setOnClickListener {
-            viewModel.checkoutWithAfterpay()
+            val intent = Afterpay.createCheckoutIntent(requireContext(), null)
+            startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
         }
 
         val totalCost = view.findViewById<TextView>(R.id.cart_totalCost)
-        val progressBar = view.findViewById<ProgressBar>(R.id.cart_progressBar)
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
                 totalCost.text = state.totalCost
                 checkoutButton.isEnabled = state.enableCheckoutButton
-                progressBar.visibility = if (state.showProgressBar) View.VISIBLE else View.INVISIBLE
             }
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
-                    is Command.StartAfterpayCheckout -> {
-                        Afterpay.setInteractiveCheckoutHandler(
-                            object : AfterpayInteractiveCheckoutHandler {
-                                override fun didCommenceCheckout(
-                                    completion: (Result<Uri>) -> Unit
-                                ) {}
-
-                                override fun shippingAddressDidChange(
-                                    address: ShippingAddress,
-                                    completion: (List<ShippingOption>) -> Unit
-                                ) {
-                                    completion(
-                                        listOf(
-                                            ShippingOption(
-                                                "standard",
-                                                "Standard",
-                                                "",
-                                                ShippingOption.Money("0.00", "AUD"),
-                                                ShippingOption.Money("50.00", "AUD"),
-                                                null
-                                            ),
-                                            ShippingOption(
-                                                "priority",
-                                                "Priority",
-                                                "Next business day",
-                                                ShippingOption.Money("10.00", "AUD"),
-                                                ShippingOption.Money("60.00", "AUD"),
-                                                null
-                                            )
-                                        )
-                                    )
-                                }
-
-                                override fun shippingOptionDidChange(
-                                    shippingOption: ShippingOption
-                                ) {}
-                            }
-                        )
-
-                        val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
-                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
-                    }
-                    is Command.DisplayError -> {
-                        Snackbar.make(requireView(), command.message, Snackbar.LENGTH_SHORT).show()
-                    }
+                    is Command.DisplayCheckout ->
+                        checkoutHandler.urlLoaded(command.checkoutUrl)
+                    is Command.DisplayError ->
+                        checkoutHandler.errorLoadingUrl(command.checkoutError)
+                    is Command.DisplayShippingOptions ->
+                        checkoutHandler.provideShippingOptions(command.shippingOptions)
                 }
             }
         }
@@ -151,4 +121,35 @@ class CheckoutFragment : Fragment() {
             }
         }
     }
+}
+
+private class CheckoutHandler(
+    val onDidCommenceCheckout: () -> Unit,
+    val onShippingAddressDidChange: (ShippingAddress) -> Unit,
+    val onShippingOptionDidChange: (ShippingOption) -> Unit
+): AfterpayInteractiveCheckoutHandler {
+    private var onUrlLoaded: (Result<String>) -> Unit = {}
+
+    override fun didCommenceCheckout(onUrlLoaded: (Result<String>) -> Unit) =
+        onDidCommenceCheckout().also { this.onUrlLoaded = onUrlLoaded }
+
+    fun urlLoaded(url: String) = onUrlLoaded(Result.success(url)).also { onUrlLoaded = {} }
+
+    fun errorLoadingUrl(error: Throwable) =
+        onUrlLoaded(Result.failure(error)).also { onUrlLoaded = {} }
+
+    private var onProvideShippingOptions: (List<ShippingOption>) -> Unit = {}
+
+    override fun shippingAddressDidChange(
+        address: ShippingAddress,
+        onProvideShippingOptions: (List<ShippingOption>) -> Unit
+    ) = onShippingAddressDidChange(address).also {
+        this.onProvideShippingOptions = onProvideShippingOptions
+    }
+
+    fun provideShippingOptions(shippingOptions: List<ShippingOption>) =
+        onProvideShippingOptions(shippingOptions).also { onProvideShippingOptions = {} }
+
+    override fun shippingOptionDidChange(shippingOption: ShippingOption) =
+        onShippingOptionDidChange(shippingOption)
 }

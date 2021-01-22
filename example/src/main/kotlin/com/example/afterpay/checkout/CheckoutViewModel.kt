@@ -3,6 +3,8 @@ package com.example.afterpay.checkout
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afterpay.android.model.ShippingAddress
+import com.afterpay.android.model.ShippingOption
 import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.util.asCurrency
@@ -24,26 +26,23 @@ class CheckoutViewModel(
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
-        val total: BigDecimal,
-        private val isLoading: Boolean
+        val total: BigDecimal
     ) {
         val totalCost: String
             get() = total.asCurrency()
 
-        val showProgressBar: Boolean
-            get() = isLoading
-
         val enableCheckoutButton: Boolean
-            get() = !isLoading && Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
+            get() = Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
     }
 
     sealed class Command {
-        data class StartAfterpayCheckout(val url: String) : Command()
-        data class DisplayError(val message: String) : Command()
+        data class DisplayCheckout(val checkoutUrl: String) : Command()
+        data class DisplayError(val checkoutError: Throwable) : Command()
+        data class DisplayShippingOptions(val shippingOptions: List<ShippingOption>): Command()
     }
 
     private val state = MutableStateFlow(
-        State(emailAddress = "", total = totalCost, isLoading = false)
+        State(emailAddress = "", total = totalCost)
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
@@ -55,25 +54,43 @@ class CheckoutViewModel(
         state.update { copy(emailAddress = email) }
     }
 
-    fun checkoutWithAfterpay() {
+    fun loadCheckout() {
         val (email, total) = state.value
         val amount = DecimalFormat("0.00").format(total)
 
         viewModelScope.launch {
-            state.update { copy(isLoading = true) }
-
             try {
                 val response = withContext(Dispatchers.IO) {
                     merchantApi.checkout(CheckoutRequest(email, amount))
                 }
-                commandChannel.offer(Command.StartAfterpayCheckout(response.url))
+                commandChannel.offer(Command.DisplayCheckout(response.url))
             } catch (error: Exception) {
-                val message = error.message ?: "Failed to fetch checkout url"
-                commandChannel.offer(Command.DisplayError(message))
+                commandChannel.offer(Command.DisplayError(error))
             }
-
-            state.update { copy(isLoading = false) }
         }
+    }
+
+    fun selectAddress(address: ShippingAddress) {
+        val shippingOptions = listOf(
+            ShippingOption(
+                "standard",
+                "Standard",
+                "",
+                ShippingOption.Money("0.00", "AUD"),
+                ShippingOption.Money("50.00", "AUD"),
+                null
+            ),
+            ShippingOption(
+                "priority",
+                "Priority",
+                "Next business day",
+                ShippingOption.Money("10.00", "AUD"),
+                ShippingOption.Money("60.00", "AUD"),
+                null
+            )
+        )
+
+        commandChannel.offer(Command.DisplayShippingOptions(shippingOptions))
     }
 
     companion object {
