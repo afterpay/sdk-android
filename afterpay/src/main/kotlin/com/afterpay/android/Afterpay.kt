@@ -40,7 +40,7 @@ object Afterpay {
      * @return An intent to initiate the Afterpay transaction.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String?): Intent {
+    fun createCheckoutIntent(context: Context, checkoutUrl: String? = null): Intent {
         val intent = Intent(context, AfterpayInteractiveCheckoutActivity::class.java)
         checkoutUrl?.let { intent.putCheckoutUrlExtra(it) }
         return intent
