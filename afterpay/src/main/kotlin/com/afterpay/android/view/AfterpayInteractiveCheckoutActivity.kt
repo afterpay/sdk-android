@@ -85,7 +85,8 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             webChromeClient = BootstrapWebChromeClient(
                 context = activity,
                 viewGroup = frameLayout,
-                onPageFinished = { frameLayout.removeView(loadingWebView) }
+                onPageFinished = { frameLayout.removeView(loadingWebView) },
+                openExternalLink = ::open
             )
 
             val javascriptInterface = BootstrapJavascriptInterface(
@@ -220,8 +221,13 @@ private class BootstrapWebViewClient(
 private class BootstrapWebChromeClient(
     private val context: Context,
     private val viewGroup: ViewGroup,
-    private val onPageFinished: () -> Unit
+    private val onPageFinished: () -> Unit,
+    private val openExternalLink: (Uri) -> Unit
 ) : WebChromeClient() {
+    companion object {
+        const val URL_KEY = "url"
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateWindow(
         view: WebView?,
@@ -232,10 +238,29 @@ private class BootstrapWebChromeClient(
         val webView = WebView(context)
         webView.visibility = INVISIBLE
         webView.settings.javaScriptEnabled = true
+        webView.settings.setSupportMultipleWindows(true)
+
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.visibility = VISIBLE
                 onPageFinished()
+            }
+        }
+
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onCreateWindow(
+                view: WebView?,
+                isDialog: Boolean,
+                isUserGesture: Boolean,
+                resultMsg: Message?
+            ): Boolean {
+                val hrefMessage = view?.handler?.obtainMessage()
+                view?.requestFocusNodeHref(hrefMessage)
+
+                val url = hrefMessage?.data?.getString(URL_KEY)
+                url?.let { openExternalLink(Uri.parse(it)) }
+
+                return false
             }
         }
 
