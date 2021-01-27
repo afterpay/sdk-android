@@ -91,10 +91,11 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             )
 
             val javascriptInterface = BootstrapJavascriptInterface(
-                activity,
-                this,
-                { this@AfterpayInteractiveCheckoutActivity.checkoutUri },
-                ::finish
+                activity = activity,
+                webView = this,
+                checkoutUri = { this@AfterpayInteractiveCheckoutActivity.checkoutUri },
+                complete = ::finish,
+                cancel = ::finish
             )
 
             addJavascriptInterface(javascriptInterface, "Android")
@@ -287,10 +288,11 @@ private class BootstrapWebChromeClient(
 }
 
 private class BootstrapJavascriptInterface(
-    val activity: Activity,
-    val webView: WebView,
-    val checkoutUri: () -> Uri,
-    val finish: (AfterpayCheckoutCompletion) -> Unit
+    private val activity: Activity,
+    private val webView: WebView,
+    private val checkoutUri: () -> Uri,
+    private val complete: (AfterpayCheckoutCompletion) -> Unit,
+    private val cancel: (CancellationStatus) -> Unit
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
@@ -314,7 +316,8 @@ private class BootstrapJavascriptInterface(
 
         when (message) {
             is ShippingAddressMessage -> {
-                val handler = Afterpay.interactiveCheckoutHandler ?: return
+                val handler = Afterpay.interactiveCheckoutHandler
+                    ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
 
                 handler.shippingAddressDidChange(message.payload) {
                     val shippingOptionsMessage = ShippingOptionsMessage(message.meta, it)
@@ -330,7 +333,8 @@ private class BootstrapJavascriptInterface(
             }
 
             is ShippingOptionMessage -> {
-                val handler = Afterpay.interactiveCheckoutHandler ?: return
+                val handler = Afterpay.interactiveCheckoutHandler
+                    ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
 
                 handler.shippingOptionDidChange(message.payload)
             }
@@ -344,6 +348,6 @@ private class BootstrapJavascriptInterface(
             null
         }
 
-        completion?.let { finish(it) }
+        completion?.let { complete(it) }
     }
 }
