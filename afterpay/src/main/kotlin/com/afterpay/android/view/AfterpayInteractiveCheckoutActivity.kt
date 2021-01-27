@@ -86,6 +86,7 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
                 context = activity,
                 viewGroup = frameLayout,
                 onPageFinished = { frameLayout.removeView(loadingWebView) },
+                receivedError = ::handleCheckoutError,
                 openExternalLink = ::open
             )
 
@@ -222,6 +223,7 @@ private class BootstrapWebChromeClient(
     private val context: Context,
     private val viewGroup: ViewGroup,
     private val onPageFinished: () -> Unit,
+    private val receivedError: () -> Unit,
     private val openExternalLink: (Uri) -> Unit
 ) : WebChromeClient() {
     companion object {
@@ -244,6 +246,16 @@ private class BootstrapWebChromeClient(
             override fun onPageFinished(view: WebView?, url: String?) {
                 webView.visibility = VISIBLE
                 onPageFinished()
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                if (request?.isForMainFrame == true) {
+                    receivedError()
+                }
             }
         }
 
