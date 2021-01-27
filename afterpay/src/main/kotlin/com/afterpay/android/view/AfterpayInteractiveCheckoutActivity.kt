@@ -22,6 +22,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
+import com.afterpay.android.BuildConfig
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
@@ -41,10 +42,22 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
 
     private lateinit var bootstrapWebView: WebView
     private lateinit var loadingWebView: WebView
-    private lateinit var checkoutWebView: WebView
+    private var checkoutWebView: WebView? = null
     private lateinit var checkoutUri: Uri
 
     private val bootstrapUrl = "https://afterpay.github.io/sdk-example-server/"
+
+    private companion object {
+
+        val validCheckoutUrls = listOf(
+            "portal.afterpay.com",
+            "portal.sandbox.afterpay.com",
+            "portal.clearpay.co.uk",
+            "portal.sandbox.clearpay.co.uk"
+        )
+
+        const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +108,11 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             settings.javaScriptEnabled = false
         }
 
+        checkoutWebView?.apply {
+            stopLoading()
+            settings.javaScriptEnabled = false
+        }
+
         super.onDestroy()
     }
 
@@ -106,8 +124,14 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
         val checkoutUrl = intent.getCheckoutUrlExtra()
 
         val openAfterpay: (String) -> Unit = { url ->
-            this.checkoutUri = Uri.parse(url).buildUpon().appendQueryParameter("isWindowed", "true").build()
-            bootstrapWebView.evaluateJavascript("openAfterpay('${this.checkoutUri}');", null)
+            val uri = Uri.parse(url).buildUpon().appendQueryParameter("isWindowed", "true").build()
+
+            if (validCheckoutUrls.contains(uri.host)) {
+                this.checkoutUri = uri
+                bootstrapWebView.evaluateJavascript("openAfterpay('$uri');", null)
+            } else {
+                finish(CancellationStatus.INVALID_CHECKOUT_URL)
+            }
         }
 
         if (checkoutUrl != null) {
@@ -117,17 +141,10 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
                 return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
 
             handler.didCommenceCheckout { result ->
-                val uri = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
-                this.runOnUiThread { openAfterpay(uri) }
+                val url = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
+                this.runOnUiThread { openAfterpay(url) }
             }
         }
-
-
-        // if (AfterpayCheckoutActivity.validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
-        //     webView.loadUrl(checkoutUrl, mapOf("X-Afterpay-SDK" to AfterpayCheckoutActivity.versionHeader))
-        // } else {
-        //     finish(CancellationStatus.INVALID_CHECKOUT_URL)
-        // }
     }
 
     private fun open(url: Uri) {
@@ -158,7 +175,7 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
 
     private fun handleCheckoutError() {
         // Clear default system error from the web view.
-        checkoutWebView.loadUrl("about:blank")
+        checkoutWebView?.loadUrl("about:blank")
 
         errorAlert { loadCheckoutUri() }.show()
     }
