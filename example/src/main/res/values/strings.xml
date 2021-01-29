@@ -15,4 +15,7 @@
     <string name="configuration_error_message">Failed to fetch Afterpay configuration</string>
     <string name="configuration_error_action_retry">Retry</string>
     <string name="preferences">com.example.afterpay.preferences</string>
+    <string name="cart_buyNowLabel">Buy Now</string>
+    <string name="cart_pickupLabel">Pickup</string>
+    <string name="cart_expressLabel">Express</string>
 </resources>

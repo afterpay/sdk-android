@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,74 +14,159 @@
         android:layout_weight="1"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:measureWithLargestChild="true"
+            android:orientation="vertical"
             android:padding="24dp"
             >
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/cart_emailAddressLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:labelFor="@id/cart_editText_emailAddress"
-                android:text="@string/email"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBottom_toTopOf="@id/cart_barrier"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+            <LinearLayout
+                android:id="@+id/cart_emailRow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                >
 
-            <EditText
-                android:id="@+id/cart_editText_emailAddress"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:autofillHints="emailAddress"
-                android:inputType="textEmailAddress"
-                android:textAlignment="textEnd"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBaseline_toBaselineOf="@id/cart_emailAddressLabel"
-                app:layout_constraintBottom_toTopOf="@id/cart_barrier"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cart_emailAddressLabel"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_emailAddressLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/cart_editText_emailAddress"
+                    android:text="@string/email"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    />
 
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/cart_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                />
+                <EditText
+                    android:id="@+id/cart_editText_emailAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="48dp"
+                    android:autofillHints="emailAddress"
+                    android:inputType="textEmailAddress"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    tools:ignore="NestedWeights"
+                    />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/cart_totalCostLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:labelFor="@id/cart_totalCost"
-                android:text="@string/total_cost"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintEnd_toStartOf="@id/cart_totalCost"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cart_barrier"
-                />
+            </LinearLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/cart_totalCost"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:textAlignment="textEnd"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:layout_constraintBaseline_toBaselineOf="@id/cart_totalCostLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cart_totalCostLabel"
-                tools:text="$100.00"
-                />
+            <LinearLayout
+                android:id="@+id/cart_totalCostRow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                >
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_totalCostLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/cart_totalCost"
+                    android:text="@string/total_cost"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_totalCost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="24dp"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    tools:text="$100.00"
+                    tools:ignore="NestedWeights"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cart_expressRow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_expressLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="24dp"
+                    android:labelFor="@id/cart_expressCheckBox"
+                    android:text="@string/cart_expressLabel"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    tools:ignore="NestedWeights"
+                    />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cart_expressCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cart_buyNowRow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_buyNowLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="24dp"
+                    android:labelFor="@id/cart_buyNowCheckBox"
+                    android:text="@string/cart_buyNowLabel"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    tools:ignore="NestedWeights"
+                    />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cart_buyNowCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cart_pickupRow"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/cart_pickupLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="24dp"
+                    android:labelFor="@id/cart_pickupCheckBox"
+                    android:text="@string/cart_pickupLabel"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    tools:ignore="NestedWeights"
+                    />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cart_pickupCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </ScrollView>
 
@@ -90,6 +174,7 @@
         android:id="@+id/cart_button_checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="24dp"
         />
 
 </LinearLayout>
