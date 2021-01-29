@@ -1,6 +1,5 @@
 package com.example.afterpay
 
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,11 +26,8 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
         AfterpayRepository(
-            merchantApi = Dependencies.merchantApi,
-            preferences = getSharedPreferences(
-                getString(R.string.preferences),
-                Context.MODE_PRIVATE
-            )
+            merchantApi = getDependencies().merchantApi,
+            preferences = getDependencies().sharedPreferences
         )
     }
 

@@ -9,6 +9,8 @@ class ExampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        initializeDependencies(this)
+
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()

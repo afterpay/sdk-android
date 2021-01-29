@@ -1,5 +1,6 @@
 package com.example.afterpay.checkout
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
@@ -24,7 +25,8 @@ import java.text.DecimalFormat
 
 class CheckoutViewModel(
     totalCost: BigDecimal,
-    private val merchantApi: MerchantApi
+    private val merchantApi: MerchantApi,
+    private val preferences: SharedPreferences
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
@@ -111,8 +113,16 @@ class CheckoutViewModel(
     }
 
     companion object {
-        fun factory(totalCost: BigDecimal, merchantApi: MerchantApi) = viewModelFactory {
-            CheckoutViewModel(totalCost = totalCost, merchantApi = merchantApi)
+        fun factory(
+            totalCost: BigDecimal,
+            merchantApi: MerchantApi,
+            preferences: SharedPreferences
+        ) = viewModelFactory {
+            CheckoutViewModel(
+                totalCost = totalCost,
+                merchantApi = merchantApi,
+                preferences = preferences
+            )
         }
     }
 }

@@ -19,9 +19,9 @@ import com.afterpay.android.AfterpayInteractiveCheckoutHandler
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.view.AfterpayPaymentButton
-import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.getDependencies
 import com.example.afterpay.nav_graph
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
@@ -36,7 +36,8 @@ class CheckoutFragment : Fragment() {
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
             totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal),
-            merchantApi = Dependencies.merchantApi
+            merchantApi = getDependencies().merchantApi,
+            preferences = getDependencies().sharedPreferences
         )
     }
 
