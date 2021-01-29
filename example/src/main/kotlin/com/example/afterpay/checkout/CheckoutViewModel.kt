@@ -1,10 +1,12 @@
 package com.example.afterpay.checkout
 
+import android.net.Uri
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
+import com.example.afterpay.data.CheckoutMode
 import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.util.asCurrency
@@ -26,7 +28,10 @@ class CheckoutViewModel(
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
-        val total: BigDecimal
+        val total: BigDecimal,
+        val express: Boolean,
+        val buyNow: Boolean,
+        val pickup: Boolean
     ) {
         val totalCost: String
             get() = total.asCurrency()
@@ -42,7 +47,7 @@ class CheckoutViewModel(
     }
 
     private val state = MutableStateFlow(
-        State(emailAddress = "", total = totalCost)
+        State(emailAddress = "", total = totalCost, express = false, buyNow = false, pickup = false)
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
@@ -50,20 +55,32 @@ class CheckoutViewModel(
 
     fun commands(): Flow<Command> = commandChannel.receiveAsFlow()
 
-    fun enterEmailAddress(email: String) {
-        state.update { copy(emailAddress = email) }
-    }
+    fun enterEmailAddress(email: String) = state.update { copy(emailAddress = email) }
+
+    fun checkExpress(checked: Boolean) = state.update { copy(express = checked) }
+
+    fun checkBuyNow(checked: Boolean) = state.update { copy(buyNow = checked) }
+
+    fun checkPickup(checked: Boolean) = state.update { copy(pickup = checked) }
 
     fun loadCheckout() {
-        val (email, total) = state.value
+        val (email, total, isExpress, isBuyNow, isPickup) = state.value
         val amount = DecimalFormat("0.00").format(total)
+        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {
             try {
-                val response = withContext(Dispatchers.IO) {
-                    merchantApi.checkout(CheckoutRequest(email, amount))
-                }
-                commandChannel.offer(Command.DisplayCheckout(response.url))
+                val request = CheckoutRequest(email, amount, mode)
+                val response = withContext(Dispatchers.IO) {  merchantApi.checkout(request) }
+
+                val uri = Uri
+                    .parse(response.url)
+                    .buildUpon()
+                    .appendQueryParameter("buyNow", isBuyNow.toString())
+                    .appendQueryParameter("pickup", isPickup.toString())
+                    .build()
+
+                commandChannel.offer(Command.DisplayCheckout(uri.toString()))
             } catch (error: Exception) {
                 commandChannel.offer(Command.DisplayError(error))
             }

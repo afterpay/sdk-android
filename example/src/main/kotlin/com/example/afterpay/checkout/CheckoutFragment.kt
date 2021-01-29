@@ -23,6 +23,7 @@ import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.nav_graph
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
@@ -72,6 +73,21 @@ class CheckoutFragment : Fragment() {
         }
 
         val totalCost = view.findViewById<TextView>(R.id.cart_totalCost)
+
+        val expressRow = view.findViewById<View>(R.id.cart_expressRow)
+        val expressCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_expressCheckBox)
+        expressRow.setOnClickListener { expressCheckBox.toggle() }
+        expressCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkExpress(checked) }
+
+        val buyNowRow = view.findViewById<View>(R.id.cart_buyNowRow)
+        val buyNowCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_buyNowCheckBox)
+        buyNowRow.setOnClickListener { buyNowCheckBox.toggle() }
+        buyNowCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkBuyNow(checked) }
+
+        val pickupRow = view.findViewById<View>(R.id.cart_pickupRow)
+        val pickupCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_pickupCheckBox)
+        pickupRow.setOnClickListener { pickupCheckBox.toggle() }
+        pickupCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkPickup(checked) }
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
