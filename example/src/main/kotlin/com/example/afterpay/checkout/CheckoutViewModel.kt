@@ -3,6 +3,7 @@ package com.example.afterpay.checkout
 import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Patterns
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.model.ShippingAddress
@@ -49,7 +50,13 @@ class CheckoutViewModel(
     }
 
     private val state = MutableStateFlow(
-        State(emailAddress = "", total = totalCost, express = false, buyNow = false, pickup = false)
+        State(
+            emailAddress = preferences.getEmail(),
+            total = totalCost,
+            express = preferences.getExpress(),
+            buyNow = preferences.getBuyNow(),
+            pickup = preferences.getPickup()
+        )
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
@@ -70,25 +77,36 @@ class CheckoutViewModel(
         val amount = DecimalFormat("0.00").format(total)
         val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
+        preferences.edit {
+            putEmail(email)
+            putExpress(isExpress)
+            putBuyNow(isBuyNow)
+            putPickup(isPickup)
+        }
+
+        val buildUrl: (String) -> String = {
+            Uri.parse(it)
+                .buildUpon()
+                .appendQueryParameter("buyNow", isBuyNow.toString())
+                .appendQueryParameter("pickup", isPickup.toString())
+                .build()
+                .toString()
+        }
+
         viewModelScope.launch {
-            try {
-                val request = CheckoutRequest(email, amount, mode)
-                val response = withContext(Dispatchers.IO) {  merchantApi.checkout(request) }
-
-                val uri = Uri
-                    .parse(response.url)
-                    .buildUpon()
-                    .appendQueryParameter("buyNow", isBuyNow.toString())
-                    .appendQueryParameter("pickup", isPickup.toString())
-                    .build()
-
-                commandChannel.offer(Command.DisplayCheckout(uri.toString()))
-            } catch (error: Exception) {
-                commandChannel.offer(Command.DisplayError(error))
+            val request = CheckoutRequest(email, amount, mode)
+            val response = runCatching {
+                withContext(Dispatchers.IO) { merchantApi.checkout(request) }
             }
+            val command = response.fold(
+                onSuccess = { Command.DisplayCheckout(buildUrl(it.url)) },
+                onFailure = { Command.DisplayError(it) }
+            )
+            commandChannel.offer(command)
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun selectAddress(address: ShippingAddress) {
         val shippingOptions = listOf(
             ShippingOption(
@@ -126,3 +144,22 @@ class CheckoutViewModel(
         }
     }
 }
+
+private object PreferenceKey {
+    const val email = "email"
+    const val express = "express"
+    const val buyNow = "buyNow"
+    const val pickup = "pickup"
+}
+
+private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
+private fun SharedPreferences.Editor.putEmail(email: String) = putString(PreferenceKey.email, email)
+
+private fun SharedPreferences.getExpress(): Boolean = getBoolean(PreferenceKey.express, false)
+private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) = putBoolean(PreferenceKey.express, isExpress)
+
+private fun SharedPreferences.getBuyNow(): Boolean = getBoolean(PreferenceKey.buyNow, false)
+private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) = putBoolean(PreferenceKey.buyNow, isBuyNow)
+
+private fun SharedPreferences.getPickup(): Boolean = getBoolean(PreferenceKey.pickup, false)
+private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) = putBoolean(PreferenceKey.pickup, isPickup)

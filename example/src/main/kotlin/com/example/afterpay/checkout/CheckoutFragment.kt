@@ -92,7 +92,14 @@ class CheckoutFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
+                if (emailField.text.toString() != state.emailAddress) {
+                    emailField.setText(state.emailAddress)
+                }
+
                 totalCost.text = state.totalCost
+                expressCheckBox.isChecked = state.express
+                buyNowCheckBox.isChecked = state.buyNow
+                pickupCheckBox.isChecked = state.pickup
                 checkoutButton.isEnabled = state.enableCheckoutButton
             }
         }
