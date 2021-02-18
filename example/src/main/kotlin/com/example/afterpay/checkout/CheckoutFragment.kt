@@ -69,7 +69,7 @@ class CheckoutFragment : Fragment() {
 
         val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
         checkoutButton.setOnClickListener {
-            val intent = Afterpay.createCheckoutIntent(requireContext())
+            val intent = Afterpay.createCheckoutV2Intent(requireContext())
             startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
         }
 
