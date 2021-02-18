@@ -3,7 +3,7 @@ package com.afterpay.android
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 
-interface AfterpayInteractiveCheckoutHandler {
+interface AfterpayCheckoutV2Handler {
     fun didCommenceCheckout(onUrlLoaded: (Result<String>) -> Unit)
 
     fun shippingAddressDidChange(

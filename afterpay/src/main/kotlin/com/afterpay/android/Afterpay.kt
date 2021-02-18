@@ -8,7 +8,7 @@ import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
-import com.afterpay.android.view.AfterpayInteractiveCheckoutActivity
+import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import java.lang.IllegalArgumentException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
@@ -27,7 +27,7 @@ object Afterpay {
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
 
-    internal var interactiveCheckoutHandler: AfterpayInteractiveCheckoutHandler? = null
+    internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
 
     /**
@@ -41,7 +41,7 @@ object Afterpay {
      */
     @JvmStatic
     fun createCheckoutIntent(context: Context, checkoutUrl: String? = null): Intent {
-        val intent = Intent(context, AfterpayInteractiveCheckoutActivity::class.java)
+        val intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         checkoutUrl?.let { intent.putCheckoutUrlExtra(it) }
         return intent
     }
@@ -112,7 +112,7 @@ object Afterpay {
     }
 
     @JvmStatic
-    fun setInteractiveCheckoutHandler(handler: AfterpayInteractiveCheckoutHandler?) {
-        interactiveCheckoutHandler = handler
+    fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
+        checkoutV2Handler = handler
     }
 }

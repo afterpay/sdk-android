@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
-import com.afterpay.android.AfterpayInteractiveCheckoutHandler
+import com.afterpay.android.AfterpayCheckoutV2Handler
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.view.AfterpayPaymentButton
@@ -50,7 +50,7 @@ class CheckoutFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Afterpay.setInteractiveCheckoutHandler(checkoutHandler)
+        Afterpay.setCheckoutV2Handler(checkoutHandler)
     }
 
     override fun onCreateView(
@@ -151,7 +151,7 @@ private class CheckoutHandler(
     val onDidCommenceCheckout: () -> Unit,
     val onShippingAddressDidChange: (ShippingAddress) -> Unit,
     val onShippingOptionDidChange: (ShippingOption) -> Unit
-): AfterpayInteractiveCheckoutHandler {
+): AfterpayCheckoutV2Handler {
     private var onUrlLoaded: (Result<String>) -> Unit = {}
 
     override fun didCommenceCheckout(onUrlLoaded: (Result<String>) -> Unit) =

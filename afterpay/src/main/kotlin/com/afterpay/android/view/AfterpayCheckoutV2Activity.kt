@@ -38,7 +38,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
-internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
+internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
     private lateinit var bootstrapWebView: WebView
     private lateinit var loadingWebView: WebView
@@ -93,7 +93,7 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
             val javascriptInterface = BootstrapJavascriptInterface(
                 activity = activity,
                 webView = this,
-                checkoutUri = { this@AfterpayInteractiveCheckoutActivity.checkoutUri },
+                checkoutUri = { this@AfterpayCheckoutV2Activity.checkoutUri },
                 complete = ::finish,
                 cancel = ::finish
             )
@@ -140,7 +140,7 @@ internal class AfterpayInteractiveCheckoutActivity : AppCompatActivity() {
         if (checkoutUrl != null) {
             openAfterpay(checkoutUrl)
         } else {
-            val handler = Afterpay.interactiveCheckoutHandler ?:
+            val handler = Afterpay.checkoutV2Handler ?:
                 return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
 
             handler.didCommenceCheckout { result ->
@@ -316,7 +316,7 @@ private class BootstrapJavascriptInterface(
 
         when (message) {
             is ShippingAddressMessage -> {
-                val handler = Afterpay.interactiveCheckoutHandler
+                val handler = Afterpay.checkoutV2Handler
                     ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
 
                 handler.shippingAddressDidChange(message.payload) {
@@ -333,7 +333,7 @@ private class BootstrapJavascriptInterface(
             }
 
             is ShippingOptionMessage -> {
-                val handler = Afterpay.interactiveCheckoutHandler
+                val handler = Afterpay.checkoutV2Handler
                     ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
 
                 handler.shippingOptionDidChange(message.payload)
