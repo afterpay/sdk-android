@@ -44,9 +44,8 @@ class CheckoutViewModel(
     }
 
     sealed class Command {
-        data class DisplayCheckout(val checkoutUrl: String) : Command()
-        data class DisplayError(val checkoutError: Throwable) : Command()
-        data class DisplayShippingOptions(val shippingOptions: List<ShippingOption>): Command()
+        data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
+        data class ProvideShippingOptions(val shippingOptions: List<ShippingOption>): Command()
     }
 
     private val state = MutableStateFlow(
@@ -84,24 +83,13 @@ class CheckoutViewModel(
             putPickup(isPickup)
         }
 
-        val buildUrl: (String) -> String = {
-            Uri.parse(it)
-                .buildUpon()
-                .appendQueryParameter("buyNow", isBuyNow.toString())
-                .appendQueryParameter("pickup", isPickup.toString())
-                .build()
-                .toString()
-        }
-
         viewModelScope.launch {
             val request = CheckoutRequest(email, amount, mode)
             val response = runCatching {
                 withContext(Dispatchers.IO) { merchantApi.checkout(request) }
             }
-            val command = response.fold(
-                onSuccess = { Command.DisplayCheckout(buildUrl(it.url)) },
-                onFailure = { Command.DisplayError(it) }
-            )
+            val tokenResult = response.map { it.token }
+            val command = Command.ProvideCheckoutTokenResult(tokenResult)
             commandChannel.offer(command)
         }
     }
@@ -127,7 +115,7 @@ class CheckoutViewModel(
             )
         )
 
-        commandChannel.offer(Command.DisplayShippingOptions(shippingOptions))
+        commandChannel.offer(Command.ProvideShippingOptions(shippingOptions))
     }
 
     companion object {

@@ -15,9 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
-import com.afterpay.android.AfterpayCheckoutV2Handler
-import com.afterpay.android.model.ShippingAddress
-import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
@@ -107,11 +104,9 @@ class CheckoutFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
-                    is Command.DisplayCheckout ->
-                        checkoutHandler.urlLoaded(command.checkoutUrl)
-                    is Command.DisplayError ->
-                        checkoutHandler.errorLoadingUrl(command.checkoutError)
-                    is Command.DisplayShippingOptions ->
+                    is Command.ProvideCheckoutTokenResult ->
+                        checkoutHandler.provideTokenResult(command.tokenResult)
+                    is Command.ProvideShippingOptions ->
                         checkoutHandler.provideShippingOptions(command.shippingOptions)
                 }
             }
@@ -145,35 +140,4 @@ class CheckoutFragment : Fragment() {
             }
         }
     }
-}
-
-private class CheckoutHandler(
-    val onDidCommenceCheckout: () -> Unit,
-    val onShippingAddressDidChange: (ShippingAddress) -> Unit,
-    val onShippingOptionDidChange: (ShippingOption) -> Unit
-): AfterpayCheckoutV2Handler {
-    private var onUrlLoaded: (Result<String>) -> Unit = {}
-
-    override fun didCommenceCheckout(onUrlLoaded: (Result<String>) -> Unit) =
-        onDidCommenceCheckout().also { this.onUrlLoaded = onUrlLoaded }
-
-    fun urlLoaded(url: String) = onUrlLoaded(Result.success(url)).also { onUrlLoaded = {} }
-
-    fun errorLoadingUrl(error: Throwable) =
-        onUrlLoaded(Result.failure(error)).also { onUrlLoaded = {} }
-
-    private var onProvideShippingOptions: (List<ShippingOption>) -> Unit = {}
-
-    override fun shippingAddressDidChange(
-        address: ShippingAddress,
-        onProvideShippingOptions: (List<ShippingOption>) -> Unit
-    ) = onShippingAddressDidChange(address).also {
-        this.onProvideShippingOptions = onProvideShippingOptions
-    }
-
-    fun provideShippingOptions(shippingOptions: List<ShippingOption>) =
-        onProvideShippingOptions(shippingOptions).also { onProvideShippingOptions = {} }
-
-    override fun shippingOptionDidChange(shippingOption: ShippingOption) =
-        onShippingOptionDidChange(shippingOption)
 }
