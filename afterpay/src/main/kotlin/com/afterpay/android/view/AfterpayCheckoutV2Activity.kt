@@ -22,16 +22,15 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
-import com.afterpay.android.BuildConfig
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
 import com.afterpay.android.internal.AfterpayCheckoutMessage
+import com.afterpay.android.internal.AfterpayCheckoutV2
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
 import com.afterpay.android.internal.ShippingOptionsMessage
-import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
 import com.squareup.moshi.Moshi
@@ -43,25 +42,25 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private lateinit var bootstrapWebView: WebView
     private lateinit var loadingWebView: WebView
     private var checkoutWebView: WebView? = null
-    private lateinit var checkoutUri: Uri
 
-    private val bootstrapUrl = "https://afterpay.github.io/sdk-example-server/"
+    private val bootstrapUrl = "https://static.afterpay.com/mobile-sdk/bootstrap/index.html"
 
-    private companion object {
-
-        val validCheckoutUrls = listOf(
-            "portal.afterpay.com",
-            "portal.sandbox.afterpay.com",
-            "portal.clearpay.co.uk",
-            "portal.sandbox.clearpay.co.uk"
+    private val moshi: Moshi = Moshi.Builder()
+        .add(
+            PolymorphicJsonAdapterFactory
+                .of(AfterpayCheckoutMessage::class.java, "type")
+                .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
+                .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
+                .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
         )
-
-        const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
-    }
+        .add(KotlinJsonAdapterFactory())
+        .build()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WebView.setWebContentsDebuggingEnabled(true)
 
         setContentView(R.layout.activity_express_web_checkout)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -81,10 +80,11 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
             settings.javaScriptCanOpenWindowsAutomatically = true
             settings.setSupportMultipleWindows(true)
 
-            webViewClient = BootstrapWebViewClient(::loadCheckoutUri, ::handleBootstrapError)
+            webViewClient = BootstrapWebViewClient(::loadCheckoutToken, ::handleBootstrapError)
             webChromeClient = BootstrapWebChromeClient(
                 context = activity,
                 viewGroup = frameLayout,
+                onOpenWebView = { checkoutWebView = it },
                 onPageFinished = { frameLayout.removeView(loadingWebView) },
                 receivedError = ::handleCheckoutError,
                 openExternalLink = ::open
@@ -93,7 +93,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
             val javascriptInterface = BootstrapJavascriptInterface(
                 activity = activity,
                 webView = this,
-                checkoutUri = { this@AfterpayCheckoutV2Activity.checkoutUri },
+                moshi = moshi,
                 complete = ::finish,
                 cancel = ::finish
             )
@@ -123,29 +123,20 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         finish(CancellationStatus.USER_INITIATED)
     }
 
-    private fun loadCheckoutUri() {
-        val checkoutUrl = intent.getCheckoutUrlExtra()
+    private fun loadCheckoutToken() {
+        val handler = Afterpay.checkoutV2Handler ?:
+            return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
+        val configuration = Afterpay.configuration ?:
+            return finish(CancellationStatus.NO_CONFIGURATION)
 
-        val openAfterpay: (String) -> Unit = { url ->
-            val uri = Uri.parse(url).buildUpon().appendQueryParameter("isWindowed", "true").build()
+        handler.didCommenceCheckout { result ->
+            val token = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
+            val checkout = AfterpayCheckoutV2(token, configuration)
+            val adapter = moshi.adapter(AfterpayCheckoutV2::class.java)
+            val checkoutJson = adapter.toJson(checkout)
 
-            if (validCheckoutUrls.contains(uri.host)) {
-                this.checkoutUri = uri
-                bootstrapWebView.evaluateJavascript("openAfterpay('$uri');", null)
-            } else {
-                finish(CancellationStatus.INVALID_CHECKOUT_URL)
-            }
-        }
-
-        if (checkoutUrl != null) {
-            openAfterpay(checkoutUrl)
-        } else {
-            val handler = Afterpay.checkoutV2Handler ?:
-                return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
-
-            handler.didCommenceCheckout { result ->
-                val url = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
-                this.runOnUiThread { openAfterpay(url) }
+            runOnUiThread {
+                bootstrapWebView.evaluateJavascript("openCheckout('$checkoutJson');", null)
             }
         }
     }
@@ -180,7 +171,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         // Clear default system error from the web view.
         checkoutWebView?.loadUrl("about:blank")
 
-        errorAlert { loadCheckoutUri() }.show()
+        errorAlert { loadCheckoutToken() }.show()
     }
 
     private fun finish(completion: AfterpayCheckoutCompletion) {
@@ -223,6 +214,7 @@ private class BootstrapWebViewClient(
 private class BootstrapWebChromeClient(
     private val context: Context,
     private val viewGroup: ViewGroup,
+    private val onOpenWebView: (WebView) -> Unit,
     private val onPageFinished: () -> Unit,
     private val receivedError: () -> Unit,
     private val openExternalLink: (Uri) -> Unit
@@ -242,6 +234,7 @@ private class BootstrapWebChromeClient(
         webView.visibility = INVISIBLE
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportMultipleWindows(true)
+        webView.settings.domStorageEnabled = true
 
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -262,8 +255,7 @@ private class BootstrapWebChromeClient(
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onCreateWindow(
-                view: WebView?,
-                isDialog: Boolean,
+                view: WebView?, isDialog: Boolean,
                 isUserGesture: Boolean,
                 resultMsg: Message?
             ): Boolean {
@@ -283,6 +275,8 @@ private class BootstrapWebChromeClient(
         transport.webView = webView
         resultMsg.sendToTarget()
 
+        onOpenWebView(webView)
+
         return true
     }
 }
@@ -290,64 +284,34 @@ private class BootstrapWebChromeClient(
 private class BootstrapJavascriptInterface(
     private val activity: Activity,
     private val webView: WebView,
-    private val checkoutUri: () -> Uri,
+    private val moshi: Moshi,
     private val complete: (AfterpayCheckoutCompletion) -> Unit,
     private val cancel: (CancellationStatus) -> Unit
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
-        val checkoutMessageAdapterFactory = PolymorphicJsonAdapterFactory
-            .of(AfterpayCheckoutMessage::class.java, "type")
-            .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
-            .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
-            .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
-
-        val moshi = Moshi.Builder()
-            .add(checkoutMessageAdapterFactory)
-            .add(KotlinJsonAdapterFactory())
-            .build()
-
         val messageAdapter = moshi.adapter(AfterpayCheckoutMessage::class.java)
-        val message = try {
-            messageAdapter.fromJson(json)
-        } catch (e: Throwable) {
-            null
-        }
+        val message = runCatching { messageAdapter.fromJson(json) }.getOrNull()
 
-        when (message) {
-            is ShippingAddressMessage -> {
-                val handler = Afterpay.checkoutV2Handler
-                    ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
+        val completionAdapter = moshi.adapter(AfterpayCheckoutCompletion::class.java)
+        val completion = runCatching { completionAdapter.fromJson(json) }.getOrNull()
 
-                handler.shippingAddressDidChange(message.payload) {
+        if (message != null) {
+            val handler = Afterpay.checkoutV2Handler
+                ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
+
+            when (message) {
+                is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
                     val shippingOptionsMessage = ShippingOptionsMessage(message.meta, it)
                     val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)
-                    val targetUrl = checkoutUri().buildUpon().clearQuery().build().toString()
-                    val javascript = "postCheckoutMessage" +
-                        "('${shippingOptionsJson}', '${targetUrl}');"
-
-                    activity.runOnUiThread {
-                        webView.evaluateJavascript(javascript) {}
-                    }
+                    val javascript = "postMessageToCheckout('${shippingOptionsJson}');"
+                    activity.runOnUiThread { webView.evaluateJavascript(javascript, null) }
                 }
+                is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
+                is ShippingOptionsMessage -> {}
             }
-
-            is ShippingOptionMessage -> {
-                val handler = Afterpay.checkoutV2Handler
-                    ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
-
-                handler.shippingOptionDidChange(message.payload)
-            }
-
-            else -> {}
+        } else if (completion != null) {
+            complete(completion)
         }
-
-        val completion = try {
-            moshi.adapter(AfterpayCheckoutCompletion::class.java).fromJson(json)
-        } catch (e: Throwable) {
-            null
-        }
-
-        completion?.let { complete(it) }
     }
 }
