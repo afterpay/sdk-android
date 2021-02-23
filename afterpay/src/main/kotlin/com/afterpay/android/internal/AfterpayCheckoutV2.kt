@@ -17,7 +17,7 @@ internal data class AfterpayCheckoutV2(
     ) : this(
         token = token,
         locale = configuration.locale.toString(),
-        environment = "sandbox",
+        environment = configuration.environment.toString(),
         version = "${BuildConfig.AfterpayLibraryVersion}-android",
         pickup = null,
         buyNow = null,

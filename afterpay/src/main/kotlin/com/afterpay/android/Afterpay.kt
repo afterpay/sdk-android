@@ -88,13 +88,15 @@ object Afterpay {
         minimumAmount: String?,
         maximumAmount: String,
         currencyCode: String,
-        locale: Locale
+        locale: Locale,
+        environment: AfterpayEnvironment
     ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),
             maximumAmount = maximumAmount.toBigDecimal(),
             currency = Currency.getInstance(currencyCode),
-            locale = locale.clone() as Locale
+            locale = locale.clone() as Locale,
+            environment = environment
         ).also { configuration ->
             if (configuration.maximumAmount < BigDecimal.ZERO) {
                 throw IllegalArgumentException("Maximum order amount is invalid")

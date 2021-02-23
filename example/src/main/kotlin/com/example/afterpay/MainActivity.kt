@@ -12,6 +12,7 @@ import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.AfterpayEnvironment
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.receipt.ReceiptFragment
@@ -94,7 +95,8 @@ class MainActivity : AppCompatActivity() {
                 minimumAmount = configuration.minimumAmount,
                 maximumAmount = configuration.maximumAmount,
                 currencyCode = configuration.currency,
-                locale = Locale.US
+                locale = Locale.US,
+                environment = AfterpayEnvironment.SANDBOX
             )
         } catch (e: Exception) {
             Snackbar
