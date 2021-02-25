@@ -1,5 +1,6 @@
 package com.afterpay.android.internal
 
+import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.BuildConfig
 
 internal data class AfterpayCheckoutV2(
@@ -13,14 +14,15 @@ internal data class AfterpayCheckoutV2(
 ) {
     constructor(
         token: String,
-        configuration: Configuration
+        configuration: Configuration,
+        options: AfterpayCheckoutV2Options
     ) : this(
         token = token,
         locale = configuration.locale.toString(),
         environment = configuration.environment.toString(),
         version = "${BuildConfig.AfterpayLibraryVersion}-android",
-        pickup = null,
-        buyNow = null,
-        shippingOptionRequired = null
+        pickup = options.pickup,
+        buyNow = options.buyNow,
+        shippingOptionRequired = options.shippingOptionRequired
     )
 }

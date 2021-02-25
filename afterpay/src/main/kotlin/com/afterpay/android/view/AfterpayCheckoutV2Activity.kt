@@ -31,6 +31,7 @@ import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
 import com.afterpay.android.internal.ShippingOptionsMessage
+import com.afterpay.android.internal.getCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
 import com.squareup.moshi.Moshi
@@ -128,10 +129,11 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
             return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
         val configuration = Afterpay.configuration ?:
             return finish(CancellationStatus.NO_CONFIGURATION)
+        val options = requireNotNull(intent.getCheckoutV2OptionsExtra())
 
         handler.didCommenceCheckout { result ->
             val token = result.getOrNull() ?: return@didCommenceCheckout handleCheckoutError()
-            val checkout = AfterpayCheckoutV2(token, configuration)
+            val checkout = AfterpayCheckoutV2(token, configuration, options)
             val adapter = moshi.adapter(AfterpayCheckoutV2::class.java)
             val checkoutJson = adapter.toJson(checkout)
 

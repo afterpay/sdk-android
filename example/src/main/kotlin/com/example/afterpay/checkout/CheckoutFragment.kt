@@ -39,7 +39,7 @@ class CheckoutFragment : Fragment() {
     }
 
     private val checkoutHandler = CheckoutHandler(
-        onDidCommenceCheckout = { viewModel.loadCheckout() },
+        onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
         onShippingAddressDidChange = { viewModel.selectAddress(it) },
         onShippingOptionDidChange = { }
     )
@@ -65,10 +65,7 @@ class CheckoutFragment : Fragment() {
         }
 
         val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
-        checkoutButton.setOnClickListener {
-            val intent = Afterpay.createCheckoutV2Intent(requireContext())
-            startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
-        }
+        checkoutButton.setOnClickListener { viewModel.showAfterpayCheckout() }
 
         val totalCost = view.findViewById<TextView>(R.id.cart_totalCost)
 
@@ -104,6 +101,10 @@ class CheckoutFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
+                    is Command.ShowAfterpayCheckout -> {
+                        val intent = Afterpay.createCheckoutV2Intent(requireContext(), command.options)
+                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+                    }
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideShippingOptions ->

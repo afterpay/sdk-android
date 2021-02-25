@@ -1,11 +1,13 @@
 package com.afterpay.android.internal
 
 import android.content.Intent
+import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.CancellationStatus
 import java.lang.Exception
 
 private object AfterpayIntent {
     const val CHECKOUT_URL = "AFTERPAY_CHECKOUT_URL"
+    const val CHECKOUT_OPTIONS = "AFTERPAY_CHECKOUT_OPTIONS"
     const val INFO_URL = "AFTERPAY_INFO_URL"
     const val ORDER_TOKEN = "AFTERPAY_ORDER_TOKEN"
     const val CANCELLATION_STATUS = "AFTERPAY_CANCELLATION_STATUS"
@@ -16,6 +18,12 @@ internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
 
 internal fun Intent.getCheckoutUrlExtra(): String? =
     getStringExtra(AfterpayIntent.CHECKOUT_URL)
+
+internal fun Intent.putCheckoutV2OptionsExtra(options: AfterpayCheckoutV2Options): Intent =
+    putExtra(AfterpayIntent.CHECKOUT_OPTIONS, options)
+
+internal fun Intent.getCheckoutV2OptionsExtra(): AfterpayCheckoutV2Options? =
+    getParcelableExtra(AfterpayIntent.CHECKOUT_OPTIONS)
 
 internal fun Intent.putOrderTokenExtra(token: String): Intent =
     putExtra(AfterpayIntent.ORDER_TOKEN, token)

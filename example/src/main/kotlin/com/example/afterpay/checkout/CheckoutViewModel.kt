@@ -1,11 +1,11 @@
 package com.example.afterpay.checkout
 
 import android.content.SharedPreferences
-import android.net.Uri
 import android.util.Patterns
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 import com.example.afterpay.data.CheckoutMode
@@ -44,6 +44,7 @@ class CheckoutViewModel(
     }
 
     sealed class Command {
+        data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptions(val shippingOptions: List<ShippingOption>): Command()
     }
@@ -71,10 +72,8 @@ class CheckoutViewModel(
 
     fun checkPickup(checked: Boolean) = state.update { copy(pickup = checked) }
 
-    fun loadCheckout() {
-        val (email, total, isExpress, isBuyNow, isPickup) = state.value
-        val amount = DecimalFormat("0.00").format(total)
-        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
+    fun showAfterpayCheckout() {
+        val (email, _, isExpress, isBuyNow, isPickup) = state.value
 
         preferences.edit {
             putEmail(email)
@@ -82,6 +81,15 @@ class CheckoutViewModel(
             putBuyNow(isBuyNow)
             putPickup(isPickup)
         }
+
+        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, null)
+        commandChannel.offer(Command.ShowAfterpayCheckout(options))
+    }
+
+    fun loadCheckoutToken() {
+        val (email, total, isExpress) = state.value
+        val amount = DecimalFormat("0.00").format(total)
+        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {
             val request = CheckoutRequest(email, amount, mode)

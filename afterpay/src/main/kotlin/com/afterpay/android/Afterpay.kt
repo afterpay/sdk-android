@@ -8,6 +8,7 @@ import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
+import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import java.lang.IllegalArgumentException
@@ -46,8 +47,11 @@ object Afterpay {
             .putCheckoutUrlExtra(checkoutUrl)
 
     @JvmStatic
-    fun createCheckoutV2Intent(context: Context): Intent =
-        Intent(context, AfterpayCheckoutV2Activity::class.java)
+    fun createCheckoutV2Intent(
+        context: Context,
+        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options()
+    ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
+        .putCheckoutV2OptionsExtra(options)
 
     /**
      * Parses the order token associated with a successful Afterpay transaction.
