@@ -34,7 +34,8 @@ class CheckoutViewModel(
         val total: BigDecimal,
         val express: Boolean,
         val buyNow: Boolean,
-        val pickup: Boolean
+        val pickup: Boolean,
+        val shippingOptionsRequired: Boolean
     ) {
         val totalCost: String
             get() = total.asCurrency()
@@ -55,7 +56,8 @@ class CheckoutViewModel(
             total = totalCost,
             express = preferences.getExpress(),
             buyNow = preferences.getBuyNow(),
-            pickup = preferences.getPickup()
+            pickup = preferences.getPickup(),
+            shippingOptionsRequired = preferences.getShippingOptionsRequired()
         )
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
@@ -72,17 +74,22 @@ class CheckoutViewModel(
 
     fun checkPickup(checked: Boolean) = state.update { copy(pickup = checked) }
 
+    fun checkShippingOptionsRequired(checked: Boolean) = state.update {
+        copy(shippingOptionsRequired = checked)
+    }
+
     fun showAfterpayCheckout() {
-        val (email, _, isExpress, isBuyNow, isPickup) = state.value
+        val (email, _, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
 
         preferences.edit {
             putEmail(email)
             putExpress(isExpress)
             putBuyNow(isBuyNow)
             putPickup(isPickup)
+            putShippingOptionsRequired(isShippingOptionsRequired)
         }
 
-        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, null)
+        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
         commandChannel.offer(Command.ShowAfterpayCheckout(options))
     }
 
@@ -146,6 +153,7 @@ private object PreferenceKey {
     const val express = "express"
     const val buyNow = "buyNow"
     const val pickup = "pickup"
+    const val shippingOptionsRequired = "shippingOptionsRequired"
 }
 
 private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
@@ -159,3 +167,7 @@ private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) = putBoolean(P
 
 private fun SharedPreferences.getPickup(): Boolean = getBoolean(PreferenceKey.pickup, false)
 private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) = putBoolean(PreferenceKey.pickup, isPickup)
+
+private fun SharedPreferences.getShippingOptionsRequired(): Boolean = getBoolean(PreferenceKey.shippingOptionsRequired, true)
+private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
+    putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)

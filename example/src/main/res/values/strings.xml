@@ -18,4 +18,5 @@
     <string name="cart_buyNowLabel">Buy Now</string>
     <string name="cart_pickupLabel">Pickup</string>
     <string name="cart_expressLabel">Express</string>
+    <string name="cart_shippingOptionsRequiredLabel">Shipping Options Required</string>
 </resources>

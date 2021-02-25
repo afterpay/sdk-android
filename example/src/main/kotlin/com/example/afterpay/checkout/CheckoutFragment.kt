@@ -84,6 +84,13 @@ class CheckoutFragment : Fragment() {
         pickupRow.setOnClickListener { pickupCheckBox.toggle() }
         pickupCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkPickup(checked) }
 
+        val shippingOptionsRequiredRow = view.findViewById<View>(R.id.cart_shippingOptionsRequiredRow)
+        val shippingOptionsRequiredCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_shippingOptionsRequiredCheckBox)
+        shippingOptionsRequiredRow.setOnClickListener { pickupCheckBox.toggle() }
+        shippingOptionsRequiredCheckBox.setOnCheckedChangeListener { _, checked ->
+            viewModel.checkShippingOptionsRequired(checked)
+        }
+
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
                 if (emailField.text.toString() != state.emailAddress) {
@@ -94,6 +101,7 @@ class CheckoutFragment : Fragment() {
                 expressCheckBox.isChecked = state.express
                 buyNowCheckBox.isChecked = state.buyNow
                 pickupCheckBox.isChecked = state.pickup
+                shippingOptionsRequiredCheckBox.isChecked = state.shippingOptionsRequired
                 checkoutButton.isEnabled = state.enableCheckoutButton
             }
         }
