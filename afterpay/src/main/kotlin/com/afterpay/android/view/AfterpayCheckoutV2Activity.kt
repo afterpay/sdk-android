@@ -65,8 +65,6 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WebView.setWebContentsDebuggingEnabled(true)
-
         setContentView(R.layout.activity_express_web_checkout)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
