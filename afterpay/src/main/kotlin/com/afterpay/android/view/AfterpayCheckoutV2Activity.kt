@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Message
 import android.util.Base64
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -28,6 +29,7 @@ import com.afterpay.android.internal.AfterpayCheckoutCompletion
 import com.afterpay.android.internal.AfterpayCheckoutMessage
 import com.afterpay.android.internal.AfterpayCheckoutV2
 import com.afterpay.android.internal.Html
+import com.afterpay.android.internal.CheckoutLogMessage
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
 import com.afterpay.android.internal.ShippingOptionsMessage
@@ -37,6 +39,7 @@ import com.afterpay.android.internal.putOrderTokenExtra
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import java.util.Locale
 
 internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
@@ -50,6 +53,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         .add(
             PolymorphicJsonAdapterFactory
                 .of(AfterpayCheckoutMessage::class.java, "type")
+                .withSubtype(CheckoutLogMessage::class.java, "onMessage")
                 .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
                 .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
                 .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
@@ -303,6 +307,11 @@ private class BootstrapJavascriptInterface(
                 ?: return cancel(CancellationStatus.NO_CHECKOUT_HANDLER)
 
             when (message) {
+                is CheckoutLogMessage -> {
+                    val (severity, logMessage) = message.payload
+                    val formattedMessage = "${severity.capitalize(Locale.ROOT)}: $logMessage"
+                    Log.d("AfterpayCheckoutV2", formattedMessage)
+                }
                 is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
                     val shippingOptionsMessage = ShippingOptionsMessage(message.meta, it)
                     val shippingOptionsJson = messageAdapter.toJson(shippingOptionsMessage)

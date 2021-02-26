@@ -10,17 +10,27 @@ internal sealed class AfterpayCheckoutMessage(
     internal data class Meta(val requestId: String)
 }
 
+internal data class CheckoutLog(
+    val severity: String,
+    val message: String
+)
+
+internal data class CheckoutLogMessage(
+    override val meta: Meta,
+    override val payload: CheckoutLog
+) : AfterpayCheckoutMessage(meta, payload)
+
 internal data class ShippingAddressMessage(
     override val meta: Meta,
     override val payload: ShippingAddress
-): AfterpayCheckoutMessage(meta, payload)
+) : AfterpayCheckoutMessage(meta, payload)
 
 internal data class ShippingOptionMessage(
     override val meta: Meta,
     override val payload: ShippingOption
-): AfterpayCheckoutMessage(meta, payload)
+) : AfterpayCheckoutMessage(meta, payload)
 
 internal data class ShippingOptionsMessage(
     override val meta: Meta,
     override val payload: List<ShippingOption>
-): AfterpayCheckoutMessage(meta, payload)
+) : AfterpayCheckoutMessage(meta, payload)
