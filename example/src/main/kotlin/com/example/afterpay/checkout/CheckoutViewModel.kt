@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
+import com.afterpay.android.model.ShippingOptionsResult
+import com.afterpay.android.model.ShippingOptionsSuccessResult
 import com.example.afterpay.data.CheckoutMode
 import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
@@ -47,7 +49,7 @@ class CheckoutViewModel(
     sealed class Command {
         data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
-        data class ProvideShippingOptions(val shippingOptions: List<ShippingOption>): Command()
+        data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult): Command()
     }
 
     private val state = MutableStateFlow(
@@ -130,7 +132,8 @@ class CheckoutViewModel(
             )
         )
 
-        commandChannel.offer(Command.ProvideShippingOptions(shippingOptions))
+        val result = ShippingOptionsSuccessResult(shippingOptions)
+        commandChannel.offer(Command.ProvideShippingOptionsResult(result))
     }
 
     companion object {

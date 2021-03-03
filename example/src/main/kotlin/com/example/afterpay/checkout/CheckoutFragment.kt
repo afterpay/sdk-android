@@ -115,8 +115,8 @@ class CheckoutFragment : Fragment() {
                     }
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
-                    is Command.ProvideShippingOptions ->
-                        checkoutHandler.provideShippingOptions(command.shippingOptions)
+                    is Command.ProvideShippingOptionsResult ->
+                        checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
                 }
             }
         }
