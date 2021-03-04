@@ -2,16 +2,25 @@ package com.afterpay.android.internal
 
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
-import com.afterpay.android.model.ShippingOptionsError
+import com.afterpay.android.model.ShippingOptionsErrorResult
+import com.afterpay.android.model.ShippingOptionsResult
+import com.afterpay.android.model.ShippingOptionsSuccessResult
 
 internal data class AfterpayCheckoutMessageMeta(val requestId: String)
 
-// Received Messages
-
-internal sealed class AfterpayCheckoutReceivedMessage(
+internal sealed class AfterpayCheckoutMessage(
     open val meta: AfterpayCheckoutMessageMeta,
-    open val payload: Any
-)
+) {
+    companion object {
+        fun fromShippingOptionsResult(
+            result: ShippingOptionsResult,
+            meta: AfterpayCheckoutMessageMeta
+        ): AfterpayCheckoutMessage = when(result) {
+            is ShippingOptionsErrorResult -> CheckoutErrorMessage(meta, result.error.name)
+            is ShippingOptionsSuccessResult -> ShippingOptionsMessage(meta, result.shippingOptions)
+        }
+    }
+}
 
 internal data class CheckoutLog(
     val severity: String,
@@ -20,27 +29,25 @@ internal data class CheckoutLog(
 
 internal data class CheckoutLogMessage(
     override val meta: AfterpayCheckoutMessageMeta,
-    override val payload: CheckoutLog
-) : AfterpayCheckoutReceivedMessage(meta, payload)
+    val payload: CheckoutLog
+) : AfterpayCheckoutMessage(meta)
+
+internal data class CheckoutErrorMessage(
+    override val meta: AfterpayCheckoutMessageMeta,
+    val error: String
+) : AfterpayCheckoutMessage(meta)
 
 internal data class ShippingAddressMessage(
     override val meta: AfterpayCheckoutMessageMeta,
-    override val payload: ShippingAddress
-) : AfterpayCheckoutReceivedMessage(meta, payload)
+    val payload: ShippingAddress
+) : AfterpayCheckoutMessage(meta)
 
 internal data class ShippingOptionMessage(
     override val meta: AfterpayCheckoutMessageMeta,
-    override val payload: ShippingOption
-) : AfterpayCheckoutReceivedMessage(meta, payload)
+    val payload: ShippingOption
+) : AfterpayCheckoutMessage(meta)
 
-// Sent Messages
-
-internal data class ShippingOptionsSuccessMessage(
-    val meta: AfterpayCheckoutMessageMeta,
+internal data class ShippingOptionsMessage(
+    override val meta: AfterpayCheckoutMessageMeta,
     val payload: List<ShippingOption>
-)
-
-internal data class ShippingOptionsErrorMessage(
-    val meta: AfterpayCheckoutMessageMeta,
-    val error: ShippingOptionsError
-)
+) : AfterpayCheckoutMessage(meta)

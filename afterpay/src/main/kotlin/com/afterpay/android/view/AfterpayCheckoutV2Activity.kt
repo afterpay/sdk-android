@@ -26,19 +26,17 @@ import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
-import com.afterpay.android.internal.AfterpayCheckoutReceivedMessage
+import com.afterpay.android.internal.AfterpayCheckoutMessage
 import com.afterpay.android.internal.AfterpayCheckoutV2
+import com.afterpay.android.internal.CheckoutErrorMessage
 import com.afterpay.android.internal.CheckoutLogMessage
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
-import com.afterpay.android.internal.ShippingOptionsErrorMessage
-import com.afterpay.android.internal.ShippingOptionsSuccessMessage
+import com.afterpay.android.internal.ShippingOptionsMessage
 import com.afterpay.android.internal.getCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
-import com.afterpay.android.model.ShippingOptionsErrorResult
-import com.afterpay.android.model.ShippingOptionsSuccessResult
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -55,10 +53,12 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private val moshi: Moshi = Moshi.Builder()
         .add(
             PolymorphicJsonAdapterFactory
-                .of(AfterpayCheckoutReceivedMessage::class.java, "type")
+                .of(AfterpayCheckoutMessage::class.java, "type")
                 .withSubtype(CheckoutLogMessage::class.java, "onMessage")
+                .withSubtype(CheckoutErrorMessage::class.java, "onError")
                 .withSubtype(ShippingAddressMessage::class.java, "onShippingAddressChange")
                 .withSubtype(ShippingOptionMessage::class.java, "onShippingOptionChange")
+                .withSubtype(ShippingOptionsMessage::class.java, "onShippingOptionsChange")
         )
         .add(KotlinJsonAdapterFactory())
         .build()
@@ -296,7 +296,7 @@ private class BootstrapJavascriptInterface(
 ) {
     @JavascriptInterface
     fun postMessage(json: String) {
-        val receivedMessageAdapter = moshi.adapter(AfterpayCheckoutReceivedMessage::class.java)
+        val receivedMessageAdapter = moshi.adapter(AfterpayCheckoutMessage::class.java)
         val message = runCatching { receivedMessageAdapter.fromJson(json) }.getOrNull()
 
         val completionAdapter = moshi.adapter(AfterpayCheckoutCompletion::class.java)
@@ -312,19 +312,15 @@ private class BootstrapJavascriptInterface(
                     val formattedMessage = "${severity.capitalize(Locale.ROOT)}: $logMessage"
                     Log.d("AfterpayCheckoutV2", formattedMessage)
                 }
-                is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) { result ->
-                    val shippingOptionsJson = when(result) {
-                        is ShippingOptionsSuccessResult -> moshi
-                            .adapter(ShippingOptionsSuccessMessage::class.java)
-                            .toJson(ShippingOptionsSuccessMessage(message.meta, result.shippingOptions))
-                        is ShippingOptionsErrorResult -> moshi
-                            .adapter(ShippingOptionsErrorMessage::class.java)
-                            .toJson(ShippingOptionsErrorMessage(message.meta, result.error))
-                    }
-                    val javascript = "postMessageToCheckout('${shippingOptionsJson}');"
+                is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
+                    val responseMessage = AfterpayCheckoutMessage
+                        .fromShippingOptionsResult(it, message.meta)
+                    val responseMessageJson = receivedMessageAdapter.toJson(responseMessage)
+                    val javascript = "postMessageToCheckout('${responseMessageJson}');"
                     activity.runOnUiThread { webView.evaluateJavascript(javascript, null) }
                 }
                 is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
+                else -> {}
             }
         } else if (completion != null) {
             complete(completion)
