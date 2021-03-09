@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 minimumAmount = configuration.minimumAmount,
                 maximumAmount = configuration.maximumAmount,
                 currencyCode = configuration.currency,
-                locale = Locale.US,
+                locale = Locale(configuration.language, configuration.country),
                 environment = AfterpayEnvironment.SANDBOX
             )
         } catch (e: Exception) {

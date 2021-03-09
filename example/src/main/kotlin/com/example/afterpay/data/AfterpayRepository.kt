@@ -12,7 +12,9 @@ class AfterpayRepository(
     data class Configuration(
         val minimumAmount: String?,
         val maximumAmount: String,
-        val currency: String
+        val currency: String,
+        val language: String,
+        val country: String
     )
 
     suspend fun fetchConfiguration(): Configuration {
@@ -23,7 +25,9 @@ class AfterpayRepository(
                 Configuration(
                     minimumAmount = it.minimumAmount?.amount,
                     maximumAmount = it.maximumAmount.amount,
-                    currency = it.maximumAmount.currency
+                    currency = it.maximumAmount.currency,
+                    language = it.locale.language,
+                    country = it.locale.country
                 )
             }.also { configuration ->
                 with(preferences.edit()) {
@@ -49,6 +53,8 @@ private object PreferenceKey {
     const val minimumAmount = "minimumAmount"
     const val maximumAmount = "maximumAmount"
     const val currency = "currency"
+    const val language = "language"
+    const val country = "country"
 }
 
 private fun SharedPreferences.getLastFetchDate(): LocalDateTime? =
@@ -60,7 +66,9 @@ private fun SharedPreferences.getConfiguration(): AfterpayRepository.Configurati
     return AfterpayRepository.Configuration(
         minimumAmount = getString(PreferenceKey.minimumAmount, null),
         maximumAmount = getString(PreferenceKey.maximumAmount, null) ?: return null,
-        currency = getString(PreferenceKey.currency, null) ?: return null
+        currency = getString(PreferenceKey.currency, null) ?: return null,
+        language = getString(PreferenceKey.language, null) ?: return null,
+        country = getString(PreferenceKey.country, null) ?: return null
     )
 }
 
@@ -72,4 +80,6 @@ private fun SharedPreferences.Editor.putConfiguration(configuration: AfterpayRep
     putString(PreferenceKey.minimumAmount, configuration.minimumAmount)
     putString(PreferenceKey.maximumAmount, configuration.maximumAmount)
     putString(PreferenceKey.currency, configuration.currency)
+    putString(PreferenceKey.language, configuration.language)
+    putString(PreferenceKey.country, configuration.country)
 }
