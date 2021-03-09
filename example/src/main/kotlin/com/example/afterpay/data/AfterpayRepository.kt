@@ -1,6 +1,7 @@
 package com.example.afterpay.data
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -30,10 +31,9 @@ class AfterpayRepository(
                     country = it.locale.country
                 )
             }.also { configuration ->
-                with(preferences.edit()) {
+                preferences.edit {
                     putConfiguration(configuration)
                     putLastFetchDate(LocalDateTime.now())
-                    commit()
                 }
             }
         } else {
