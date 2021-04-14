@@ -12,8 +12,9 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [ProGuard](#proguard)
 - [Features](#features)
 - [Getting Started](#getting-started)
-    - [Configurating the SDK](#configuring-the-sdk)
-    - [Launching the Checkout](launching-the-checkout)
+    - [Configuring the SDK](#configuring-the-sdk)
+    - [Launching the Checkout (v1)](#launching-the-checkout-(v1))
+    - [Launching the Checkout (v2)](#launching-the-checkout-(v2))
 - [UI Components](#ui-components)
     - [Badge](#badge)
     - [Pay Now Button](#pay-now-button)
@@ -47,7 +48,7 @@ Proguard users will need to manually apply the rules defined in [`consumer-rules
 
 ## Features
 
-The initial release of the SDK contains the web login and checkout process with more features to come in subsequent releases.
+The SDK provides easy integration of the Afterpay web login and checkout process as well as ready-made UI components. There are two versions of checkout; v1 supports the standard flow while v2 adds support for the richer express experience, the callbacks for which are handled by the provided handler object.
 
 ## Getting Started
 
@@ -57,6 +58,8 @@ Each merchant has configuration specific to their account which is accessible fr
 
 The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how to best supply the locale which will determine the terms and conditions provided and currency formatting of the SDK.
 
+Environment is required only for checkout v2; it's recommended to use `AfterpayEnvironment.PRODUCTION` for release builds and `AfterpayEnvironment.SANDBOX` for all others.
+
 ```kotlin
 val configuration = api.getConfiguration()
 
@@ -64,15 +67,16 @@ Afterpay.setConfiguration(
     minimumAmount = configuration.minimum?.amount,
     maximumAmount = configuration.maximum.amount,
     currency = configuration.maximum.currency,
-    locale = Locale.US
+    locale = Locale.US,
+    environment = AfterpayEnvironment.SANDBOX
 )
 ```
 
 > **NOTE:** The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
 
-### Launching the Checkout
+### Launching the Checkout (v1)
 
-Launch the Afterpay payment flow by starting the intent provided by the SDK for a given checkout URL.
+Launch the Afterpay standard checkout flow by starting the intent provided by the SDK for a given checkout URL.
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -96,12 +100,73 @@ class ExampleActivity: Activity {
 
         when (requestCode to resultCode) {
             CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
-                val token = Afterpay.parseCheckoutResponse(data!!)
-                Toast.makeText(this, "Success: Completed order $token", Toast.LENGTH_SHORT).show()
+                val token = Afterpay.parseCheckoutSuccessResponse(data!!)
+                TODO("Capture payment with token")
             }
             CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
                 val status = Afterpay.parseCheckoutCancellationResponse(data!!)
-                Toast.makeText(this, "Cancelled: $status", Toast.LENGTH_SHORT).show()
+                TODO("Notify user of checkout cancellation")
+            }
+        }
+    }
+}
+```
+
+### Launching the Checkout (v2)
+
+Launch the Afterpay express checkout flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
+
+> **NOTE:** Configuration must always be set before calling checkout v2.
+
+```kotlin
+class ExampleActivity: Activity {
+    private companion object {
+        const val CHECKOUT_WITH_AFTERPAY = 1234
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Afterpay.setCheckoutV2Handler(object : AfterpayCheckoutV2Handler {
+            override fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit) {
+                TODO("Load the token passing the result to completion")
+            }
+
+            override fun shippingAddressDidChange(
+                address: ShippingAddress,
+                onProvideShippingOptions: (ShippingOptionsResult) -> Unit
+            ) {
+                TODO("Use the address to form shipping options and pass to completion")
+            }
+
+            override fun shippingOptionDidChange(shippingOption: ShippingOption) {
+                TODO("Optionally update your application model with the selected shipping option")
+            }
+        })
+    }
+
+    override fun onCreate(savedInstanceState: Bundle) {
+        // ...
+
+        val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
+        afterpayCheckoutButton.setOnClickListener {
+            val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
+            val intent = Afterpay.createCheckoutV2Intent(this, options)
+            startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // ...
+
+        when (requestCode to resultCode) {
+            CHECKOUT_WITH_AFTERPAY to RESULT_OK -> {
+                val token = Afterpay.parseCheckoutSuccessResponse(data!!)
+                TODO("Capture payment with token")
+            }
+            CHECKOUT_WITH_AFTERPAY to RESULT_CANCELED -> {
+                val status = Afterpay.parseCheckoutCancellationResponse(data!!)
+                TODO("Notify user of checkout cancellation")
             }
         }
     }
@@ -203,6 +268,7 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [button-white-on-black]: images/button_white_on_black.png
 [contributing]: CONTRIBUTING.md
 [docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
+[express-checkout]: https://developers.afterpay.com/afterpay-online/reference#what-is-express-checkout
 [example]: example
 [example-configuration]: https://github.com/afterpay/sdk-android/blob/master/example/src/main/kotlin/com/example/afterpay/MainActivity.kt#L92-L100
 [example-server]: https://github.com/afterpay/sdk-example-server
