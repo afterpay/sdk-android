@@ -15,10 +15,10 @@ class AfterpayRepository(
         val currency: String
     )
 
-    suspend fun fetchConfiguration(): Configuration {
+    suspend fun fetchConfiguration(forceRefresh: Boolean = false): Configuration {
         val cachedConfiguration = preferences.getConfiguration()
 
-        return if (shouldRefreshConfiguration() || cachedConfiguration == null) {
+        return if (forceRefresh || shouldRefreshConfiguration() || cachedConfiguration == null) {
             merchantApi.configuration().let {
                 Configuration(
                     minimumAmount = it.minimumAmount?.amount,
