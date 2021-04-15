@@ -2,18 +2,20 @@ package com.afterpay.android
 
 import org.junit.Assert.assertThrows
 import org.junit.Test
-import java.lang.IllegalArgumentException
-import java.lang.NumberFormatException
 import java.util.Locale
 
 class AfterpayTest {
+
+    private val environment = AfterpayEnvironment.SANDBOX
+
     @Test
     fun `setConfiguration does not throw for valid configuration`() {
         Afterpay.setConfiguration(
             minimumAmount = "10.00",
             maximumAmount = "100.00",
             currencyCode = "AUD",
-            locale = Locale.US
+            locale = Locale.US,
+            environment = environment
         )
     }
 
@@ -23,7 +25,8 @@ class AfterpayTest {
             minimumAmount = null,
             maximumAmount = "100.00",
             currencyCode = "AUD",
-            locale = Locale.US
+            locale = Locale.US,
+            environment = environment
         )
     }
 
@@ -34,7 +37,8 @@ class AfterpayTest {
                 minimumAmount = "10.00",
                 maximumAmount = "100.00",
                 currencyCode = "foo",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -46,7 +50,8 @@ class AfterpayTest {
                 minimumAmount = "foo",
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -58,7 +63,8 @@ class AfterpayTest {
                 minimumAmount = "10.00",
                 maximumAmount = "foo",
                 currencyCode = "AUD",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -70,7 +76,8 @@ class AfterpayTest {
                 minimumAmount = "-10.00",
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -82,7 +89,8 @@ class AfterpayTest {
                 minimumAmount = "110.00",
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -94,7 +102,8 @@ class AfterpayTest {
                 minimumAmount = null,
                 maximumAmount = "-2.00",
                 currencyCode = "AUD",
-                locale = Locale.US
+                locale = Locale.US,
+                environment = environment
             )
         }
     }
@@ -106,7 +115,8 @@ class AfterpayTest {
                 minimumAmount = "10.00",
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
-                locale = Locale.JAPAN
+                locale = Locale.JAPAN,
+                environment = environment
             )
         }
     }

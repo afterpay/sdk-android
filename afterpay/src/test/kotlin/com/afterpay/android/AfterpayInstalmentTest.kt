@@ -108,7 +108,13 @@ class AfterpayInstalmentTest {
         currency: Currency,
         locale: Locale
     ): AfterpayInstalment.Available {
-        val configuration = Configuration(50.toBigDecimal(), 1000.toBigDecimal(), currency, locale)
+        val configuration = Configuration(
+            50.toBigDecimal(),
+            1000.toBigDecimal(),
+            currency,
+            locale,
+            AfterpayEnvironment.SANDBOX
+        )
         return AfterpayInstalment.of(amount, configuration) as AfterpayInstalment.Available
     }
 }
