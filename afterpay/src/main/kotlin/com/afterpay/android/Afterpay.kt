@@ -11,8 +11,6 @@ import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
-import java.lang.IllegalArgumentException
-import java.lang.NumberFormatException
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
@@ -33,19 +31,20 @@ object Afterpay {
         private set
 
     /**
-     * Creates an [Intent] that can be used to initiate an Afterpay transaction. Provide the
-     * new [Intent] in [startActivityForResult][android.app.Activity.startActivityForResult]
-     * to initiate the checkout process.
-     *
-     * @param context The calling activity context.
-     * @param checkoutUrl The URL used to initiate the transaction.
-     * @return An intent to initiate the Afterpay transaction.
+     * Returns an [Intent] for the given [context] and [checkoutUrl] that can be passed to
+     * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
+     * Afterpay checkout.
      */
     @JvmStatic
     fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
         Intent(context, AfterpayCheckoutActivity::class.java)
             .putCheckoutUrlExtra(checkoutUrl)
 
+    /**
+     * Returns an [Intent] for the given [context] and [options] that can be passed to
+     * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
+     * Afterpay checkout.
+     */
     @JvmStatic
     fun createCheckoutV2Intent(
         context: Context,
@@ -54,38 +53,30 @@ object Afterpay {
         .putCheckoutV2OptionsExtra(options)
 
     /**
-     * Parses the order token associated with a successful Afterpay transaction.
-     *
-     * @param intent The intent returned in
-     * [startActivityForResult][android.app.Activity.startActivityForResult].
-     * @return The order token associated with the transaction.
+     * Returns the [token][String] parsed from the given [intent] returned by a successful
+     * Afterpay checkout.
      */
     @JvmStatic
     fun parseCheckoutSuccessResponse(intent: Intent): String? =
         intent.getOrderTokenExtra()
 
     /**
-     * Parses the status associated with a cancelled Afterpay transaction.
-     *
-     * @param intent The intent returned in
-     * [startActivityForResult][android.app.Activity.startActivityForResult].
-     * @return The status indicating why the transaction was cancelled.
+     * Returns the [status][CancellationStatus] parsed from the given [intent] returned by a
+     * cancelled Afterpay checkout.
      */
     @JvmStatic
     fun parseCheckoutCancellationResponse(intent: Intent): CancellationStatus? =
         intent.getCancellationStatusExtra()
 
     /**
-     * Sets global payment configuration for the merchant account.
+     * Sets the global checkout configuration comprising the [minimum order amount][minimumAmount],
+     * [maximum order amount][maximumAmount], [currency code in ISO 4217 format][currencyCode],
+     * [locale] for formatting of terms and conditions and currency, and the [environment] in which
+     * to launch the checkout.
      *
-     * @param minimumAmount The minimum order amount.
-     * @param maximumAmount The maximum order amount.
-     * @param currencyCode The currency code in ISO 4217 format.
-     * @param locale The locale of the merchant for terms and conditions and currency formatting.
-     *
-     * @throws NumberFormatException if the amount is not a valid representation of a number.
-     * @throws IllegalArgumentException if the currency is not a valid ISO 4217 currency code, if
-     * the minimum and maximum amount isn't correctly ordered or if the locale is not supported.
+     * Results in a [NumberFormatException] if an amount is not a valid representation of a number
+     * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if
+     * the minimum and maximum amount isn't correctly ordered, or if the locale is not supported.
      */
     @JvmStatic
     fun setConfiguration(
@@ -120,6 +111,9 @@ object Afterpay {
         }
     }
 
+    /**
+     * Sets the global [handler] used to provide callbacks for the v2 checkout.
+     */
     @JvmStatic
     fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
         checkoutV2Handler = handler
