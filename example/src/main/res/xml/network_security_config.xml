@@ -23,15 +23,14 @@
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="false">portal.sandbox.afterpay.com</domain>
         <pin-set
-            expiration="2021-07-05"
-            tools:ignore="MissingBackupPin">
+            expiration="2021-09-09">
             <pin digest="SHA-256">15mVY9KpcF6J/UzKCS2AfUjUWPVsIvxi9PW0XuFnvH4=</pin>
             <pin digest="SHA-256">FEzVOUp4dF3gI0ZVPRJhFbSJVXR+uQmMH65xhs1glH4=</pin>
         </pin-set>
     </domain-config>
 
     <!-- Use self-signed SSL certificate for the local web server. -->
-    <domain-config>
+    <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="false">10.0.2.2</domain>
         <trust-anchors>
             <certificates src="system" />

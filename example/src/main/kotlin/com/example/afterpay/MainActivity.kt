@@ -1,6 +1,5 @@
 package com.example.afterpay
 
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +12,7 @@ import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.AfterpayEnvironment
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.receipt.ReceiptFragment
@@ -27,11 +27,8 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
         AfterpayRepository(
-            merchantApi = Dependencies.merchantApi,
-            preferences = getSharedPreferences(
-                getString(R.string.preferences),
-                Context.MODE_PRIVATE
-            )
+            merchantApi = getDependencies().merchantApi,
+            preferences = getDependencies().sharedPreferences
         )
     }
 
@@ -112,7 +109,8 @@ class MainActivity : AppCompatActivity() {
                 minimumAmount = configuration.minimumAmount,
                 maximumAmount = configuration.maximumAmount,
                 currencyCode = configuration.currency,
-                locale = Locale.US
+                locale = Locale(configuration.language, configuration.country),
+                environment = AfterpayEnvironment.SANDBOX
             )
         } catch (e: Exception) {
             Snackbar

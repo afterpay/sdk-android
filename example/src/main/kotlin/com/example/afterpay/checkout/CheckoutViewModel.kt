@@ -1,8 +1,16 @@
 package com.example.afterpay.checkout
 
+import android.content.SharedPreferences
 import android.util.Patterns
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.model.ShippingAddress
+import com.afterpay.android.model.ShippingOption
+import com.afterpay.android.model.ShippingOptionsResult
+import com.afterpay.android.model.ShippingOptionsSuccessResult
+import com.example.afterpay.data.CheckoutMode
 import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.util.asCurrency
@@ -20,30 +28,40 @@ import java.text.DecimalFormat
 
 class CheckoutViewModel(
     totalCost: BigDecimal,
-    private val merchantApi: MerchantApi
+    private val merchantApi: MerchantApi,
+    private val preferences: SharedPreferences
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
         val total: BigDecimal,
-        private val isLoading: Boolean
+        val express: Boolean,
+        val buyNow: Boolean,
+        val pickup: Boolean,
+        val shippingOptionsRequired: Boolean
     ) {
         val totalCost: String
             get() = total.asCurrency()
 
-        val showProgressBar: Boolean
-            get() = isLoading
-
         val enableCheckoutButton: Boolean
-            get() = !isLoading && Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
+            get() = Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()
     }
 
     sealed class Command {
-        data class StartAfterpayCheckout(val url: String) : Command()
-        data class DisplayError(val message: String) : Command()
+        data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
+        data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
+        data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
+            Command()
     }
 
     private val state = MutableStateFlow(
-        State(emailAddress = "", total = totalCost, isLoading = false)
+        State(
+            emailAddress = preferences.getEmail(),
+            total = totalCost,
+            express = preferences.getExpress(),
+            buyNow = preferences.getBuyNow(),
+            pickup = preferences.getPickup(),
+            shippingOptionsRequired = preferences.getShippingOptionsRequired()
+        )
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
@@ -51,34 +69,114 @@ class CheckoutViewModel(
 
     fun commands(): Flow<Command> = commandChannel.receiveAsFlow()
 
-    fun enterEmailAddress(email: String) {
-        state.update { copy(emailAddress = email) }
+    fun enterEmailAddress(email: String) = state.update { copy(emailAddress = email) }
+
+    fun checkExpress(checked: Boolean) = state.update { copy(express = checked) }
+
+    fun checkBuyNow(checked: Boolean) = state.update { copy(buyNow = checked) }
+
+    fun checkPickup(checked: Boolean) = state.update { copy(pickup = checked) }
+
+    fun checkShippingOptionsRequired(checked: Boolean) = state.update {
+        copy(shippingOptionsRequired = checked)
     }
 
-    fun checkoutWithAfterpay() {
-        val (email, total) = state.value
+    fun showAfterpayCheckout() {
+        val (email, _, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
+
+        preferences.edit {
+            putEmail(email)
+            putExpress(isExpress)
+            putBuyNow(isBuyNow)
+            putPickup(isPickup)
+            putShippingOptionsRequired(isShippingOptionsRequired)
+        }
+
+        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
+        commandChannel.offer(Command.ShowAfterpayCheckout(options))
+    }
+
+    fun loadCheckoutToken() {
+        val (email, total, isExpress) = state.value
         val amount = DecimalFormat("0.00").format(total)
+        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {
-            state.update { copy(isLoading = true) }
-
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    merchantApi.checkout(CheckoutRequest(email, amount))
-                }
-                commandChannel.offer(Command.StartAfterpayCheckout(response.url))
-            } catch (error: Exception) {
-                val message = error.message ?: "Failed to fetch checkout url"
-                commandChannel.offer(Command.DisplayError(message))
+            val request = CheckoutRequest(email, amount, mode)
+            val response = runCatching {
+                withContext(Dispatchers.IO) { merchantApi.checkout(request) }
             }
-
-            state.update { copy(isLoading = false) }
+            val tokenResult = response.map { it.token }
+            val command = Command.ProvideCheckoutTokenResult(tokenResult)
+            commandChannel.offer(command)
         }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun selectAddress(address: ShippingAddress) {
+        val shippingOptions = listOf(
+            ShippingOption(
+                "standard",
+                "Standard",
+                "",
+                ShippingOption.Money("0.00", "AUD"),
+                ShippingOption.Money("50.00", "AUD"),
+                null
+            ),
+            ShippingOption(
+                "priority",
+                "Priority",
+                "Next business day",
+                ShippingOption.Money("10.00", "AUD"),
+                ShippingOption.Money("60.00", "AUD"),
+                null
+            )
+        )
+
+        val result = ShippingOptionsSuccessResult(shippingOptions)
+        commandChannel.offer(Command.ProvideShippingOptionsResult(result))
     }
 
     companion object {
-        fun factory(totalCost: BigDecimal, merchantApi: MerchantApi) = viewModelFactory {
-            CheckoutViewModel(totalCost = totalCost, merchantApi = merchantApi)
+        fun factory(
+            totalCost: BigDecimal,
+            merchantApi: MerchantApi,
+            preferences: SharedPreferences
+        ) = viewModelFactory {
+            CheckoutViewModel(
+                totalCost = totalCost,
+                merchantApi = merchantApi,
+                preferences = preferences
+            )
         }
     }
 }
+
+private object PreferenceKey {
+    const val email = "email"
+    const val express = "express"
+    const val buyNow = "buyNow"
+    const val pickup = "pickup"
+    const val shippingOptionsRequired = "shippingOptionsRequired"
+}
+
+private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
+private fun SharedPreferences.Editor.putEmail(email: String) = putString(PreferenceKey.email, email)
+
+private fun SharedPreferences.getExpress(): Boolean = getBoolean(PreferenceKey.express, false)
+private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) =
+    putBoolean(PreferenceKey.express, isExpress)
+
+private fun SharedPreferences.getBuyNow(): Boolean = getBoolean(PreferenceKey.buyNow, false)
+private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) =
+    putBoolean(PreferenceKey.buyNow, isBuyNow)
+
+private fun SharedPreferences.getPickup(): Boolean = getBoolean(PreferenceKey.pickup, false)
+private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) =
+    putBoolean(PreferenceKey.pickup, isPickup)
+
+private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
+    getBoolean(PreferenceKey.shippingOptionsRequired, true)
+
+private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
+    putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)

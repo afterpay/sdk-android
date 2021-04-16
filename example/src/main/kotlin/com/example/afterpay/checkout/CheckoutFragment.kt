@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -17,10 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayPaymentButton
-import com.example.afterpay.Dependencies
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.getDependencies
 import com.example.afterpay.nav_graph
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
@@ -33,8 +33,21 @@ class CheckoutFragment : Fragment() {
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
             totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal),
-            merchantApi = Dependencies.merchantApi
+            merchantApi = getDependencies().merchantApi,
+            preferences = getDependencies().sharedPreferences
         )
+    }
+
+    private val checkoutHandler = CheckoutHandler(
+        onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
+        onShippingAddressDidChange = { viewModel.selectAddress(it) },
+        onShippingOptionDidChange = { }
+    )
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Afterpay.setCheckoutV2Handler(checkoutHandler)
     }
 
     override fun onCreateView(
@@ -52,30 +65,58 @@ class CheckoutFragment : Fragment() {
         }
 
         val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
-        checkoutButton.setOnClickListener {
-            viewModel.checkoutWithAfterpay()
-        }
+        checkoutButton.setOnClickListener { viewModel.showAfterpayCheckout() }
 
         val totalCost = view.findViewById<TextView>(R.id.cart_totalCost)
-        val progressBar = view.findViewById<ProgressBar>(R.id.cart_progressBar)
+
+        val expressRow = view.findViewById<View>(R.id.cart_expressRow)
+        val expressCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_expressCheckBox)
+        expressRow.setOnClickListener { expressCheckBox.toggle() }
+        expressCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkExpress(checked) }
+
+        val buyNowRow = view.findViewById<View>(R.id.cart_buyNowRow)
+        val buyNowCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_buyNowCheckBox)
+        buyNowRow.setOnClickListener { buyNowCheckBox.toggle() }
+        buyNowCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkBuyNow(checked) }
+
+        val pickupRow = view.findViewById<View>(R.id.cart_pickupRow)
+        val pickupCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_pickupCheckBox)
+        pickupRow.setOnClickListener { pickupCheckBox.toggle() }
+        pickupCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkPickup(checked) }
+
+        val shippingOptionsRequiredRow = view.findViewById<View>(R.id.cart_shippingOptionsRequiredRow)
+        val shippingOptionsRequiredCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_shippingOptionsRequiredCheckBox)
+        shippingOptionsRequiredRow.setOnClickListener { pickupCheckBox.toggle() }
+        shippingOptionsRequiredCheckBox.setOnCheckedChangeListener { _, checked ->
+            viewModel.checkShippingOptionsRequired(checked)
+        }
 
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
+                if (emailField.text.toString() != state.emailAddress) {
+                    emailField.setText(state.emailAddress)
+                }
+
                 totalCost.text = state.totalCost
+                expressCheckBox.isChecked = state.express
+                buyNowCheckBox.isChecked = state.buyNow
+                pickupCheckBox.isChecked = state.pickup
+                shippingOptionsRequiredCheckBox.isChecked = state.shippingOptionsRequired
                 checkoutButton.isEnabled = state.enableCheckoutButton
-                progressBar.visibility = if (state.showProgressBar) View.VISIBLE else View.INVISIBLE
             }
         }
+
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
-                    is Command.StartAfterpayCheckout -> {
-                        val intent = Afterpay.createCheckoutIntent(requireContext(), command.url)
+                    is Command.ShowAfterpayCheckout -> {
+                        val intent = Afterpay.createCheckoutV2Intent(requireContext(), command.options)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
-                    is Command.DisplayError -> {
-                        Snackbar.make(requireView(), command.message, Snackbar.LENGTH_SHORT).show()
-                    }
+                    is Command.ProvideCheckoutTokenResult ->
+                        checkoutHandler.provideTokenResult(command.tokenResult)
+                    is Command.ProvideShippingOptionsResult ->
+                        checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
                 }
             }
         }
