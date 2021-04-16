@@ -81,6 +81,20 @@ class MainActivity : AppCompatActivity() {
             setNavigationOnClickListener {
                 onBackPressed()
             }
+
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_refresh_config -> {
+                        lifecycleScope.launch {
+                            applyAfterpayConfiguration(forceRefresh = true)
+                        }
+
+                        true
+                    }
+
+                    else -> false
+                }
+            }
         }
 
         lifecycleScope.launchWhenStarted {
@@ -88,10 +102,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun applyAfterpayConfiguration() {
+    private suspend fun applyAfterpayConfiguration(forceRefresh: Boolean = false) {
         try {
             val configuration = withContext(Dispatchers.IO) {
-                afterpayRepository.fetchConfiguration()
+                afterpayRepository.fetchConfiguration(forceRefresh)
             }
 
             Afterpay.setConfiguration(

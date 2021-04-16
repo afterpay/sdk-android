@@ -8,9 +8,10 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/main_toolbar"
         style="@style/Widget.MaterialComponents.Toolbar.Primary"
-        app:titleTextAppearance="?attr/textAppearanceHeadline6"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize"
+        app:menu="@menu/menu"
+        app:titleTextAppearance="?attr/textAppearanceHeadline6" />
 
     <fragment
         android:id="@+id/nav_host_fragment"
