@@ -9,7 +9,7 @@ class CheckoutHandler(
     val onDidCommenceCheckout: () -> Unit,
     val onShippingAddressDidChange: (ShippingAddress) -> Unit,
     val onShippingOptionDidChange: (ShippingOption) -> Unit
-): AfterpayCheckoutV2Handler {
+) : AfterpayCheckoutV2Handler {
     private var onTokenLoaded: (Result<String>) -> Unit = {}
 
     override fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit) =

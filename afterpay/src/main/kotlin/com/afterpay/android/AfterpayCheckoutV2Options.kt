@@ -7,7 +7,7 @@ data class AfterpayCheckoutV2Options(
     val pickup: Boolean? = null,
     val buyNow: Boolean? = null,
     val shippingOptionRequired: Boolean? = null
-): Parcelable {
+) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,

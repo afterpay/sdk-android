@@ -15,7 +15,7 @@ internal sealed class AfterpayCheckoutMessage(
         fun fromShippingOptionsResult(
             result: ShippingOptionsResult,
             meta: AfterpayCheckoutMessageMeta
-        ): AfterpayCheckoutMessage = when(result) {
+        ): AfterpayCheckoutMessage = when (result) {
             is ShippingOptionsErrorResult -> CheckoutErrorMessage(meta, result.error.name)
             is ShippingOptionsSuccessResult -> ShippingOptionsMessage(meta, result.shippingOptions)
         }

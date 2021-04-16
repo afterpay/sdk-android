@@ -49,7 +49,8 @@ class CheckoutViewModel(
     sealed class Command {
         data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
-        data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult): Command()
+        data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
+            Command()
     }
 
     private val state = MutableStateFlow(
@@ -163,14 +164,19 @@ private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email
 private fun SharedPreferences.Editor.putEmail(email: String) = putString(PreferenceKey.email, email)
 
 private fun SharedPreferences.getExpress(): Boolean = getBoolean(PreferenceKey.express, false)
-private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) = putBoolean(PreferenceKey.express, isExpress)
+private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) =
+    putBoolean(PreferenceKey.express, isExpress)
 
 private fun SharedPreferences.getBuyNow(): Boolean = getBoolean(PreferenceKey.buyNow, false)
-private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) = putBoolean(PreferenceKey.buyNow, isBuyNow)
+private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) =
+    putBoolean(PreferenceKey.buyNow, isBuyNow)
 
 private fun SharedPreferences.getPickup(): Boolean = getBoolean(PreferenceKey.pickup, false)
-private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) = putBoolean(PreferenceKey.pickup, isPickup)
+private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) =
+    putBoolean(PreferenceKey.pickup, isPickup)
 
-private fun SharedPreferences.getShippingOptionsRequired(): Boolean = getBoolean(PreferenceKey.shippingOptionsRequired, true)
+private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
+    getBoolean(PreferenceKey.shippingOptionsRequired, true)
+
 private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
     putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)

@@ -129,10 +129,10 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     }
 
     private fun loadCheckoutToken() {
-        val handler = Afterpay.checkoutV2Handler ?:
-            return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
-        val configuration = Afterpay.configuration ?:
-            return finish(CancellationStatus.NO_CONFIGURATION)
+        val handler =
+            Afterpay.checkoutV2Handler ?: return finish(CancellationStatus.NO_CHECKOUT_HANDLER)
+        val configuration =
+            Afterpay.configuration ?: return finish(CancellationStatus.NO_CONFIGURATION)
         val options = requireNotNull(intent.getCheckoutV2OptionsExtra())
 
         handler.didCommenceCheckout { result ->
@@ -261,7 +261,8 @@ private class BootstrapWebChromeClient(
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onCreateWindow(
-                view: WebView?, isDialog: Boolean,
+                view: WebView?,
+                isDialog: Boolean,
                 isUserGesture: Boolean,
                 resultMsg: Message?
             ): Boolean {
@@ -316,11 +317,11 @@ private class BootstrapJavascriptInterface(
                     val responseMessage = AfterpayCheckoutMessage
                         .fromShippingOptionsResult(it, message.meta)
                     val responseMessageJson = receivedMessageAdapter.toJson(responseMessage)
-                    val javascript = "postMessageToCheckout('${responseMessageJson}');"
+                    val javascript = "postMessageToCheckout('$responseMessageJson');"
                     activity.runOnUiThread { webView.evaluateJavascript(javascript, null) }
                 }
                 is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
-                else -> {}
+                else -> Unit
             }
         } else if (completion != null) {
             complete(completion)
