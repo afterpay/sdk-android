@@ -1,9 +1,9 @@
 buildscript {
     ext.versions = [
-        'compile_sdk': 29,
+        'compile_sdk': 30,
         'min_sdk': 21,
         'java': '1.8',
-        'build_tools': '29.0.3',
+        'build_tools': '30.0.3',
         'android_gradle_plugin': '4.1.2',
         'kotlin': '1.4.30',
         'maven_publish_plugin': '0.12.0',
