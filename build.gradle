@@ -5,7 +5,7 @@ buildscript {
         'java': '1.8',
         'build_tools': '30.0.3',
         'android_gradle_plugin': '4.1.2',
-        'kotlin': '1.4.30',
+        'kotlin': '1.4.32',
         'maven_publish_plugin': '0.12.0',
         'androidx_activity': '1.1.0',
         'androidx_constraint_layout': '2.0.4',
