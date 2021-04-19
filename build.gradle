@@ -7,7 +7,7 @@ buildscript {
         'android_gradle_plugin': '4.1.2',
         'kotlin': '1.4.32',
         'maven_publish_plugin': '0.12.0',
-        'androidx_activity': '1.1.0',
+        'androidx_activity': '1.2.2',
         'androidx_constraint_layout': '2.0.4',
         'androidx_fragment': '1.2.5',
         'androidx_lifecycle': '2.2.0',
