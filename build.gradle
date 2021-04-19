@@ -11,7 +11,7 @@ buildscript {
         'androidx_constraint_layout': '2.0.4',
         'androidx_fragment': '1.3.2',
         'androidx_lifecycle': '2.3.1',
-        'androidx_navigation': '2.3.3',
+        'androidx_navigation': '2.3.5',
         'androidx_recycler_view': '1.1.0',
         'android_three_ten': '1.2.4',
         'app_compat': '1.2.0',
