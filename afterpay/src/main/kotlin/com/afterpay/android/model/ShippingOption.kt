@@ -7,9 +7,4 @@ data class ShippingOption(
     var shippingAmount: Money,
     var orderAmount: Money,
     var taxAmount: Money?
-) {
-    data class Money(
-        val amount: String,
-        val currency: String
-    )
-}
+)
