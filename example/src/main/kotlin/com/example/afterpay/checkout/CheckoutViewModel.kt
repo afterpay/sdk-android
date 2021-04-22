@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.model.ShippingOptionsResult
@@ -119,16 +120,16 @@ class CheckoutViewModel(
                 "standard",
                 "Standard",
                 "",
-                ShippingOption.Money("0.00", "AUD"),
-                ShippingOption.Money("50.00", "AUD"),
+                Money("0.00", "AUD"),
+                Money("50.00", "AUD"),
                 null
             ),
             ShippingOption(
                 "priority",
                 "Priority",
                 "Next business day",
-                ShippingOption.Money("10.00", "AUD"),
-                ShippingOption.Money("60.00", "AUD"),
+                Money("10.00", "AUD"),
+                Money("60.00", "AUD"),
                 null
             )
         )
