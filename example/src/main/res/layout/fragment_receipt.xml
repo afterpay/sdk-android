@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <com.afterpay.android.view.AfterpayWidgetView
-        android:id="@+id/widget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</FrameLayout>
+        android:id="@+id/receipt_widget"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/receipt_totalCost_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/total_cost"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintBaseline_toBaselineOf="@id/receipt_totalCost"
+        app:layout_constraintEnd_toStartOf="@+id/receipt_totalCost"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/receipt_totalCost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/receipt_totalCost_hint"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/receipt_totalCost_label"
+        app:layout_constraintTop_toBottomOf="@+id/receipt_widget" />
+</androidx.constraintlayout.widget.ConstraintLayout>

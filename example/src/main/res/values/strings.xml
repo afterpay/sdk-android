@@ -19,4 +19,5 @@
     <string name="cart_pickupLabel">Pickup</string>
     <string name="cart_expressLabel">Express</string>
     <string name="cart_shippingOptionsRequiredLabel">Shipping Options Required</string>
+    <string name="receipt_totalCost_hint">0.00</string>
 </resources>
