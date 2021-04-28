@@ -1,6 +1,10 @@
 package com.example.afterpay.receipt
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +48,7 @@ class ReceiptFragment : Fragment() {
 
         view.findViewById<AfterpayWidgetView>(R.id.receipt_widget)
             .apply {
-                init(viewModel.token)
+                init(viewModel.token, ::onWidgetExternalLink, ::onWidgetError)
                 viewModel
                     .totalCost()
                     .onEach { update(it) }
@@ -62,5 +66,13 @@ class ReceiptFragment : Fragment() {
                 .onEach { viewModel.onTotalCost(it) }
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
+    }
+
+    private fun onWidgetExternalLink(url: Uri) {
+        runCatching { startActivity(Intent(ACTION_VIEW, url)) }
+    }
+
+    private fun onWidgetError(message: String?) {
+        Log.e("AfterpayWidget", "An error occurred: $message")
     }
 }
