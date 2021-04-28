@@ -36,21 +36,25 @@ class AfterpayWidgetView @JvmOverloads constructor(
     fun init(
         token: String,
         onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit
+        onError: (String?) -> Unit,
+        showLogo: Boolean = false,
+        showHeading: Boolean = false
     ) {
         check(token.isNotBlank()) { "Supplied token is empty" }
         configureWebView(onExternalRequest, onError) {
-            loadWidget(""""$token"""", totalCost = null)
+            loadWidget(""""$token"""", totalCost = null, showLogo, showHeading)
         }
     }
 
     fun init(
         totalCost: BigDecimal,
         onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit
+        onError: (String?) -> Unit,
+        showLogo: Boolean = false,
+        showHeading: Boolean = false
     ) {
         configureWebView(onExternalRequest, onError) {
-            loadWidget(token = null, totalCost.toAmount())
+            loadWidget(token = null, totalCost.toAmount(), showLogo, showHeading)
         }
     }
 
@@ -115,9 +119,15 @@ class AfterpayWidgetView @JvmOverloads constructor(
         loadUrl("https://afterpay.github.io/sdk-example-server/widget-bootstrap.html")
     }
 
-    private fun loadWidget(token: String?, totalCost: String?) {
+    private fun loadWidget(
+        token: String?,
+        totalCost: String?,
+        showLogo: Boolean,
+        showHeading: Boolean
+    ) {
+        val style = """{ "logo": $showLogo, "heading": $showHeading }"""
         val script =
-            """createAfterpayWidget($token, $totalCost, "${configuration.locale}", { "logo": true, "heading": true });"""
+            """createAfterpayWidget($token, $totalCost, "${configuration.locale}", $style);"""
         evaluateJavascript(script, null)
     }
 
