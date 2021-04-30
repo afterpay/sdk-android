@@ -14,14 +14,11 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
+import com.afterpay.android.internal.BigDecimalSerializer
 import com.afterpay.android.internal.Configuration
-import kotlinx.serialization.KSerializer
+import com.afterpay.android.internal.CurrencySerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
 import java.util.Currency
@@ -213,35 +210,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     data class DueToday(
         @Serializable(with = BigDecimalSerializer::class) val amount: BigDecimal,
         @Serializable(with = CurrencySerializer::class) val currency: Currency
-    ) {
-
-        object BigDecimalSerializer : KSerializer<BigDecimal> {
-
-            override val descriptor = PrimitiveSerialDescriptor(
-                serialName = "BigDecimal",
-                kind = PrimitiveKind.STRING
-            )
-
-            override fun deserialize(decoder: Decoder) = decoder.decodeString().toBigDecimal()
-
-            override fun serialize(encoder: Encoder, value: BigDecimal) =
-                encoder.encodeString(value.toPlainString())
-        }
-
-        object CurrencySerializer : KSerializer<Currency> {
-
-            override val descriptor = PrimitiveSerialDescriptor(
-                serialName = "Currency",
-                kind = PrimitiveKind.STRING
-            )
-
-            override fun deserialize(decoder: Decoder): Currency =
-                Currency.getInstance(decoder.decodeString())
-
-            override fun serialize(encoder: Encoder, value: Currency) =
-                encoder.encodeString(value.currencyCode)
-        }
-    }
+    )
 
     @Serializable
     private data class Event(
