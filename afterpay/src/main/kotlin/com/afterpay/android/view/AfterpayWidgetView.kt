@@ -41,6 +41,18 @@ class AfterpayWidgetView @JvmOverloads constructor(
     private lateinit var onUpdate: (DueToday, String?) -> Unit
     private lateinit var onError: (String?) -> Unit
 
+    /**
+     * Initialises the Afterpay widget for the given [token] returned from a successful checkout.
+     *
+     * External links in the widget should be handled in [onExternalRequest]. [onUpdate] will be
+     * called for any change to the total (including the initial value) while [onError] is called
+     * if a problem has occurred and indicates that the order should not proceed.
+     *
+     * The Afterpay logo and heading are hidden by default but can be shown by setting [showLogo]
+     * and [showHeading] to true.
+     *
+     * Results in an [IllegalStateException] if the configuration has not been set.
+     */
     @JvmOverloads
     fun init(
         token: String,
@@ -58,6 +70,18 @@ class AfterpayWidgetView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Initialises the Afterpay widget for the given [currency amount][totalCost].
+     *
+     * External links in the widget should be handled in [onExternalRequest]. [onUpdate] will be
+     * called for any change to the total (including the initial value) while [onError] is called
+     * if a problem has occurred and indicates that the order should not proceed.
+     *
+     * The Afterpay logo and heading are hidden by default but can be shown by setting [showLogo]
+     * and [showHeading] to true.
+     *
+     * Results in an [IllegalStateException] if the configuration has not been set.
+     */
     @JvmOverloads
     fun init(
         totalCost: BigDecimal,
@@ -147,6 +171,11 @@ class AfterpayWidgetView @JvmOverloads constructor(
         evaluateJavascript(script, null)
     }
 
+    /**
+     * Updates the Afterpay widget with the given [currency amount][totalCost].
+     *
+     * Results in an [IllegalStateException] if the configuration has not been set.
+     */
     fun update(totalCost: BigDecimal) {
         val script = """updateAmount(${totalCost.toAmount()}, "${configuration.locale}");"""
         evaluateJavascript(script, null)
