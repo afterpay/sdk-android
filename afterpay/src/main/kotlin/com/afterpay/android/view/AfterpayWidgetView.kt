@@ -16,11 +16,16 @@ import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
 import com.afterpay.android.internal.Configuration
-import com.afterpay.android.model.Money
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
+import java.util.Currency
 
 class AfterpayWidgetView @JvmOverloads constructor(
     context: Context,
@@ -33,26 +38,37 @@ class AfterpayWidgetView @JvmOverloads constructor(
 
     private val json = Json { ignoreUnknownKeys = true }
 
+    private lateinit var onUpdate: (DueToday, String?) -> Unit
+    private lateinit var onError: (String?) -> Unit
+
+    @JvmOverloads
     fun init(
         token: String,
-        onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit,
+        onExternalRequest: (externalUrl: Uri) -> Unit,
+        onUpdate: (dueToday: DueToday, checksum: String?) -> Unit,
+        onError: (error: String?) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
         check(token.isNotBlank()) { "Supplied token is empty" }
+        this.onUpdate = onUpdate
+        this.onError = onError
         configureWebView(onExternalRequest, onError) {
             loadWidget(""""$token"""", totalCost = null, showLogo, showHeading)
         }
     }
 
+    @JvmOverloads
     fun init(
         totalCost: BigDecimal,
-        onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit,
+        onExternalRequest: (externalUrl: Uri) -> Unit,
+        onUpdate: (dueToday: DueToday, checksum: String?) -> Unit,
+        onError: (error: String?) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
+        this.onUpdate = onUpdate
+        this.onError = onError
         configureWebView(onExternalRequest, onError) {
             loadWidget(token = null, totalCost.toAmount(), showLogo, showHeading)
         }
@@ -137,25 +153,75 @@ class AfterpayWidgetView @JvmOverloads constructor(
     }
 
     private fun BigDecimal.toAmount(): String =
-        """{ "amount": "$this", "currency": "${configuration.currency}" }"""
+        json.encodeToString(DueToday.serializer(), DueToday(this, configuration.currency))
 
     @JavascriptInterface
     fun postMessage(messageJson: String) {
-        runCatching { json.decodeFromString<Event>(messageJson) }
-            .onSuccess { TODO() }
-            .onFailure { TODO() }
+        if (messageJson.contains("resize")) return
+
+        runCatching {
+            val event = json.decodeFromString<Event>(messageJson)
+
+            if (event.isValid && event.amountDueToday == null) {
+                error("Valid widget event does not contain amount due")
+            }
+
+            return@runCatching event
+        }
+            .onSuccess {
+                if (it.isValid) {
+                    onUpdate(it.amountDueToday!!, it.paymentScheduleChecksum)
+                } else {
+                    onError(it.error?.message ?: "An unknown error occurred")
+                }
+            }
+            .onFailure { onError(it.message ?: "An unknown error occurred") }
+    }
+
+    @Serializable
+    data class DueToday(
+        @Serializable(with = BigDecimalSerializer::class) val amount: BigDecimal,
+        @Serializable(with = CurrencySerializer::class) val currency: Currency
+    ) {
+
+        object BigDecimalSerializer : KSerializer<BigDecimal> {
+
+            override val descriptor = PrimitiveSerialDescriptor(
+                serialName = "BigDecimal",
+                kind = PrimitiveKind.STRING
+            )
+
+            override fun deserialize(decoder: Decoder) = decoder.decodeString().toBigDecimal()
+
+            override fun serialize(encoder: Encoder, value: BigDecimal) =
+                encoder.encodeString(value.toPlainString())
+        }
+
+        object CurrencySerializer : KSerializer<Currency> {
+
+            override val descriptor = PrimitiveSerialDescriptor(
+                serialName = "Currency",
+                kind = PrimitiveKind.STRING
+            )
+
+            override fun deserialize(decoder: Decoder): Currency =
+                Currency.getInstance(decoder.decodeString())
+
+            override fun serialize(encoder: Encoder, value: Currency) =
+                encoder.encodeString(value.currencyCode)
+        }
     }
 
     @Serializable
     private data class Event(
         val isValid: Boolean,
-        val amountDueToday: Money? = null,
+        val amountDueToday: DueToday? = null,
         val paymentScheduleChecksum: String? = null,
         val error: Error? = null
     ) {
 
         @Serializable
-        private data class Error(
+        data class Error(
             val errorCode: String? = null,
             val errorId: String? = null,
             val message: String? = null,
