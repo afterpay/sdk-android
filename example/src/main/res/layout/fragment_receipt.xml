@@ -5,14 +5,23 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <com.afterpay.android.view.AfterpayWidgetView
-        android:id="@+id/receipt_widget"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/widget_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="?android:attr/strokeColor"
+        app:strokeWidth="1dp">
+
+        <com.afterpay.android.view.AfterpayWidgetView
+            android:id="@+id/afterpay_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/receipt_totalCost_label"
@@ -33,5 +42,5 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/receipt_totalCost_label"
-        app:layout_constraintTop_toBottomOf="@+id/receipt_widget" />
+        app:layout_constraintTop_toBottomOf="@+id/widget_container" />
 </androidx.constraintlayout.widget.ConstraintLayout>
