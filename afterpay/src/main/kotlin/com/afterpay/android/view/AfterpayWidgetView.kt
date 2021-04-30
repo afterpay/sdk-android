@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Message
 import android.util.AttributeSet
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -165,10 +164,11 @@ class AfterpayWidgetView @JvmOverloads constructor(
         showLogo: Boolean,
         showHeading: Boolean
     ) {
-        val style = """{ "logo": $showLogo, "heading": $showHeading }"""
-        val script =
-            """createAfterpayWidget($token, $totalCost, "${configuration.locale}", $style);"""
-        evaluateJavascript(script, null)
+        val style = "{ \"logo\": $showLogo, \"heading\": $showHeading }"
+        evaluateJavascript(
+            "createAfterpayWidget($token, $totalCost, \"${configuration.locale}\", $style);",
+            null
+        )
     }
 
     /**
@@ -177,8 +177,10 @@ class AfterpayWidgetView @JvmOverloads constructor(
      * Results in an [IllegalStateException] if the configuration has not been set.
      */
     fun update(totalCost: BigDecimal) {
-        val script = """updateAmount(${totalCost.toAmount()}, "${configuration.locale}");"""
-        evaluateJavascript(script, null)
+        evaluateJavascript(
+            "updateAmount(${totalCost.toAmount()}, \"${configuration.locale}\");",
+            null
+        )
     }
 
     private fun BigDecimal.toAmount(): String =
