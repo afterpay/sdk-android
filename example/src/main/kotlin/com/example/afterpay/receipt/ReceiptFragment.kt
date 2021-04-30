@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.view.AfterpayWidgetView
+import com.afterpay.android.view.AfterpayWidgetView.DueToday
 import com.example.afterpay.R
 import com.example.afterpay.nav_graph
 import kotlinx.coroutines.channels.awaitClose
@@ -48,7 +49,7 @@ class ReceiptFragment : Fragment() {
 
         view.findViewById<AfterpayWidgetView>(R.id.receipt_widget)
             .apply {
-                init(viewModel.token, ::onWidgetExternalLink, ::onWidgetError)
+                init(viewModel.token, ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
                 viewModel
                     .totalCost()
                     .onEach { update(it) }
@@ -72,7 +73,11 @@ class ReceiptFragment : Fragment() {
         runCatching { startActivity(Intent(ACTION_VIEW, url)) }
     }
 
-    private fun onWidgetError(message: String?) {
-        Log.e("AfterpayWidget", "An error occurred: $message")
+    private fun onWidgetUpdate(dueToday: DueToday, checksum: String?) {
+        Log.d("ReceiptFragment", "$dueToday, checksum: $checksum")
+    }
+
+    private fun onWidgetError(error: String?) {
+        Log.e("ReceiptFragment", "An error occurred: $error")
     }
 }
