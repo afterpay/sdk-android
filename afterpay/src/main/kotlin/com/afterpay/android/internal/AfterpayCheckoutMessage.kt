@@ -5,13 +5,19 @@ import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.model.ShippingOptionsErrorResult
 import com.afterpay.android.model.ShippingOptionsResult
 import com.afterpay.android.model.ShippingOptionsSuccessResult
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-internal data class AfterpayCheckoutMessageMeta(val requestId: String)
+@Serializable
+internal sealed class AfterpayCheckoutMessage {
 
-internal sealed class AfterpayCheckoutMessage(
-    open val meta: AfterpayCheckoutMessageMeta,
-) {
+    abstract val meta: AfterpayCheckoutMessageMeta
+
+    @Serializable
+    internal data class AfterpayCheckoutMessageMeta(val requestId: String)
+
     companion object {
+
         fun fromShippingOptionsResult(
             result: ShippingOptionsResult,
             meta: AfterpayCheckoutMessageMeta
@@ -22,32 +28,44 @@ internal sealed class AfterpayCheckoutMessage(
     }
 }
 
-internal data class CheckoutLog(
-    val severity: String,
-    val message: String
-)
-
+@Serializable
+@SerialName("onMessage")
 internal data class CheckoutLogMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val payload: CheckoutLog
-) : AfterpayCheckoutMessage(meta)
+) : AfterpayCheckoutMessage() {
 
+    @Serializable
+    internal data class CheckoutLog(
+        val severity: String,
+        val message: String
+    )
+}
+
+@Serializable
+@SerialName("onError")
 internal data class CheckoutErrorMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val error: String
-) : AfterpayCheckoutMessage(meta)
+) : AfterpayCheckoutMessage()
 
+@Serializable
+@SerialName("onShippingAddressChange")
 internal data class ShippingAddressMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val payload: ShippingAddress
-) : AfterpayCheckoutMessage(meta)
+) : AfterpayCheckoutMessage()
 
+@Serializable
+@SerialName("onShippingOptionChange")
 internal data class ShippingOptionMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val payload: ShippingOption
-) : AfterpayCheckoutMessage(meta)
+) : AfterpayCheckoutMessage()
 
+@Serializable
+@SerialName("onShippingOptionsChange")
 internal data class ShippingOptionsMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val payload: List<ShippingOption>
-) : AfterpayCheckoutMessage(meta)
+) : AfterpayCheckoutMessage()

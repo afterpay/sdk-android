@@ -14,14 +14,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
-import com.afterpay.android.internal.BigDecimalSerializer
 import com.afterpay.android.internal.Configuration
-import com.afterpay.android.internal.CurrencySerializer
+import com.afterpay.android.model.Money
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
-import java.util.Currency
 
 class AfterpayWidgetView @JvmOverloads constructor(
     context: Context,
@@ -34,7 +32,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    private lateinit var onUpdate: (DueToday, String?) -> Unit
+    private lateinit var onUpdate: (Money, String?) -> Unit
     private lateinit var onError: (String?) -> Unit
 
     /**
@@ -53,7 +51,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     fun init(
         token: String,
         onExternalRequest: (externalUrl: Uri) -> Unit,
-        onUpdate: (dueToday: DueToday, checksum: String?) -> Unit,
+        onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String?) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
@@ -82,7 +80,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     fun init(
         totalCost: BigDecimal,
         onExternalRequest: (externalUrl: Uri) -> Unit,
-        onUpdate: (dueToday: DueToday, checksum: String?) -> Unit,
+        onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String?) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
@@ -181,7 +179,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     }
 
     private fun BigDecimal.toAmount(): String =
-        json.encodeToString(DueToday.serializer(), DueToday(this, configuration.currency))
+        json.encodeToString(Money.serializer(), Money(this, configuration.currency))
 
     @JavascriptInterface
     fun postMessage(messageJson: String) {
@@ -207,15 +205,9 @@ class AfterpayWidgetView @JvmOverloads constructor(
     }
 
     @Serializable
-    data class DueToday(
-        @Serializable(with = BigDecimalSerializer::class) val amount: BigDecimal,
-        @Serializable(with = CurrencySerializer::class) val currency: Currency
-    )
-
-    @Serializable
     private data class Event(
         val isValid: Boolean,
-        val amountDueToday: DueToday? = null,
+        val amountDueToday: Money? = null,
         val paymentScheduleChecksum: String? = null,
         val error: Error? = null
     ) {
