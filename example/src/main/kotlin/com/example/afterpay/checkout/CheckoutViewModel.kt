@@ -11,9 +11,11 @@ import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
 import com.afterpay.android.model.ShippingOptionsResult
 import com.afterpay.android.model.ShippingOptionsSuccessResult
+import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.data.CheckoutMode
 import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
+import com.example.afterpay.getDependencies
 import com.example.afterpay.util.asCurrency
 import com.example.afterpay.util.update
 import com.example.afterpay.util.viewModelFactory
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.util.Currency
 
 class CheckoutViewModel(
     totalCost: BigDecimal,
@@ -94,7 +97,7 @@ class CheckoutViewModel(
         }
 
         val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
-        commandChannel.offer(Command.ShowAfterpayCheckout(options))
+        commandChannel.trySend(Command.ShowAfterpayCheckout(options))
     }
 
     fun loadCheckoutToken() {
@@ -109,33 +112,43 @@ class CheckoutViewModel(
             }
             val tokenResult = response.map { it.token }
             val command = Command.ProvideCheckoutTokenResult(tokenResult)
-            commandChannel.offer(command)
+            commandChannel.trySend(command)
         }
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun selectAddress(address: ShippingAddress) {
-        val shippingOptions = listOf(
-            ShippingOption(
-                "standard",
-                "Standard",
-                "",
-                Money("0.00", "AUD"),
-                Money("50.00", "AUD"),
-                null
-            ),
-            ShippingOption(
-                "priority",
-                "Priority",
-                "Next business day",
-                Money("10.00", "AUD"),
-                Money("60.00", "AUD"),
-                null
-            )
-        )
+        viewModelScope.launch {
+            val configuration = withContext(Dispatchers.IO) {
+                getDependencies()
+                    .run { AfterpayRepository(merchantApi, sharedPreferences) }
+                    .fetchConfiguration()
+            }
 
-        val result = ShippingOptionsSuccessResult(shippingOptions)
-        commandChannel.offer(Command.ProvideShippingOptionsResult(result))
+            val currency = Currency.getInstance(configuration.currency)
+
+            val shippingOptions = listOf(
+                ShippingOption(
+                    "standard",
+                    "Standard",
+                    "",
+                    Money("0.00".toBigDecimal(), currency),
+                    Money("50.00".toBigDecimal(), currency),
+                    null
+                ),
+                ShippingOption(
+                    "priority",
+                    "Priority",
+                    "Next business day",
+                    Money("10.00".toBigDecimal(), currency),
+                    Money("60.00".toBigDecimal(), currency),
+                    null
+                )
+            )
+
+            val result = ShippingOptionsSuccessResult(shippingOptions)
+            commandChannel.trySend(Command.ProvideShippingOptionsResult(result))
+        }
     }
 
     companion object {

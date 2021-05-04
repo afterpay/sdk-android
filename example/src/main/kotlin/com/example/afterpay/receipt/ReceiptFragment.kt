@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.afterpay.android.model.Money
 import com.afterpay.android.view.AfterpayWidgetView
-import com.afterpay.android.view.AfterpayWidgetView.DueToday
 import com.example.afterpay.R
 import com.example.afterpay.nav_graph
 import kotlinx.coroutines.channels.awaitClose
@@ -73,7 +73,7 @@ class ReceiptFragment : Fragment() {
         runCatching { startActivity(Intent(ACTION_VIEW, url)) }
     }
 
-    private fun onWidgetUpdate(dueToday: DueToday, checksum: String?) {
+    private fun onWidgetUpdate(dueToday: Money, checksum: String?) {
         Log.d("ReceiptFragment", "$dueToday, checksum: $checksum")
     }
 

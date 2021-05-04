@@ -2,7 +2,9 @@ package com.afterpay.android.internal
 
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.BuildConfig
+import kotlinx.serialization.Serializable
 
+@Serializable
 internal data class AfterpayCheckoutV2(
     val token: String,
     val locale: String,
