@@ -13,10 +13,13 @@ android {
         targetSdkVersion versions.compile_sdk
         versionCode 1
         versionName '1.0'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     compileOptions {
@@ -65,4 +68,11 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.jakewharton.threetenabp:threetenabp:${versions.android_three_ten}"
+
+    androidTestImplementation "androidx.test:core:${versions.androidx_test_core}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_test_junit}"
+    androidTestImplementation "androidx.test:runner:${versions.androidx_test_runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:${versions.uiautomator}"
 }
