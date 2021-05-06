@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
+import com.afterpay.android.R
 import com.afterpay.android.internal.Configuration
 import com.afterpay.android.model.Money
 import kotlinx.coroutines.CoroutineScope
@@ -154,8 +155,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
             }
         }
 
-        val widgetScriptUrl = "https://portal.sandbox.afterpay.com/afterpay.js?merchant_key=demo"
-        val bootstrapScriptUrl = "https://afterpay.github.io/sdk-example-server/widget-bootstrap.js"
+        val widgetScriptUrl = context.resources.getString(R.string.url_widget)
+        val bootstrapScriptUrl = context.resources.getString(R.string.url_widget_bootstrap)
 
         CoroutineScope(Dispatchers.IO).launch {
             val html = context.assets.open("widget/index.html")
@@ -164,13 +165,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
                 .format(widgetScriptUrl, bootstrapScriptUrl)
 
             withContext(Dispatchers.Main.immediate) {
-                loadDataWithBaseURL(
-                    "https://static.afterpay.com/mobile-sdk/bootstrap/index.html",
-                    html,
-                    "text/html",
-                    "base64",
-                    null
-                )
+                loadDataWithBaseURL(widgetScriptUrl, html, "text/html", "base64", null)
             }
         }
     }
