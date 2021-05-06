@@ -77,7 +77,7 @@ class ReceiptFragment : Fragment() {
         Log.d("ReceiptFragment", "$dueToday, checksum: $checksum")
     }
 
-    private fun onWidgetError(error: String?) {
-        Log.e("ReceiptFragment", "An error occurred: $error")
+    private fun onWidgetError(error: String) {
+        Log.e("ReceiptFragment", error)
     }
 }

@@ -33,7 +33,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     private val json = Json { ignoreUnknownKeys = true }
 
     private lateinit var onUpdate: (Money, String?) -> Unit
-    private lateinit var onError: (String?) -> Unit
+    private lateinit var onError: (String) -> Unit
 
     /**
      * Initialises the Afterpay widget for the given [token] returned from a successful checkout.
@@ -52,7 +52,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         token: String,
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
-        onError: (error: String?) -> Unit,
+        onError: (error: String) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
@@ -81,7 +81,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         totalCost: BigDecimal,
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
-        onError: (error: String?) -> Unit,
+        onError: (error: String) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
@@ -94,7 +94,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
 
     private fun configureWebView(
         onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit,
+        onError: (String) -> Unit,
         onPageFinished: () -> Unit
     ) {
         @SuppressLint("SetJavaScriptEnabled")
@@ -133,7 +133,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
             ) {
                 checkNotNull(webView) { "A WebView was expected but not received" }
                 if (request?.isForMainFrame == true) {
-                    onError(error?.description.toString())
+                    onError(error?.description.toString().orDefaultError())
                 }
             }
 
@@ -145,7 +145,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
             ) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     checkNotNull(webView) { "A WebView was expected but not received" }
-                    onError(description)
+                    onError(description.orDefaultError())
                 }
             }
         }
@@ -198,11 +198,14 @@ class AfterpayWidgetView @JvmOverloads constructor(
                 if (it.isValid) {
                     onUpdate(it.amountDueToday!!, it.paymentScheduleChecksum)
                 } else {
-                    onError(it.error?.message ?: "An unknown error occurred")
+                    onError(it.error?.message.orDefaultError())
                 }
             }
-            .onFailure { onError(it.message ?: "An unknown error occurred") }
+            .onFailure { onError(it.message.orDefaultError()) }
     }
+
+    private fun String?.orDefaultError() =
+        takeUnless { it.isNullOrBlank() } ?: "An unknown error occurred"
 
     @Serializable
     private data class Event(
