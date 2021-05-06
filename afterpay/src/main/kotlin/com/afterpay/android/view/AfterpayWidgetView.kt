@@ -97,6 +97,10 @@ class AfterpayWidgetView @JvmOverloads constructor(
         }
     }
 
+    override fun setWebViewClient(client: WebViewClient) = Unit
+
+    override fun setWebChromeClient(client: WebChromeClient?) = Unit
+
     private fun configureWebView(
         onExternalRequest: (Uri) -> Unit,
         onError: (String) -> Unit,
@@ -108,52 +112,56 @@ class AfterpayWidgetView @JvmOverloads constructor(
         settings.setSupportMultipleWindows(true)
         addJavascriptInterface(this, "Android")
 
-        webChromeClient = object : WebChromeClient() {
+        super.setWebChromeClient(
+            object : WebChromeClient() {
 
-            override fun onCreateWindow(
-                webView: WebView?,
-                isDialog: Boolean,
-                isUserGesture: Boolean,
-                resultMsg: Message?
-            ): Boolean {
-                val message = webView?.handler?.obtainMessage()
-                webView?.requestFocusNodeHref(message)
-                message?.data?.getString("url")?.let { onExternalRequest(Uri.parse(it)) }
-                return false
-            }
-        }
-
-        webViewClient = object : WebViewClient() {
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                onPageFinished()
-            }
-
-            @RequiresApi(Build.VERSION_CODES.M)
-            override fun onReceivedError(
-                webView: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?
-            ) {
-                checkNotNull(webView) { "A WebView was expected but not received" }
-                if (request?.isForMainFrame == true) {
-                    onError(error?.description.toString().orDefaultError())
+                override fun onCreateWindow(
+                    webView: WebView?,
+                    isDialog: Boolean,
+                    isUserGesture: Boolean,
+                    resultMsg: Message?
+                ): Boolean {
+                    val message = webView?.handler?.obtainMessage()
+                    webView?.requestFocusNodeHref(message)
+                    message?.data?.getString("url")?.let { onExternalRequest(Uri.parse(it)) }
+                    return false
                 }
             }
+        )
 
-            override fun onReceivedError(
-                webView: WebView?,
-                errorCode: Int,
-                description: String?,
-                failingUrl: String?
-            ) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        super.setWebViewClient(
+            object : WebViewClient() {
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    onPageFinished()
+                }
+
+                @RequiresApi(Build.VERSION_CODES.M)
+                override fun onReceivedError(
+                    webView: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
                     checkNotNull(webView) { "A WebView was expected but not received" }
-                    onError(description.orDefaultError())
+                    if (request?.isForMainFrame == true) {
+                        onError(error?.description.toString().orDefaultError())
+                    }
+                }
+
+                override fun onReceivedError(
+                    webView: WebView?,
+                    errorCode: Int,
+                    description: String?,
+                    failingUrl: String?
+                ) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        checkNotNull(webView) { "A WebView was expected but not received" }
+                        onError(description.orDefaultError())
+                    }
                 }
             }
-        }
+        )
 
         val widgetScriptUrl = context.resources.getString(R.string.url_widget)
         val bootstrapScriptUrl = context.resources.getString(R.string.url_widget_bootstrap)
