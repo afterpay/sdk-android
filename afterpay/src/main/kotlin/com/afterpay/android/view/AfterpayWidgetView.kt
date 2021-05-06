@@ -14,8 +14,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
+import com.afterpay.android.R
 import com.afterpay.android.internal.Configuration
 import com.afterpay.android.model.Money
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -33,7 +38,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     private val json = Json { ignoreUnknownKeys = true }
 
     private lateinit var onUpdate: (Money, String?) -> Unit
-    private lateinit var onError: (String?) -> Unit
+    private lateinit var onError: (String) -> Unit
 
     /**
      * Initialises the Afterpay widget for the given [token] returned from a successful checkout.
@@ -52,7 +57,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         token: String,
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
-        onError: (error: String?) -> Unit,
+        onError: (error: String) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
@@ -81,7 +86,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         totalCost: BigDecimal,
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
-        onError: (error: String?) -> Unit,
+        onError: (error: String) -> Unit,
         showLogo: Boolean = false,
         showHeading: Boolean = false
     ) {
@@ -94,7 +99,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
 
     private fun configureWebView(
         onExternalRequest: (Uri) -> Unit,
-        onError: (String?) -> Unit,
+        onError: (String) -> Unit,
         onPageFinished: () -> Unit
     ) {
         @SuppressLint("SetJavaScriptEnabled")
@@ -133,7 +138,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
             ) {
                 checkNotNull(webView) { "A WebView was expected but not received" }
                 if (request?.isForMainFrame == true) {
-                    onError(error?.description.toString())
+                    onError(error?.description.toString().orDefaultError())
                 }
             }
 
@@ -145,12 +150,24 @@ class AfterpayWidgetView @JvmOverloads constructor(
             ) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     checkNotNull(webView) { "A WebView was expected but not received" }
-                    onError(description)
+                    onError(description.orDefaultError())
                 }
             }
         }
 
-        loadUrl("https://afterpay.github.io/sdk-example-server/widget-bootstrap.html")
+        val widgetScriptUrl = context.resources.getString(R.string.url_widget)
+        val bootstrapScriptUrl = context.resources.getString(R.string.url_widget_bootstrap)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val html = context.assets.open("widget/index.html")
+                .bufferedReader()
+                .use { it.readText() }
+                .format(widgetScriptUrl, bootstrapScriptUrl)
+
+            withContext(Dispatchers.Main.immediate) {
+                loadDataWithBaseURL(widgetScriptUrl, html, "text/html", "base64", null)
+            }
+        }
     }
 
     private fun loadWidget(
@@ -198,11 +215,14 @@ class AfterpayWidgetView @JvmOverloads constructor(
                 if (it.isValid) {
                     onUpdate(it.amountDueToday!!, it.paymentScheduleChecksum)
                 } else {
-                    onError(it.error?.message ?: "An unknown error occurred")
+                    onError(it.error?.message.orDefaultError())
                 }
             }
-            .onFailure { onError(it.message ?: "An unknown error occurred") }
+            .onFailure { onError(it.message.orDefaultError()) }
     }
+
+    private fun String?.orDefaultError() =
+        takeUnless { it.isNullOrBlank() } ?: "An unknown error occurred"
 
     @Serializable
     private data class Event(
