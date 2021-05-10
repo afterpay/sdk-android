@@ -18,6 +18,13 @@
         app:strokeColor="?android:attr/strokeColor"
         app:strokeWidth="1dp">
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/progress_bar" />
+
         <com.afterpay.android.view.AfterpayWidgetView
             android:id="@+id/afterpay_widget"
             android:layout_width="match_parent"
