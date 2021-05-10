@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.io.IOException
 import java.math.BigDecimal
 
 class AfterpayWidgetView @JvmOverloads constructor(
@@ -167,13 +168,17 @@ class AfterpayWidgetView @JvmOverloads constructor(
         val bootstrapScriptUrl = context.resources.getString(R.string.url_widget_bootstrap)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val html = context.assets.open("widget/index.html")
-                .bufferedReader()
-                .use { it.readText() }
-                .format(widgetScriptUrl, bootstrapScriptUrl)
+            try {
+                val html = context.assets.open("widget/index.html")
+                    .bufferedReader()
+                    .use { it.readText() }
+                    .format(widgetScriptUrl, bootstrapScriptUrl)
 
-            withContext(Dispatchers.Main.immediate) {
-                loadDataWithBaseURL(widgetScriptUrl, html, "text/html", "base64", null)
+                withContext(Dispatchers.Main.immediate) {
+                    loadDataWithBaseURL(widgetScriptUrl, html, "text/html", "base64", null)
+                }
+            } catch (e: IOException) {
+                onError(e.message ?: "Failed to open widget bootstrap")
             }
         }
     }
