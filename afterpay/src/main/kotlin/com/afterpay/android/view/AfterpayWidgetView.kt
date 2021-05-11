@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 import com.afterpay.android.internal.Configuration
+import com.afterpay.android.internal.setAfterpayUserAgentString
 import com.afterpay.android.model.Money
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -107,6 +108,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         onError: (String) -> Unit,
         onPageFinished: () -> Unit
     ) {
+        setAfterpayUserAgentString()
         @SuppressLint("SetJavaScriptEnabled")
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true

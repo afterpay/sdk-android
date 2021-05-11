@@ -36,6 +36,7 @@ import com.afterpay.android.internal.ShippingOptionMessage
 import com.afterpay.android.internal.getCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
+import com.afterpay.android.internal.setAfterpayUserAgentString
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -67,6 +68,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         val frameLayout = findViewById<FrameLayout>(R.id.afterpay_webView_frame_layout)
 
         bootstrapWebView.apply {
+            setAfterpayUserAgentString()
             settings.javaScriptEnabled = true
             settings.javaScriptCanOpenWindowsAutomatically = true
             settings.setSupportMultipleWindows(true)
@@ -221,6 +223,7 @@ private class BootstrapWebChromeClient(
         resultMsg: Message?
     ): Boolean {
         val webView = WebView(context)
+        webView.setAfterpayUserAgentString()
         webView.visibility = INVISIBLE
         webView.settings.javaScriptEnabled = true
         webView.settings.setSupportMultipleWindows(true)
