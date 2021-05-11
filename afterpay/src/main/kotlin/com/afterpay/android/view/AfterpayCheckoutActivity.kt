@@ -14,12 +14,12 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.afterpay.android.BuildConfig
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
+import com.afterpay.android.internal.setAfterpayUserAgentString
 
 internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
@@ -31,8 +31,6 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             "portal.clearpay.co.uk",
             "portal.sandbox.clearpay.co.uk"
         )
-
-        const val versionHeader = "${BuildConfig.AfterpayLibraryVersion}-android"
     }
 
     private lateinit var webView: WebView
@@ -45,6 +43,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
+            setAfterpayUserAgentString()
             settings.javaScriptEnabled = true
             settings.setSupportMultipleWindows(true)
             webViewClient = AfterpayWebViewClient(
@@ -77,7 +76,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
 
         if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
-            webView.loadUrl(checkoutUrl, mapOf("X-Afterpay-SDK" to versionHeader))
+            webView.loadUrl(checkoutUrl)
         } else {
             finish(CancellationStatus.INVALID_CHECKOUT_URL)
         }
