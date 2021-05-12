@@ -1,50 +1,32 @@
 package com.afterpay.android.view
 
-import com.afterpay.android.Afterpay
+import androidx.annotation.ColorRes
 import com.afterpay.android.R
-import java.util.Locale
 
-enum class AfterpayColorScheme {
-    BLACK_ON_MINT,
-    MINT_ON_BLACK,
-    WHITE_ON_BLACK,
-    BLACK_ON_WHITE;
+enum class AfterpayColorScheme(
+    @ColorRes val foregroundColorResId: Int,
+    @ColorRes val backgroundColorResId: Int
+) {
+    BLACK_ON_MINT(
+        foregroundColorResId = R.color.afterpay_black,
+        backgroundColorResId = R.color.afterpay_mint
+    ),
+    MINT_ON_BLACK(
+        foregroundColorResId = R.color.afterpay_mint,
+        backgroundColorResId = R.color.afterpay_black
+    ),
+    WHITE_ON_BLACK(
+        foregroundColorResId = R.color.afterpay_white,
+        backgroundColorResId = R.color.afterpay_black
+    ),
+    BLACK_ON_WHITE(
+        foregroundColorResId = R.color.afterpay_black,
+        backgroundColorResId = R.color.afterpay_white
+    );
 
     internal companion object {
-        val DEFAULT: AfterpayColorScheme get() = BLACK_ON_MINT
+
+        @JvmField
+        val DEFAULT = BLACK_ON_MINT
     }
 }
-
-internal val AfterpayColorScheme.badgeDrawable: Int
-    get() = if (Afterpay.locale == Locale.UK) {
-        when (this) {
-            AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.clearpay_badge_black_on_mint
-            AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.clearpay_badge_mint_on_black
-            AfterpayColorScheme.WHITE_ON_BLACK -> R.drawable.clearpay_badge_white_on_black
-            AfterpayColorScheme.BLACK_ON_WHITE -> R.drawable.clearpay_badge_black_on_white
-        }
-    } else {
-        when (this) {
-            AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.afterpay_badge_black_on_mint
-            AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.afterpay_badge_mint_on_black
-            AfterpayColorScheme.WHITE_ON_BLACK -> R.drawable.afterpay_badge_white_on_black
-            AfterpayColorScheme.BLACK_ON_WHITE -> R.drawable.afterpay_badge_black_on_white
-        }
-    }
-
-internal val AfterpayColorScheme.payNowButtonDrawable: Int
-    get() = if (Afterpay.locale == Locale.UK) {
-        when (this) {
-            AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.clearpay_button_pay_now_black_on_mint
-            AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.clearpay_button_pay_now_mint_on_black
-            AfterpayColorScheme.WHITE_ON_BLACK -> R.drawable.clearpay_button_pay_now_white_on_black
-            AfterpayColorScheme.BLACK_ON_WHITE -> R.drawable.clearpay_button_pay_now_black_on_mint
-        }
-    } else {
-        when (this) {
-            AfterpayColorScheme.BLACK_ON_MINT -> R.drawable.afterpay_button_pay_now_black_on_mint
-            AfterpayColorScheme.MINT_ON_BLACK -> R.drawable.afterpay_button_pay_now_mint_on_black
-            AfterpayColorScheme.WHITE_ON_BLACK -> R.drawable.afterpay_button_pay_now_white_on_black
-            AfterpayColorScheme.BLACK_ON_WHITE -> R.drawable.afterpay_button_pay_now_black_on_mint
-        }
-    }
