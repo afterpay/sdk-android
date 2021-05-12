@@ -4,13 +4,11 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -50,23 +48,11 @@ internal fun Context.coloredDrawable(
     return wrappedDrawable
 }
 
-internal class BackgroundDrawable(
-    @ColorInt backgroundColor: Int,
-    @Dimension cornerRadius: Float
-) : GradientDrawable() {
-    init {
-        shape = RECTANGLE
-        color = ColorStateList.valueOf(backgroundColor)
-        this.cornerRadius = cornerRadius
-    }
-}
-
 internal fun Context.rippleDrawable(
     @ColorRes rippleColorResId: Int,
-    @ColorRes backgroundColorResId: Int,
-    @Dimension cornerRadius: Float
+    drawable: Drawable
 ): Drawable = RippleDrawable(
     ColorStateList.valueOf(color(rippleColorResId)),
-    BackgroundDrawable(color(backgroundColorResId), cornerRadius),
+    drawable,
     null
 )

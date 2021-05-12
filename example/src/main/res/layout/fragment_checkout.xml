@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:measureWithLargestChild="true"
             android:orientation="vertical"
-            android:padding="24dp"
-            >
+            android:padding="24dp">
 
             <LinearLayout
                 android:id="@+id/cart_emailRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                >
+                android:gravity="center_vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_emailAddressLabel"
@@ -36,21 +31,19 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/cart_editText_emailAddress"
                     android:text="@string/email"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    />
+                    android:textAppearance="?attr/textAppearanceBody1" />
 
                 <EditText
                     android:id="@+id/cart_editText_emailAddress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="48dp"
+                    android:layout_weight="1"
                     android:autofillHints="emailAddress"
                     android:inputType="textEmailAddress"
                     android:textAlignment="textEnd"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:ignore="NestedWeights"
-                    />
+                    tools:ignore="NestedWeights" />
 
             </LinearLayout>
 
@@ -59,8 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                >
+                android:gravity="center_vertical">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_totalCostLabel"
@@ -68,20 +60,18 @@
                     android:layout_height="wrap_content"
                     android:labelFor="@id/cart_totalCost"
                     android:text="@string/total_cost"
-                    android:textAppearance="?attr/textAppearanceBody1"
-                    />
+                    android:textAppearance="?attr/textAppearanceBody1" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_totalCost"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="24dp"
+                    android:layout_weight="1"
                     android:textAlignment="textEnd"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:text="$100.00"
                     tools:ignore="NestedWeights"
-                    />
+                    tools:text="$100.00" />
 
             </LinearLayout>
 
@@ -89,26 +79,23 @@
                 android:id="@+id/cart_expressRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_expressLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="24dp"
+                    android:layout_weight="1"
                     android:labelFor="@id/cart_expressCheckBox"
                     android:text="@string/cart_expressLabel"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:ignore="NestedWeights"
-                    />
+                    tools:ignore="NestedWeights" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cart_expressCheckBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -116,26 +103,23 @@
                 android:id="@+id/cart_buyNowRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_buyNowLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="24dp"
+                    android:layout_weight="1"
                     android:labelFor="@id/cart_buyNowCheckBox"
                     android:text="@string/cart_buyNowLabel"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:ignore="NestedWeights"
-                    />
+                    tools:ignore="NestedWeights" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cart_buyNowCheckBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -143,26 +127,23 @@
                 android:id="@+id/cart_pickupRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_pickupLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="24dp"
+                    android:layout_weight="1"
                     android:labelFor="@id/cart_pickupCheckBox"
                     android:text="@string/cart_pickupLabel"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:ignore="NestedWeights"
-                    />
+                    tools:ignore="NestedWeights" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cart_pickupCheckBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -170,26 +151,23 @@
                 android:id="@+id/cart_shippingOptionsRequiredRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_shippingOptionsRequiredLabel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="24dp"
+                    android:layout_weight="1"
                     android:labelFor="@id/cart_shippingOptionsRequiredCheckBox"
                     android:text="@string/cart_shippingOptionsRequiredLabel"
                     android:textAppearance="?attr/textAppearanceBody1"
-                    tools:ignore="NestedWeights"
-                    />
+                    tools:ignore="NestedWeights" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/cart_shippingOptionsRequiredCheckBox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -201,7 +179,6 @@
         android:id="@+id/cart_button_checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="24dp"
-        />
+        android:layout_margin="24dp" />
 
 </LinearLayout>
