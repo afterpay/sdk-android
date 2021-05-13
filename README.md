@@ -17,7 +17,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [Launching the Checkout (v2)](#launching-the-checkout-(v2))
 - [UI Components](#ui-components)
     - [Badge](#badge)
-    - [Pay Now Button](#pay-now-button)
+    - [Payment Buttons](#payment-buttons)
     - [Price Breakdown](#price-breakdown)
 - [Security](#security)
 - [Examples](#examples)
@@ -177,13 +177,32 @@ class ExampleActivity: Activity {
 
 ### Badge
 
-![Black on Mint badge][badge-black-on-mint] ![Mint on Black badge][badge-mint-on-black] ![White on Black badge][badge-white-on-black] ![Black on White badge][badge-black-on-white]
+![Black on Mint badge][badge-black-on-mint]
+![Mint on Black badge][badge-mint-on-black]
 
-### Pay Now Button
+![Black on White badge][badge-black-on-white]
+![White on Black badge][badge-white-on-black]
+
+**Attributes**
+```xml
+app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
+```
+
+### Payment Buttons
+
+A selection of payment buttons is available to suit most common purchasing scenarios.
 
 ![Black on Mint pay now button][button-black-on-mint]
 ![Mint on Black pay now button][button-mint-on-black]
+
+![Black on White pay now button][button-black-on-white]
 ![White on Black pay now button][button-white-on-black]
+
+**Attributes**
+```xml
+app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
+app:afterpayButtonText="payNow|buyNow|checkout|placeOrder"
+```
 
 > **NOTE:** Setting the configured locale to `Locale.UK` (`"en_GB"`) will display Clearpay assets and branding.
 
@@ -257,14 +276,15 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
 [badge-black-on-mint]: images/badge_black_on_mint.png
 [badge-mint-on-black]: images/badge_mint_on_black.png
-[badge-white-on-black]: images/badge_white_on_black.png
 [badge-black-on-white]: images/badge_black_on_white.png
+[badge-white-on-black]: images/badge_white_on_black.png
 [breakdown-available]: images/price_breakdown_available.png
 [breakdown-no-configuration]: images/price_breakdown_no_configuration.png
 [breakdown-unavailable-min-max]: images/price_breakdown_unavailable_min_max.png
 [breakdown-unavailable-max]: images/price_breakdown_unavailable_max.png
 [button-black-on-mint]: images/button_black_on_mint.png
 [button-mint-on-black]: images/button_mint_on_black.png
+[button-black-on-white]: images/button_black_on_white.png
 [button-white-on-black]: images/button_white_on_black.png
 [contributing]: CONTRIBUTING.md
 [docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
