@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="afterpay_white">#FFFFFF</color>
-    <color name="afterpay_grey">#373737</color>
     <color name="afterpay_black">#000000</color>
-    <color name="afterpay_blue">#16A0D5</color>
-    <color name="afterpay_navy">#074578</color>
-    <color name="afterpay_navy_dark">#001F4C</color>
     <color name="afterpay_mint">#B2FCE4</color>
-    <color name="afterpay_ripple_light">#1f000000</color>
-    <color name="afterpay_ripple_dark">#33ffffff</color>
+    <color name="afterpay_ripple_light">#1F000000</color>
+    <color name="afterpay_ripple_dark">#33FFFFFF</color>
     <color name="progress_bar_fg">#B2FCE4</color>
 </resources>
