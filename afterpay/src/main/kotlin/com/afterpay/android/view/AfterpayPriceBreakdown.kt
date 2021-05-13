@@ -4,26 +4,31 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
+import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
+import androidx.core.content.res.use
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
 import com.afterpay.android.internal.ConfigurationObservable
+import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
 import java.util.Locale
 import java.util.Observer
 
-class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-    constructor(context: Context) : this(context, attrs = null)
+class AfterpayPriceBreakdown @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : FrameLayout(context, attrs) {
 
     private data class Content(
         val text: String,
@@ -48,8 +53,8 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         setLineSpacing(0f, 1.2f)
         textSize = 14f
         movementMethod = LinkMovementMethod.getInstance()
-        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+        layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
     }
 
     // The terms and conditions are tied to the configured locale on the configuration
@@ -60,22 +65,20 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
         }
 
     init {
-        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         isFocusable = true
 
         addView(textView)
 
-        context.theme
-            .obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0)
-            .apply {
-                try {
-                    val value = getInteger(R.styleable.Afterpay_afterpayColorScheme, 0)
-                    colorScheme = AfterpayColorScheme.values()[value]
-                } finally {
-                    recycle()
-                }
-            }
+        context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
+            colorScheme = AfterpayColorScheme.values()[
+                attributes.getInteger(
+                    R.styleable.Afterpay_afterpayColorScheme,
+                    AfterpayColorScheme.DEFAULT.ordinal
+                )
+            ]
+        }
 
         updateText()
     }
@@ -86,25 +89,34 @@ class AfterpayPriceBreakdown(context: Context, attrs: AttributeSet?) : FrameLayo
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
         ConfigurationObservable.addObserver(configurationObserver)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-
         ConfigurationObservable.deleteObserver(configurationObserver)
     }
 
     private fun updateText() {
-        val drawable = resources.getDrawable(colorScheme.badgeDrawable, null).apply {
-            val metrics = textView.paint.fontMetrics
-            val fontHeight = metrics.descent - metrics.ascent
-            val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
-            val drawableHeight = fontHeight * 2.5
-            val drawableWidth = drawableHeight * aspectRatio
-            setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
-        }
+        val drawable = LayerDrawable(
+            arrayOf(
+                context.coloredDrawable(
+                    drawableResId = R.drawable.afterpay_badge_bg,
+                    colorResId = colorScheme.backgroundColorResId
+                ),
+
+                context.coloredDrawable(
+                    drawableResId = R.drawable.afterpay_badge_fg,
+                    colorResId = colorScheme.foregroundColorResId
+                )
+            )
+        )
+            .apply {
+                val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
+                val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
+                val drawableWidth = drawableHeight * aspectRatio
+                setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
+            }
 
         val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
         val content = generateContent(instalment)
