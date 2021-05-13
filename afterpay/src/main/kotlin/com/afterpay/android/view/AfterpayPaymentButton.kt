@@ -57,7 +57,6 @@ class AfterpayPaymentButton @JvmOverloads constructor(
                     AfterpayColorScheme.DEFAULT.ordinal
                 )
             ]
-
         }
 
         update()
