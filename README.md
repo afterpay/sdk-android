@@ -17,7 +17,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [Launching the Checkout (v2)](#launching-the-checkout-(v2))
 - [UI Components](#ui-components)
     - [Badge](#badge)
-    - [Pay Now Button](#pay-now-button)
+    - [Payment Buttons](#payment-buttons)
     - [Price Breakdown](#price-breakdown)
 - [Security](#security)
 - [Examples](#examples)
@@ -183,13 +183,26 @@ class ExampleActivity: Activity {
 ![Black on White badge][badge-black-on-white]
 ![White on Black badge][badge-white-on-black]
 
-### Pay Now Button
+**Attributes**
+```xml
+app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
+```
+
+### Payment Buttons
+
+A selection of payment buttons is available to suit most common purchasing scenarios.
 
 ![Black on Mint pay now button][button-black-on-mint]
 ![Mint on Black pay now button][button-mint-on-black]
 
 ![Black on White pay now button][button-black-on-white]
 ![White on Black pay now button][button-white-on-black]
+
+**Attributes**
+```xml
+app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
+app:afterpayButtonText="payNow|buyNow|checkout|placeOrder"
+```
 
 > **NOTE:** Setting the configured locale to `Locale.UK` (`"en_GB"`) will display Clearpay assets and branding.
 
