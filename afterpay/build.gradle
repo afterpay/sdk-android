@@ -32,7 +32,6 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlinx_coroutines}"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.kotlinx_serialization}"
     implementation "androidx.core:core-ktx:${versions.core_ktx}"
