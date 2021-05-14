@@ -6,4 +6,6 @@
     <color name="afterpay_blue">#16A0D5</color>
     <color name="afterpay_navy">#074578</color>
     <color name="afterpay_navy_dark">#001F4C</color>
+
+    <color name="light_grey">#D6D6D9</color>
 </resources>

@@ -16,6 +16,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
     - [Launching the Checkout (v1)](#launching-the-checkout-(v1))
     - [Launching the Checkout (v2)](#launching-the-checkout-(v2))
 - [UI Components](#ui-components)
+    - [Widget](#widget)
     - [Badge](#badge)
     - [Payment Buttons](#payment-buttons)
     - [Price Breakdown](#price-breakdown)
@@ -174,6 +175,14 @@ class ExampleActivity: Activity {
 ```
 
 ## UI Components
+
+### Widget
+
+The widget displays the consumer's payment schedule, provided by either a token or monetary amount, after checkout and can be updated to reflect changes such as promotional discounts or shipping costs. The widget will also present any issues that might prevent the order from completing. 
+
+The widget can be added to a layout or instantiated in code but an instance must always be initialised with one of the two `init()` functions.
+
+> **NOTE:** Configuration must always be set before initialising the widget.
 
 ### Badge
 

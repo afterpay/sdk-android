@@ -1,17 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:padding="16dp">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/receipt_message"
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/widget_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textAppearance="?attr/textAppearanceBody1"
-        tools:text="Checkout successful with token:\n1234" />
+        android:layout_marginBottom="32dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="200dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="?android:attr/strokeColor"
+        app:strokeWidth="1dp">
 
-</FrameLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/progress_bar" />
+
+        <com.afterpay.android.view.AfterpayWidgetView
+            android:id="@+id/afterpay_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/receipt_totalCost_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/total_cost"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintBaseline_toBaselineOf="@id/receipt_totalCost"
+        app:layout_constraintEnd_toStartOf="@+id/receipt_totalCost"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/receipt_totalCost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/receipt_totalCost_hint"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/receipt_totalCost_label"
+        app:layout_constraintTop_toBottomOf="@+id/widget_container" />
+</androidx.constraintlayout.widget.ConstraintLayout>
