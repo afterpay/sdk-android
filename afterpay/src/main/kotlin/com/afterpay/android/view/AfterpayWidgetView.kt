@@ -49,8 +49,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
      * called for any change to the total (including the initial value) while [onError] is called
      * if a problem has occurred and indicates that the order should not proceed.
      *
-     * The Afterpay logo and heading are hidden by default but can be shown by setting [showLogo]
-     * and [showHeading] to true.
+     * The Afterpay logo and heading are visible by default but can be hidden by setting [showLogo]
+     * and [showHeading] to false.
      *
      * Results in an [IllegalStateException] if the configuration has not been set.
      */
@@ -60,8 +60,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String) -> Unit,
-        showLogo: Boolean = false,
-        showHeading: Boolean = false
+        showLogo: Boolean = true,
+        showHeading: Boolean = true
     ) {
         check(token.isNotBlank()) { "Supplied token is empty" }
         this.onUpdate = onUpdate
@@ -78,8 +78,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
      * called for any change to the total (including the initial value) while [onError] is called
      * if a problem has occurred and indicates that the order should not proceed.
      *
-     * The Afterpay logo and heading are hidden by default but can be shown by setting [showLogo]
-     * and [showHeading] to true.
+     * The Afterpay logo and heading are visible by default but can be hidden by setting [showLogo]
+     * and [showHeading] to false.
      *
      * Results in an [IllegalStateException] if the configuration has not been set.
      */
@@ -89,8 +89,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
         onExternalRequest: (externalUrl: Uri) -> Unit,
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String) -> Unit,
-        showLogo: Boolean = false,
-        showHeading: Boolean = false
+        showLogo: Boolean = true,
+        showHeading: Boolean = true
     ) {
         this.onUpdate = onUpdate
         this.onError = onError
