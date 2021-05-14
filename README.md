@@ -184,6 +184,36 @@ The widget can be added to a layout or instantiated in code but an instance must
 
 > **NOTE:** Configuration must always be set before initialising the widget.
 
+### Adding the Widget
+```kotlin
+class ReceiptFragment : Fragment() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // ...
+        
+        view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
+            .init(token, ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
+    }
+
+    private fun onWidgetExternalLink(url: Uri) {
+        TODO("Launch external browser")
+    }
+
+    private fun onWidgetUpdate(dueToday: Money, checksum: String?) {
+        Log.d("ReceiptFragment", "$dueToday, checksum: $checksum")
+    }
+
+    private fun onWidgetError(error: String) {
+        Log.e("ReceiptFragment", error)
+    }
+}
+```
+
+### Updating the widget
+```kotlin
+widget.update("50.00".toBigDecimal())
+```
+
 ### Badge
 
 ![Black on Mint badge][badge-black-on-mint]
