@@ -15,6 +15,7 @@ android {
         versionName '1.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
     sourceSets {
@@ -36,6 +37,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 }
 
@@ -68,6 +73,8 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.jakewharton.threetenabp:threetenabp:${versions.android_three_ten}"
+
+    androidTestUtil "androidx.test:orchestrator:${versions.androidx_test_orchestrator}"
 
     androidTestImplementation "androidx.test:core:${versions.androidx_test_core}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidx_test_junit}"
