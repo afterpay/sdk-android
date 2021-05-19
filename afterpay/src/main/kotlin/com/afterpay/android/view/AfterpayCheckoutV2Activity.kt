@@ -48,11 +48,13 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private lateinit var loadingWebView: WebView
     private var checkoutWebView: WebView? = null
 
-    private val bootstrapUrl = "https://static.afterpay.com/mobile-sdk/bootstrap/index.html"
+    private lateinit var bootstrapUrl: String
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bootstrapUrl = getString(R.string.url_checkout_express)
 
         setContentView(R.layout.activity_express_web_checkout)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

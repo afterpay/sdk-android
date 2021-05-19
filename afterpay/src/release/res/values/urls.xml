@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="url_widget">https://portal.afterpay.com/afterpay.js?merchant_key=demo</string>
-    <string name="url_widget_bootstrap">https://static.afterpay.com/mobile-sdk/bootstrap/widget-bootstrap.js</string>
+    <string name="url_checkout_express" translatable="false">https://static.afterpay.com/mobile-sdk/bootstrap/index.html</string>
+    <string name="url_widget" translatable="false">https://portal.afterpay.com/afterpay.js?merchant_key=demo</string>
+    <string name="url_widget_bootstrap" translatable="false">https://static.afterpay.com/mobile-sdk/bootstrap/widget-bootstrap.js</string>
 </resources>
