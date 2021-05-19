@@ -54,7 +54,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bootstrapUrl = getString(R.string.url_checkout_express)
+        bootstrapUrl = getString(R.string.afterpay_url_checkout_express)
 
         setContentView(R.layout.activity_express_web_checkout)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)

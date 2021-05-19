@@ -166,8 +166,8 @@ class AfterpayWidgetView @JvmOverloads constructor(
             }
         )
 
-        val widgetScriptUrl = context.resources.getString(R.string.url_widget)
-        val bootstrapScriptUrl = context.resources.getString(R.string.url_widget_bootstrap)
+        val widgetScriptUrl = context.resources.getString(R.string.afterpay_url_widget)
+        val bootstrapScriptUrl = context.resources.getString(R.string.afterpay_url_widget_bootstrap)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
