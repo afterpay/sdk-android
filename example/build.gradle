@@ -85,5 +85,6 @@ dependencies {
     androidTestImplementation "androidx.test:runner:${versions.androidx_test_runner}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:${versions.espresso}"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:${versions.uiautomator}"
 }
