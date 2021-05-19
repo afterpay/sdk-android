@@ -18,9 +18,20 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        staging {
+            initWith debug
+        }
+    }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        test.java.srcDirs += 'src/androidTest/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     compileOptions {
@@ -30,13 +41,6 @@ android {
 
     kotlinOptions {
         jvmTarget = versions.java
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
 
     testOptions {
