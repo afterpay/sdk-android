@@ -2,5 +2,5 @@
 <resources>
     <string name="afterpay_url_checkout_express" translatable="false">file:///android_asset/express_checkout.html</string>
     <string name="afterpay_url_widget" translatable="false" />
-    <string name="afterpay_url_widget_bootstrap" translatable="false" />
+    <string name="afterpay_url_widget_bootstrap" translatable="false">file:///android_asset/widget/bootstrap.js</string>
 </resources>
