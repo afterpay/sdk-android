@@ -205,7 +205,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
      */
     fun update(totalCost: BigDecimal) {
         evaluateJavascript(
-            "updateAmount(${totalCost.toAmount()}, \"${configuration.locale}\");",
+            "updateAmount(${totalCost.toAmount()});",
             null
         )
     }
