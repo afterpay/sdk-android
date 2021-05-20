@@ -109,6 +109,9 @@ class AfterpayCheckoutTest {
 
         onView(withId(R.id.receipt_totalCost)).perform(typeText("50"))
 
+        // This is the lesser of two evils (the greater being to pollute our production code with
+        // an idling resource); it accounts for a debounce in the collection of text input when
+        // updating the widget with a new amount.
         Thread.sleep(800)
 
         val expectedUpdatedContent = """Update called with {"amount":"50","currency":"AUD"}"""
