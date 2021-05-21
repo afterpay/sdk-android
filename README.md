@@ -126,7 +126,7 @@ class ExampleActivity: Activity {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // ...
 
         Afterpay.setCheckoutV2Handler(object : AfterpayCheckoutV2Handler {
             override fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit) {
@@ -144,10 +144,6 @@ class ExampleActivity: Activity {
                 TODO("Optionally update your application model with the selected shipping option")
             }
         })
-    }
-
-    override fun onCreate(savedInstanceState: Bundle) {
-        // ...
 
         val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
         afterpayCheckoutButton.setOnClickListener {
