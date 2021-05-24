@@ -179,6 +179,8 @@ The checkout widget displays the consumer's payment schedule, and can be updated
 
 The widget can be added to a layout or instantiated in code but an instance must always be initialised in one of the two ways demonstrated below and provided with the required callbacks which will notify your app when the widget is updated or an error occurs, or when an attempt to load an external URL is made.
 
+![Payment Schedule Widget][widget]
+
 ### Adding the Widget
 
 Initialising the widget with a token received upon completion of checkout v2 will populate it with information about the transaction.
@@ -332,6 +334,7 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 <!-- Links: -->
 [badge-ci]: https://github.com/afterpay/sdk-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
+[widget]: images/widget.png
 [badge-black-on-mint]: images/badge_black_on_mint.png
 [badge-mint-on-black]: images/badge_mint_on_black.png
 [badge-black-on-white]: images/badge_black_on_white.png
