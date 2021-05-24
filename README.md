@@ -211,7 +211,7 @@ class ReceiptFragment : Fragment() {
 }
 ```
 
-Alternatively, if checkout has not been completed or not using checkout v2, the widget may be initialised with a `BigDecimal` representing the total cost of the purchase.
+Alternatively, if checkout has not been completed or your app is not using checkout v2, the widget may be initialised in tokenless mode with a `BigDecimal` representing the total cost of the purchase.
 ```kotlin
 view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
     .init("50.00".toBigDecimal(), ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
