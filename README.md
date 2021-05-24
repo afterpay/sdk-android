@@ -261,10 +261,16 @@ app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 The payment button may be added to your layout and scaled to suit the needs of your app but to maintain legibility the width must not exceed `256dp`.
 
 ![Black on Mint pay now button][button-black-on-mint]
-![Mint on Black pay now button][button-mint-on-black]
+![Mint on Black buy now button][button-mint-on-black]
 
-![Black on White pay now button][button-black-on-white]
-![White on Black pay now button][button-white-on-black]
+![Black on White checkout with button][button-black-on-white]
+![White on Black place order with button][button-white-on-black]
+
+The button may be styled with different text to suit some common purchasing scenarios:
+- Pay Now
+- Buy Now
+- Checkout with
+- Place order with
 
 **Attributes**
 ```xml
