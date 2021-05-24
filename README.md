@@ -55,9 +55,9 @@ The SDK provides easy integration of the Afterpay web login and checkout process
 
 ### Configuring the SDK
 
-Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
+Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components with the correct branding and assets, T&Cs, web links, and currency formatting, and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
 
-The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how to best supply the locale which will determine the terms and conditions provided and currency formatting of the SDK.
+The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how best to supply the locale.
 
 Environment is required only for checkout v2; it's recommended to use `AfterpayEnvironment.PRODUCTION` for release builds and `AfterpayEnvironment.SANDBOX` for all others.
 
@@ -73,7 +73,10 @@ Afterpay.setConfiguration(
 )
 ```
 
-> **NOTE:** The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
+> **NOTES:**
+> - The configuration must always be set when using the SDK, and before any included components are initialised.
+> - The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
+> - Configuring the SDK with a UK locale will display Clearpay assets and branding, T&Cs, and currency formatting.
 
 ### Launching the Checkout (v1)
 
@@ -115,9 +118,7 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-Launch the Afterpay express checkout flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
-
-> **NOTE:** Configuration must always be set before calling checkout v2.
+Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -239,8 +240,6 @@ app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 app:afterpayButtonText="payNow|buyNow|checkout|placeOrder"
 ```
 
-> **NOTE:** Setting the configured locale to `Locale.UK` (`"en_GB"`) will display Clearpay assets and branding.
-
 ### Price Breakdown
 
 The price breakdown component displays information about Afterpay instalments and handles a number of common configurations.
@@ -271,8 +270,6 @@ When no payment amount has been set or the merchant account configuration has no
 ![Price breakdown no merchant account configuration][breakdown-no-configuration]
 
 The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
-
-> **NOTE:** The way the configured currency is formatted and the destination for the info link is determined by the configured locale.
 
 ## Security
 
