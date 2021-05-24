@@ -213,7 +213,10 @@ view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
     .init("50.00".toBigDecimal(), ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
 ```
 
-### Updating the widget
+### Updating the Widget
+
+The widget can be updated to reflect changes to the order total caused by promo codes, shipping options, etc.
+
 ```kotlin
 widget.update("50.00".toBigDecimal())
 ```
