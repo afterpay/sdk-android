@@ -175,11 +175,9 @@ class ExampleActivity: Activity {
 
 ### Widget
 
-The widget displays the consumer's payment schedule, provided by either a token or monetary amount, after checkout and can be updated to reflect changes such as promotional discounts or shipping costs. The widget will also present any issues that might prevent the order from completing. 
+The checkout widget displays the consumer's payment schedule, and can be updated as the order total changes. It should be shown if the order value is going to change after the Afterpay Express checkout has finished. For example, the order total may change in response to shipping costs and promo codes. It can also be used to show if there are any barriers to completing the purchase, like if the customer has gone over their Afterpay payment limit.
 
-The widget can be added to a layout or instantiated in code but an instance must always be initialised with one of the two `init()` functions.
-
-> **NOTE:** Configuration must always be set before initialising the widget.
+The widget can be added to a layout or instantiated in code but an instance must always be initialised with either a checkout token (from checkout v2) or with a monetary amount.
 
 ### Adding the Widget
 ```kotlin
