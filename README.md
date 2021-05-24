@@ -213,6 +213,22 @@ view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
     .init("50.00".toBigDecimal(), ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
 ```
 
+### Styling the Widget
+
+By default the widget will show the Afterpay logo and header but these may be independently disabled when initialising the widget.
+
+```kotlin
+view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
+    .init(
+        "50.00".toBigDecimal(),
+        ::onWidgetExternalLink,
+        ::onWidgetUpdate,
+        ::onWidgetError,
+        showLogo = true,
+        showHeading = false
+    )
+```
+
 ### Updating the Widget
 
 The widget can be updated to reflect changes to the order total caused by promo codes, shipping options, etc.
