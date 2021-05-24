@@ -179,6 +179,8 @@ The checkout widget displays the consumer's payment schedule, and can be updated
 
 The widget can be added to a layout or instantiated in code but an instance must always be initialised in one of the two ways demonstrated below and provided with the required callbacks which will notify your app when the widget is updated or an error occurs, or when an attempt to load an external URL is made.
 
+The widget will resize to fit the internal content and should not be made smaller so as to maintain legibility.
+
 ![Payment Schedule Widget][widget]
 
 ### Adding the Widget
@@ -241,6 +243,8 @@ widget.update("50.00".toBigDecimal())
 
 ### Badge
 
+The Afterpay badge can be added to your layout and scaled to suit the needs of your app. Per branding guidelines it requires a minimum width of `64dp`.
+
 ![Black on Mint badge][badge-black-on-mint]
 ![Mint on Black badge][badge-mint-on-black]
 
@@ -254,7 +258,7 @@ app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 
 ### Payment Buttons
 
-A selection of payment buttons is available to suit most common purchasing scenarios.
+The payment button may be added to your layout and scaled to suit the needs of your app but to maintain legibility the width must not exceed `256dp`.
 
 ![Black on Mint pay now button][button-black-on-mint]
 ![Mint on Black pay now button][button-mint-on-black]
