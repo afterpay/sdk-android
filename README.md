@@ -13,8 +13,8 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 - [Features](#features)
 - [Getting Started](#getting-started)
     - [Configuring the SDK](#configuring-the-sdk)
-    - [Launching the Checkout (v1)](#launching-the-checkout-(v1))
-    - [Launching the Checkout (v2)](#launching-the-checkout-(v2))
+    - [Launching the Checkout (v1)](#launching-the-checkout-v1)
+    - [Launching the Checkout (v2)](#launching-the-checkout-v2)
 - [UI Components](#ui-components)
     - [Widget](#widget)
     - [Badge](#badge)
@@ -55,9 +55,9 @@ The SDK provides easy integration of the Afterpay web login and checkout process
 
 ### Configuring the SDK
 
-Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
+Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components with the correct branding and assets, T&Cs, web links, and currency formatting, and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration] method.
 
-The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how to best supply the locale which will determine the terms and conditions provided and currency formatting of the SDK.
+The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how best to supply the locale.
 
 Environment is required only for checkout v2; it's recommended to use `AfterpayEnvironment.PRODUCTION` for release builds and `AfterpayEnvironment.SANDBOX` for all others.
 
@@ -73,7 +73,10 @@ Afterpay.setConfiguration(
 )
 ```
 
-> **NOTE:** The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
+> **NOTES:**
+> - The configuration must always be set when using the SDK, and before any included components are initialised.
+> - The merchant account is subject to change and it is recommended to update this configuration **once per day**. The example project provides a [reference][example-configuration] demonstrating how this may be implemented.
+> - Configuring the SDK with a UK locale will display Clearpay assets and branding, T&Cs, and currency formatting.
 
 ### Launching the Checkout (v1)
 
@@ -115,9 +118,7 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-Launch the Afterpay express checkout flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
-
-> **NOTE:** Configuration must always be set before calling checkout v2.
+Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -126,7 +127,7 @@ class ExampleActivity: Activity {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // ...
 
         Afterpay.setCheckoutV2Handler(object : AfterpayCheckoutV2Handler {
             override fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit) {
@@ -144,10 +145,6 @@ class ExampleActivity: Activity {
                 TODO("Optionally update your application model with the selected shipping option")
             }
         })
-    }
-
-    override fun onCreate(savedInstanceState: Bundle) {
-        // ...
 
         val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
         afterpayCheckoutButton.setOnClickListener {
@@ -178,13 +175,18 @@ class ExampleActivity: Activity {
 
 ### Widget
 
-The widget displays the consumer's payment schedule, provided by either a token or monetary amount, after checkout and can be updated to reflect changes such as promotional discounts or shipping costs. The widget will also present any issues that might prevent the order from completing. 
+The checkout widget displays the consumer's payment schedule, and can be updated as the order total changes. It should be shown if the order value is going to change after the Afterpay Express checkout has finished. For example, the order total may change in response to shipping costs and promo codes. It can also be used to show if there are any barriers to completing the purchase, like if the customer has gone over their Afterpay payment limit.
 
-The widget can be added to a layout or instantiated in code but an instance must always be initialised with one of the two `init()` functions.
+The widget can be added to a layout or instantiated in code but an instance must always be initialised in one of the two ways demonstrated below and provided with the required callbacks which will notify your app when the widget is updated or an error occurs, or when an attempt to load an external URL is made.
 
-> **NOTE:** Configuration must always be set before initialising the widget.
+The widget will resize to fit the internal content and should not be made smaller so as to maintain legibility.
+
+![Payment Schedule Widget][widget]
 
 ### Adding the Widget
+
+Initialising the widget with a token received upon completion of checkout v2 will populate it with information about the transaction.
+
 ```kotlin
 class ReceiptFragment : Fragment() {
 
@@ -209,12 +211,39 @@ class ReceiptFragment : Fragment() {
 }
 ```
 
-### Updating the widget
+Alternatively, if checkout has not been completed or your app is not using checkout v2, the widget may be initialised in tokenless mode with a `BigDecimal` representing the total cost of the purchase.
+```kotlin
+view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
+    .init("50.00".toBigDecimal(), ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
+```
+
+### Styling the Widget
+
+By default the widget will show the Afterpay logo and header but these may be independently disabled when initialising the widget.
+
+```kotlin
+view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
+    .init(
+        "50.00".toBigDecimal(),
+        ::onWidgetExternalLink,
+        ::onWidgetUpdate,
+        ::onWidgetError,
+        showLogo = true,
+        showHeading = false
+    )
+```
+
+### Updating the Widget
+
+The widget can be updated to reflect changes to the order total caused by promo codes, shipping options, etc.
+
 ```kotlin
 widget.update("50.00".toBigDecimal())
 ```
 
 ### Badge
+
+The Afterpay badge can be added to your layout and scaled to suit the needs of your app. Per branding guidelines it requires a minimum width of `64dp`.
 
 ![Black on Mint badge][badge-black-on-mint]
 ![Mint on Black badge][badge-mint-on-black]
@@ -229,21 +258,25 @@ app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 
 ### Payment Buttons
 
-A selection of payment buttons is available to suit most common purchasing scenarios.
+The payment button may be added to your layout and scaled to suit the needs of your app but to maintain legibility the width must not exceed `256dp`.
 
 ![Black on Mint pay now button][button-black-on-mint]
-![Mint on Black pay now button][button-mint-on-black]
+![Mint on Black buy now button][button-mint-on-black]
 
-![Black on White pay now button][button-black-on-white]
-![White on Black pay now button][button-white-on-black]
+![Black on White checkout with button][button-black-on-white]
+![White on Black place order with button][button-white-on-black]
+
+The button may be styled with different text to suit some common purchasing scenarios:
+- Pay Now
+- Buy Now
+- Checkout with
+- Place order with
 
 **Attributes**
 ```xml
 app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 app:afterpayButtonText="payNow|buyNow|checkout|placeOrder"
 ```
-
-> **NOTE:** Setting the configured locale to `Locale.UK` (`"en_GB"`) will display Clearpay assets and branding.
 
 ### Price Breakdown
 
@@ -275,8 +308,6 @@ When no payment amount has been set or the merchant account configuration has no
 ![Price breakdown no merchant account configuration][breakdown-no-configuration]
 
 The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
-
-> **NOTE:** The way the configured currency is formatted and the destination for the info link is determined by the configured locale.
 
 ## Security
 
@@ -313,6 +344,7 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 <!-- Links: -->
 [badge-ci]: https://github.com/afterpay/sdk-android/workflows/Build%20and%20Test/badge.svg?branch=master&event=push
 [badge-ktlint]: https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg
+[widget]: images/widget.png
 [badge-black-on-mint]: images/badge_black_on_mint.png
 [badge-mint-on-black]: images/badge_mint_on_black.png
 [badge-black-on-white]: images/badge_black_on_white.png
