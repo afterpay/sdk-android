@@ -48,11 +48,13 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private lateinit var loadingWebView: WebView
     private var checkoutWebView: WebView? = null
 
-    private val bootstrapUrl = "https://static.afterpay.com/mobile-sdk/bootstrap/index.html"
+    private lateinit var bootstrapUrl: String
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        bootstrapUrl = getString(R.string.afterpay_url_checkout_express)
 
         setContentView(R.layout.activity_express_web_checkout)
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -116,8 +118,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     }
 
     private fun loadCheckoutToken() {
-        val handler =
-            Afterpay.checkoutV2Handler ?: return finish(NO_CHECKOUT_HANDLER)
+        val handler = Afterpay.checkoutV2Handler ?: return finish(NO_CHECKOUT_HANDLER)
         val configuration =
             Afterpay.configuration ?: return finish(CancellationStatus.NO_CONFIGURATION)
         val options = requireNotNull(intent.getCheckoutV2OptionsExtra())
@@ -281,35 +282,44 @@ private class BootstrapJavascriptInterface(
     private val complete: (AfterpayCheckoutCompletion) -> Unit,
     private val cancel: (CancellationStatus) -> Unit
 ) {
-    @JavascriptInterface
-    fun postMessage(json: String) {
-        val checkoutMessage = runCatching { Json.decodeFromString<AfterpayCheckoutMessage>(json) }
-            .getOrNull()
 
-        if (checkoutMessage == null) {
-            runCatching { Json.decodeFromString<AfterpayCheckoutCompletion>(json) }
+    private val json = Json { ignoreUnknownKeys = true }
+
+    @JavascriptInterface
+    fun postMessage(messageJson: String) {
+        runCatching { json.decodeFromString<AfterpayCheckoutMessage>(messageJson) }
+            .onFailure { Log.d(javaClass.simpleName, it.toString()) }
+            .getOrNull()
+            ?.let { message ->
+                val handler = Afterpay.checkoutV2Handler ?: return cancel(NO_CHECKOUT_HANDLER)
+
+                when (message) {
+                    is CheckoutLogMessage -> Log.d(
+                        javaClass.simpleName,
+                        message.payload.run { "${severity.capitalize(Locale.ROOT)}: $message" }
+                    )
+
+                    is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
+                        AfterpayCheckoutMessage
+                            .fromShippingOptionsResult(it, message.meta)
+                            .let { result ->
+                                "postMessageToCheckout('${json.encodeToString(result)}');"
+                            }
+                            .also { javascript ->
+                                activity.runOnUiThread {
+                                    webView.evaluateJavascript(javascript, null)
+                                }
+                            }
+                    }
+
+                    is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
+
+                    else -> Unit
+                }
+            }
+            ?: runCatching { json.decodeFromString<AfterpayCheckoutCompletion>(messageJson) }
+                .onFailure { Log.d(javaClass.simpleName, it.toString()) }
                 .getOrNull()
                 ?.let(complete)
-        } else {
-            val handler = Afterpay.checkoutV2Handler ?: return cancel(NO_CHECKOUT_HANDLER)
-
-            when (checkoutMessage) {
-                is CheckoutLogMessage -> Log.d(
-                    "AfterpayCheckoutV2",
-                    checkoutMessage.payload.run { "${severity.capitalize(Locale.ROOT)}: $message" }
-                )
-
-                is ShippingAddressMessage -> handler.shippingAddressDidChange(checkoutMessage.payload) {
-                    val javascript = AfterpayCheckoutMessage
-                        .fromShippingOptionsResult(it, checkoutMessage.meta)
-                        .let { result -> "postMessageToCheckout('${Json.encodeToString(result)}');" }
-                    activity.runOnUiThread { webView.evaluateJavascript(javascript, null) }
-                }
-
-                is ShippingOptionMessage -> handler.shippingOptionDidChange(checkoutMessage.payload)
-
-                else -> Unit
-            }
-        }
     }
 }

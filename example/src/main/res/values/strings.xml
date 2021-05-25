@@ -1,23 +1,24 @@
 <resources>
-    <string name="app_name">Afterpay Integration</string>
-    <string name="checkout_with_afterpay">Checkout with Afterpay</string>
-    <string name="example_email_address">email@afterpay.com</string>
-    <string name="view_cart">View Cart</string>
-    <string name="add_to_cart_button">+</string>
-    <string name="add_to_cart_button_content_description">Add to Cart</string>
-    <string name="remove_from_cart_button">-</string>
-    <string name="remove_from_cart_button_content_description">Remove from Cart</string>
-    <string name="total_cost">Total Cost</string>
-    <string name="email">Email</string>
-    <string name="title_shopping">Aftersnack</string>
-    <string name="title_checkout">Checkout</string>
-    <string name="title_receipt">Receipt</string>
-    <string name="configuration_error_message">Failed to fetch Afterpay configuration</string>
-    <string name="configuration_error_action_retry">Retry</string>
-    <string name="preferences">com.example.afterpay.preferences</string>
-    <string name="cart_buyNowLabel">Buy Now</string>
-    <string name="cart_pickupLabel">Pickup</string>
-    <string name="cart_expressLabel">Express</string>
-    <string name="cart_shippingOptionsRequiredLabel">Shipping Options Required</string>
-    <string name="receipt_totalCost_hint">0.00</string>
+    <string name="app_name" translatable="false">Afterpay Integration</string>
+    <string name="refresh_configuration" translatable="false">Refresh Configuration</string>
+    <string name="checkout_with_afterpay" translatable="false">Checkout with Afterpay</string>
+    <string name="example_email_address" translatable="false">email@afterpay.com</string>
+    <string name="view_cart" translatable="false">View Cart</string>
+    <string name="add_to_cart_button" translatable="false">+</string>
+    <string name="add_to_cart_button_content_description" translatable="false">Add to Cart</string>
+    <string name="remove_from_cart_button" translatable="false">-</string>
+    <string name="remove_from_cart_button_content_description" translatable="false">Remove from Cart</string>
+    <string name="total_cost" translatable="false">Total Cost</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="title_shopping" translatable="false">Aftersnack</string>
+    <string name="title_checkout" translatable="false">Checkout</string>
+    <string name="title_receipt" translatable="false">Receipt</string>
+    <string name="configuration_error_message" translatable="false">Failed to fetch Afterpay configuration</string>
+    <string name="configuration_error_action_retry" translatable="false">Retry</string>
+    <string name="preferences" translatable="false">com.example.afterpay.preferences</string>
+    <string name="cart_buyNowLabel" translatable="false">Buy Now</string>
+    <string name="cart_pickupLabel" translatable="false">Pickup</string>
+    <string name="cart_expressLabel" translatable="false">Express</string>
+    <string name="cart_shippingOptionsRequiredLabel" translatable="false">Shipping Options Required</string>
+    <string name="receipt_totalCost_hint" translatable="false">0.00</string>
 </resources>

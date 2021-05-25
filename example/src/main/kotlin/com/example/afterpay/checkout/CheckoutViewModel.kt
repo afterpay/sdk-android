@@ -190,7 +190,7 @@ private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) =
     putBoolean(PreferenceKey.pickup, isPickup)
 
 private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
-    getBoolean(PreferenceKey.shippingOptionsRequired, true)
+    getBoolean(PreferenceKey.shippingOptionsRequired, false)
 
 private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
     putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)

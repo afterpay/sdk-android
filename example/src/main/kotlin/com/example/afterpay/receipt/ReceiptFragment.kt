@@ -47,7 +47,7 @@ class ReceiptFragment : Fragment() {
             findNavController().navigate(nav_graph.action.back_to_shopping)
         }
 
-        view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
+        view.findViewById<AfterpayWidgetView>(R.id.receipt_afterpayWidget)
             .apply {
                 init(viewModel.token, ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
                 viewModel

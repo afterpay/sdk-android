@@ -13,10 +13,25 @@ android {
         targetSdkVersion versions.compile_sdk
         versionCode 1
         versionName '1.0'
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        staging {
+            initWith debug
+        }
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     compileOptions {
@@ -28,11 +43,8 @@ android {
         jvmTarget = versions.java
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 }
 
@@ -65,4 +77,15 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.jakewharton.threetenabp:threetenabp:${versions.android_three_ten}"
+
+    androidTestUtil "androidx.test:orchestrator:${versions.androidx_test_orchestrator}"
+
+    androidTestImplementation "androidx.test:core:${versions.androidx_test_core}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_test_junit}"
+    androidTestImplementation "androidx.test:runner:${versions.androidx_test_runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:${versions.espresso}"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:${versions.espresso}"
+    androidTestImplementation "androidx.test.espresso:espresso-web:${versions.espresso}"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:${versions.uiautomator}"
 }

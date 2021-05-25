@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+    <title>Afterpay Test Checkout</title>
+    <script type="text/javascript">
+        function openCheckout(json) {
+            let app;
+
+            try {
+                app = window.webkit.messageHandlers.iOS;
+            } catch {}
+
+            if (typeof app === "undefined" && typeof Android !== "undefined") {
+                app = Android;
+            }
+
+            if (typeof app !== "undefined") {
+                app.postMessage('{"status":"SUCCESS","orderToken":"thisIsAnOrderToken"}');
+            }
+        }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
