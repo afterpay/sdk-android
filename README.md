@@ -118,7 +118,11 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
+Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. 
+
+> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here](https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28). See more at by checking the [API reference][express-checkout]. Failing to do so will cause undefined behavior.
+
+For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
 
 ```kotlin
 class ExampleActivity: Activity {
