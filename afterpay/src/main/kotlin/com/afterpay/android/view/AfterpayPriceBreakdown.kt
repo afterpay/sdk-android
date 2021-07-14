@@ -124,13 +124,21 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
         textView.apply {
             text = SpannableStringBuilder().apply {
                 if (instalment is AfterpayInstalment.NotAvailable) {
-                    append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    append(
+                        "afterpay",
+                        CenteredImageSpan(drawable),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
                     append(" ")
                     append(content.text)
                 } else {
                     append(content.text)
                     append(" ")
-                    append(" ", CenteredImageSpan(drawable), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    append(
+                        "afterpay",
+                        CenteredImageSpan(drawable),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
                 }
                 append(" ")
                 append(
