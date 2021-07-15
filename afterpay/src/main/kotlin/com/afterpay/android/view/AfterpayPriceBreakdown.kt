@@ -125,7 +125,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             text = SpannableStringBuilder().apply {
                 if (instalment is AfterpayInstalment.NotAvailable) {
                     append(
-                        "afterpay",
+                        context.getString(R.string.afterpay_service_name),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -135,7 +135,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(content.text)
                     append(" ")
                     append(
-                        "afterpay",
+                        context.getString(R.string.afterpay_service_name),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
