@@ -2,6 +2,7 @@ package com.afterpay.android.internal
 
 import android.content.Intent
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.AfterpayCheckoutV3Options
 import com.afterpay.android.CancellationStatus
 import java.lang.Exception
 
@@ -23,6 +24,12 @@ internal fun Intent.putCheckoutV2OptionsExtra(options: AfterpayCheckoutV2Options
     putExtra(AfterpayIntent.CHECKOUT_OPTIONS, options)
 
 internal fun Intent.getCheckoutV2OptionsExtra(): AfterpayCheckoutV2Options? =
+    getParcelableExtra(AfterpayIntent.CHECKOUT_OPTIONS)
+
+internal fun Intent.putCheckoutV3OptionsExtra(options: AfterpayCheckoutV3Options): Intent =
+    putExtra(AfterpayIntent.CHECKOUT_OPTIONS, options)
+
+internal fun Intent.getCheckoutV3OptionsExtra(): AfterpayCheckoutV3Options? =
     getParcelableExtra(AfterpayIntent.CHECKOUT_OPTIONS)
 
 internal fun Intent.putOrderTokenExtra(token: String): Intent =

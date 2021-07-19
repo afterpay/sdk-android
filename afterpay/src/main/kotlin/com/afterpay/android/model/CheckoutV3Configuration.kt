@@ -9,7 +9,7 @@ data class CheckoutV3Configuration(
     val region: AfterpayRegion,
     val environment: AfterpayEnvironment
 ) {
-    private val shopDirectoryId: String
+    internal val shopDirectoryId: String
         get() = when (region) {
             AfterpayRegion.US -> when (environment) {
                 AfterpayEnvironment.SANDBOX -> "cd6b7914412b407d80aaf81d855d1105"

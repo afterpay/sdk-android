@@ -12,6 +12,7 @@ import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
+import com.afterpay.android.internal.putCheckoutV3OptionsExtra
 import com.afterpay.android.model.CheckoutV3Configuration
 import com.afterpay.android.model.CheckoutV3Consumer
 import com.afterpay.android.model.CheckoutV3Item
@@ -19,6 +20,8 @@ import com.afterpay.android.model.MerchantConfigurationV3
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
@@ -203,7 +206,19 @@ object Afterpay {
     ): Intent {
         val configuration = configuration
             ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
-        val intent = Intent(context, AfterpayCheckoutActivity::class.java)
-        return intent
+
+        val checkoutRequest = CheckoutV3.Request.create(
+            consumer = consumer,
+            orderTotal = orderTotal,
+            items = items,
+            configuration = configuration,
+        )
+        val options = AfterpayCheckoutV3Options(
+            buyNow = buyNow,
+            checkoutPayload = Json.encodeToString(checkoutRequest)
+        )
+
+        return Intent(context, AfterpayCheckoutActivity::class.java)
+            .putCheckoutV3OptionsExtra(options)
     }
 }
