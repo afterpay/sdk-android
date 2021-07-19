@@ -1,5 +1,6 @@
 package com.afterpay.android.internal
 
+import com.afterpay.android.model.Configuration
 import java.util.Observable
 
 internal object ConfigurationObservable : Observable() {

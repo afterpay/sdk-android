@@ -1,7 +1,7 @@
 package com.afterpay.android
 
 import com.afterpay.android.internal.AfterpayInstalment
-import com.afterpay.android.internal.Configuration
+import com.afterpay.android.model.Configuration
 import com.afterpay.android.internal.Locales
 import org.junit.Assert.assertEquals
 import org.junit.Test

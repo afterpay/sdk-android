@@ -1,11 +1,11 @@
-package com.afterpay.android.internal
+package com.afterpay.android.model
 
 import com.afterpay.android.AfterpayEnvironment
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 
-internal data class Configuration(
+data class Configuration(
     val minimumAmount: BigDecimal?,
     val maximumAmount: BigDecimal,
     val currency: Currency,

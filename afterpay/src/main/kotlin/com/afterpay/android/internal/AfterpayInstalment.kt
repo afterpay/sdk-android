@@ -1,5 +1,6 @@
 package com.afterpay.android.internal
 
+import com.afterpay.android.model.Configuration
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat

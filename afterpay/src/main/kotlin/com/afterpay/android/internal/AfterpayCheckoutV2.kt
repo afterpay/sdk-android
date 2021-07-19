@@ -2,6 +2,7 @@ package com.afterpay.android.internal
 
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.BuildConfig
+import com.afterpay.android.model.Configuration
 import kotlinx.serialization.Serializable
 
 @Serializable
