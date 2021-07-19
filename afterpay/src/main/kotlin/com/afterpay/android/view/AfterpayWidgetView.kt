@@ -15,7 +15,7 @@ import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
-import com.afterpay.android.internal.Configuration
+import com.afterpay.android.model.Configuration
 import com.afterpay.android.internal.setAfterpayUserAgentString
 import com.afterpay.android.model.Money
 import kotlinx.coroutines.CoroutineScope
