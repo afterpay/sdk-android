@@ -26,7 +26,7 @@ class DetailsViewModel(private val resultData: CheckoutV3Data) : ViewModel() {
             val result = Afterpay.updateMerchantReferenceV3(reference, resultData.tokens)
             result.fold(
                 onSuccess = { onMerchantReference(reference) },
-                onFailure = { onMerchantReference("Update failed!") }
+                onFailure = { onMerchantReference(it.message ?: "Update failed!") }
             )
         }
     }
