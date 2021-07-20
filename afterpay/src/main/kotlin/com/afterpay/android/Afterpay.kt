@@ -168,9 +168,9 @@ object Afterpay {
         buyNow: Boolean,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Intent {
-        val configuration = configuration
-            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
-
+        requireNotNull(configuration) {
+            "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+        }
         val checkoutRequest = CheckoutV3.Request.create(
             consumer = consumer,
             orderTotal = orderTotal,
@@ -197,8 +197,9 @@ object Afterpay {
         tokens: CheckoutV3Tokens,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Result<Unit> {
-        val configuration = configuration
-            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
+        requireNotNull(configuration) {
+            "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+        }
 
         val payload = CheckoutV3.MerchantReferenceUpdate(
             merchantReference,
@@ -221,8 +222,9 @@ object Afterpay {
     fun fetchMerchantConfigurationV3(
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Result<Configuration> {
-        val configuration = configuration
-            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
+        requireNotNull(configuration) {
+            "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+        }
 
         return ApiV3.get<MerchantConfigurationV3>(configuration.v3ConfigurationUrl)
             .map {
