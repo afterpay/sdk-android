@@ -124,20 +124,15 @@ object Afterpay {
     }
 
     private fun validateConfiguration(configuration: Configuration) {
-        if (configuration.maximumAmount < BigDecimal.ZERO) {
-            throw IllegalArgumentException("Maximum order amount is invalid")
-        }
+        require(configuration.maximumAmount >= BigDecimal.ZERO) { "Maximum order amount is invalid" }
         configuration.minimumAmount?.let { minimumAmount ->
-            if (minimumAmount < BigDecimal.ZERO || minimumAmount > configuration.maximumAmount) {
-                throw IllegalArgumentException("Minimum order amount is invalid")
+            require(minimumAmount < BigDecimal.ZERO || minimumAmount > configuration.maximumAmount) {
+                "Minimum order amount is invalid"
             }
         }
-        if (!Locales.validSet.contains(configuration.locale)) {
-            val validCountries = Locales.validSet.map { it.country }
-            throw IllegalArgumentException(
-                "Locale contains an unsupported country: ${configuration.locale.country}. " +
-                    "Supported countries include: ${validCountries.joinToString(",")}"
-            )
+        require(Locales.validSet.contains(configuration.locale)) {
+            val validCountries = Locales.validSet.joinToString(",") { it.country }
+            "Locale contains an unsupported country: ${configuration.locale.country}. Supported countries include: $validCountries"
         }
     }
 
