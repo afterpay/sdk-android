@@ -13,7 +13,6 @@ import kotlin.Exception
 
 internal object ApiV3 {
 
-    @JvmStatic
     internal inline fun <reified T, reified B>request(url: URL, method: HttpVerb, body: B): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
@@ -41,7 +40,6 @@ internal object ApiV3 {
         }
     }
 
-    @JvmStatic
     internal inline fun <reified B>requestUnit(url: URL, method: HttpVerb, body: B): Result<Unit> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
@@ -70,8 +68,7 @@ internal object ApiV3 {
             connection.disconnect()
         }
     }
-
-    @JvmStatic
+    
     internal inline fun <reified T>get(url: URL): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
