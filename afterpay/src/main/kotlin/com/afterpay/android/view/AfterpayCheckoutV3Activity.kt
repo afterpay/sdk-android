@@ -238,11 +238,9 @@ private class AfterpayWebViewClientV3(
 }
 
 private class AfterpayWebChromeClientV3(
-    private val openExternalLink: (Uri) -> Unit
+    private val openExternalLink: (Uri) -> Unit,
+    private val URL_KEY: String = "url"
 ) : WebChromeClient() {
-    companion object {
-        const val URL_KEY = "url"
-    }
 
     override fun onCreateWindow(
         view: WebView?,
