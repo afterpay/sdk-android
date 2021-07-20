@@ -63,7 +63,7 @@ internal object CheckoutV3 {
                     shippingAmount = Money(orderTotal.shipping, currency),
                     taxAmount = Money(orderTotal.tax, currency),
                     items = items.map { Item.create(it, configuration.region) },
-                    consumer =  Consumer(
+                    consumer = Consumer(
                         email = consumer.email,
                         givenNames = consumer.givenNames,
                         surname = consumer.surname,
@@ -71,7 +71,7 @@ internal object CheckoutV3 {
                     ),
                     merchant = Merchant(
                         redirectConfirmUrl = "https://www.afterpay.com",
-                        redirectCancelUrl =  "https://www.afterpay.com"
+                        redirectCancelUrl = "https://www.afterpay.com"
                     ),
                     shipping = Contact.create(consumer.shippingInformation),
                     billing = Contact.create(consumer.billingInformation)

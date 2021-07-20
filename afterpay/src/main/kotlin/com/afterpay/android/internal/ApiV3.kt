@@ -4,7 +4,7 @@ import com.afterpay.android.BuildConfig
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
 import java.io.OutputStreamWriter
 import java.net.URL
@@ -13,7 +13,7 @@ import kotlin.Exception
 
 internal object ApiV3 {
 
-    internal inline fun <reified T, reified B>request(url: URL, method: HttpVerb, body: B): Result<T> {
+    internal inline fun <reified T, reified B> request(url: URL, method: HttpVerb, body: B): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
@@ -40,7 +40,7 @@ internal object ApiV3 {
         }
     }
 
-    internal inline fun <reified B>requestUnit(url: URL, method: HttpVerb, body: B): Result<Unit> {
+    internal inline fun <reified B> requestUnit(url: URL, method: HttpVerb, body: B): Result<Unit> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
@@ -68,7 +68,7 @@ internal object ApiV3 {
         }
     }
 
-    internal inline fun <reified T>get(url: URL): Result<T> {
+    internal inline fun <reified T> get(url: URL): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, HttpVerb.GET)
@@ -89,8 +89,8 @@ internal object ApiV3 {
         }
     }
 
-    internal enum class HttpVerb(name: String) {
-        POST("POST"), PUT("PUT"), GET("GET")
+    internal enum class HttpVerb {
+        POST, PUT, GET
     }
 
     private fun configure(connection: HttpsURLConnection, type: HttpVerb) {
@@ -127,5 +127,3 @@ internal object ApiV3 {
         val httpStatusCode: Int
     )
 }
-
-

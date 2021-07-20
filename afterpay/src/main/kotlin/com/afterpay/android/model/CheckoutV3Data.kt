@@ -3,8 +3,8 @@ package com.afterpay.android.model
 import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Instant
 

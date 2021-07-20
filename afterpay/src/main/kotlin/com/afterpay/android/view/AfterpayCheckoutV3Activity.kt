@@ -27,8 +27,8 @@ import com.afterpay.android.internal.putCancellationStatusExtraV3
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putResultDataV3
 import com.afterpay.android.internal.setAfterpayUserAgentString
-import com.afterpay.android.model.CheckoutV3Tokens
 import com.afterpay.android.model.CheckoutV3Data
+import com.afterpay.android.model.CheckoutV3Tokens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -96,11 +96,13 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                 .buildUpon()
                 .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
                 .build()
-            intent.putCheckoutV3OptionsExtra(options.copy(
-                redirectUrl = URL(builder.toString()),
-                singleUseCardToken = response.singleUseCardToken,
-                token = response.token
-            ))
+            intent.putCheckoutV3OptionsExtra(
+                options.copy(
+                    redirectUrl = URL(builder.toString()),
+                    singleUseCardToken = response.singleUseCardToken,
+                    token = response.token
+                )
+            )
             loadRedirectUrl()
         } catch (exception: Exception) {
             received(CancellationStatusV3.REQUEST_ERROR, exception)
@@ -151,9 +153,11 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         when (status) {
             is CheckoutStatusV3.Success -> {
                 intent.getCheckoutV3OptionsExtra()?.let {
-                    intent.putCheckoutV3OptionsExtra(it.copy(
-                        ppaConfirmToken = status.ppaConfirmToken
-                    ))
+                    intent.putCheckoutV3OptionsExtra(
+                        it.copy(
+                            ppaConfirmToken = status.ppaConfirmToken
+                        )
+                    )
                 }
                 lifecycleScope.launch {
                     performConfirmationRequest()
@@ -174,7 +178,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         val request = CheckoutV3.Confirmation.Request(
             token = token,
             ppaConfirmToken = ppaConfirmToken,
-            singleUseCardToken =  singleUseCardToken
+            singleUseCardToken = singleUseCardToken
         )
         val result: Result<CheckoutV3.Confirmation.Response> = withContext(Dispatchers.IO) {
             ApiV3.request(conformationUrl, ApiV3.HttpVerb.POST, request)

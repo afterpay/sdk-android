@@ -1,8 +1,8 @@
 package com.afterpay.android
 
 import com.afterpay.android.internal.AfterpayInstalment
-import com.afterpay.android.model.Configuration
 import com.afterpay.android.internal.Locales
+import com.afterpay.android.model.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.math.BigDecimal

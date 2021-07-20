@@ -30,7 +30,6 @@ internal object MoneyBigDecimalSerializer : KSerializer<BigDecimal> {
             value.setScale(2, RoundingMode.HALF_EVEN).toPlainString()
         )
     }
-
 }
 
 internal object CurrencySerializer : KSerializer<Currency> {

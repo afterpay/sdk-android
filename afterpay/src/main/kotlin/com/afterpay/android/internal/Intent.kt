@@ -6,7 +6,6 @@ import com.afterpay.android.AfterpayCheckoutV3Options
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.model.CheckoutV3Data
-import com.afterpay.android.view.AfterpayPaymentButton
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

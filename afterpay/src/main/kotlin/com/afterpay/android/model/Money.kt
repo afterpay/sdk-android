@@ -1,7 +1,7 @@
 package com.afterpay.android.model
 
-import com.afterpay.android.internal.MoneyBigDecimalSerializer
 import com.afterpay.android.internal.CurrencySerializer
+import com.afterpay.android.internal.MoneyBigDecimalSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.util.Currency
