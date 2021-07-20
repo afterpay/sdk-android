@@ -87,25 +87,23 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         val checkoutPayload = options.checkoutPayload
             ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
 
-        withContext(Dispatchers.IO) {
-            val result = ApiV3.request<CheckoutV3.Response, String>(checkoutUrl, ApiV3.HttpVerb.POST, checkoutPayload)
-            try {
-                val response = result.getOrThrow()
-                val builder = Uri.parse(response.redirectCheckoutUrl)
-                    .buildUpon()
-                    .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
-                    .build()
-                intent.putCheckoutV3OptionsExtra(options.copy(
-                    redirectUrl = URL(builder.toString()),
-                    singleUseCardToken = response.singleUseCardToken,
-                    token = response.token
-                ))
-                withContext(Dispatchers.Main) {
-                    loadRedirectUrl()
-                }
-            } catch (exception: Exception) {
-                received(CancellationStatusV3.REQUEST_ERROR, exception)
-            }
+        val result = withContext(Dispatchers.IO) {
+            ApiV3.request<CheckoutV3.Response, String>(checkoutUrl, ApiV3.HttpVerb.POST, checkoutPayload)
+        }
+        try {
+            val response = result.getOrThrow()
+            val builder = Uri.parse(response.redirectCheckoutUrl)
+                .buildUpon()
+                .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
+                .build()
+            intent.putCheckoutV3OptionsExtra(options.copy(
+                redirectUrl = URL(builder.toString()),
+                singleUseCardToken = response.singleUseCardToken,
+                token = response.token
+            ))
+            loadRedirectUrl()
+        } catch (exception: Exception) {
+            received(CancellationStatusV3.REQUEST_ERROR, exception)
         }
     }
 
@@ -178,29 +176,25 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             ppaConfirmToken = ppaConfirmToken,
             singleUseCardToken =  singleUseCardToken
         )
-        withContext(Dispatchers.IO) {
-            val result: Result<CheckoutV3.Confirmation.Response> = ApiV3.request(conformationUrl, ApiV3.HttpVerb.POST, request)
-            try {
-                val response = result.getOrThrow()
-                val data = CheckoutV3Data(
-                    cardDetails = response.paymentDetails.virtualCard,
-                    cardValidUntil = response.cardValidUntil,
-                    tokens = CheckoutV3Tokens(
-                        token = token,
-                        singleUseCardToken = singleUseCardToken,
-                        ppaConfirmToken = ppaConfirmToken
-                    )
-                )
-                withContext(Dispatchers.Main) {
-                    setResult(Activity.RESULT_OK, Intent().putResultDataV3(data))
-                    finish()
-                }
-
-            } catch (exception: Exception) {
-                received(CancellationStatusV3.REQUEST_ERROR, exception)
-            }
+        val result: Result<CheckoutV3.Confirmation.Response> = withContext(Dispatchers.IO) {
+            ApiV3.request(conformationUrl, ApiV3.HttpVerb.POST, request)
         }
-
+        try {
+            val response = result.getOrThrow()
+            val data = CheckoutV3Data(
+                cardDetails = response.paymentDetails.virtualCard,
+                cardValidUntil = response.cardValidUntil,
+                tokens = CheckoutV3Tokens(
+                    token = token,
+                    singleUseCardToken = singleUseCardToken,
+                    ppaConfirmToken = ppaConfirmToken
+                )
+            )
+            setResult(Activity.RESULT_OK, Intent().putResultDataV3(data))
+            finish()
+        } catch (exception: Exception) {
+            received(CancellationStatusV3.REQUEST_ERROR, exception)
+        }
     }
 
     private fun received(status: CancellationStatusV3, exception: Exception? = null) {
