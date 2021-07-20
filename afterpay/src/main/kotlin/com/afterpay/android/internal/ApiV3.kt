@@ -27,13 +27,13 @@ internal object ApiV3 {
             val data = connection.inputStream.bufferedReader().readText()
             val result = Json.decodeFromString<T>(data)
             Result.success(result)
-        } catch (error: Exception) {
+        } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
-                Result.failure(error)
+                Result.failure(exception)
             }
         } finally {
             connection.disconnect()
@@ -50,25 +50,24 @@ internal object ApiV3 {
             outputStreamWriter.write(payload)
             outputStreamWriter.flush()
 
-            when (connection.responseCode) {
-                200, 201, 204 -> Result.success(Unit)
-                else -> {
-                    Result.failure(InvalidObjectException("Unexpected response code ${connection.responseCode}"))
-                }
+            if (connection.errorStream == null && connection.responseCode < 400) {
+                Result.success(Unit)
+            } else {
+                throw InvalidObjectException("Unexpected response code: ${connection.responseCode}")
             }
-        } catch (error: Exception) {
+        } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
-                Result.failure(error)
+                Result.failure(exception)
             }
         } finally {
             connection.disconnect()
         }
     }
-    
+
     internal inline fun <reified T>get(url: URL): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
@@ -77,8 +76,14 @@ internal object ApiV3 {
             val inputStream = connection.inputStream.bufferedReader().readText()
             val result = Json.decodeFromString<T>(inputStream)
             Result.success(result)
-        } catch (error: Exception) {
-            Result.failure(error)
+        } catch (exception: Exception) {
+            try {
+                val data = connection.errorStream.bufferedReader().readText()
+                val result = Json.decodeFromString<ApiErrorV3>(data)
+                Result.failure(InvalidObjectException(result.message))
+            } catch (_: Exception) {
+                Result.failure(exception)
+            }
         } finally {
             connection.disconnect()
         }
@@ -113,12 +118,14 @@ internal object ApiV3 {
             }
         }
     }
+
+    @Serializable
+    internal data class ApiErrorV3(
+        val errorCode: String,
+        val errorId: String,
+        val message: String,
+        val httpStatusCode: Int
+    )
 }
 
-@Serializable
-data class ApiErrorV3(
-    val errorCode: String,
-    val errorId: String,
-    val message: String,
-    val httpStatusCode: Int
-)
+
