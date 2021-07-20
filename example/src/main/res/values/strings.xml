@@ -21,4 +21,7 @@
     <string name="cart_expressLabel" translatable="false">Express</string>
     <string name="cart_shippingOptionsRequiredLabel" translatable="false">Shipping Options Required</string>
     <string name="receipt_totalCost_hint" translatable="false">0.00</string>
+    <string name="details_merchant_button_title" translatable="false">Update Merchant Reference</string>
+    <string name="details_merchant_instructions_body" translatable="false">After the user has completed their Afterpay checkout, you will have until the `virtual card expiry` to perform an authorisation on the card. This completes the purchase. Once a stable, unique id has been generated for the transaction, the Afterpay merchant reference must be updated.</string>
+    <string name="details_merchant_instructions_title" translatable="false">Next steps</string>
 </resources>
