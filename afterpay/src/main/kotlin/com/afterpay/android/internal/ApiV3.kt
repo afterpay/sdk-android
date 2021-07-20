@@ -1,5 +1,6 @@
 package com.afterpay.android.internal
 
+import com.afterpay.android.BuildConfig
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -92,8 +93,7 @@ internal object ApiV3 {
 
     private fun configure(connection: HttpsURLConnection, type: HttpVerb) {
         connection.requestMethod = type.name
-        // TODO: SDK version like on iOS?
-        connection.setRequestProperty("1.3", "X-Afterpay-SDK")
+        connection.setRequestProperty("${BuildConfig.AfterpayLibraryVersion}-android", "X-Afterpay-SDK")
         when (type) {
             HttpVerb.POST, HttpVerb.PUT -> {
                 connection.setRequestProperty("Content-Type", "application/json")
