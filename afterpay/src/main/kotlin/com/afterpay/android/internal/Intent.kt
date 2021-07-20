@@ -4,7 +4,9 @@ import android.content.Intent
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.AfterpayCheckoutV3Options
 import com.afterpay.android.CancellationStatus
+import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.model.CheckoutV3Data
+import com.afterpay.android.view.AfterpayPaymentButton
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -16,6 +18,7 @@ private object AfterpayIntent {
     const val INFO_URL = "AFTERPAY_INFO_URL"
     const val ORDER_TOKEN = "AFTERPAY_ORDER_TOKEN"
     const val CANCELLATION_STATUS = "AFTERPAY_CANCELLATION_STATUS"
+    const val CANCELLATION_ERROR = "AFTERPAY_CANCELLATION_ERROR"
     const val RESULT_DATA_V3 = "AFTERPAY_RESULT_DATA_V3"
 }
 
@@ -62,6 +65,21 @@ internal fun Intent.getCancellationStatusExtra(): CancellationStatus? = try {
 } catch (_: Exception) {
     null
 }
+
+internal fun Intent.putCancellationStatusExtraV3(status: CancellationStatusV3): Intent =
+    putExtra(AfterpayIntent.CANCELLATION_STATUS, status.name)
+
+internal fun Intent.getCancellationStatusExtraV3(): CancellationStatusV3? = try {
+    getStringExtra(AfterpayIntent.CANCELLATION_STATUS)?.let { enumValueOf<CancellationStatusV3>(it) }
+} catch (_: Exception) {
+    null
+}
+
+internal fun Intent.putCancellationStatusExtraErrorV3(error: Exception): Intent =
+    putExtra(AfterpayIntent.CANCELLATION_ERROR, error)
+
+internal fun Intent.getCancellationStatusExtraErrorV3(): Exception? =
+    getSerializableExtra(AfterpayIntent.CANCELLATION_ERROR) as? Exception
 
 internal fun Intent.putInfoUrlExtra(url: String): Intent =
     putExtra(AfterpayIntent.INFO_URL, url)

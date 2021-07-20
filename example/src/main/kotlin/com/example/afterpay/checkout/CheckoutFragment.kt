@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.R
@@ -173,6 +174,21 @@ class CheckoutFragment : Fragment() {
                     "A cancelled Afterpay transaction always contains a status"
                 }
                 Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
+            }
+            CHECKOUT_WITH_AFTERPAY_V3 to AppCompatActivity.RESULT_CANCELED -> {
+                val intent = requireNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val pair = checkNotNull(Afterpay.parseCheckoutCancellationResponseV3(intent)) {
+                    "A cancelled Afterpay transaction always contains a status"
+                }
+                val errorMessage = when (pair.first) {
+                    CancellationStatusV3.CONFIGURATION_ERROR -> "Checkout missing configuration data"
+                    CancellationStatusV3.USER_INITIATED -> "Ended by user"
+                    CancellationStatusV3.REQUEST_ERROR -> pair.second?.message ?: "Unknown request error"
+                }
+
+                Snackbar.make(requireView(), "Cancelled: $errorMessage", Snackbar.LENGTH_LONG).show()
             }
         }
     }

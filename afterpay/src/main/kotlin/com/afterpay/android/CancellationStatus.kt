@@ -7,3 +7,9 @@ enum class CancellationStatus {
     NO_CHECKOUT_HANDLER,
     NO_CONFIGURATION
 }
+
+enum class CancellationStatusV3 {
+    USER_INITIATED,
+    CONFIGURATION_ERROR,
+    REQUEST_ERROR
+}

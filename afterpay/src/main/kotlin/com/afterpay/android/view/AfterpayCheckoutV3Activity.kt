@@ -16,13 +16,14 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.afterpay.android.CancellationStatus
+import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
 import com.afterpay.android.internal.ApiV3
 import com.afterpay.android.internal.CheckoutV3
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.getCheckoutV3OptionsExtra
-import com.afterpay.android.internal.putCancellationStatusExtra
+import com.afterpay.android.internal.putCancellationStatusExtraErrorV3
+import com.afterpay.android.internal.putCancellationStatusExtraV3
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putResultDataV3
 import com.afterpay.android.internal.setAfterpayUserAgentString
@@ -75,16 +76,16 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        received(CancellationStatus.USER_INITIATED)
+        received(CancellationStatusV3.USER_INITIATED)
     }
 
     private suspend fun performCheckoutRequest() {
         val options = intent.getCheckoutV3OptionsExtra()
-            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
         val checkoutUrl = options.checkoutUrl
-            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
         val checkoutPayload = options.checkoutPayload
-            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
 
         withContext(Dispatchers.IO) {
             val result = ApiV3.request<CheckoutV3.Response, String>(checkoutUrl, ApiV3.HttpVerb.POST, checkoutPayload)
@@ -102,16 +103,16 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                     loadRedirectUrl()
                 }
             } catch (exception: Exception) {
-                received(CancellationStatus.NO_CHECKOUT_URL)
+                received(CancellationStatusV3.REQUEST_ERROR, exception)
             }
         }
     }
 
     private fun loadRedirectUrl() {
         val options = intent.getCheckoutV3OptionsExtra()
-            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
         val redirectUrl = options.redirectUrl
-            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
 
         webView.loadUrl(redirectUrl.toString())
     }
@@ -142,7 +143,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                 dialog.cancel()
             }
             .setOnCancelListener {
-                received(CancellationStatus.USER_INITIATED)
+                received(CancellationStatusV3.USER_INITIATED)
             }
             .show()
     }
@@ -159,7 +160,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                 }
             }
             CheckoutStatusV3.Cancelled -> {
-                received(CancellationStatus.USER_INITIATED)
+                received(CancellationStatusV3.USER_INITIATED)
             }
         }
     }
@@ -194,15 +195,19 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                 }
 
             } catch (exception: Exception) {
-                // FIXME: Do something
-                print(exception.message)
+                received(CancellationStatusV3.REQUEST_ERROR, exception)
             }
         }
 
     }
 
-    private fun received(status: CancellationStatus) {
-        setResult(Activity.RESULT_CANCELED, Intent().putCancellationStatusExtra(status))
+    private fun received(status: CancellationStatusV3, exception: Exception? = null) {
+        val intent = Intent()
+        intent.putCancellationStatusExtraV3(status)
+        exception?.let {
+            intent.putCancellationStatusExtraErrorV3(it)
+        }
+        setResult(Activity.RESULT_CANCELED, intent)
         finish()
     }
 }

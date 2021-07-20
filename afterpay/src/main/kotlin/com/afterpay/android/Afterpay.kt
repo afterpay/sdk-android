@@ -9,6 +9,8 @@ import com.afterpay.android.model.Configuration
 import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
+import com.afterpay.android.internal.getCancellationStatusExtraErrorV3
+import com.afterpay.android.internal.getCancellationStatusExtraV3
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.getResultDataExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
@@ -245,4 +247,14 @@ object Afterpay {
     @JvmStatic
     fun parseCheckoutSuccessResponseV3(intent: Intent): CheckoutV3Data? =
         intent.getResultDataExtra()
+
+    /**
+     * Returns the [status][CancellationStatusV3] and [Exception] parsed from the given [intent] returned by a
+     * cancelled Afterpay checkout.
+     */
+    @JvmStatic
+    fun parseCheckoutCancellationResponseV3(intent: Intent): Pair<CancellationStatusV3, Exception?>? =
+        intent.getCancellationStatusExtraV3()?.let {
+            Pair(it, intent.getCancellationStatusExtraErrorV3())
+        } ?: null
 }
