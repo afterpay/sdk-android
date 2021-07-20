@@ -253,5 +253,5 @@ object Afterpay {
     fun parseCheckoutCancellationResponseV3(intent: Intent): Pair<CancellationStatusV3, Exception?>? =
         intent.getCancellationStatusExtraV3()?.let {
             Pair(it, intent.getCancellationStatusExtraErrorV3())
-        } ?: null
+        }
 }
