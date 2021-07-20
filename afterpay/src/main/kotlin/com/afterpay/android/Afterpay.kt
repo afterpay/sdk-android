@@ -147,57 +147,21 @@ object Afterpay {
         checkoutV2Handler = handler
     }
 
-    // V3 work
-
     private var checkoutV3Configuration: CheckoutV3Configuration? = null
 
+    /**
+     * Sets the collection of options and values required to interact with the Afterpay API.
+     */
     @JvmStatic
     fun setCheckoutV3Configuration(configuration: CheckoutV3Configuration) {
         checkoutV3Configuration = configuration
     }
 
-    @JvmStatic
-    fun updateMerchantReferenceV3(
-        merchantReference: String,
-        tokens: CheckoutV3Tokens,
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
-    ): Result<Unit> {
-        val configuration = configuration
-            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
-
-        val payload = CheckoutV3.MerchantReferenceUpdate(
-            merchantReference,
-            token = tokens.token,
-            ppaConfirmToken = tokens.ppaConfirmToken,
-            singleUseCardToken =  tokens.singleUseCardToken
-        )
-
-        return ApiV3.requestUnit(
-            configuration.v3CheckoutUrl,
-            ApiV3.HttpVerb.PUT,
-            payload
-        )
-    }
-
-    @JvmStatic
-    fun fetchMerchantConfigurationV3(
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
-    ): Result<Configuration> {
-        val configuration = configuration
-            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
-
-        return ApiV3.get<MerchantConfigurationV3>(configuration.v3ConfigurationUrl)
-            .map {
-                Configuration(
-                    minimumAmount = it.minimumAmount.amount,
-                    maximumAmount = it.maximumAmount.amount,
-                    currency = Currency.getInstance(configuration.region.currencyCode),
-                    locale = configuration.region.locale,
-                    environment = configuration.environment
-                )
-            }
-    }
-
+    /**
+     * Returns an [Intent] for the given [context] and options that can be passed to
+     * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
+     * Afterpay checkout.
+     */
     @JvmStatic
     fun createCheckoutV3Intent(
         context: Context,
@@ -225,6 +189,54 @@ object Afterpay {
 
         return Intent(context, AfterpayCheckoutV3Activity::class.java)
             .putCheckoutV3OptionsExtra(options)
+    }
+
+    /**
+     * Updates the [merchantReference] corresponding to the checkout represented by the provided [tokens].
+     */
+    @JvmStatic
+    fun updateMerchantReferenceV3(
+        merchantReference: String,
+        tokens: CheckoutV3Tokens,
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+    ): Result<Unit> {
+        val configuration = configuration
+            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
+
+        val payload = CheckoutV3.MerchantReferenceUpdate(
+            merchantReference,
+            token = tokens.token,
+            ppaConfirmToken = tokens.ppaConfirmToken,
+            singleUseCardToken =  tokens.singleUseCardToken
+        )
+
+        return ApiV3.requestUnit(
+            configuration.v3CheckoutUrl,
+            ApiV3.HttpVerb.PUT,
+            payload
+        )
+    }
+
+    /**
+     * Returns the [Configuration] inclusive of minimum and maximum spend available.
+     */
+    @JvmStatic
+    fun fetchMerchantConfigurationV3(
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+    ): Result<Configuration> {
+        val configuration = configuration
+            ?: throw IllegalArgumentException("`configuration` must be set via `setCheckoutV3Configuration` or passed into this function")
+
+        return ApiV3.get<MerchantConfigurationV3>(configuration.v3ConfigurationUrl)
+            .map {
+                Configuration(
+                    minimumAmount = it.minimumAmount.amount,
+                    maximumAmount = it.maximumAmount.amount,
+                    currency = Currency.getInstance(configuration.region.currencyCode),
+                    locale = configuration.region.locale,
+                    environment = configuration.environment
+                )
+            }
     }
 
     /**
