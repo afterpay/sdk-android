@@ -28,7 +28,7 @@ internal object ApiV3 {
             val result = Json.decodeFromString<T>(data)
             Result.success(result)
         } catch (error: Exception) {
-            return try {
+            try {
                 val data = connection.errorStream.bufferedReader().readText()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
@@ -51,15 +51,14 @@ internal object ApiV3 {
             outputStreamWriter.write(payload)
             outputStreamWriter.flush()
 
-            return when (connection.responseCode) {
+            when (connection.responseCode) {
                 200, 201, 204 -> Result.success(Unit)
                 else -> {
                     Result.failure(InvalidObjectException("Unexpected response code ${connection.responseCode}"))
                 }
             }
-
         } catch (error: Exception) {
-            return try {
+            try {
                 val data = connection.errorStream.bufferedReader().readText()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
@@ -76,7 +75,6 @@ internal object ApiV3 {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, HttpVerb.GET)
-            connection.setChunkedStreamingMode(0)
 
             val inputStream = connection.inputStream.bufferedReader().readText()
             val result = Json.decodeFromString<T>(inputStream)
@@ -101,6 +99,7 @@ internal object ApiV3 {
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.setRequestProperty("Accept", "application/json")
             }
+            else -> { }
         }
         when (type) {
             HttpVerb.GET -> {

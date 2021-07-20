@@ -10,6 +10,4 @@ data class Consumer(
     override var phoneNumber: String? = null,
     override var shippingInformation: CheckoutV3Contact? = null,
     override var billingInformation: CheckoutV3Contact? = null
-) : CheckoutV3Consumer {
-
-}
+) : CheckoutV3Consumer

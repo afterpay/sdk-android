@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.onEach
 class DetailsFragment : Fragment() {
 
     private val resultData: CheckoutV3Data
-        get() = requireNotNull(arguments?.getParcelable<CheckoutV3Data>(nav_graph.args.result_data_v3))
+        get() = requireNotNull(arguments?.getParcelable(nav_graph.args.result_data_v3))
 
     private val viewModel by viewModels<DetailsViewModel> { DetailsViewModel.factory(resultData) }
 
@@ -79,7 +79,7 @@ class DetailsFragment : Fragment() {
                 viewModel
                     .merchantReference()
                     .onEach {
-                        this.text = "Merchant reference: ${it}"
+                        this.text = "Merchant reference: $it"
                         updateMerchantReferenceButton.isEnabled = true
                     }
                     .launchIn(viewLifecycleOwner.lifecycleScope)

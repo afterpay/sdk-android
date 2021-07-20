@@ -157,7 +157,7 @@ object Afterpay {
     }
 
     @JvmStatic
-    suspend fun updateMerchantReferenceV3(
+    fun updateMerchantReferenceV3(
         merchantReference: String,
         tokens: CheckoutV3Tokens,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
@@ -180,7 +180,7 @@ object Afterpay {
     }
 
     @JvmStatic
-    suspend fun fetchMerchantConfigurationV3(
+    fun fetchMerchantConfigurationV3(
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Result<Configuration> {
         val configuration = configuration
@@ -203,7 +203,7 @@ object Afterpay {
         context: Context,
         consumer: CheckoutV3Consumer,
         orderTotal: OrderTotal,
-        items: Array<CheckoutV3Item> = arrayOf<CheckoutV3Item>(),
+        items: Array<CheckoutV3Item> = arrayOf(),
         buyNow: Boolean,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Intent {
