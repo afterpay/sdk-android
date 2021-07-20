@@ -15,6 +15,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.ApiV3
@@ -28,7 +29,6 @@ import com.afterpay.android.internal.setAfterpayUserAgentString
 import com.afterpay.android.model.CheckoutV3Tokens
 import com.afterpay.android.model.CheckoutV3Data
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -57,7 +57,8 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             val htmlData = Base64.encodeToString(Html.loading.toByteArray(), Base64.NO_PADDING)
             loadData(htmlData, "text/html", "base64")
         }
-        GlobalScope.launch {
+
+        lifecycleScope.launchWhenStarted {
             performCheckoutRequest()
         }
     }
@@ -153,7 +154,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                     it.ppaConfirmToken = status.ppaConfirmToken
                     intent.putCheckoutV3OptionsExtra(it)
                 }
-                GlobalScope.launch {
+                lifecycleScope.launch {
                     performConfirmationRequest()
                 }
             }
@@ -166,8 +167,8 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     private suspend fun performConfirmationRequest() {
         val options = intent.getCheckoutV3OptionsExtra()
         val token = options?.token ?: return
-        val ppaConfirmToken = options?.ppaConfirmToken ?: return
-        val singleUseCardToken = options?.singleUseCardToken ?: return
+        val ppaConfirmToken = options.ppaConfirmToken ?: return
+        val singleUseCardToken = options.singleUseCardToken ?: return
         val conformationUrl = options.confirmUrl ?: return
         val request = CheckoutV3.Confirmation.Request(
             token = token,
@@ -259,7 +260,7 @@ private class AfterpayWebChromeClientV3(
 }
 
 private sealed class CheckoutStatusV3 {
-    data class Success(val orderToken: String, val ppaConfirmToken: String, ) : CheckoutStatusV3()
+    data class Success(val orderToken: String, val ppaConfirmToken: String) : CheckoutStatusV3()
     object Cancelled : CheckoutStatusV3()
 
     companion object {
