@@ -12,9 +12,10 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.Currency
 
-internal object BigDecimalSerializer : KSerializer<BigDecimal> {
+internal object MoneyBigDecimalSerializer : KSerializer<BigDecimal> {
 
     override val descriptor = PrimitiveSerialDescriptor(
         serialName = "BigDecimal",
@@ -23,8 +24,13 @@ internal object BigDecimalSerializer : KSerializer<BigDecimal> {
 
     override fun deserialize(decoder: Decoder) = decoder.decodeString().toBigDecimal()
 
-    override fun serialize(encoder: Encoder, value: BigDecimal) =
-        encoder.encodeString(value.toPlainString())
+    // Round to two decimals, as per ISO-4217, using banker's rounding
+    override fun serialize(encoder: Encoder, value: BigDecimal) {
+        return encoder.encodeString(
+            value.setScale(2, RoundingMode.HALF_EVEN).toPlainString()
+        )
+    }
+
 }
 
 internal object CurrencySerializer : KSerializer<Currency> {
