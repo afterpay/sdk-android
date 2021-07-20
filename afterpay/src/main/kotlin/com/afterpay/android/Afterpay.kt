@@ -126,7 +126,7 @@ object Afterpay {
     private fun validateConfiguration(configuration: Configuration) {
         require(configuration.maximumAmount >= BigDecimal.ZERO) { "Maximum order amount is invalid" }
         configuration.minimumAmount?.let { minimumAmount ->
-            require(minimumAmount < BigDecimal.ZERO || minimumAmount > configuration.maximumAmount) {
+            require(minimumAmount > BigDecimal.ZERO && minimumAmount < configuration.maximumAmount) {
                 "Minimum order amount is invalid"
             }
         }
