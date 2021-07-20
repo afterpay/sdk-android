@@ -10,6 +10,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
+import java.lang.IllegalArgumentException
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Currency
@@ -55,6 +56,6 @@ internal object VirtualCardSerializer : JsonContentPolymorphicSerializer<Virtual
         if (element.jsonObject.containsKey("cardNumber")) {
             return VirtualCard.Card.serializer()
         }
-        throw Exception("Unknown VirtualCard: JSON does not match any response type")
+        throw IllegalArgumentException("Unknown VirtualCard: JSON does not match any response type")
     }
 }
