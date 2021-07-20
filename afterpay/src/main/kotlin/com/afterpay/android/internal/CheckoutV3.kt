@@ -138,7 +138,7 @@ internal object CheckoutV3 {
         companion object {
             @JvmStatic
             fun create(contact: CheckoutV3Contact?): Contact? {
-                val contact = contact ?: return null
+                contact ?: return null
                 return Contact(
                     name = contact.name,
                     line1 = contact.line1,

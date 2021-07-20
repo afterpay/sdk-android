@@ -111,18 +111,6 @@ object Afterpay {
         ).also { validateConfiguration(it) }
     }
 
-    /**
-     * Sets the global checkout configuration object.
-     *
-     * Results in a [NumberFormatException] if an amount is not a valid representation of a number
-     * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if
-     * the minimum and maximum amount isn't correctly ordered, or if the locale is not supported.
-     */
-    @JvmStatic
-    fun setConfigurationV3(newConfiguration: Configuration) {
-        configuration = newConfiguration.also { validateConfiguration(it) }
-    }
-
     private fun validateConfiguration(configuration: Configuration) {
         require(configuration.maximumAmount >= BigDecimal.ZERO) { "Maximum order amount is invalid" }
         configuration.minimumAmount?.let { minimumAmount ->
@@ -142,6 +130,18 @@ object Afterpay {
     @JvmStatic
     fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
         checkoutV2Handler = handler
+    }
+
+    /**
+     * Sets the global checkout configuration object.
+     *
+     * Results in a [NumberFormatException] if an amount is not a valid representation of a number
+     * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if
+     * the minimum and maximum amount isn't correctly ordered, or if the locale is not supported.
+     */
+    @JvmStatic
+    fun setConfigurationV3(newConfiguration: Configuration) {
+        configuration = newConfiguration.also { validateConfiguration(it) }
     }
 
     private var checkoutV3Configuration: CheckoutV3Configuration? = null
