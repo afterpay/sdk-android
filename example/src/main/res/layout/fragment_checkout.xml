@@ -79,7 +79,8 @@
                 android:id="@+id/cart_expressRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_expressLabel"
@@ -127,7 +128,8 @@
                 android:id="@+id/cart_pickupRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_pickupLabel"
@@ -151,7 +153,8 @@
                 android:id="@+id/cart_shippingOptionsRequiredRow"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/cart_shippingOptionsRequiredLabel"
