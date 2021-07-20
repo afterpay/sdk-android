@@ -6,6 +6,8 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.model.CheckoutV3Consumer
+import com.afterpay.android.model.Consumer
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
@@ -52,6 +54,7 @@ class CheckoutViewModel(
 
     sealed class Command {
         data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
+        data class ShowAfterpayCheckoutV3(val consumer: CheckoutV3Consumer, val total: BigDecimal, val buyNow: Boolean) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
@@ -86,7 +89,7 @@ class CheckoutViewModel(
     }
 
     fun showAfterpayCheckout() {
-        val (email, _, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
+        val (email, total, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
 
         preferences.edit {
             putEmail(email)
@@ -96,8 +99,8 @@ class CheckoutViewModel(
             putShippingOptionsRequired(isShippingOptionsRequired)
         }
 
-        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
-        commandChannel.trySend(Command.ShowAfterpayCheckout(options))
+        val consumer = Consumer(email = email)
+        commandChannel.trySend(Command.ShowAfterpayCheckoutV3(consumer, total, isBuyNow))
     }
 
     fun loadCheckoutToken() {

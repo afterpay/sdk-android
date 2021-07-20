@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
+import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
@@ -28,6 +29,7 @@ import java.math.BigDecimal
 class CheckoutFragment : Fragment() {
     private companion object {
         const val CHECKOUT_WITH_AFTERPAY = 1234
+        const val CHECKOUT_WITH_AFTERPAY_V3 = 12345
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
@@ -113,6 +115,19 @@ class CheckoutFragment : Fragment() {
                         val intent = Afterpay.createCheckoutV2Intent(requireContext(), command.options)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
+                    is Command.ShowAfterpayCheckoutV3 -> {
+                        val intent = Afterpay.createCheckoutV3Intent(
+                            requireContext(),
+                            consumer = command.consumer,
+                            orderTotal = OrderTotal(
+                                total = command.total,
+                                shipping = BigDecimal.ZERO,
+                                tax = BigDecimal.ZERO
+                            ),
+                            buyNow = command.buyNow
+                        )
+                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY_V3)
+                    }
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideShippingOptionsResult ->
@@ -136,6 +151,18 @@ class CheckoutFragment : Fragment() {
                 findNavController().navigate(
                     nav_graph.action.to_receipt,
                     bundleOf(nav_graph.args.checkout_token to token)
+                )
+            }
+            CHECKOUT_WITH_AFTERPAY_V3 to AppCompatActivity.RESULT_OK -> {
+                val intent = checkNotNull(data) {
+                    "Intent should always be populated by the SDK"
+                }
+                val resultData = checkNotNull(Afterpay.parseCheckoutSuccessResponseV3(intent)) {
+                    "Result data is always associated with a successful V3 Afterpay transaction"
+                }
+                findNavController().navigate(
+                    nav_graph.action.to_details_v3,
+                    bundleOf(nav_graph.args.result_data_v3 to resultData)
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {

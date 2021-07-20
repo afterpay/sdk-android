@@ -15,8 +15,10 @@ import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayEnvironment
 import com.afterpay.android.model.AfterpayRegion
 import com.afterpay.android.model.CheckoutV3Configuration
+import com.afterpay.android.model.CheckoutV3Data
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.AfterpayRepository
+import com.example.afterpay.detailsv3.DetailsFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
@@ -56,11 +57,29 @@ class MainActivity : AppCompatActivity() {
                     action(nav_graph.action.to_receipt) {
                         destinationId = nav_graph.dest.receipt
                     }
+                    action(nav_graph.action.to_details_v3) {
+                        destinationId = nav_graph.dest.details_v3
+                    }
                 }
                 fragment<ReceiptFragment>(nav_graph.dest.receipt) {
                     label = getString(R.string.title_receipt)
                     argument(nav_graph.args.checkout_token) {
                         type = NavType.StringType
+                    }
+                    action(nav_graph.action.back_to_shopping) {
+                        destinationId = nav_graph.dest.shopping
+                        navOptions {
+                            popUpTo(nav_graph.dest.shopping) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                }
+                fragment<DetailsFragment>(nav_graph.dest.details_v3) {
+                    label = "Single Use Card"
+                    argument(nav_graph.args.result_data_v3) {
+                        type = NavType.ParcelableType(CheckoutV3Data::class.java)
                     }
                     action(nav_graph.action.back_to_shopping) {
                         destinationId = nav_graph.dest.shopping
