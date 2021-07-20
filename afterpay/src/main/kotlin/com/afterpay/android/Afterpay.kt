@@ -10,16 +10,19 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
+import com.afterpay.android.internal.getResultDataExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
 import com.afterpay.android.model.CheckoutV3Configuration
 import com.afterpay.android.model.CheckoutV3Consumer
+import com.afterpay.android.model.CheckoutV3Data
 import com.afterpay.android.model.CheckoutV3Item
 import com.afterpay.android.model.MerchantConfigurationV3
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
+import com.afterpay.android.view.AfterpayCheckoutV3Activity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
@@ -169,7 +172,7 @@ object Afterpay {
             singleUseCardToken =  tokens.singleUseCardToken
         )
 
-        return ApiV3.request(
+        return ApiV3.requestUnit(
             configuration.v3CheckoutUrl,
             ApiV3.HttpVerb.PUT,
             payload
@@ -196,7 +199,7 @@ object Afterpay {
     }
 
     @JvmStatic
-    fun createCheckoutIntentV3(
+    fun createCheckoutV3Intent(
         context: Context,
         consumer: CheckoutV3Consumer,
         orderTotal: OrderTotal,
@@ -215,10 +218,19 @@ object Afterpay {
         )
         val options = AfterpayCheckoutV3Options(
             buyNow = buyNow,
-            checkoutPayload = Json.encodeToString(checkoutRequest)
+            checkoutPayload = Json.encodeToString(checkoutRequest),
+            checkoutUrl = configuration.v3CheckoutUrl,
+            confirmUrl = configuration.v3CheckoutConfirmationUrl
         )
 
-        return Intent(context, AfterpayCheckoutActivity::class.java)
+        return Intent(context, AfterpayCheckoutV3Activity::class.java)
             .putCheckoutV3OptionsExtra(options)
     }
+
+    /**
+     * Returns the [CheckoutV3Data] returned by a successful Afterpay checkout.
+     */
+    @JvmStatic
+    fun parseCheckoutSuccessResponseV3(intent: Intent): CheckoutV3Data? =
+        intent.getResultDataExtra()
 }

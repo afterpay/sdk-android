@@ -1,82 +1,75 @@
 package com.afterpay.android.internal
 
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import java.io.InvalidObjectException
 import java.io.OutputStreamWriter
-import java.lang.Exception
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
+import kotlin.Exception
 
-object ApiV3 {
-    // @JvmStatic
-    // internal suspend inline fun <reified T, reified B>request(url: URL, method: HttpVerb, body: B, crossinline completion: (Result<T>) -> Unit) {
-    //     val connection = url.openConnection() as HttpsURLConnection
-    //     try {
-    //         configure(connection, method)
-    //
-    //         val payload = Json.encodeToString(body)
-    //         val outputStreamWriter = OutputStreamWriter(connection.outputStream)
-    //         outputStreamWriter.write(payload)
-    //         outputStreamWriter.flush()
-    //
-    //         // TODO: Status code checking, error object decoding
-    //         val inputStream = connection.inputStream.bufferedReader().readText()
-    //         val result = Json.decodeFromString<T>(inputStream)
-    //         withContext(Dispatchers.Main) {
-    //             completion(Result.success(result))
-    //         }
-    //     } catch (error: Exception) {
-    //         withContext(Dispatchers.Main) {
-    //             completion(Result.failure(error))
-    //         }
-    //     } finally {
-    //         connection.disconnect()
-    //     }
-    // }
+internal object ApiV3 {
 
     @JvmStatic
     internal inline fun <reified T, reified B>request(url: URL, method: HttpVerb, body: B): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
+            val payload = (body as? String) ?: Json.encodeToString(body)
 
-            val payload = Json.encodeToString(body)
             val outputStreamWriter = OutputStreamWriter(connection.outputStream)
             outputStreamWriter.write(payload)
             outputStreamWriter.flush()
 
             // TODO: Status code checking, error object decoding, bypass if return type is Unit
-            val inputStream = connection.inputStream.bufferedReader().readText()
-            val result = Json.decodeFromString<T>(inputStream)
+            val data = connection.inputStream.bufferedReader().readText()
+            val result = Json.decodeFromString<T>(data)
             Result.success(result)
         } catch (error: Exception) {
-            Result.failure(error)
+            return try {
+                val data = connection.errorStream.bufferedReader().readText()
+                val result = Json.decodeFromString<ApiErrorV3>(data)
+                Result.failure(InvalidObjectException(result.message))
+            } catch (_: Exception) {
+                Result.failure(error)
+            }
         } finally {
             connection.disconnect()
         }
     }
 
-    // @JvmStatic
-    // internal suspend inline fun <reified T>get(url: URL, crossinline completion: (Result<T>) -> Unit) {
-    //     val connection = url.openConnection() as HttpsURLConnection
-    //     try {
-    //         configure(connection, HttpVerb.GET)
-    //         connection.setChunkedStreamingMode(0)
-    //
-    //         val inputStream = connection.inputStream.bufferedReader().readText()
-    //         val result = Json.decodeFromString<T>(inputStream)
-    //         withContext(Dispatchers.Main) {
-    //             completion(Result.success(result))
-    //         }
-    //     } catch (error: Exception) {
-    //         withContext(Dispatchers.Main) {
-    //             completion(Result.failure(error))
-    //         }
-    //     } finally {
-    //         connection.disconnect()
-    //     }
-    // }
+    @JvmStatic
+    internal inline fun <reified B>requestUnit(url: URL, method: HttpVerb, body: B): Result<Unit> {
+        val connection = url.openConnection() as HttpsURLConnection
+        return try {
+            configure(connection, method)
+            val payload = (body as? String) ?: Json.encodeToString(body)
+
+            val outputStreamWriter = OutputStreamWriter(connection.outputStream)
+            outputStreamWriter.write(payload)
+            outputStreamWriter.flush()
+
+            return when (connection.responseCode) {
+                200, 201, 204 -> Result.success(Unit)
+                else -> {
+                    Result.failure(InvalidObjectException("Unexpected response code ${connection.responseCode}"))
+                }
+            }
+
+        } catch (error: Exception) {
+            return try {
+                val data = connection.errorStream.bufferedReader().readText()
+                val result = Json.decodeFromString<ApiErrorV3>(data)
+                Result.failure(InvalidObjectException(result.message))
+            } catch (_: Exception) {
+                Result.failure(error)
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
 
     @JvmStatic
     internal inline fun <reified T>get(url: URL): Result<T> {
@@ -125,3 +118,11 @@ object ApiV3 {
         }
     }
 }
+
+@Serializable
+data class ApiErrorV3(
+    val errorCode: String,
+    val errorId: String,
+    val message: String,
+    val httpStatusCode: Int
+)

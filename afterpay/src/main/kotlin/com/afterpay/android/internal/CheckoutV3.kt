@@ -7,6 +7,7 @@ import com.afterpay.android.model.CheckoutV3Contact
 import com.afterpay.android.model.CheckoutV3Item
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.OrderTotal
+import com.afterpay.android.model.VirtualCard
 import kotlinx.serialization.Serializable
 import java.util.Currency
 
@@ -17,6 +18,14 @@ internal object CheckoutV3 {
         val token: String,
         val singleUseCardToken: String,
         val ppaConfirmToken: String
+    )
+
+    @Serializable
+    data class Response(
+        val token: String,
+        val confirmMustBeCalledBefore: String?,
+        val redirectCheckoutUrl: String,
+        val singleUseCardToken: String
     )
 
     @Serializable
@@ -47,7 +56,10 @@ internal object CheckoutV3 {
                 return Request(
                     shopDirectoryId = configuration.shopDirectoryId,
                     shopDirectoryMerchantId = configuration.shopDirectoryMerchantId,
-                    amount = Money(orderTotal.total, currency),
+                    amount = Money(
+                        orderTotal.total,
+                        currency
+                    ),
                     shippingAmount = Money(orderTotal.shipping, currency),
                     taxAmount = Money(orderTotal.tax, currency),
                     items = items.map { Item.create(it, configuration.region) },
@@ -140,5 +152,27 @@ internal object CheckoutV3 {
                 )
             }
         }
+    }
+
+    object Confirmation {
+
+        @Serializable
+        data class Request(
+            val token: String,
+            val singleUseCardToken: String,
+            val ppaConfirmToken: String
+        )
+
+        @Serializable
+        data class Response(
+            val paymentDetails: PaymentDetails,
+            val cardValidUntil: String?,
+            val authToken: String
+        )
+
+        @Serializable
+        data class PaymentDetails(
+            val virtualCard: VirtualCard
+        )
     }
 }

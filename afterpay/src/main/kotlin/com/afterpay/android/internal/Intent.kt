@@ -4,6 +4,10 @@ import android.content.Intent
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.AfterpayCheckoutV3Options
 import com.afterpay.android.CancellationStatus
+import com.afterpay.android.model.CheckoutV3Data
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.lang.Exception
 
 private object AfterpayIntent {
@@ -12,6 +16,7 @@ private object AfterpayIntent {
     const val INFO_URL = "AFTERPAY_INFO_URL"
     const val ORDER_TOKEN = "AFTERPAY_ORDER_TOKEN"
     const val CANCELLATION_STATUS = "AFTERPAY_CANCELLATION_STATUS"
+    const val RESULT_DATA_V3 = "AFTERPAY_RESULT_DATA_V3"
 }
 
 internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
@@ -37,6 +42,17 @@ internal fun Intent.putOrderTokenExtra(token: String): Intent =
 
 internal fun Intent.getOrderTokenExtra(): String? =
     getStringExtra(AfterpayIntent.ORDER_TOKEN)
+
+internal fun Intent.putResultDataV3(resultData: CheckoutV3Data): Intent {
+    val json = Json.encodeToString(resultData)
+    putExtra(AfterpayIntent.RESULT_DATA_V3, json)
+    return this
+}
+
+internal fun Intent.getResultDataExtra(): CheckoutV3Data? {
+    val json = getStringExtra(AfterpayIntent.RESULT_DATA_V3) ?: return null
+    return Json.decodeFromString(json)
+}
 
 internal fun Intent.putCancellationStatusExtra(status: CancellationStatus): Intent =
     putExtra(AfterpayIntent.CANCELLATION_STATUS, status.name)

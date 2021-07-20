@@ -18,6 +18,10 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/AfterpayDialog" />
         <activity
+            android:name=".view.AfterpayCheckoutV3Activity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/AfterpayDialog" />
+        <activity
             android:name=".internal.AfterpayInfoActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/AfterpayDialog" />

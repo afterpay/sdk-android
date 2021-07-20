@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
+import android.util.Base64
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -16,22 +17,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
-import com.afterpay.android.internal.getCheckoutUrlExtra
+import com.afterpay.android.internal.ApiV3
+import com.afterpay.android.internal.CheckoutV3
+import com.afterpay.android.internal.Html
+import com.afterpay.android.internal.getCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
-import com.afterpay.android.internal.putOrderTokenExtra
+import com.afterpay.android.internal.putCheckoutV3OptionsExtra
+import com.afterpay.android.internal.putResultDataV3
 import com.afterpay.android.internal.setAfterpayUserAgentString
+import com.afterpay.android.model.CheckoutV3Tokens
+import com.afterpay.android.model.CheckoutV3Data
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
+import java.net.URL
 
 internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
-
-    private companion object {
-
-        val validCheckoutUrls = listOf(
-            "portal.afterpay.com",
-            "portal.sandbox.afterpay.com",
-            "portal.clearpay.co.uk",
-            "portal.sandbox.clearpay.co.uk"
-        )
-    }
 
     private lateinit var webView: WebView
 
@@ -48,12 +51,15 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             settings.setSupportMultipleWindows(true)
             webViewClient = AfterpayWebViewClientV3(
                 receivedError = ::handleError,
-                completed = ::finish
+                received = ::received
             )
             webChromeClient = AfterpayWebChromeClientV3(openExternalLink = ::open)
+            val htmlData = Base64.encodeToString(Html.loading.toByteArray(), Base64.NO_PADDING)
+            loadData(htmlData, "text/html", "base64")
         }
-
-        loadCheckoutUrl()
+        GlobalScope.launch {
+            performCheckoutRequest()
+        }
     }
 
     override fun onDestroy() {
@@ -68,18 +74,45 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish(CancellationStatus.USER_INITIATED)
+        received(CancellationStatus.USER_INITIATED)
     }
 
-    private fun loadCheckoutUrl() {
-        val checkoutUrl = intent.getCheckoutUrlExtra()
-            ?: return finish(CancellationStatus.NO_CHECKOUT_URL)
+    private suspend fun performCheckoutRequest() {
+        val options = intent.getCheckoutV3OptionsExtra()
+            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+        val checkoutUrl = options.checkoutUrl
+            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+        val checkoutPayload = options.checkoutPayload
+            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
 
-        if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
-            webView.loadUrl(checkoutUrl)
-        } else {
-            finish(CancellationStatus.INVALID_CHECKOUT_URL)
+        withContext(Dispatchers.IO) {
+            val result = ApiV3.request<CheckoutV3.Response, String>(checkoutUrl, ApiV3.HttpVerb.POST, checkoutPayload)
+            try {
+                val response = result.getOrThrow()
+                val builder = Uri.parse(response.redirectCheckoutUrl)
+                    .buildUpon()
+                    .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
+                    .build()
+                options.redirectUrl = URL(builder.toString())
+                options.singleUseCardToken = response.singleUseCardToken
+                options.token = response.token
+                intent.putCheckoutV3OptionsExtra(options)
+                withContext(Dispatchers.Main) {
+                    loadRedirectUrl()
+                }
+            } catch (exception: Exception) {
+                received(CancellationStatus.NO_CHECKOUT_URL)
+            }
         }
+    }
+
+    private fun loadRedirectUrl() {
+        val options = intent.getCheckoutV3OptionsExtra()
+            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+        val redirectUrl = options.redirectUrl
+            ?: return received(CancellationStatus.NO_CHECKOUT_URL)
+
+        webView.loadUrl(redirectUrl.toString())
     }
 
     private fun open(url: Uri) {
@@ -97,31 +130,77 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             .setTitle(R.string.afterpay_load_error_title)
             .setMessage(R.string.afterpay_load_error_message)
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
-                loadCheckoutUrl()
+                val options = intent.getCheckoutV3OptionsExtra()
+                val retryUrl = options?.redirectUrl ?: options?.checkoutUrl
+                retryUrl?.let {
+                    webView.loadUrl(it.toString())
+                }
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
                 dialog.cancel()
             }
             .setOnCancelListener {
-                finish(CancellationStatus.USER_INITIATED)
+                received(CancellationStatus.USER_INITIATED)
             }
             .show()
     }
 
-    private fun finish(status: CheckoutStatusV3) {
+    private fun received(status: CheckoutStatusV3) {
         when (status) {
             is CheckoutStatusV3.Success -> {
-                setResult(Activity.RESULT_OK, Intent().putOrderTokenExtra(status.orderToken))
-                finish()
+                intent.getCheckoutV3OptionsExtra()?.let {
+                    it.ppaConfirmToken = status.ppaConfirmToken
+                    intent.putCheckoutV3OptionsExtra(it)
+                }
+                GlobalScope.launch {
+                    performConfirmationRequest()
+                }
             }
             CheckoutStatusV3.Cancelled -> {
-                finish(CancellationStatus.USER_INITIATED)
+                received(CancellationStatus.USER_INITIATED)
             }
         }
     }
 
-    private fun finish(status: CancellationStatus) {
+    private suspend fun performConfirmationRequest() {
+        val options = intent.getCheckoutV3OptionsExtra()
+        val token = options?.token ?: return
+        val ppaConfirmToken = options?.ppaConfirmToken ?: return
+        val singleUseCardToken = options?.singleUseCardToken ?: return
+        val conformationUrl = options.confirmUrl ?: return
+        val request = CheckoutV3.Confirmation.Request(
+            token = token,
+            ppaConfirmToken = ppaConfirmToken,
+            singleUseCardToken =  singleUseCardToken
+        )
+        withContext(Dispatchers.IO) {
+            val result: Result<CheckoutV3.Confirmation.Response> = ApiV3.request(conformationUrl, ApiV3.HttpVerb.POST, request)
+            try {
+                val response = result.getOrThrow()
+                val data = CheckoutV3Data(
+                    cardDetails = response.paymentDetails.virtualCard,
+                    cardValidUntil = response.cardValidUntil,
+                    tokens = CheckoutV3Tokens(
+                        token = token,
+                        singleUseCardToken = singleUseCardToken,
+                        ppaConfirmToken = ppaConfirmToken
+                    )
+                )
+                withContext(Dispatchers.Main) {
+                    setResult(Activity.RESULT_OK, Intent().putResultDataV3(data))
+                    finish()
+                }
+
+            } catch (exception: Exception) {
+                // FIXME: Do something
+                print(exception.message)
+            }
+        }
+
+    }
+
+    private fun received(status: CancellationStatus) {
         setResult(Activity.RESULT_CANCELED, Intent().putCancellationStatusExtra(status))
         finish()
     }
@@ -129,7 +208,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
 private class AfterpayWebViewClientV3(
     private val receivedError: () -> Unit,
-    private val completed: (CheckoutStatusV3) -> Unit
+    private val received: (CheckoutStatusV3) -> Unit
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
@@ -137,7 +216,7 @@ private class AfterpayWebViewClientV3(
 
         return when {
             status != null -> {
-                completed(status)
+                received(status)
                 true
             }
 
@@ -180,12 +259,19 @@ private class AfterpayWebChromeClientV3(
 }
 
 private sealed class CheckoutStatusV3 {
-    data class Success(val orderToken: String) : CheckoutStatusV3()
+    data class Success(val orderToken: String, val ppaConfirmToken: String, ) : CheckoutStatusV3()
     object Cancelled : CheckoutStatusV3()
 
     companion object {
         fun fromUrl(url: Uri): CheckoutStatusV3? = when (url.getQueryParameter("status")) {
-            "SUCCESS" -> url.getQueryParameter("orderToken")?.let(::Success)
+            "SUCCESS" -> {
+                val success = url.getQueryParameter("orderToken")?.let { token ->
+                    url.getQueryParameter("ppaConfirmToken")?.let { confirmToken ->
+                        Success(token, confirmToken)
+                    }
+                }
+                success
+            }
             "CANCELLED" -> Cancelled
             else -> null
         }
