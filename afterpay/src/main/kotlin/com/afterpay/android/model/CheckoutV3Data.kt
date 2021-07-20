@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.time.Instant
 
 /** Data returned from a successful V3 checkout */
 @Serializable
@@ -13,19 +14,19 @@ data class CheckoutV3Data(
     /** The virtual card details */
     val cardDetails: VirtualCard,
     /** The time before which an authorization needs to be made on the virtual card. */
-    val cardValidUntil: String?,
+    internal val cardValidUntilInternal: String?,
     /** The collection of tokens required to update the merchant reference or cancel the virtual card */
     val tokens: CheckoutV3Tokens
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         cardDetails = parcel.readString()?.let { Json.decodeFromString(it) } ?: throw IllegalArgumentException("Missing Serialized value for `cardDetails`"),
-        cardValidUntil = parcel.readString(),
+        cardValidUntilInternal = parcel.readString(),
         tokens = parcel.readString()?.let { Json.decodeFromString(it) } ?: throw IllegalArgumentException("Missing Serialized value `tokens`")
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(Json.encodeToString(cardDetails))
-        parcel.writeString(cardValidUntil)
+        parcel.writeString(cardValidUntilInternal)
         parcel.writeString(Json.encodeToString(tokens))
     }
 
@@ -42,4 +43,7 @@ data class CheckoutV3Data(
             return arrayOfNulls(size)
         }
     }
+
+    val cardValidUntil: Instant?
+        get() = cardValidUntilInternal?.let { Instant.parse(it) }
 }

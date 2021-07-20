@@ -1,5 +1,6 @@
 package com.example.afterpay.detailsv3
 
+import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.Afterpay
@@ -8,6 +9,8 @@ import com.example.afterpay.util.viewModelFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.Instant
 import java.util.UUID
 
 class DetailsViewModel(private val resultData: CheckoutV3Data) : ViewModel() {
@@ -18,6 +21,15 @@ class DetailsViewModel(private val resultData: CheckoutV3Data) : ViewModel() {
 
     private fun onMerchantReference(reference: String) {
         merchantReferenceUpdate.tryEmit(reference)
+    }
+
+    val cardValidFor: String? = resultData.cardValidUntil?.let {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val duration = Duration.between(Instant.now(), it)
+            "${duration.toMinutes()} minutes"
+        } else {
+            resultData.cardValidUntil?.toString()
+        }
     }
 
     fun updateMerchantReference() {

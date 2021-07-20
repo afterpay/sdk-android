@@ -183,7 +183,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             val response = result.getOrThrow()
             val data = CheckoutV3Data(
                 cardDetails = response.paymentDetails.virtualCard,
-                cardValidUntil = response.cardValidUntil,
+                cardValidUntilInternal = response.cardValidUntil,
                 tokens = CheckoutV3Tokens(
                     token = token,
                     singleUseCardToken = singleUseCardToken,

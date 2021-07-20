@@ -29,6 +29,7 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -45,6 +46,7 @@ dependencies {
     implementation "androidx.core:core-ktx:${versions.core_ktx}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
     testImplementation "junit:junit:${versions.junit}"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 }
 
 apply plugin: 'com.vanniktech.maven.publish'

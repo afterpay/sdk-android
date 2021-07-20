@@ -63,7 +63,7 @@ class DetailsFragment : Fragment() {
         }
 
         val expiration = view.findViewById<TextView>(R.id.textView4)
-        expiration.text = "Virtual card expiry: ${resultData.cardValidUntil ?: "Unknown"}"
+        expiration.text = "Virtual card expiry: ${viewModel.cardValidFor ?: "Unknown"}"
 
         val merchantReference = view.findViewById<TextView>(R.id.textView5)
         merchantReference.text = "Merchant reference: <not set>"
