@@ -95,10 +95,11 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                     .buildUpon()
                     .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
                     .build()
-                options.redirectUrl = URL(builder.toString())
-                options.singleUseCardToken = response.singleUseCardToken
-                options.token = response.token
-                intent.putCheckoutV3OptionsExtra(options)
+                intent.putCheckoutV3OptionsExtra(options.copy(
+                    redirectUrl = URL(builder.toString()),
+                    singleUseCardToken = response.singleUseCardToken,
+                    token = response.token
+                ))
                 withContext(Dispatchers.Main) {
                     loadRedirectUrl()
                 }
@@ -152,8 +153,9 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         when (status) {
             is CheckoutStatusV3.Success -> {
                 intent.getCheckoutV3OptionsExtra()?.let {
-                    it.ppaConfirmToken = status.ppaConfirmToken
-                    intent.putCheckoutV3OptionsExtra(it)
+                    intent.putCheckoutV3OptionsExtra(it.copy(
+                        ppaConfirmToken = status.ppaConfirmToken
+                    ))
                 }
                 lifecycleScope.launch {
                     performConfirmationRequest()
