@@ -18,26 +18,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
-import com.afterpay.android.internal.ApiV3
-import com.afterpay.android.internal.CheckoutV3
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.getCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtraErrorV3
 import com.afterpay.android.internal.putCancellationStatusExtraV3
-import com.afterpay.android.internal.putCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putResultDataV3
 import com.afterpay.android.internal.setAfterpayUserAgentString
-import com.afterpay.android.model.CheckoutV3Data
-import com.afterpay.android.model.CheckoutV3Tokens
-import kotlinx.coroutines.Dispatchers
+import com.afterpay.android.internal.CheckoutV3ViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.lang.Exception
-import java.net.URL
 
 internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
     private lateinit var webView: WebView
+    private lateinit var viewModel: CheckoutV3ViewModel
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +40,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
+        viewModel = CheckoutV3ViewModel(requireNotNull(intent.getCheckoutV3OptionsExtra()))
         webView = findViewById<WebView>(R.id.afterpay_webView).apply {
             setAfterpayUserAgentString()
             settings.javaScriptEnabled = true
@@ -60,7 +55,13 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         }
 
         lifecycleScope.launchWhenStarted {
-            performCheckoutRequest()
+            viewModel.performCheckoutRequest()
+                .onSuccess {
+                    webView.loadUrl(it.toString())
+                }
+                .onFailure {
+                    received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
+                }
         }
     }
 
@@ -77,45 +78,6 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
     override fun onBackPressed() {
         received(CancellationStatusV3.USER_INITIATED)
-    }
-
-    private suspend fun performCheckoutRequest() {
-        val options = intent.getCheckoutV3OptionsExtra()
-            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
-        val checkoutUrl = options.checkoutUrl
-            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
-        val checkoutPayload = options.checkoutPayload
-            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
-
-        val result = withContext(Dispatchers.IO) {
-            ApiV3.request<CheckoutV3.Response, String>(checkoutUrl, ApiV3.HttpVerb.POST, checkoutPayload)
-        }
-        try {
-            val response = result.getOrThrow()
-            val builder = Uri.parse(response.redirectCheckoutUrl)
-                .buildUpon()
-                .appendQueryParameter("buyNow", (options.buyNow ?: false).toString())
-                .build()
-            intent.putCheckoutV3OptionsExtra(
-                options.copy(
-                    redirectUrl = URL(builder.toString()),
-                    singleUseCardToken = response.singleUseCardToken,
-                    token = response.token
-                )
-            )
-            loadRedirectUrl()
-        } catch (exception: Exception) {
-            received(CancellationStatusV3.REQUEST_ERROR, exception)
-        }
-    }
-
-    private fun loadRedirectUrl() {
-        val options = intent.getCheckoutV3OptionsExtra()
-            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
-        val redirectUrl = options.redirectUrl
-            ?: return received(CancellationStatusV3.CONFIGURATION_ERROR)
-
-        webView.loadUrl(redirectUrl.toString())
     }
 
     private fun open(url: Uri) {
@@ -152,52 +114,20 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     private fun received(status: CheckoutStatusV3) {
         when (status) {
             is CheckoutStatusV3.Success -> {
-                intent.getCheckoutV3OptionsExtra()?.let {
-                    intent.putCheckoutV3OptionsExtra(
-                        it.copy(
-                            ppaConfirmToken = status.ppaConfirmToken
-                        )
-                    )
-                }
                 lifecycleScope.launch {
-                    performConfirmationRequest()
+                    viewModel.performConfirmationRequest(status.ppaConfirmToken)
+                        .onSuccess {
+                            setResult(Activity.RESULT_OK, Intent().putResultDataV3(it))
+                            finish()
+                        }
+                        .onFailure {
+                            received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
+                        }
                 }
             }
             CheckoutStatusV3.Cancelled -> {
                 received(CancellationStatusV3.USER_INITIATED)
             }
-        }
-    }
-
-    private suspend fun performConfirmationRequest() {
-        val options = intent.getCheckoutV3OptionsExtra()
-        val token = options?.token ?: return
-        val ppaConfirmToken = options.ppaConfirmToken ?: return
-        val singleUseCardToken = options.singleUseCardToken ?: return
-        val conformationUrl = options.confirmUrl ?: return
-        val request = CheckoutV3.Confirmation.Request(
-            token = token,
-            ppaConfirmToken = ppaConfirmToken,
-            singleUseCardToken = singleUseCardToken
-        )
-        val result: Result<CheckoutV3.Confirmation.Response> = withContext(Dispatchers.IO) {
-            ApiV3.request(conformationUrl, ApiV3.HttpVerb.POST, request)
-        }
-        try {
-            val response = result.getOrThrow()
-            val data = CheckoutV3Data(
-                cardDetails = response.paymentDetails.virtualCard,
-                cardValidUntilInternal = response.cardValidUntil,
-                tokens = CheckoutV3Tokens(
-                    token = token,
-                    singleUseCardToken = singleUseCardToken,
-                    ppaConfirmToken = ppaConfirmToken
-                )
-            )
-            setResult(Activity.RESULT_OK, Intent().putResultDataV3(data))
-            finish()
-        } catch (exception: Exception) {
-            received(CancellationStatusV3.REQUEST_ERROR, exception)
         }
     }
 
