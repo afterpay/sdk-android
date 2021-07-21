@@ -25,11 +25,14 @@ import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import com.afterpay.android.view.AfterpayCheckoutV3Activity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
+import java.util.concurrent.CompletableFuture
 import kotlin.properties.Delegates.observable
 
 object Afterpay {
@@ -191,7 +194,7 @@ object Afterpay {
     /**
      * Updates the [merchantReference] corresponding to the checkout represented by the provided [tokens].
      */
-    @JvmStatic
+    @JvmSynthetic
     fun updateMerchantReferenceV3(
         merchantReference: String,
         tokens: CheckoutV3Tokens,
@@ -216,9 +219,28 @@ object Afterpay {
     }
 
     /**
-     * Returns the [Configuration] inclusive of minimum and maximum spend available.
+     * Updates the [merchantReference] corresponding to the checkout represented by the provided [tokens].
      */
     @JvmStatic
+    @JvmOverloads
+    fun updateMerchantReferenceV3Async(
+        merchantReference: String,
+        tokens: CheckoutV3Tokens,
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
+    ): CompletableFuture<Void?> {
+        return GlobalScope.future {
+            updateMerchantReferenceV3(merchantReference, tokens, configuration)
+                .fold(
+                    onSuccess = { null },
+                    onFailure = { throw it }
+                )
+        }
+    }
+
+    /**
+     * Returns the [Configuration] inclusive of minimum and maximum spend available.
+     */
+    @JvmSynthetic
     fun fetchMerchantConfigurationV3(
         configuration: CheckoutV3Configuration? = checkoutV3Configuration
     ): Result<Configuration> {
@@ -236,6 +258,37 @@ object Afterpay {
                     environment = configuration.environment
                 )
             }
+    }
+
+    /**
+     * Returns the [Configuration] inclusive of minimum and maximum spend available.
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun fetchMerchantConfigurationV3Async(
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+    ): CompletableFuture<Configuration> {
+        requireNotNull(configuration) {
+            "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+        }
+
+        return GlobalScope.future {
+            val result = ApiV3.get<MerchantConfigurationV3>(configuration.v3ConfigurationUrl)
+                .map {
+                    Configuration(
+                        minimumAmount = it.minimumAmount.amount,
+                        maximumAmount = it.maximumAmount.amount,
+                        currency = Currency.getInstance(configuration.region.currencyCode),
+                        locale = configuration.region.locale,
+                        environment = configuration.environment
+                    )
+                }
+
+            result.fold(
+                onSuccess = { it },
+                onFailure = { throw it }
+            )
+        }
     }
 
     /**
