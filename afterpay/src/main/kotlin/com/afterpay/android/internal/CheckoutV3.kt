@@ -70,8 +70,8 @@ internal object CheckoutV3 {
                         phoneNumber = consumer.phoneNumber
                     ),
                     merchant = Merchant(
-                        redirectConfirmUrl = "https://www.afterpay.com",
-                        redirectCancelUrl = "https://www.afterpay.com"
+                        redirectConfirmUrl = "https://static.afterpay.com",
+                        redirectCancelUrl = "https://static.afterpay.com"
                     ),
                     shipping = Contact.create(consumer.shippingInformation),
                     billing = Contact.create(consumer.billingInformation)
