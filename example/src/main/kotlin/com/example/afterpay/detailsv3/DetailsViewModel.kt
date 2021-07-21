@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.model.CheckoutV3Data
 import com.example.afterpay.util.viewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
@@ -35,7 +37,7 @@ class DetailsViewModel(private val resultData: CheckoutV3Data) : ViewModel() {
     fun updateMerchantReference() {
         val reference = UUID.randomUUID().toString()
         viewModelScope.launch {
-            val result = Afterpay.updateMerchantReferenceV3(reference, resultData.tokens)
+            val result = withContext(Dispatchers.IO) { Afterpay.updateMerchantReferenceV3(reference, resultData.tokens) }
             result.fold(
                 onSuccess = { onMerchantReference(reference) },
                 onFailure = { onMerchantReference(it.message ?: "Update failed!") }
