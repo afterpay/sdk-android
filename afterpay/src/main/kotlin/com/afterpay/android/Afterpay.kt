@@ -25,6 +25,7 @@ import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import com.afterpay.android.view.AfterpayCheckoutV3Activity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 import kotlinx.serialization.encodeToString
@@ -221,6 +222,7 @@ object Afterpay {
     /**
      * Updates the [merchantReference] corresponding to the checkout represented by the provided [tokens].
      */
+    @DelicateCoroutinesApi
     @JvmStatic
     @JvmOverloads
     fun updateMerchantReferenceV3Async(
@@ -263,6 +265,7 @@ object Afterpay {
     /**
      * Returns the [Configuration] inclusive of minimum and maximum spend available.
      */
+    @DelicateCoroutinesApi
     @JvmStatic
     @JvmOverloads
     fun fetchMerchantConfigurationV3Async(

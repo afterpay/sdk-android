@@ -127,11 +127,13 @@ class CheckoutFragment : Fragment() {
                                 shipping = BigDecimal.ZERO,
                                 tax = BigDecimal.ZERO
                             ),
-                            items = arrayOf(Item(
-                                name = "Coffee",
-                                quantity = 1u,
-                                price = BigDecimal(13.37)
-                            )),
+                            items = arrayOf(
+                                Item(
+                                    name = "Coffee",
+                                    quantity = 1u,
+                                    price = BigDecimal(13.37)
+                                )
+                            ),
                             buyNow = command.buyNow
                         )
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY_V3)
@@ -214,5 +216,5 @@ class CheckoutFragment : Fragment() {
         override val imageUrl: URL? = null,
         override val categories: List<List<String>>? = null,
         override val estimatedShipmentDate: String? = null
-    ): CheckoutV3Item
+    ) : CheckoutV3Item
 }

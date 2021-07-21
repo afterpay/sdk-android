@@ -18,13 +18,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
+import com.afterpay.android.internal.CheckoutV3ViewModel
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.getCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtraErrorV3
 import com.afterpay.android.internal.putCancellationStatusExtraV3
 import com.afterpay.android.internal.putResultDataV3
 import com.afterpay.android.internal.setAfterpayUserAgentString
-import com.afterpay.android.internal.CheckoutV3ViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
