@@ -157,13 +157,6 @@ internal object CheckoutV3 {
     object Confirmation {
 
         @Serializable
-        data class Request(
-            val token: String,
-            val singleUseCardToken: String,
-            val ppaConfirmToken: String
-        )
-
-        @Serializable
         data class Response(
             val paymentDetails: PaymentDetails,
             val cardValidUntil: String?,

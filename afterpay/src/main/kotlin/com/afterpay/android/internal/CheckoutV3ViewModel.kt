@@ -45,17 +45,11 @@ class CheckoutV3ViewModel(private var options: AfterpayCheckoutV3Options) : View
                 ppaConfirmToken = ppaConfirmToken
             )
 
-            val request = CheckoutV3.Confirmation.Request(
-                token = tokens.token,
-                ppaConfirmToken = tokens.ppaConfirmToken,
-                singleUseCardToken = tokens.singleUseCardToken
-            )
-
             val response = withContext(Dispatchers.IO) {
-                ApiV3.request<CheckoutV3.Confirmation.Response, CheckoutV3.Confirmation.Request>(
+                ApiV3.request<CheckoutV3.Confirmation.Response, CheckoutV3Tokens>(
                     confirmationUrl,
                     ApiV3.HttpVerb.POST,
-                    request
+                    tokens
                 )
             }.getOrThrow()
 
