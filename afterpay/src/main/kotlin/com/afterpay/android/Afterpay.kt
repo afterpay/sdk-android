@@ -164,6 +164,7 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
+    @JvmOverloads
     fun createCheckoutV3Intent(
         context: Context,
         consumer: CheckoutV3Consumer,
