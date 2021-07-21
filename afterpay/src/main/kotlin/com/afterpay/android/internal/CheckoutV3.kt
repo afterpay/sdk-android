@@ -88,7 +88,7 @@ internal object CheckoutV3 {
         val sku: String?,
         val pageUrl: String?,
         val imageUrl: String?,
-        val categories: Array<Array<String>>?,
+        val categories: List<List<String>>?,
         val estimatedShipmentDate: String?
     ) {
         companion object {
