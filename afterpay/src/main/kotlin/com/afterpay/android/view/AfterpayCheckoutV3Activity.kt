@@ -56,8 +56,8 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.performCheckoutRequest()
-                .onSuccess {
-                    webView.loadUrl(it.toString())
+                .onSuccess { checkoutRedirectUrl ->
+                    webView.loadUrl(checkoutRedirectUrl.toString())
                 }
                 .onFailure {
                     received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
