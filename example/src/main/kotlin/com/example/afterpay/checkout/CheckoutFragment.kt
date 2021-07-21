@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatusV3
+import com.afterpay.android.model.CheckoutV3Item
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.R
@@ -26,6 +27,7 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import java.math.BigDecimal
+import java.net.URL
 
 class CheckoutFragment : Fragment() {
     private companion object {
@@ -125,6 +127,11 @@ class CheckoutFragment : Fragment() {
                                 shipping = BigDecimal.ZERO,
                                 tax = BigDecimal.ZERO
                             ),
+                            items = arrayOf(Item(
+                                name = "Coffee",
+                                quantity = 1u,
+                                price = BigDecimal(13.37)
+                            )),
                             buyNow = command.buyNow
                         )
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY_V3)
@@ -192,4 +199,20 @@ class CheckoutFragment : Fragment() {
             }
         }
     }
+
+    /**
+     * Example implementation of [CheckoutV3Item], which can optionally be included as part of the
+     * checkout. This will not affect the total charged to the consumer, which remains the sole
+     * responsibility of [OrderTotal.total]
+     */
+    private data class Item(
+        override val name: String,
+        override val quantity: UInt,
+        override val price: BigDecimal,
+        override val sku: String? = null,
+        override val pageUrl: URL? = null,
+        override val imageUrl: URL? = null,
+        override val categories: List<List<String>>? = null,
+        override val estimatedShipmentDate: String? = null
+    ): CheckoutV3Item
 }
