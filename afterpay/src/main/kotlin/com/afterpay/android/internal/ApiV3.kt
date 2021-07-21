@@ -25,11 +25,13 @@ internal object ApiV3 {
 
             // TODO: Status code checking, error object decoding, bypass if return type is Unit
             val data = connection.inputStream.bufferedReader().readText()
+            connection.inputStream.close()
             val result = Json.decodeFromString<T>(data)
             Result.success(result)
         } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
+                connection.errorStream.close()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
@@ -58,6 +60,7 @@ internal object ApiV3 {
         } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
+                connection.errorStream.close()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
@@ -73,12 +76,14 @@ internal object ApiV3 {
         return try {
             configure(connection, HttpVerb.GET)
 
-            val inputStream = connection.inputStream.bufferedReader().readText()
-            val result = Json.decodeFromString<T>(inputStream)
+            val data = connection.inputStream.bufferedReader().readText()
+            connection.inputStream.close()
+            val result = Json.decodeFromString<T>(data)
             Result.success(result)
         } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
+                connection.errorStream.close()
                 val result = Json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
