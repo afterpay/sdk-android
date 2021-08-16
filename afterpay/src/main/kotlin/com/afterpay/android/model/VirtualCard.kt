@@ -24,9 +24,8 @@ sealed class VirtualCard {
 
     @Serializable
     data class TokenizedCard(
-        val cardType: String,
+        val paymentGateway: String,
         val cardToken: String?,
-        val cvc: String,
         private val expiry: String,
         @Transient var expiryYear: Int = -1,
         @Transient var expiryMonth: Int = -1

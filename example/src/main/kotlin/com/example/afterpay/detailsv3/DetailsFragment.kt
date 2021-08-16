@@ -41,23 +41,23 @@ class DetailsFragment : Fragment() {
         val cardDetails = resultData.cardDetails
 
         val cardNumberOrToken = view.findViewById<TextView>(R.id.textView1)
-        val cvc = view.findViewById<TextView>(R.id.textView2)
+        val cvcOrPaymentGateway = view.findViewById<TextView>(R.id.textView2)
         val cardExpiry = view.findViewById<TextView>(R.id.textView3)
 
         when (cardDetails) {
             is VirtualCard.Card -> {
                 cardNumberOrToken.text = "Card number: ${cardDetails.cardNumber}"
-                cvc.text = "CVC: ${cardDetails.cvc}"
+                cvcOrPaymentGateway.text = "CVC: ${cardDetails.cvc}"
                 cardExpiry.text = "Expiration: ${cardDetails.expiryMonth}/${cardDetails.expiryYear}"
             }
             is VirtualCard.TokenizedCard -> {
                 cardNumberOrToken.text = "Card token: ${cardDetails.cardToken}"
-                cvc.text = "CVC: ${cardDetails.cvc}"
+                cvcOrPaymentGateway.text = "Payment gateway: ${cardDetails.paymentGateway}"
                 cardExpiry.text = "Expiration: ${cardDetails.expiryMonth}/${cardDetails.expiryYear}"
             }
             else -> {
                 cardNumberOrToken.text = "Card token/number: Unexpected value"
-                cvc.text = "CVC: Unavailable"
+                cvcOrPaymentGateway.text = "CVC: Unavailable"
                 cardExpiry.text = "Expiration: Unavailable"
             }
         }
