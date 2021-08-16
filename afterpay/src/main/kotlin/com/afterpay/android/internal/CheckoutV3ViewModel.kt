@@ -54,7 +54,7 @@ class CheckoutV3ViewModel(private var options: AfterpayCheckoutV3Options) : View
             }.getOrThrow()
 
             CheckoutV3Data(
-                cardDetails = response.paymentDetails.virtualCard,
+                cardDetails = response.paymentDetails.virtualCard ?: response.paymentDetails.virtualCardToken!!,
                 cardValidUntilInternal = response.cardValidUntil,
                 tokens = tokens
             )

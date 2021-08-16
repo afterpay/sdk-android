@@ -165,7 +165,8 @@ internal object CheckoutV3 {
 
         @Serializable
         data class PaymentDetails(
-            val virtualCard: VirtualCard
+            val virtualCard: VirtualCard.Card? = null,
+            val virtualCardToken: VirtualCard.TokenizedCard? = null
         )
     }
 }
