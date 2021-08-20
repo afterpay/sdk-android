@@ -9,8 +9,8 @@
 
     <string name="afterpay_badge_content_description" translatable="true">After pay</string>
 
-    <string name="afterpay_price_breakdown_total_cost" translatable="false">or 4 interest-free payments of %1$s with</string>
-    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">Or four interest free payments of %1$s with After pay</string>
+    <string name="afterpay_price_breakdown_total_cost" translatable="false">%1$s4 interest-free payments of %2$s with</string>
+    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$sfour interest free payments of %2$s with After pay</string>
     <string name="afterpay_price_breakdown_limit" translatable="false">available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description" translatable="true">After pay available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_upper_limit" translatable="false">available for orders up to %1$s</string>
@@ -18,6 +18,12 @@
     <string name="afterpay_price_breakdown_no_configuration" translatable="false">or pay with</string>
     <string name="afterpay_price_breakdown_no_configuration_description" translatable="true">Or pay with After pay</string>
     <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
+
+    <string name="afterpay_price_breakdown_string_empty" translatable="false"></string>
+    <string name="afterpay_price_breakdown_intro_pay" translatable="false">Pay\u0020</string>
+    <string name="afterpay_price_breakdown_intro_in" translatable="false">In\u0020</string>
+    <string name="afterpay_price_breakdown_intro_or" translatable="false">Or\u0020</string>
+    <string name="afterpay_price_breakdown_intro_pay_in" translatable="false">Pay In\u0020</string>
 
     <string name="afterpay_payment_button_content_description" translatable="true">Pay now with After pay</string>
 </resources>

@@ -313,6 +313,15 @@ When no payment amount has been set or the merchant account configuration has no
 
 The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
 
+#### Configuring the Price Breakdown
+
+Setting the `paymentBreakdown.introText` value will modify opening word.
+This can be set to any of the following where OR is default:
+
+```
+paymentBreakdown.introText = AfterpayIntroText.OR|NONE|PAY|IN|PAY_IN
+```
+
 ## Security
 
 To limit the possibility of a man-in-the-middle attack during the checkout process, certificate pinning can be configured for the Afterpay portal. Please refer to the Android [Network Security Configuration][network-config] documentation for more information.
