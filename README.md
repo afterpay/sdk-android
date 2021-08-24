@@ -315,7 +315,7 @@ The **Info** link at the end of the component will display a window containing m
 
 #### Configuring the Price Breakdown
 
-Setting the `paymentBreakdown.introText` value will modify opening word.
+Setting the `paymentBreakdown.introText` value will modify the opening word(s).
 This can be set to any of the following where OR is default:
 
 ```
