@@ -19,7 +19,8 @@
     <string name="afterpay_price_breakdown_no_configuration_description" translatable="true">Or pay with After pay</string>
     <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
 
-    <string name="afterpay_price_breakdown_string_empty" translatable="false"></string>
+    <string name="afterpay_price_breakdown_intro_none" translatable="false"></string>
+    <string name="afterpay_price_breakdown_intro_make" translatable="false">Make\u0020</string>
     <string name="afterpay_price_breakdown_intro_pay" translatable="false">Pay\u0020</string>
     <string name="afterpay_price_breakdown_intro_in" translatable="false">In\u0020</string>
     <string name="afterpay_price_breakdown_intro_or" translatable="false">Or\u0020</string>

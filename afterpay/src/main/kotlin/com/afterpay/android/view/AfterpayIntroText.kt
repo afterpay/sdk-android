@@ -3,7 +3,8 @@ package com.afterpay.android.view
 import com.afterpay.android.R
 
 enum class AfterpayIntroText(val resourceID: Int) {
-    NONE(R.string.afterpay_price_breakdown_string_empty),
+    NONE(R.string.afterpay_price_breakdown_intro_none),
+    MAKE(R.string.afterpay_price_breakdown_intro_make),
     PAY(R.string.afterpay_price_breakdown_intro_pay),
     IN(R.string.afterpay_price_breakdown_intro_in),
     OR(R.string.afterpay_price_breakdown_intro_or),

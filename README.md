@@ -319,7 +319,7 @@ Setting the `paymentBreakdown.introText` value will modify the opening word(s).
 This can be set to any of the following where OR is default:
 
 ```
-paymentBreakdown.introText = AfterpayIntroText.OR|NONE|PAY|IN|PAY_IN
+paymentBreakdown.introText = AfterpayIntroText.OR|NONE|MAKE|PAY|IN|PAY_IN
 ```
 
 ## Security
