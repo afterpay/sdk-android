@@ -37,7 +37,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ```gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:2.0.1'
+    implementation 'com.afterpay:afterpay-android:2.0.4'
 }
 ```
 
@@ -118,7 +118,11 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
+Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. 
+
+> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here](https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28). See the [API reference][express-checkout] for more details! Failing to do so will cause undefined behavior.
+
+For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -308,6 +312,15 @@ When no payment amount has been set or the merchant account configuration has no
 ![Price breakdown no merchant account configuration][breakdown-no-configuration]
 
 The **Info** link at the end of the component will display a window containing more information about Afterpay for the user.
+
+#### Configuring the Price Breakdown
+
+Setting the `paymentBreakdown.introText` value will modify the opening word(s).
+This can be set to any of the following where OR is default:
+
+```
+paymentBreakdown.introText = AfterpayIntroText.OR|NONE|MAKE|PAY|IN|PAY_IN
+```
 
 ## Security
 
