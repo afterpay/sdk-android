@@ -22,7 +22,6 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
-import java.util.Locale
 import java.util.Observer
 
 class AfterpayPriceBreakdown @JvmOverloads constructor(
@@ -66,8 +65,8 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     // The terms and conditions are tied to the configured locale on the configuration
     private val infoUrl: String
         get() {
-            val country = Afterpay.locale.country.toLowerCase(Locale.ROOT)
-            return "https://static-us.afterpay.com/javascript/modal/${country}_rebrand_modal.html"
+            val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
+            return "https://static.afterpay.com/modal/$locale.html"
         }
 
     init {
