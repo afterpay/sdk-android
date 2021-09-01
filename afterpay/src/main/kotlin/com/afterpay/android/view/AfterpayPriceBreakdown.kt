@@ -60,7 +60,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     private val infoUrl: String
         get() {
             val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
-            return "https://static.afterpay.com/modal/${locale}.html"
+            return "https://static.afterpay.com/modal/$locale.html"
         }
 
     init {
