@@ -47,6 +47,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
+    var introText: AfterpayIntroText = AfterpayIntroText.DEFAULT
+        set(value) {
+            field = value
+            updateText()
+        }
+
     private val textView: TextView = TextView(context).apply {
         setTextColor(context.resolveColorAttr(android.R.attr.textColorPrimary))
         setLinkTextColor(context.resolveColorAttr(android.R.attr.textColorSecondary))
@@ -156,10 +162,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             Content(
                 text = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost),
+                    resources.getString(introText.resourceID).toLowerCase(),
                     afterpay.instalmentAmount
                 ),
                 description = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
+                    resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
                 )
             )
