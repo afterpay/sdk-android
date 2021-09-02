@@ -6,7 +6,7 @@
 
     <string name="afterpay_badge_content_description" translatable="true">Clear pay</string>
 
-    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$sfour interest free payments of %2$s with Clear pay</string>
+    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$s four interest free payments of %2$s with Clear pay</string>
     <string name="afterpay_price_breakdown_limit_description" translatable="true">Clear pay available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_upper_limit_description" translatable="true">Clear pay available for orders up to %1$s</string>
     <string name="afterpay_price_breakdown_no_configuration_description" translatable="true">Or pay with Clear pay</string>
