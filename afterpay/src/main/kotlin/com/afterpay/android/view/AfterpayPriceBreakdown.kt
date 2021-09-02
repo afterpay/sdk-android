@@ -161,7 +161,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             Content(
                 text = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost),
-                    resources.getString(introText.resourceID).toLowerCase(),
+                    resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
                 ),
                 description = String.format(
