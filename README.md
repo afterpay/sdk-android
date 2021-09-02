@@ -316,10 +316,11 @@ The **Info** link at the end of the component will display a window containing m
 #### Configuring the Price Breakdown
 
 Setting the `paymentBreakdown.introText` value will modify the opening word(s).
+Options are in lowercase unless suffixed with `_TITLE` where they will be title case.
 This can be set to any of the following where OR is default:
 
 ```
-paymentBreakdown.introText = AfterpayIntroText.OR|NONE|MAKE|PAY|IN|PAY_IN
+paymentBreakdown.introText = AfterpayIntroText.OR|OR_TITLE|MAKE|MAKE_TITLE|PAY|PAY_TITLE|IN|IN_TITLE|PAY_IN|PAY_IN_TITLE|NONE
 ```
 
 ## Security
