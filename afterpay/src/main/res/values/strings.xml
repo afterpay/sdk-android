@@ -20,7 +20,7 @@
     <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
 
     <!--  Intro Text Options  -->
-    <string name="afterpay_price_breakdown_intro_none" translatable="false"></string>
+    <string name="afterpay_price_breakdown_intro_empty" translatable="false"></string>
     <string name="afterpay_price_breakdown_intro_make_title" translatable="false">Make</string>
     <string name="afterpay_price_breakdown_intro_make" translatable="false">make</string>
     <string name="afterpay_price_breakdown_intro_pay_title" translatable="false">Pay</string>
