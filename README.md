@@ -322,8 +322,8 @@ Can be any of `OR`, `OR_TITLE`, `MAKE`, `MAKE_TITLE`, `PAY`, `PAY_TITLE`, `IN`, 
 Intro text will be rendered lowercase unless using an option suffixed with `_TITLE` in which case title case will be rendered.
 
 ```kotlin
-let priceBreakdownView = PriceBreakdownView()
-priceBreakdownView.introText = AfterpayIntroText.MAKE_TITLE
+val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
+afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
 ```
 
 Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.##`
