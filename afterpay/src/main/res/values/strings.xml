@@ -9,8 +9,8 @@
 
     <string name="afterpay_badge_content_description" translatable="true">After pay</string>
 
-    <string name="afterpay_price_breakdown_total_cost" translatable="false">%1$s4 interest-free payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$sfour interest free payments of %2$s with After pay</string>
+    <string name="afterpay_price_breakdown_total_cost" translatable="false">%1$s 4 interest-free payments of %2$s with</string>
+    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$s four interest free payments of %2$s with After pay</string>
     <string name="afterpay_price_breakdown_limit" translatable="false">available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description" translatable="true">After pay available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_upper_limit" translatable="false">available for orders up to %1$s</string>
@@ -20,17 +20,17 @@
     <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
 
     <!--  Intro Text Options  -->
-    <string name="afterpay_price_breakdown_intro_none" translatable="false"></string>
-    <string name="afterpay_price_breakdown_intro_make_title" translatable="false">Make\u0020</string>
-    <string name="afterpay_price_breakdown_intro_make" translatable="false">make\u0020</string>
-    <string name="afterpay_price_breakdown_intro_pay_title" translatable="false">Pay\u0020</string>
-    <string name="afterpay_price_breakdown_intro_pay" translatable="false">pay\u0020</string>
-    <string name="afterpay_price_breakdown_intro_in_title" translatable="false">In\u0020</string>
-    <string name="afterpay_price_breakdown_intro_in" translatable="false">in\u0020</string>
-    <string name="afterpay_price_breakdown_intro_or_title" translatable="false">Or\u0020</string>
-    <string name="afterpay_price_breakdown_intro_or" translatable="false">or\u0020</string>
-    <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="false">Pay in\u0020</string>
-    <string name="afterpay_price_breakdown_intro_pay_in" translatable="false">pay in\u0020</string>
+    <string name="afterpay_price_breakdown_intro_empty" translatable="false"></string>
+    <string name="afterpay_price_breakdown_intro_make_title" translatable="false">Make</string>
+    <string name="afterpay_price_breakdown_intro_make" translatable="false">make</string>
+    <string name="afterpay_price_breakdown_intro_pay_title" translatable="false">Pay</string>
+    <string name="afterpay_price_breakdown_intro_pay" translatable="false">pay</string>
+    <string name="afterpay_price_breakdown_intro_in_title" translatable="false">In</string>
+    <string name="afterpay_price_breakdown_intro_in" translatable="false">in</string>
+    <string name="afterpay_price_breakdown_intro_or_title" translatable="false">Or</string>
+    <string name="afterpay_price_breakdown_intro_or" translatable="false">or</string>
+    <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="false">Pay in</string>
+    <string name="afterpay_price_breakdown_intro_pay_in" translatable="false">pay in</string>
 
     <string name="afterpay_payment_button_content_description" translatable="true">Pay now with After pay</string>
 </resources>
