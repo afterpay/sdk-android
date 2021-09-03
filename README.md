@@ -315,13 +315,18 @@ The **Info** link at the end of the component will display a window containing m
 
 #### Configuring the Price Breakdown
 
-Setting the `paymentBreakdown.introText` value will modify the opening word(s).
-Options are in lowercase unless suffixed with `_TITLE` where they will be title case.
-This can be set to any of the following where OR is default:
+##### Intro Text
+Setting `introText` is optional, will default to `OR` and must be of type `AfterpayIntroText`.
 
+Can be any of `OR`, `OR_TITLE`, `MAKE`, `MAKE_TITLE`, `PAY`, `PAY_TITLE`, `IN`, `IN_TITLE`, `PAY_IN`, `PAY_IN_TITLE` or `EMPTY` (no intro text).
+Intro text will be rendered lowercase unless using an option suffixed with `_TITLE` in which case title case will be rendered.
+
+```kotlin
+let priceBreakdownView = PriceBreakdownView()
+priceBreakdownView.introText = AfterpayIntroText.MAKE_TITLE
 ```
-paymentBreakdown.introText = AfterpayIntroText.OR|OR_TITLE|MAKE|MAKE_TITLE|PAY|PAY_TITLE|IN|IN_TITLE|PAY_IN|PAY_IN_TITLE|NONE
-```
+
+Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.##`
 
 ## Security
 

@@ -163,12 +163,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
-                ),
+                ).trim(),
                 description = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
-                )
+                ).trim()
             )
         is AfterpayInstalment.NotAvailable ->
             if (afterpay.minimumAmount != null)
