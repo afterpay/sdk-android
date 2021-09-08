@@ -9,7 +9,7 @@ import java.io.IOException
 
 private const val SHELL_COMMAND = "settings put global %s %d"
 private const val TRANSITION_ANIMATION_SCALE = "transition_animation_scale"
-private const val WINDOW_ANIMATION_SCALE = "window_animation_sc"
+private const val WINDOW_ANIMATION_SCALE = "window_animation_scale"
 private const val ANIMATOR_DURATION = "animator_duration_scale"
 
 class DisableAnimationsRule : TestRule {
