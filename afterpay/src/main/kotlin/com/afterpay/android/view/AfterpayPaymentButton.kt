@@ -7,6 +7,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.content.res.use
 import androidx.core.view.setPadding
+import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.dp
@@ -37,8 +38,10 @@ class AfterpayPaymentButton @JvmOverloads constructor(
         }
 
     init {
-        contentDescription =
-            resources.getString(R.string.afterpay_payment_button_content_description)
+        contentDescription = String.format(
+            resources.getString(R.string.afterpay_payment_button_content_description),
+            resources.getString(Afterpay.brand.serviceNameDescription)
+        )
         scaleType = FIT_CENTER
         adjustViewBounds = true
         setPadding(PADDING.dp)
@@ -89,10 +92,10 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
     enum class ButtonText(@DrawableRes val drawableResId: Int) {
 
-        PAY_NOW(drawableResId = R.drawable.afterpay_button_pay_now_fg),
-        BUY_NOW(drawableResId = R.drawable.afterpay_button_buy_now_fg),
-        CHECKOUT(drawableResId = R.drawable.afterpay_button_checkout_fg),
-        PLACE_ORDER(drawableResId = R.drawable.afterpay_button_place_order_fg);
+        PAY_NOW(drawableResId = Afterpay.brand.buttonPayNowFg),
+        BUY_NOW(drawableResId = Afterpay.brand.buttonBuyNowFg),
+        CHECKOUT(drawableResId = Afterpay.brand.buttonCheckoutFg),
+        PLACE_ORDER(drawableResId = Afterpay.brand.buttonPlaceOrderFg);
 
         companion object {
 
