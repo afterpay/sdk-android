@@ -28,7 +28,6 @@ object Afterpay {
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
 
-    // TODO: remove this
     internal val brand: Brand
         get() = Brand.forLocale(locale)
 
