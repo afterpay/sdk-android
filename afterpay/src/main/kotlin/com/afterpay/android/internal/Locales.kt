@@ -11,9 +11,4 @@ internal object Locales {
     val US: Locale = Locale.US
 
     val validSet = setOf(AUSTRALIA, CANADA, UK, NEW_ZEALAND, US)
-
-    internal val brandLocales = mapOf(
-        setOf(AUSTRALIA, CANADA, NEW_ZEALAND, US) to Brand.AFTERPAY,
-        setOf(UK) to Brand.CLEARPAY,
-    )
 }

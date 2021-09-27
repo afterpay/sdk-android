@@ -3,7 +3,17 @@ package com.afterpay.android.internal
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.afterpay.android.R
+import com.afterpay.android.internal.Locales.AUSTRALIA
+import com.afterpay.android.internal.Locales.CANADA
+import com.afterpay.android.internal.Locales.NEW_ZEALAND
+import com.afterpay.android.internal.Locales.UK
+import com.afterpay.android.internal.Locales.US
 import java.util.Locale
+
+private val brandLocales = mapOf(
+    setOf(AUSTRALIA, CANADA, NEW_ZEALAND, US) to Brand.AFTERPAY,
+    setOf(UK) to Brand.CLEARPAY,
+)
 
 internal enum class Brand(
     @StringRes val title: Int,
@@ -38,6 +48,6 @@ internal enum class Brand(
     companion object {
 
         fun forLocale(locale: Locale): Brand =
-            Locales.brandLocales.entries.find { locale in it.key }?.value ?: AFTERPAY
+            brandLocales.entries.find { locale in it.key }?.value ?: AFTERPAY
     }
 }
