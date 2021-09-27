@@ -99,7 +99,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             .setMessage(
                 String.format(
                     resources.getString(R.string.afterpay_load_error_message),
-                    resources.getString(Afterpay.brand.serviceName)
+                    resources.getString(Afterpay.brand.title)
                 )
             )
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->

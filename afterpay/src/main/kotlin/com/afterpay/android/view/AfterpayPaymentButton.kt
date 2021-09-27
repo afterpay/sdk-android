@@ -40,7 +40,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
     init {
         contentDescription = String.format(
             resources.getString(R.string.afterpay_payment_button_content_description),
-            resources.getString(Afterpay.brand.serviceNameDescription)
+            resources.getString(Afterpay.brand.description)
         )
         scaleType = FIT_CENTER
         adjustViewBounds = true
@@ -92,10 +92,10 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
     enum class ButtonText(@DrawableRes val drawableResId: Int) {
 
-        PAY_NOW(drawableResId = Afterpay.brand.buttonPayNowFg),
-        BUY_NOW(drawableResId = Afterpay.brand.buttonBuyNowFg),
-        CHECKOUT(drawableResId = Afterpay.brand.buttonCheckoutFg),
-        PLACE_ORDER(drawableResId = Afterpay.brand.buttonPlaceOrderFg);
+        PAY_NOW(drawableResId = Afterpay.brand.payNowButtonForeground),
+        BUY_NOW(drawableResId = Afterpay.brand.buyNowButtonForeground),
+        CHECKOUT(drawableResId = Afterpay.brand.checkoutButtonForeground),
+        PLACE_ORDER(drawableResId = Afterpay.brand.placeOrderButtonForeground);
 
         companion object {
 

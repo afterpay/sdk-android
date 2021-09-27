@@ -24,7 +24,7 @@ class AfterpayBadge @JvmOverloads constructor(
         }
 
     init {
-        contentDescription = resources.getString(Afterpay.brand.serviceNameDescription)
+        contentDescription = resources.getString(Afterpay.brand.title)
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         isFocusable = true
         scaleType = FIT_CENTER
@@ -44,7 +44,7 @@ class AfterpayBadge @JvmOverloads constructor(
     private fun update() {
         setImageDrawable(
             context.coloredDrawable(
-                drawableResId = Afterpay.brand.badgeFg,
+                drawableResId = Afterpay.brand.badgeForeground,
                 colorResId = colorScheme.foregroundColorResId
             )
         )

@@ -111,7 +111,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 ),
 
                 context.coloredDrawable(
-                    drawableResId = Afterpay.brand.badgeFg,
+                    drawableResId = Afterpay.brand.badgeForeground,
                     colorResId = colorScheme.foregroundColorResId
                 )
             )
@@ -130,7 +130,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             text = SpannableStringBuilder().apply {
                 if (instalment is AfterpayInstalment.NotAvailable) {
                     append(
-                        context.getString(Afterpay.brand.serviceName),
+                        context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -140,7 +140,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(content.text)
                     append(" ")
                     append(
-                        context.getString(Afterpay.brand.serviceName),
+                        context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -168,7 +168,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount,
-                    resources.getString(Afterpay.brand.serviceNameDescription)
+                    resources.getString(Afterpay.brand.description)
                 ).trim()
             )
         is AfterpayInstalment.NotAvailable ->
@@ -181,7 +181,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     ),
                     description = String.format(
                         resources.getString(R.string.afterpay_price_breakdown_limit_description),
-                        resources.getString(Afterpay.brand.serviceNameDescription),
+                        resources.getString(Afterpay.brand.description),
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
                     )
@@ -194,7 +194,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     ),
                     description = String.format(
                         resources.getString(R.string.afterpay_price_breakdown_upper_limit_description),
-                        resources.getString(Afterpay.brand.serviceNameDescription),
+                        resources.getString(Afterpay.brand.description),
                         afterpay.maximumAmount
                     )
                 )
@@ -203,7 +203,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 text = resources.getString(R.string.afterpay_price_breakdown_no_configuration),
                 description = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_no_configuration_description),
-                    resources.getString(Afterpay.brand.serviceNameDescription)
+                    resources.getString(Afterpay.brand.description)
                 )
             )
     }
