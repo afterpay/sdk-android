@@ -14,6 +14,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
 import com.afterpay.android.internal.getCheckoutUrlExtra
@@ -95,7 +96,12 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle(R.string.afterpay_load_error_title)
-            .setMessage(R.string.afterpay_load_error_message)
+            .setMessage(
+                String.format(
+                    resources.getString(R.string.afterpay_load_error_message),
+                    resources.getString(Afterpay.brand.title)
+                )
+            )
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
                 loadCheckoutUrl()
                 dialog.dismiss()

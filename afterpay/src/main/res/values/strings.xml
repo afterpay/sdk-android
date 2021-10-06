@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="afterpay_service_name" translatable="true">Afterpay</string>
-
     <string name="afterpay_load_error_title" translatable="false">Error</string>
-    <string name="afterpay_load_error_message" translatable="true">Failed to load Afterpay checkout</string>
     <string name="afterpay_load_error_retry" translatable="false">Retry</string>
     <string name="afterpay_load_error_cancel" translatable="false">Cancel</string>
-
-    <string name="afterpay_badge_content_description" translatable="true">After pay</string>
+    <string name="afterpay_load_error_message" translatable="false">Failed to load %1$s checkout</string>
 
     <string name="afterpay_price_breakdown_total_cost" translatable="false">%1$s 4 interest-free payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_total_cost_description" translatable="true">%1$s four interest free payments of %2$s with After pay</string>
+    <string name="afterpay_price_breakdown_total_cost_description" translatable="false">%1$s four interest free payments of %2$s with %3$s</string>
     <string name="afterpay_price_breakdown_limit" translatable="false">available for orders between %1$s – %2$s</string>
-    <string name="afterpay_price_breakdown_limit_description" translatable="true">After pay available for orders between %1$s – %2$s</string>
+    <string name="afterpay_price_breakdown_limit_description" translatable="false">%1$s available for orders between %2$s – %3$s</string>
     <string name="afterpay_price_breakdown_upper_limit" translatable="false">available for orders up to %1$s</string>
-    <string name="afterpay_price_breakdown_upper_limit_description" translatable="true">After pay available for orders up to %1$s</string>
+    <string name="afterpay_price_breakdown_upper_limit_description" translatable="false">%1$s available for orders up to %2$s</string>
     <string name="afterpay_price_breakdown_no_configuration" translatable="false">or pay with</string>
-    <string name="afterpay_price_breakdown_no_configuration_description" translatable="true">Or pay with After pay</string>
+    <string name="afterpay_price_breakdown_no_configuration_description" translatable="false">Or pay with %1$s</string>
     <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
 
     <!--  Intro Text Options  -->
@@ -32,5 +28,5 @@
     <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="false">Pay in</string>
     <string name="afterpay_price_breakdown_intro_pay_in" translatable="false">pay in</string>
 
-    <string name="afterpay_payment_button_content_description" translatable="true">Pay now with After pay</string>
+    <string name="afterpay_payment_button_content_description" translatable="false">Pay now with %1$s</string>
 </resources>

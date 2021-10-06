@@ -144,7 +144,12 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private fun errorAlert(retryAction: () -> Unit) =
         AlertDialog.Builder(this)
             .setTitle(R.string.afterpay_load_error_title)
-            .setMessage(R.string.afterpay_load_error_message)
+            .setMessage(
+                String.format(
+                    resources.getString(R.string.afterpay_load_error_message),
+                    resources.getString(Afterpay.brand.title)
+                )
+            )
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
                 retryAction()
                 dialog.dismiss()
