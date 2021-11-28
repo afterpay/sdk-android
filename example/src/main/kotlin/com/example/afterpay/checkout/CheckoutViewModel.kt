@@ -9,6 +9,9 @@ import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
+import com.afterpay.android.model.ShippingOptionUpdate
+import com.afterpay.android.model.ShippingOptionUpdateResult
+import com.afterpay.android.model.ShippingOptionUpdateSuccessResult
 import com.afterpay.android.model.ShippingOptionsResult
 import com.afterpay.android.model.ShippingOptionsSuccessResult
 import com.example.afterpay.data.AfterpayRepository
@@ -55,6 +58,9 @@ class CheckoutViewModel(
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
+        data class ProvideShippingOptionUpdateResult(
+                val shippingOptionUpdateResult: ShippingOptionUpdateResult
+            ) : Command()
     }
 
     private val state = MutableStateFlow(
@@ -148,6 +154,29 @@ class CheckoutViewModel(
 
             val result = ShippingOptionsSuccessResult(shippingOptions)
             commandChannel.trySend(Command.ProvideShippingOptionsResult(result))
+        }
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun selectShippingOption(shippingOption: ShippingOption) {
+        viewModelScope.launch {
+            val configuration = withContext(Dispatchers.IO) {
+                getDependencies()
+                    .run { AfterpayRepository(merchantApi, sharedPreferences) }
+                    .fetchConfiguration()
+            }
+
+            val currency = Currency.getInstance(configuration.currency)
+
+            val updatedShippingOption = ShippingOptionUpdate(
+                "standard",
+                Money("2.00".toBigDecimal(), currency),
+                Money("50.00".toBigDecimal(), currency),
+                null
+            )
+
+            val result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
+            commandChannel.trySend(Command.ProvideShippingOptionUpdateResult(result))
         }
     }
 
