@@ -317,7 +317,13 @@ private class BootstrapJavascriptInterface(
                             }
                     }
 
-                    is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
+                    is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload) {
+                        AfterpayCheckoutMessage
+                            .fromShippingOptionUpdateResult(it, message.meta)
+                            .let {
+                                result -> Log.d("testingtag", result.toString())
+                            }
+                    }
 
                     else -> Unit
                 }
