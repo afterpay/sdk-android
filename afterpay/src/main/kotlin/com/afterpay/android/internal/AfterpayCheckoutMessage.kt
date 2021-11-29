@@ -37,7 +37,7 @@ internal sealed class AfterpayCheckoutMessage {
             is ShippingOptionUpdateErrorResult -> CheckoutErrorMessage(meta, result.error.name)
             is ShippingOptionUpdateSuccessResult -> ShippingOptionUpdateMessage(
                 meta,
-                result.shippingOptions
+                result.shippingOptionUpdate
             )
         }
     }
@@ -82,7 +82,7 @@ internal data class ShippingOptionMessage(
 @SerialName("onShippingOptionUpdateChange")
 internal data class ShippingOptionUpdateMessage(
     override val meta: AfterpayCheckoutMessageMeta,
-    val payload: ShippingOptionUpdate
+    val payload: ShippingOptionUpdate?
 ) : AfterpayCheckoutMessage()
 
 @Serializable

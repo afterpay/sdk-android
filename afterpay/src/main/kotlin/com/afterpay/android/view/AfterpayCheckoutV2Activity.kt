@@ -322,7 +322,6 @@ private class BootstrapJavascriptInterface(
                             .fromShippingOptionUpdateResult(it, message.meta)
                             .let {
                                 result ->
-                                    Log.d("jscheckout", result.toString())
                                     "postMessageToCheckout('${json.encodeToString(result)}');"
                             }
                             .also { javascript ->

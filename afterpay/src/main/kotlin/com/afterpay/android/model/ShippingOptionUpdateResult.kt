@@ -3,7 +3,7 @@ package com.afterpay.android.model
 sealed class ShippingOptionUpdateResult
 
 data class ShippingOptionUpdateSuccessResult(
-    val shippingOptions: ShippingOptionUpdate
+    val shippingOptionUpdate: ShippingOptionUpdate
 ) : ShippingOptionUpdateResult()
 
 data class ShippingOptionUpdateErrorResult(
