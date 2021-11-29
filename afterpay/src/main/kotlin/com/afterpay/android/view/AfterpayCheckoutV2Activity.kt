@@ -321,7 +321,14 @@ private class BootstrapJavascriptInterface(
                         AfterpayCheckoutMessage
                             .fromShippingOptionUpdateResult(it, message.meta)
                             .let {
-                                result -> Log.d("testingtag", result.toString())
+                                result ->
+                                    Log.d("jscheckout", result.toString())
+                                    "postMessageToCheckout('${json.encodeToString(result)}');"
+                            }
+                            .also { javascript ->
+                                activity.runOnUiThread {
+                                    webView.evaluateJavascript(javascript, null)
+                                }
                             }
                     }
 
