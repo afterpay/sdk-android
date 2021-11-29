@@ -31,7 +31,7 @@ internal sealed class AfterpayCheckoutMessage {
         }
 
         fun fromShippingOptionUpdateResult(
-            result: ShippingOptionUpdateResult,
+            result: ShippingOptionUpdateResult?,
             meta: AfterpayCheckoutMessageMeta
         ): AfterpayCheckoutMessage = when (result) {
             is ShippingOptionUpdateErrorResult -> CheckoutErrorMessage(meta, result.error.name)
@@ -39,6 +39,7 @@ internal sealed class AfterpayCheckoutMessage {
                 meta,
                 result.shippingOptionUpdate
             )
+            null -> EmptyPayloadMessage(meta)
         }
     }
 }
@@ -90,4 +91,10 @@ internal data class ShippingOptionUpdateMessage(
 internal data class ShippingOptionsMessage(
     override val meta: AfterpayCheckoutMessageMeta,
     val payload: List<ShippingOption>
+) : AfterpayCheckoutMessage()
+
+@Serializable
+@SerialName("onEmptyPayload")
+internal data class EmptyPayloadMessage(
+    override val meta: AfterpayCheckoutMessageMeta
 ) : AfterpayCheckoutMessage()

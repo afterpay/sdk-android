@@ -15,6 +15,6 @@ interface AfterpayCheckoutV2Handler {
 
     fun shippingOptionDidChange(
         shippingOption: ShippingOption,
-        onProvideShippingOption: (ShippingOptionUpdateResult) -> Unit
+        onProvideShippingOption: (ShippingOptionUpdateResult?) -> Unit
     )
 }

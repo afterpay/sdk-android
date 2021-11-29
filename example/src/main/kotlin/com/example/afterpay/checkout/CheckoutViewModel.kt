@@ -59,7 +59,7 @@ class CheckoutViewModel(
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
-                val shippingOptionUpdateResult: ShippingOptionUpdateResult
+                val shippingOptionUpdateResult: ShippingOptionUpdateResult?
             ) : Command()
     }
 
@@ -145,7 +145,7 @@ class CheckoutViewModel(
                     "",
                     Money("0.00".toBigDecimal(), currency),
                     Money("50.00".toBigDecimal(), currency),
-                    null
+                    Money("0.00".toBigDecimal(), currency)
                 ),
                 ShippingOption(
                     "priority",
@@ -172,15 +172,21 @@ class CheckoutViewModel(
             }
 
             val currency = Currency.getInstance(configuration.currency)
+            val result: ShippingOptionUpdateResult?
 
-            val updatedShippingOption = ShippingOptionUpdate(
-                "standard",
-                Money("2.00".toBigDecimal(), currency),
-                Money("50.00".toBigDecimal(), currency),
-                null
-            )
+            if (shippingOption.id == "standard") {
+                val updatedShippingOption = ShippingOptionUpdate(
+                    "standard",
+                    Money("0.00".toBigDecimal(), currency),
+                    Money("50.00".toBigDecimal(), currency),
+                    Money("2.00".toBigDecimal(), currency)
+                )
 
-            val result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
+                result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
+            } else {
+                result = null
+            }
+
             commandChannel.trySend(Command.ProvideShippingOptionUpdateResult(result))
         }
     }

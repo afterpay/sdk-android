@@ -32,16 +32,16 @@ class CheckoutHandler(
     fun provideShippingOptionsResult(shippingOptionsResult: ShippingOptionsResult) =
         onProvideShippingOptions(shippingOptionsResult).also { onProvideShippingOptions = {} }
 
-    private var onProvideShippingOptionUpdate: (ShippingOptionUpdateResult) -> Unit = {}
+    private var onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit = {}
 
     override fun shippingOptionDidChange(
         shippingOption: ShippingOption,
-        onProvideShippingOptionUpdate: (ShippingOptionUpdateResult) -> Unit
+        onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit
     ) = onShippingOptionDidChange(shippingOption).also {
         this.onProvideShippingOptionUpdate = onProvideShippingOptionUpdate
     }
 
-    fun provideShippingOptionUpdateResult(shippingOptionUpdateResult: ShippingOptionUpdateResult) =
+    fun provideShippingOptionUpdateResult(shippingOptionUpdateResult: ShippingOptionUpdateResult?) =
         onProvideShippingOptionUpdate(shippingOptionUpdateResult).also {
             onProvideShippingOptionUpdate = {}
         }
