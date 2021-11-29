@@ -102,7 +102,12 @@ class CheckoutViewModel(
             putShippingOptionsRequired(isShippingOptionsRequired)
         }
 
-        val options = AfterpayCheckoutV2Options(isPickup, isBuyNow, isShippingOptionsRequired)
+        val options = AfterpayCheckoutV2Options(
+            isPickup,
+            isBuyNow,
+            isShippingOptionsRequired,
+            enableSingleShippingOptionUpdate = true
+        )
         commandChannel.trySend(Command.ShowAfterpayCheckout(options))
     }
 
