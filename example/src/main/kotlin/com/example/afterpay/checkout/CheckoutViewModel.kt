@@ -59,8 +59,8 @@ class CheckoutViewModel(
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
-                val shippingOptionUpdateResult: ShippingOptionUpdateResult?
-            ) : Command()
+            val shippingOptionUpdateResult: ShippingOptionUpdateResult?
+        ) : Command()
     }
 
     private val state = MutableStateFlow(

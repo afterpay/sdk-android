@@ -320,9 +320,8 @@ private class BootstrapJavascriptInterface(
                     is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload) {
                         AfterpayCheckoutMessage
                             .fromShippingOptionUpdateResult(it, message.meta)
-                            .let {
-                                result ->
-                                    "postMessageToCheckout('${json.encodeToString(result)}');"
+                            .let { result ->
+                                "postMessageToCheckout('${json.encodeToString(result)}');"
                             }
                             .also { javascript ->
                                 activity.runOnUiThread {

@@ -3,7 +3,6 @@ package com.example.afterpay.checkout
 import com.afterpay.android.AfterpayCheckoutV2Handler
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
-import com.afterpay.android.model.ShippingOptionUpdate
 import com.afterpay.android.model.ShippingOptionUpdateResult
 import com.afterpay.android.model.ShippingOptionsResult
 
