@@ -29,7 +29,7 @@ The Afterpay Android SDK makes it quick and easy to provide an excellent payment
 
 ### Requirements
 
-- Android 5.0 (API level 21) and above
+- Android 7.0 (API level 24) and above
 
 ### Configuration
 
