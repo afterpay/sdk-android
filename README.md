@@ -145,7 +145,10 @@ class ExampleActivity: Activity {
                 TODO("Use the address to form shipping options and pass to completion")
             }
 
-            override fun shippingOptionDidChange(shippingOption: ShippingOption) {
+            override fun shippingOptionDidChange(
+                shippingOption: ShippingOption,
+                onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit
+            ) {
                 TODO("Optionally update your application model with the selected shipping option")
             }
         })

@@ -6,9 +6,11 @@ import android.os.Parcelable
 data class AfterpayCheckoutV2Options(
     val pickup: Boolean? = null,
     val buyNow: Boolean? = null,
-    val shippingOptionRequired: Boolean? = null
+    val shippingOptionRequired: Boolean? = null,
+    val enableSingleShippingOptionUpdate: Boolean? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean
@@ -18,6 +20,7 @@ data class AfterpayCheckoutV2Options(
         parcel.writeValue(pickup)
         parcel.writeValue(buyNow)
         parcel.writeValue(shippingOptionRequired)
+        parcel.writeValue(enableSingleShippingOptionUpdate)
     }
 
     override fun describeContents(): Int {

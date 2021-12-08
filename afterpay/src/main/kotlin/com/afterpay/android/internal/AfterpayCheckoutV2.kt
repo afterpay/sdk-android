@@ -12,7 +12,8 @@ internal data class AfterpayCheckoutV2(
     val version: String,
     val pickup: Boolean?,
     val buyNow: Boolean?,
-    val shippingOptionRequired: Boolean?
+    val shippingOptionRequired: Boolean?,
+    val checkoutRedesignForced: Boolean?
 ) {
     constructor(
         token: String,
@@ -25,6 +26,7 @@ internal data class AfterpayCheckoutV2(
         version = "${BuildConfig.AfterpayLibraryVersion}-android",
         pickup = options.pickup,
         buyNow = options.buyNow,
-        shippingOptionRequired = options.shippingOptionRequired
+        shippingOptionRequired = options.shippingOptionRequired,
+        checkoutRedesignForced = options.enableSingleShippingOptionUpdate
     )
 }
