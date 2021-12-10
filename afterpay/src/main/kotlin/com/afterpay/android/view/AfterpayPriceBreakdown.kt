@@ -52,7 +52,13 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
-    var optionalText: AfterpayOptionalText = AfterpayOptionalText.DEFAULT
+    var showWithText: Boolean = true
+        set(value) {
+            field = value
+            updateText()
+        }
+
+    var showInterestFreeText: Boolean = true
         set(value) {
             field = value
             updateText()
@@ -163,20 +169,31 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
-        is AfterpayInstalment.Available ->
+        is AfterpayInstalment.Available -> {
+            val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showInterestFreeText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showWithText) {
+                AfterpayOptionalText.WITH
+            } else {
+                AfterpayOptionalText.NONE
+            }
+
             Content(
                 text = String.format(
-                    resources.getString(optionalText.textResourceID),
+                    resources.getString(template.textResourceID),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
                 ).trim(),
                 description = String.format(
-                    resources.getString(optionalText.descriptionResourceId),
+                    resources.getString(template.descriptionResourceId),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount,
                     resources.getString(Afterpay.brand.description)
                 ).trim()
             )
+        }
         is AfterpayInstalment.NotAvailable ->
             if (afterpay.minimumAmount != null)
                 Content(

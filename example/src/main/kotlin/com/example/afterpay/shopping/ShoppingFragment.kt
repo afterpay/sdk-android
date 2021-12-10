@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afterpay.android.view.AfterpayIntroText
-import com.afterpay.android.view.AfterpayOptionalText
 import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.example.afterpay.R
 import com.example.afterpay.data.Product
@@ -65,7 +64,7 @@ class ShoppingFragment : Fragment() {
         val totalCost = view.findViewById<TextView>(R.id.shopping_totalCost)
         val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
         afterpayBreakdown.introText = AfterpayIntroText.PAY_IN
-        afterpayBreakdown.optionalText = AfterpayOptionalText.WITH
+        afterpayBreakdown.showInterestFreeText = false
 
         lifecycleScope.launchWhenCreated {
             viewModel.state.collectLatest { state ->
