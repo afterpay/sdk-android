@@ -1,6 +1,6 @@
 buildscript {
     ext.versions = [
-        'compile_sdk'               : 30,
+        'compile_sdk'               : 31,
         'min_sdk'                   : 24,
         'java'                      : '1.8',
         'build_tools'               : '30.0.3',
