@@ -6,19 +6,17 @@
     <string name="afterpay_load_error_message" translatable="false">Failed to load %1$s checkout</string>
 
     <!--  Price breakdown templates: Available  -->
-    <string name="afterpay_price_breakdown_available_no_optional" translatable="false">%1$s 4 payments of %2$s</string>
-    <string name="afterpay_price_breakdown_available_no_optional_description" translatable="false">%1$s four payments of %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest" translatable="false">%1$s 4 interest-free payments of %2$s</string>
-    <string name="afterpay_price_breakdown_available_interest_description" translatable="false">%1$s four interest free payments of %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_with" translatable="false">%1$s 4 payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_available_with_description" translatable="false">%1$s four payments of %2$s with %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with" translatable="false">%1$s 4 interest-free payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with_description" translatable="false">%1$s four interest free payments of %2$s with %3$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional" translatable="true">%1$s 4 payments of %2$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional_description" translatable="true">%1$s four payments of %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest" translatable="true">%1$s 4 interest-free payments of %2$s</string>
+    <string name="afterpay_price_breakdown_available_interest_description" translatable="true">%1$s four interest free payments of %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_with" translatable="true">%1$s 4 payments of %2$s with</string>
+    <string name="afterpay_price_breakdown_available_with_description" translatable="true">%1$s four payments of %2$s with %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with" translatable="true">%1$s 4 interest-free payments of %2$s with</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with_description" translatable="true">%1$s four interest free payments of %2$s with %3$s</string>
     <!--  Price breakdown templates: Outside limits  -->
-    <string name="afterpay_price_breakdown_limit" translatable="false">available for orders between %1$s – %2$s</string>
-    <string name="afterpay_price_breakdown_limit_description" translatable="false">%1$s available for orders between %2$s – %3$s</string>
-    <string name="afterpay_price_breakdown_upper_limit" translatable="false">available for orders up to %1$s</string>
-    <string name="afterpay_price_breakdown_upper_limit_description" translatable="false">%1$s available for orders up to %2$s</string>
+    <string name="afterpay_price_breakdown_limit" translatable="true">available for orders between %1$s – %2$s</string>
+    <string name="afterpay_price_breakdown_limit_description" translatable="true">%1$s available for orders between %2$s – %3$s</string>
     <!--  Price breakdown templates: No config  -->
     <string name="afterpay_price_breakdown_no_configuration" translatable="false">or pay with</string>
     <string name="afterpay_price_breakdown_no_configuration_description" translatable="false">Or pay with %1$s</string>
@@ -28,16 +26,16 @@
 
     <!--  Intro Text Options  -->
     <string name="afterpay_price_breakdown_intro_empty" translatable="false"></string>
-    <string name="afterpay_price_breakdown_intro_make_title" translatable="false">Make</string>
-    <string name="afterpay_price_breakdown_intro_make" translatable="false">make</string>
-    <string name="afterpay_price_breakdown_intro_pay_title" translatable="false">Pay</string>
-    <string name="afterpay_price_breakdown_intro_pay" translatable="false">pay</string>
-    <string name="afterpay_price_breakdown_intro_in_title" translatable="false">In</string>
-    <string name="afterpay_price_breakdown_intro_in" translatable="false">in</string>
-    <string name="afterpay_price_breakdown_intro_or_title" translatable="false">Or</string>
-    <string name="afterpay_price_breakdown_intro_or" translatable="false">or</string>
-    <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="false">Pay in</string>
-    <string name="afterpay_price_breakdown_intro_pay_in" translatable="false">pay in</string>
+    <string name="afterpay_price_breakdown_intro_make_title" translatable="true">Make</string>
+    <string name="afterpay_price_breakdown_intro_make" translatable="true">make</string>
+    <string name="afterpay_price_breakdown_intro_pay_title" translatable="true">Pay</string>
+    <string name="afterpay_price_breakdown_intro_pay" translatable="true">pay</string>
+    <string name="afterpay_price_breakdown_intro_in_title" translatable="true">In</string>
+    <string name="afterpay_price_breakdown_intro_in" translatable="true">in</string>
+    <string name="afterpay_price_breakdown_intro_or_title" translatable="true">Or</string>
+    <string name="afterpay_price_breakdown_intro_or" translatable="true">or</string>
+    <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="true">Pay in</string>
+    <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">pay in</string>
 
     <string name="afterpay_payment_button_content_description" translatable="false">Pay now with %1$s</string>
 </resources>

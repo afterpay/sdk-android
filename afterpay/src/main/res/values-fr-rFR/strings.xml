@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="afterpay_price_breakdown_intro_make_title">Effectuez</string>
+    <string name="afterpay_price_breakdown_intro_make">effectuez</string>
+    <string name="afterpay_price_breakdown_intro_pay_title">Payez</string>
+    <string name="afterpay_price_breakdown_intro_pay">payez</string>
+    <string name="afterpay_price_breakdown_intro_in_title">En</string>
+    <string name="afterpay_price_breakdown_intro_in">en</string>
+    <string name="afterpay_price_breakdown_intro_or_title">Ou</string>
+    <string name="afterpay_price_breakdown_intro_or">ou</string>
+    <string name="afterpay_price_breakdown_available_interest">%1$s 4 paiements sans frais de %2$s</string>
+    <string name="afterpay_price_breakdown_available_interest_description">%1$s quatre paiements sans frais de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_with">%1$s 4 paiements de %2$s avec</string>
+    <string name="afterpay_price_breakdown_available_with_description">%1$s quatre paiements de %2$s avec %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with">%1$s 4 paiements sans frais de %2$s avec</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with_description">%1$s quatre paiements sans frais de %2$s avec %3$s</string>
+    <string name="afterpay_price_breakdown_limit">disponible pour les montants entre %1$s – %2$s</string>
+    <string name="afterpay_price_breakdown_limit_description">%1$s disponible pour les montants entre %2$s – %3$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional">%1$s 4 paiements de %2$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional_description">%1$s quatre paiements de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_intro_pay_in_title">Payez en</string>
+    <string name="afterpay_price_breakdown_intro_pay_in">payez en</string>
+</resources>

@@ -63,8 +63,8 @@ class ShoppingFragment : Fragment() {
 
         val totalCost = view.findViewById<TextView>(R.id.shopping_totalCost)
         val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
-        afterpayBreakdown.introText = AfterpayIntroText.PAY_IN
-        afterpayBreakdown.showInterestFreeText = false
+        afterpayBreakdown.introText = AfterpayIntroText.MAKE
+        // afterpayBreakdown.showInterestFreeText = false
 
         lifecycleScope.launchWhenCreated {
             viewModel.state.collectLatest { state ->

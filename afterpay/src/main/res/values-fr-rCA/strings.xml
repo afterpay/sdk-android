@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Price breakdown templates: Available  -->
+    <string name="afterpay_price_breakdown_available_no_optional" translatable="true">%1$s 4 paiements de %2$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional_description" translatable="true">%1$s quatre paiements de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest" translatable="true">%1$s 4 paiements sans intérêts de %2$s</string>
+    <string name="afterpay_price_breakdown_available_interest_description" translatable="true">%1$s quatre paiements sans intérêts de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_with" translatable="true">%1$s 4 paiements de %2$s avec</string>
+    <string name="afterpay_price_breakdown_available_with_description" translatable="true">%1$s quatre paiements de %2$s avec %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with" translatable="true">%1$s 4 paiements sans intérêts de %2$s avec</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with_description" translatable="true">%1$s quatre paiements sans intérêts de %2$s avec %3$s</string>
+    <!--  Price breakdown templates: Outside limits  -->
+    <string name="afterpay_price_breakdown_limit" translatable="true">disponible pour les montants entre %1$s – %2$s</string>
+    <string name="afterpay_price_breakdown_limit_description" translatable="true">%1$s disponible pour les montants entre %2$s – %3$s</string>
+
+    <!--  Intro Text Options  -->
+    <string name="afterpay_price_breakdown_intro_make_title" translatable="true">Effectuez</string>
+    <string name="afterpay_price_breakdown_intro_make" translatable="true">effectuez</string>
+    <string name="afterpay_price_breakdown_intro_pay_title" translatable="true">Payez</string>
+    <string name="afterpay_price_breakdown_intro_pay" translatable="true">payez</string>
+    <string name="afterpay_price_breakdown_intro_in_title" translatable="true">En</string>
+    <string name="afterpay_price_breakdown_intro_in" translatable="true">en</string>
+    <string name="afterpay_price_breakdown_intro_or_title" translatable="true">Ou</string>
+    <string name="afterpay_price_breakdown_intro_or" translatable="true">ou</string>
+    <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="true">Payez en</string>
+    <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">payez en</string>
+</resources>

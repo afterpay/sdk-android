@@ -212,12 +212,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             else
                 Content(
                     text = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_upper_limit),
+                        resources.getString(R.string.afterpay_price_breakdown_limit),
+                        "1",
                         afterpay.maximumAmount
                     ),
                     description = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_upper_limit_description),
+                        resources.getString(R.string.afterpay_price_breakdown_limit_description),
                         resources.getString(Afterpay.brand.description),
+                        "1",
                         afterpay.maximumAmount
                     )
                 )
