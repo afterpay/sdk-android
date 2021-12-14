@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="afterpay_price_breakdown_available_interest_and_with_description">%1$s cuatro pagos sin intereses de %2$s con %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with">%1$s 4 pagos sin intereses de %2$s con</string>
+    <string name="afterpay_price_breakdown_available_with">%1$s 4 pagos de %2$s con</string>
+    <string name="afterpay_price_breakdown_available_with_description">%1$s cuatro pagos de %2$s con %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest">%1$s 4 pagos sin intereses de %2$s</string>
+    <string name="afterpay_price_breakdown_available_interest_description">%1$s cuatro pagos sin intereses de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional">%1$s 4 pagos de %2$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional_description">%1$s cuatro pagos de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_limit">disponible para importes entre %1$s – %2$s</string>
+    <string name="afterpay_price_breakdown_limit_description">%1$s disponible para importes entre %2$s – %3$s</string>
+    <string name="afterpay_price_breakdown_intro_or_title">O</string>
+    <string name="afterpay_price_breakdown_intro_or">o</string>
+    <string name="afterpay_price_breakdown_intro_in_title">En</string>
+    <string name="afterpay_price_breakdown_intro_in">en</string>
+    <string name="afterpay_price_breakdown_intro_pay_title">Paga</string>
+    <string name="afterpay_price_breakdown_intro_pay">paga</string>
+    <string name="afterpay_price_breakdown_intro_pay_in_title">Paga en</string>
+    <string name="afterpay_price_breakdown_intro_pay_in">paga en</string>
+    <string name="afterpay_price_breakdown_intro_make_title">Haga</string>
+    <string name="afterpay_price_breakdown_intro_make">haga</string>
+</resources>
