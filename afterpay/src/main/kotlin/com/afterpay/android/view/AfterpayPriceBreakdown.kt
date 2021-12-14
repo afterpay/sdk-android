@@ -52,6 +52,18 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
+    var showWithText: Boolean = true
+        set(value) {
+            field = value
+            updateText()
+        }
+
+    var showInterestFreeText: Boolean = true
+        set(value) {
+            field = value
+            updateText()
+        }
+
     private val textView: TextView = TextView(context).apply {
         setTextColor(context.resolveColorAttr(android.R.attr.textColorPrimary))
         setLinkTextColor(context.resolveColorAttr(android.R.attr.textColorSecondary))
@@ -157,20 +169,31 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
-        is AfterpayInstalment.Available ->
+        is AfterpayInstalment.Available -> {
+            val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showInterestFreeText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showWithText) {
+                AfterpayOptionalText.WITH
+            } else {
+                AfterpayOptionalText.NONE
+            }
+
             Content(
                 text = String.format(
-                    resources.getString(R.string.afterpay_price_breakdown_total_cost),
+                    resources.getString(template.textResourceID),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
                 ).trim(),
                 description = String.format(
-                    resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
+                    resources.getString(template.descriptionResourceId),
                     resources.getString(introText.resourceID),
                     afterpay.instalmentAmount,
                     resources.getString(Afterpay.brand.description)
                 ).trim()
             )
+        }
         is AfterpayInstalment.NotAvailable ->
             if (afterpay.minimumAmount != null)
                 Content(

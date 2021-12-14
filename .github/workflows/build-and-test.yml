@@ -14,10 +14,10 @@ jobs:
       - name: Clone Repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: '11'
 
       - name: Lint
         run: ./gradlew afterpay:lintDebug afterpay:ktlint
@@ -32,10 +32,10 @@ jobs:
       - name: Clone Repository
         uses: actions/checkout@v2
 
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: '11'
 
       - name: Build and Lint
         run: ./gradlew example:buildDebug example:lintDebug example:ktlint

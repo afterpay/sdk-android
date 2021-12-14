@@ -324,6 +324,13 @@ Setting `introText` is optional, will default to `OR` and must be of type `After
 Can be any of `OR`, `OR_TITLE`, `MAKE`, `MAKE_TITLE`, `PAY`, `PAY_TITLE`, `IN`, `IN_TITLE`, `PAY_IN`, `PAY_IN_TITLE` or `EMPTY` (no intro text).
 Intro text will be rendered lowercase unless using an option suffixed with `_TITLE` in which case title case will be rendered.
 
+##### Optional Words
+Setting `showInterestFreeText` and / or `showWithText` is optional and is of type `Boolean`.
+
+Both default to true. This will show the text `pay in 4 interest-free payents of $#.##`.
+Setting `showInterestFreeText` to false will remove "interest-free" from the sentence.
+Setting `showWithText` to false will remove the word "with" from the sentence.
+
 ```kotlin
 val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
 afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
