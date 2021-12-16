@@ -21,7 +21,7 @@ class AfterpayInstalmentTest {
 
     @Test
     fun `available instalment in Australia locale`() {
-        val locale = Locales.AUSTRALIA
+        val locale = Locales.EN_AU
 
         val audInstalment = availableInstalment(oneHundredAndTwenty, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwenty, canadianDollar, locale)
@@ -38,7 +38,7 @@ class AfterpayInstalmentTest {
 
     @Test
     fun `available instalment in Canada locale`() {
-        val locale = Locales.CANADA
+        val locale = Locales.EN_CA
 
         val audInstalment = availableInstalment(oneHundredAndTwenty, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwenty, canadianDollar, locale)
@@ -55,7 +55,7 @@ class AfterpayInstalmentTest {
 
     @Test
     fun `available instalment in UK locale`() {
-        val locale = Locales.UK
+        val locale = Locales.EN_GB
 
         val audInstalment = availableInstalment(oneHundredAndTwenty, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwenty, canadianDollar, locale)
@@ -72,7 +72,7 @@ class AfterpayInstalmentTest {
 
     @Test
     fun `available instalment in New Zealand locale`() {
-        val locale = Locales.NEW_ZEALAND
+        val locale = Locales.EN_NZ
 
         val audInstalment = availableInstalment(oneHundredAndTwenty, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwenty, canadianDollar, locale)
@@ -89,7 +89,7 @@ class AfterpayInstalmentTest {
 
     @Test
     fun `available instalment in US locale`() {
-        val locale = Locales.US
+        val locale = Locales.EN_US
 
         val audInstalment = availableInstalment(oneHundredAndTwenty, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwenty, canadianDollar, locale)
@@ -114,7 +114,7 @@ class AfterpayInstalmentTest {
      */
     @Test
     fun `available instalment when amount is round and odd`() {
-        val locale = Locales.AUSTRALIA
+        val locale = Locales.EN_AU
 
         val audInstalment = availableInstalment(oneHundredAndTwentyOne, australianDollar, locale)
         val cadInstalment = availableInstalment(oneHundredAndTwentyOne, canadianDollar, locale)

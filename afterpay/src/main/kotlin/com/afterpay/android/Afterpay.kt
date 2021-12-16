@@ -26,7 +26,7 @@ object Afterpay {
         private set
 
     internal val locale: Locale
-        get() = configuration?.locale ?: Locales.US
+        get() = configuration?.locale ?: Locales.EN_US
 
     internal val brand: Brand
         get() = Brand.forLocale(locale)

@@ -3,16 +3,20 @@ package com.afterpay.android.internal
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.afterpay.android.R
-import com.afterpay.android.internal.Locales.AUSTRALIA
-import com.afterpay.android.internal.Locales.CANADA
-import com.afterpay.android.internal.Locales.NEW_ZEALAND
-import com.afterpay.android.internal.Locales.UK
-import com.afterpay.android.internal.Locales.US
+import com.afterpay.android.internal.Locales.EN_AU
+import com.afterpay.android.internal.Locales.EN_CA
+import com.afterpay.android.internal.Locales.FR_CA
+import com.afterpay.android.internal.Locales.EN_NZ
+import com.afterpay.android.internal.Locales.EN_GB
+import com.afterpay.android.internal.Locales.EN_US
+import com.afterpay.android.internal.Locales.IT_IT
+import com.afterpay.android.internal.Locales.FR_FR
+import com.afterpay.android.internal.Locales.ES_ES
 import java.util.Locale
 
 private val brandLocales = mapOf(
-    setOf(AUSTRALIA, CANADA, NEW_ZEALAND, US) to Brand.AFTERPAY,
-    setOf(UK) to Brand.CLEARPAY,
+    setOf(EN_AU, EN_CA, FR_CA, EN_NZ, EN_US) to Brand.AFTERPAY,
+    setOf(EN_GB, IT_IT, FR_FR, ES_ES) to Brand.CLEARPAY,
 )
 
 internal enum class Brand(

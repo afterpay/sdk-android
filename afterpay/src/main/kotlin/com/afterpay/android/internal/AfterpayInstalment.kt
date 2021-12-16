@@ -33,13 +33,13 @@ internal sealed class AfterpayInstalment {
                 this.currency = configuration.currency
             }
 
-            if (configuration.locale == Locales.US) {
+            if (configuration.locale == Locales.EN_US) {
                 currencyFormatter.apply {
                     decimalFormatSymbols = decimalFormatSymbols.apply {
                         this.currencySymbol = when (configuration.currency) {
-                            Currency.getInstance(Locales.AUSTRALIA) -> "A$"
-                            Currency.getInstance(Locales.NEW_ZEALAND) -> "NZ$"
-                            Currency.getInstance(Locales.CANADA) -> "CA$"
+                            Currency.getInstance(Locales.EN_AU) -> "A$"
+                            Currency.getInstance(Locales.EN_NZ) -> "NZ$"
+                            Currency.getInstance(Locales.EN_CA) -> "CA$"
                             else -> currencySymbol
                         }
                     }
