@@ -5,6 +5,7 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Currency
+import java.util.Locale
 
 internal sealed class AfterpayInstalment {
     data class Available(
@@ -19,34 +20,59 @@ internal sealed class AfterpayInstalment {
     object NoConfiguration : AfterpayInstalment()
 
     companion object {
-        fun of(totalCost: BigDecimal, configuration: Configuration?): AfterpayInstalment {
+        fun of(totalCost: BigDecimal, configuration: Configuration?, locale: Locale): AfterpayInstalment {
             if (configuration == null) {
                 return NoConfiguration
             }
 
-            val currencyLocale = Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
-            val currencySymbol = configuration.currency.getSymbol(currencyLocale)
-            val usCurrencySymbol = Currency.getInstance(Locales.US).getSymbol(Locales.US)
-            val localCurrency = Currency.getInstance(configuration.locale)
+            val currencyLocales = Locales.validSet.filterTo(HashSet()) {
+                Currency.getInstance(it) == configuration.currency
+            }
 
-            val currencyFormatter = (NumberFormat.getCurrencyInstance(currencyLocale) as DecimalFormat).apply {
+            val currencyLocale: Locale = when {
+                currencyLocales.count() == 1 -> currencyLocales.first()
+                currencyLocales.contains(configuration.locale) -> configuration.locale
+                else -> Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
+            }
+
+            val localCurrency = Currency.getInstance(locale)
+            val currencySymbol = configuration.currency.getSymbol(currencyLocale)
+
+            val usCurrencySymbol = Currency.getInstance(Locales.EN_US).getSymbol(Locales.EN_US)
+            val gbCurrencySymbol = Currency.getInstance(Locales.EN_GB).getSymbol(Locales.EN_GB)
+            val euCurrencySymbol = Currency.getInstance(Locales.FR_FR).getSymbol(Locales.FR_FR)
+
+            val currencyFormatter = (NumberFormat.getCurrencyInstance(locale) as DecimalFormat).apply {
                 this.currency = configuration.currency
             }
 
-            if (configuration.locale == Locales.EN_US) {
+            if (locale == Locales.EN_US) {
                 currencyFormatter.apply {
+                    when (currencySymbol) {
+                        euCurrencySymbol -> this.applyPattern("#,##0.00¤")
+                    }
+
                     decimalFormatSymbols = decimalFormatSymbols.apply {
                         this.currencySymbol = when (configuration.currency) {
                             Currency.getInstance(Locales.EN_AU) -> "A$"
                             Currency.getInstance(Locales.EN_NZ) -> "NZ$"
                             Currency.getInstance(Locales.EN_CA) -> "CA$"
+                            Currency.getInstance(Locales.FR_CA) -> "CA$"
                             else -> currencySymbol
                         }
                     }
                 }
-            } else if (currencySymbol == usCurrencySymbol && configuration.currency != localCurrency) {
+            } else if (configuration.currency != localCurrency) {
                 currencyFormatter.apply {
-                    this.applyPattern("¤#,##0.00 ¤¤")
+                    decimalFormatSymbols = decimalFormatSymbols.apply {
+                        this.currencySymbol = currencySymbol
+                    }
+
+                    when (currencySymbol) {
+                        usCurrencySymbol -> this.applyPattern("¤#,##0.00 ¤¤")
+                        gbCurrencySymbol -> this.applyPattern("¤#,##0.00")
+                        euCurrencySymbol -> this.applyPattern("#,##0.00¤")
+                    }
                 }
             }
 

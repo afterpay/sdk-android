@@ -135,7 +135,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
             }
 
-        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
+        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
         val content = generateContent(instalment)
 
         textView.apply {
@@ -173,7 +173,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
                 AfterpayOptionalText.INTEREST_FREE_AND_WITH
             } else if (showInterestFreeText) {
-                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+                AfterpayOptionalText.INTEREST_FREE
             } else if (showWithText) {
                 AfterpayOptionalText.WITH
             } else {

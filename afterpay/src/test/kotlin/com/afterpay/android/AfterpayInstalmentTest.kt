@@ -141,6 +141,6 @@ class AfterpayInstalmentTest {
             locale,
             AfterpayEnvironment.SANDBOX
         )
-        return AfterpayInstalment.of(amount, configuration) as AfterpayInstalment.Available
+        return AfterpayInstalment.of(amount, configuration, locale) as AfterpayInstalment.Available
     }
 }
