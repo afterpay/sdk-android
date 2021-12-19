@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="afterpay_price_breakdown_available_interest_and_with_description">%1$s cuatro pagos sin intereses de %2$s con %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with">%1$s 4 pagos sin intereses de %2$s con</string>
-    <string name="afterpay_price_breakdown_available_with">%1$s 4 pagos de %2$s con</string>
-    <string name="afterpay_price_breakdown_available_with_description">%1$s cuatro pagos de %2$s con %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest">%1$s 4 pagos sin intereses de %2$s</string>
-    <string name="afterpay_price_breakdown_available_interest_description">%1$s cuatro pagos sin intereses de %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_no_optional">%1$s 4 pagos de %2$s</string>
-    <string name="afterpay_price_breakdown_available_no_optional_description">%1$s cuatro pagos de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with_description">%1$s cuatro cuotas sin coste de %2$s con %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest_and_with">%1$s 4 cuotas sin coste de %2$s con</string>
+    <string name="afterpay_price_breakdown_available_with">%1$s 4 cuotas de %2$s con</string>
+    <string name="afterpay_price_breakdown_available_with_description">%1$s cuatro cuotas de %2$s con %3$s</string>
+    <string name="afterpay_price_breakdown_available_interest">%1$s 4 cuotas sin coste de %2$s</string>
+    <string name="afterpay_price_breakdown_available_interest_description">%1$s cuatro cuotas sin coste de %2$s %3$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional">%1$s 4 cuotas de %2$s</string>
+    <string name="afterpay_price_breakdown_available_no_optional_description">%1$s cuotas pagos de %2$s %3$s</string>
     <string name="afterpay_price_breakdown_limit">disponible para importes entre %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description">%1$s disponible para importes entre %2$s – %3$s</string>
     <string name="afterpay_price_breakdown_intro_or_title">O</string>
