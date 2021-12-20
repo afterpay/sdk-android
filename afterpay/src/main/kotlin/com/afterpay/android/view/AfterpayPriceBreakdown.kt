@@ -64,6 +64,10 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
+    var modalTheme: AfterpayModalTheme = AfterpayModalTheme.DEFAULT
+
+    var modalId: String? = null
+
     private val textView: TextView = TextView(context).apply {
         setTextColor(context.resolveColorAttr(android.R.attr.textColorPrimary))
         setLinkTextColor(context.resolveColorAttr(android.R.attr.textColorSecondary))
@@ -77,8 +81,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     // The terms and conditions are tied to the configured locale on the configuration
     private val infoUrl: String
         get() {
+            modalId?.let {
+                return "https://static.afterpay.com/modal/$modalId.html"
+            }
+
             val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
-            return "https://static.afterpay.com/modal/$locale.html"
+            return "https://static.afterpay.com/modal/$locale${modalTheme.slug}.html"
         }
 
     init {
