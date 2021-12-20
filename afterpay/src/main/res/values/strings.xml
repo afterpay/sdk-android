@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="afterpay_load_error_title" translatable="false">Error</string>
-    <string name="afterpay_load_error_retry" translatable="false">Retry</string>
-    <string name="afterpay_load_error_cancel" translatable="false">Cancel</string>
-    <string name="afterpay_load_error_message" translatable="false">Failed to load %1$s checkout</string>
+    <string name="afterpay_load_error_title">Error</string>
+    <string name="afterpay_load_error_retry">Retry</string>
+    <string name="afterpay_load_error_cancel">Cancel</string>
+    <string name="afterpay_load_error_message">Failed to load %1$s checkout</string>
 
     <!--  Price breakdown templates: Available  -->
     <string name="afterpay_price_breakdown_available_no_optional" translatable="true">%1$s 4 payments of %2$s</string>
@@ -18,11 +18,11 @@
     <string name="afterpay_price_breakdown_limit" translatable="true">available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description" translatable="true">%1$s available for orders between %2$s – %3$s</string>
     <!--  Price breakdown templates: No config  -->
-    <string name="afterpay_price_breakdown_no_configuration" translatable="false">or pay with</string>
-    <string name="afterpay_price_breakdown_no_configuration_description" translatable="false">Or pay with %1$s</string>
+    <string name="afterpay_price_breakdown_no_configuration">or pay with</string>
+    <string name="afterpay_price_breakdown_no_configuration_description">Or pay with %1$s</string>
 
     <!--  More info  -->
-    <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
+    <string name="afterpay_price_breakdown_info_link">Info</string>
 
     <!--  Intro Text Options  -->
     <string name="afterpay_price_breakdown_intro_empty" translatable="false"></string>
