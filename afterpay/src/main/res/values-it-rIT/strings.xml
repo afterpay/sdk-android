@@ -20,4 +20,12 @@
     <string name="afterpay_price_breakdown_intro_pay_in">paga in</string>
     <string name="afterpay_price_breakdown_intro_make_title">Scegli</string>
     <string name="afterpay_price_breakdown_intro_make">scegli</string>
+    <string name="afterpay_price_breakdown_no_configuration_description">O paga con %1$s</string>
+    <string name="afterpay_price_breakdown_info_link">Informazione</string>
+    <string name="afterpay_price_breakdown_no_configuration">o paga con</string>
+    <string name="afterpay_load_error_title">Errore</string>
+    <string name="afterpay_load_error_retry">Riprovare</string>
+    <string name="afterpay_load_error_cancel">Annulla</string>
+    <string name="afterpay_load_error_message">Impossibile caricare il cassa di %1$s</string>
+    <string name="afterpay_payment_button_content_description">Paga ora con %1$s</string>
 </resources>

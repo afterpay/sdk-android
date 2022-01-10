@@ -24,4 +24,12 @@
     <string name="afterpay_price_breakdown_intro_or" translatable="true">ou</string>
     <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="true">Payez en</string>
     <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">payez en</string>
+    <string name="afterpay_price_breakdown_no_configuration_description">Ou payer avec %1$s</string>
+    <string name="afterpay_price_breakdown_info_link">Information</string>
+    <string name="afterpay_price_breakdown_no_configuration">ou payer avec</string>
+    <string name="afterpay_load_error_title">Erreur</string>
+    <string name="afterpay_load_error_retry">Retenter</string>
+    <string name="afterpay_load_error_cancel">Annuler</string>
+    <string name="afterpay_load_error_message">Échec du chargement de la caisse %1$s</string>
+    <string name="afterpay_payment_button_content_description">Payez maintenant avec %1$s</string>
 </resources>

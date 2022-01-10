@@ -37,5 +37,5 @@
     <string name="afterpay_price_breakdown_intro_pay_in_title" translatable="true">Pay in</string>
     <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">pay in</string>
 
-    <string name="afterpay_payment_button_content_description" translatable="false">Pay now with %1$s</string>
+    <string name="afterpay_payment_button_content_description">Pay now with %1$s</string>
 </resources>

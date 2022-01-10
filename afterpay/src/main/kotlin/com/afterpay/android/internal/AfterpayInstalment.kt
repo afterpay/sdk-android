@@ -20,7 +20,7 @@ internal sealed class AfterpayInstalment {
     object NoConfiguration : AfterpayInstalment()
 
     companion object {
-        fun of(totalCost: BigDecimal, configuration: Configuration?, locale: Locale): AfterpayInstalment {
+        fun of(totalCost: BigDecimal, configuration: Configuration?, clientLocale: Locale): AfterpayInstalment {
             if (configuration == null) {
                 return NoConfiguration
             }
@@ -35,18 +35,18 @@ internal sealed class AfterpayInstalment {
                 else -> Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
             }
 
-            val localCurrency = Currency.getInstance(locale)
+            val localCurrency = Currency.getInstance(clientLocale)
             val currencySymbol = configuration.currency.getSymbol(currencyLocale)
 
             val usCurrencySymbol = Currency.getInstance(Locales.EN_US).getSymbol(Locales.EN_US)
             val gbCurrencySymbol = Currency.getInstance(Locales.EN_GB).getSymbol(Locales.EN_GB)
             val euCurrencySymbol = Currency.getInstance(Locales.FR_FR).getSymbol(Locales.FR_FR)
 
-            val currencyFormatter = (NumberFormat.getCurrencyInstance(locale) as DecimalFormat).apply {
+            val currencyFormatter = (NumberFormat.getCurrencyInstance(clientLocale) as DecimalFormat).apply {
                 this.currency = configuration.currency
             }
 
-            if (locale == Locales.EN_US) {
+            if (clientLocale == Locales.EN_US) {
                 currencyFormatter.apply {
                     when (currencySymbol) {
                         euCurrencySymbol -> this.applyPattern("#,##0.00¤")
