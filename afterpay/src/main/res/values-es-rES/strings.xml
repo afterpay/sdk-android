@@ -20,4 +20,12 @@
     <string name="afterpay_price_breakdown_intro_pay_in">paga en</string>
     <string name="afterpay_price_breakdown_intro_make_title">Haga</string>
     <string name="afterpay_price_breakdown_intro_make">haga</string>
+    <string name="afterpay_price_breakdown_no_configuration_description">O pagar con %1$s</string>
+    <string name="afterpay_price_breakdown_info_link">Información</string>
+    <string name="afterpay_price_breakdown_no_configuration">o pagar con</string>
+    <string name="afterpay_load_error_title">Error</string>
+    <string name="afterpay_load_error_retry">Volver a intentar</string>
+    <string name="afterpay_load_error_cancel">Cancelar</string>
+    <string name="afterpay_load_error_message">Imposible cargar la página de pago de %1$s</string>
+    <string name="afterpay_payment_button_content_description">Pagar ahora con %1$s</string>
 </resources>
