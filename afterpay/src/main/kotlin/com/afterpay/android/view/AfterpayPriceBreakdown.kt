@@ -170,26 +170,30 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
         is AfterpayInstalment.Available -> {
-            val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
-                AfterpayOptionalText.INTEREST_FREE_AND_WITH
-            } else if (showInterestFreeText) {
-                AfterpayOptionalText.INTEREST_FREE
-            } else if (showWithText) {
-                AfterpayOptionalText.WITH
-            } else {
-                AfterpayOptionalText.NONE
+            val withText: String = when {
+                showWithText -> resources.getString(R.string.afterpay_price_breakdown_with)
+                else -> ""
+            }
+
+            val interestFreeText: String = when {
+                showInterestFreeText -> resources.getString(R.string.afterpay_price_breakdown_interest_free)
+                else -> ""
             }
 
             Content(
                 text = String.format(
-                    resources.getString(template.textResourceID),
+                    resources.getString(R.string.afterpay_price_breakdown_available),
                     resources.getString(introText.resourceID),
-                    afterpay.instalmentAmount
+                    interestFreeText,
+                    afterpay.instalmentAmount,
+                    withText
                 ).trim(),
                 description = String.format(
-                    resources.getString(template.descriptionResourceId),
+                    resources.getString(R.string.afterpay_price_breakdown_available_description),
                     resources.getString(introText.resourceID),
+                    interestFreeText,
                     afterpay.instalmentAmount,
+                    withText,
                     resources.getString(Afterpay.brand.description)
                 ).trim()
             )

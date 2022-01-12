@@ -4,16 +4,6 @@
     <string name="afterpay_load_error_retry">Retry</string>
     <string name="afterpay_load_error_cancel">Cancel</string>
     <string name="afterpay_load_error_message">Failed to load %1$s checkout</string>
-
-    <!--  Price breakdown templates: Available  -->
-    <string name="afterpay_price_breakdown_available_no_optional" translatable="true">%1$s 4 payments of %2$s</string>
-    <string name="afterpay_price_breakdown_available_no_optional_description" translatable="true">%1$s four payments of %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest" translatable="true">%1$s 4 interest-free payments of %2$s</string>
-    <string name="afterpay_price_breakdown_available_interest_description" translatable="true">%1$s four interest free payments of %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_with" translatable="true">%1$s 4 payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_available_with_description" translatable="true">%1$s four payments of %2$s with %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with" translatable="true">%1$s 4 interest-free payments of %2$s with</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with_description" translatable="true">%1$s four interest free payments of %2$s with %3$s</string>
     <!--  Price breakdown templates: Outside limits  -->
     <string name="afterpay_price_breakdown_limit" translatable="true">available for orders between %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description" translatable="true">%1$s available for orders between %2$s – %3$s</string>
@@ -38,4 +28,8 @@
     <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">pay in</string>
 
     <string name="afterpay_payment_button_content_description">Pay now with %1$s</string>
+    <string name="afterpay_price_breakdown_available">%1$s 4 %2$spayments of %3$s %4$s</string>
+    <string name="afterpay_price_breakdown_with">"with "</string>
+    <string name="afterpay_price_breakdown_interest_free">"interest-free "</string>
+    <string name="afterpay_price_breakdown_available_description">%1$s 4 %2$spayments of %3$s %4$s%5$s</string>
 </resources>

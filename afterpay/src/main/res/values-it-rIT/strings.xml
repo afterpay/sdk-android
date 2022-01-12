@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="afterpay_price_breakdown_available_interest_and_with">%1$s 4 rate senza interessi da %2$s con</string>
-    <string name="afterpay_price_breakdown_available_interest_and_with_description">%1$s quattro rate senza interessi da %2$s con %3$s</string>
-    <string name="afterpay_price_breakdown_available_with">%1$s 4 rate da %2$s con</string>
-    <string name="afterpay_price_breakdown_available_with_description">%1$s quattro rate da %2$s con %3$s</string>
-    <string name="afterpay_price_breakdown_available_interest">%1$s 4 rate senza interessi da %2$s</string>
-    <string name="afterpay_price_breakdown_available_interest_description">%1$s quattro rate senza interessi da %2$s %3$s</string>
-    <string name="afterpay_price_breakdown_available_no_optional">%1$s 4 rate da %2$s con</string>
-    <string name="afterpay_price_breakdown_available_no_optional_description">%1$s quattro rate da %2$s con %3$s</string>
     <string name="afterpay_price_breakdown_limit">disponibile per importi fra %1$s – %2$s</string>
     <string name="afterpay_price_breakdown_limit_description">%1$s disponibile per importi fra %2$s – %3$s</string>
     <string name="afterpay_price_breakdown_intro_or_title">O</string>
@@ -28,4 +20,8 @@
     <string name="afterpay_load_error_cancel">Annulla</string>
     <string name="afterpay_load_error_message">Impossibile caricare il cassa di %1$s</string>
     <string name="afterpay_payment_button_content_description">Paga ora con %1$s</string>
+    <string name="afterpay_price_breakdown_available">%1$s 4 rate %2$sda %3$s %4$s</string>
+    <string name="afterpay_price_breakdown_with">"con "</string>
+    <string name="afterpay_price_breakdown_available_description">%1$s 4 rate %2$sda %3$s %4$s%5$s</string>
+    <string name="afterpay_price_breakdown_interest_free">"senza interessi "</string>
 </resources>
