@@ -46,7 +46,7 @@ class CheckoutFragment : Fragment() {
     private val checkoutHandler = CheckoutHandler(
         onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
         onShippingAddressDidChange = { viewModel.selectAddress(it) },
-        onShippingOptionDidChange = { }
+        onShippingOptionDidChange = { viewModel.selectShippingOption(it) }
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,6 +142,10 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideShippingOptionsResult ->
                         checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
+                    is Command.ProvideShippingOptionUpdateResult ->
+                        checkoutHandler.provideShippingOptionUpdateResult(
+                            command.shippingOptionUpdateResult
+                        )
                 }
             }
         }

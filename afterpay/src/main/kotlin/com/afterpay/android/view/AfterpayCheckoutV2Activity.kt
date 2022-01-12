@@ -144,7 +144,12 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     private fun errorAlert(retryAction: () -> Unit) =
         AlertDialog.Builder(this)
             .setTitle(R.string.afterpay_load_error_title)
-            .setMessage(R.string.afterpay_load_error_message)
+            .setMessage(
+                String.format(
+                    resources.getString(R.string.afterpay_load_error_message),
+                    resources.getString(Afterpay.brand.title)
+                )
+            )
             .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
                 retryAction()
                 dialog.dismiss()
@@ -312,7 +317,18 @@ private class BootstrapJavascriptInterface(
                             }
                     }
 
-                    is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload)
+                    is ShippingOptionMessage -> handler.shippingOptionDidChange(message.payload) {
+                        AfterpayCheckoutMessage
+                            .fromShippingOptionUpdateResult(it, message.meta)
+                            .let { result ->
+                                "postMessageToCheckout('${json.encodeToString(result)}');"
+                            }
+                            .also { javascript ->
+                                activity.runOnUiThread {
+                                    webView.evaluateJavascript(javascript, null)
+                                }
+                            }
+                    }
 
                     else -> Unit
                 }

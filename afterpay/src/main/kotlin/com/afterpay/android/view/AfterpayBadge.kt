@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.use
+import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.dp
@@ -23,7 +24,7 @@ class AfterpayBadge @JvmOverloads constructor(
         }
 
     init {
-        contentDescription = resources.getString(R.string.afterpay_badge_content_description)
+        contentDescription = resources.getString(Afterpay.brand.title)
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         isFocusable = true
         scaleType = FIT_CENTER
@@ -43,7 +44,7 @@ class AfterpayBadge @JvmOverloads constructor(
     private fun update() {
         setImageDrawable(
             context.coloredDrawable(
-                drawableResId = R.drawable.afterpay_badge_fg,
+                drawableResId = Afterpay.brand.badgeForeground,
                 colorResId = colorScheme.foregroundColorResId
             )
         )

@@ -59,7 +59,8 @@ internal sealed class AfterpayInstalment {
                 )
             }
 
-            val instalment = (totalCost / 4.toBigDecimal()).setScale(2, RoundingMode.HALF_EVEN)
+            val numberOfInstalments = 4.toBigDecimal()
+            val instalment = totalCost.divide(numberOfInstalments, 2, RoundingMode.HALF_EVEN)
             return Available(instalmentAmount = currencyFormatter.format(instalment))
         }
     }

@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import com.afterpay.android.internal.ApiV3
 import com.afterpay.android.internal.CheckoutV3
+import com.afterpay.android.model.CheckoutV3Tokens
+import com.afterpay.android.model.Configuration
+import com.afterpay.android.internal.Brand
 import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
@@ -18,8 +21,6 @@ import com.afterpay.android.model.CheckoutV3Configuration
 import com.afterpay.android.model.CheckoutV3Consumer
 import com.afterpay.android.model.CheckoutV3Data
 import com.afterpay.android.model.CheckoutV3Item
-import com.afterpay.android.model.CheckoutV3Tokens
-import com.afterpay.android.model.Configuration
 import com.afterpay.android.model.MerchantConfigurationV3
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayCheckoutActivity
@@ -46,6 +47,9 @@ object Afterpay {
 
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
+
+    internal val brand: Brand
+        get() = Brand.forLocale(locale)
 
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set

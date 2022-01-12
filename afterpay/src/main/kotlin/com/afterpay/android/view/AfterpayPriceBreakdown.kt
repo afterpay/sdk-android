@@ -22,7 +22,6 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
-import java.util.Locale
 import java.util.Observer
 
 class AfterpayPriceBreakdown @JvmOverloads constructor(
@@ -47,6 +46,24 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
+    var introText: AfterpayIntroText = AfterpayIntroText.DEFAULT
+        set(value) {
+            field = value
+            updateText()
+        }
+
+    var showWithText: Boolean = true
+        set(value) {
+            field = value
+            updateText()
+        }
+
+    var showInterestFreeText: Boolean = true
+        set(value) {
+            field = value
+            updateText()
+        }
+
     private val textView: TextView = TextView(context).apply {
         setTextColor(context.resolveColorAttr(android.R.attr.textColorPrimary))
         setLinkTextColor(context.resolveColorAttr(android.R.attr.textColorSecondary))
@@ -60,8 +77,8 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     // The terms and conditions are tied to the configured locale on the configuration
     private val infoUrl: String
         get() {
-            val country = Afterpay.locale.country.toLowerCase(Locale.ROOT)
-            return "https://static-us.afterpay.com/javascript/modal/${country}_rebrand_modal.html"
+            val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
+            return "https://static.afterpay.com/modal/$locale.html"
         }
 
     init {
@@ -106,7 +123,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 ),
 
                 context.coloredDrawable(
-                    drawableResId = R.drawable.afterpay_badge_fg,
+                    drawableResId = Afterpay.brand.badgeForeground,
                     colorResId = colorScheme.foregroundColorResId
                 )
             )
@@ -125,7 +142,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             text = SpannableStringBuilder().apply {
                 if (instalment is AfterpayInstalment.NotAvailable) {
                     append(
-                        context.getString(R.string.afterpay_service_name),
+                        context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -135,7 +152,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(content.text)
                     append(" ")
                     append(
-                        context.getString(R.string.afterpay_service_name),
+                        context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -152,17 +169,31 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
-        is AfterpayInstalment.Available ->
+        is AfterpayInstalment.Available -> {
+            val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showInterestFreeText) {
+                AfterpayOptionalText.INTEREST_FREE_AND_WITH
+            } else if (showWithText) {
+                AfterpayOptionalText.WITH
+            } else {
+                AfterpayOptionalText.NONE
+            }
+
             Content(
                 text = String.format(
-                    resources.getString(R.string.afterpay_price_breakdown_total_cost),
+                    resources.getString(template.textResourceID),
+                    resources.getString(introText.resourceID),
                     afterpay.instalmentAmount
-                ),
+                ).trim(),
                 description = String.format(
-                    resources.getString(R.string.afterpay_price_breakdown_total_cost_description),
-                    afterpay.instalmentAmount
-                )
+                    resources.getString(template.descriptionResourceId),
+                    resources.getString(introText.resourceID),
+                    afterpay.instalmentAmount,
+                    resources.getString(Afterpay.brand.description)
+                ).trim()
             )
+        }
         is AfterpayInstalment.NotAvailable ->
             if (afterpay.minimumAmount != null)
                 Content(
@@ -173,6 +204,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     ),
                     description = String.format(
                         resources.getString(R.string.afterpay_price_breakdown_limit_description),
+                        resources.getString(Afterpay.brand.description),
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
                     )
@@ -185,13 +217,17 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     ),
                     description = String.format(
                         resources.getString(R.string.afterpay_price_breakdown_upper_limit_description),
+                        resources.getString(Afterpay.brand.description),
                         afterpay.maximumAmount
                     )
                 )
         AfterpayInstalment.NoConfiguration ->
             Content(
                 text = resources.getString(R.string.afterpay_price_breakdown_no_configuration),
-                description = resources.getString(R.string.afterpay_price_breakdown_no_configuration_description)
+                description = String.format(
+                    resources.getString(R.string.afterpay_price_breakdown_no_configuration_description),
+                    resources.getString(Afterpay.brand.description)
+                )
             )
     }
 }
