@@ -1,7 +1,7 @@
 package com.afterpay.android
 
-import android.os.Parcelable
 import android.os.Parcel
+import android.os.Parcelable
 
 data class AfterpayCheckoutV2Options(
     val pickup: Boolean? = null,
