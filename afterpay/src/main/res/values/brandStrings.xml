@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="afterpay_service_name" translatable="false">Afterpay</string>
+    <string name="clearpay_service_name" translatable="false">Clearpay</string>
+
+    <string name="afterpay_service_name_description" translatable="false">After pay</string>
+    <string name="clearpay_service_name_description" translatable="false">Clear pay</string>
+</resources>

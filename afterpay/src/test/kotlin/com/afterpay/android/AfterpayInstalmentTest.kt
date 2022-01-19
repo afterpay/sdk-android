@@ -17,6 +17,7 @@ class AfterpayInstalmentTest {
     private val unitedStatesDollar: Currency = Currency.getInstance("USD")
 
     private val oneHundredAndTwenty = 120.toBigDecimal()
+    private val oneHundredAndTwentyOne = 121.toBigDecimal()
 
     @Test
     fun `available instalment in Australia locale`() {
@@ -101,6 +102,31 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", gbpInstalment.instalmentAmount)
         assertEquals("NZ$30.00", nzdInstalment.instalmentAmount)
         assertEquals("$30.00", usdInstalment.instalmentAmount)
+    }
+
+    /**
+     * This test was added because when using the / character to divide a BigDecimal
+     * it uses the BigDecimal.div extension
+     *
+     * see here: https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/java.math.-big-decimal/div.html
+     *
+     * Relevant section is: The scale of the result is the same as the scale of this (divident)
+     */
+    @Test
+    fun `available instalment when amount is round and odd`() {
+        val locale = Locales.AUSTRALIA
+
+        val audInstalment = availableInstalment(oneHundredAndTwentyOne, australianDollar, locale)
+        val cadInstalment = availableInstalment(oneHundredAndTwentyOne, canadianDollar, locale)
+        val gbpInstalment = availableInstalment(oneHundredAndTwentyOne, poundSterling, locale)
+        val nzdInstalment = availableInstalment(oneHundredAndTwentyOne, newZealandDollar, locale)
+        val usdInstalment = availableInstalment(oneHundredAndTwentyOne, unitedStatesDollar, locale)
+
+        assertEquals("$30.25", audInstalment.instalmentAmount)
+        assertEquals("$30.25 CAD", cadInstalment.instalmentAmount)
+        assertEquals("£30.25", gbpInstalment.instalmentAmount)
+        assertEquals("$30.25 NZD", nzdInstalment.instalmentAmount)
+        assertEquals("$30.25 USD", usdInstalment.instalmentAmount)
     }
 
     private fun availableInstalment(

@@ -3,6 +3,7 @@ package com.afterpay.android
 import android.content.Context
 import android.content.Intent
 import com.afterpay.android.internal.ApiV3
+import com.afterpay.android.internal.Brand
 import com.afterpay.android.internal.CheckoutV3
 import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
@@ -46,6 +47,9 @@ object Afterpay {
 
     internal val locale: Locale
         get() = configuration?.locale ?: Locales.US
+
+    internal val brand: Brand
+        get() = Brand.forLocale(locale)
 
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
