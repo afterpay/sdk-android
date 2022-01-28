@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afterpay.android.view.AfterpayIntroText
 import com.afterpay.android.view.AfterpayModalTheme
-import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.afterpay.android.view.AfterpayMoreInfoOptions
+import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.example.afterpay.R
 import com.example.afterpay.data.Product
 import com.example.afterpay.nav_graph
