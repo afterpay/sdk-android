@@ -64,7 +64,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
-    var moreInfoOptions: MoreInfoOptions = MoreInfoOptions()
+    var moreInfoOptions: AfterpayMoreInfoOptions = AfterpayMoreInfoOptions()
         set(value) {
             field = value
             updateText()

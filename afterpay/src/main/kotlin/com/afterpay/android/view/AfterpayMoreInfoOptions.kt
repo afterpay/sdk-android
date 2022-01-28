@@ -2,7 +2,7 @@ package com.afterpay.android.view
 
 import com.afterpay.android.Afterpay
 
-class MoreInfoOptions(
+class AfterpayMoreInfoOptions(
     var modalTheme: AfterpayModalTheme = AfterpayModalTheme.DEFAULT,
     var modalId: String? = null
 ) {
