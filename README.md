@@ -345,7 +345,7 @@ Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. Thi
 - `isCBT`: a `boolean` to indicate if the modal should show the CBT details in the modal
 
 **Notes**
-If both `modalId` and `modalTheme` are set, `modalId` takes precedence.
+If both `modalId` is set `modalTheme` and `isCBT` are ignored.
 Not all combinations of Locales and CBT are available.
 
 ```kotlin
