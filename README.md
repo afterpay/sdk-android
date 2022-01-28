@@ -341,7 +341,7 @@ Given the above, the price breakdown text will be rendered `Make 4 interest-free
 ##### More Info Options
 Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class takes three parameters:
 - `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
-- `modalTheme`: an enum of type `AfterpayModalTheme` withe the following options: `DEFAULT`, `DEFAULT_CBT`, `WHITE` and `WHITE_CBT`.
+- `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `DEFAULT`, `DEFAULT_CBT`, `WHITE` and `WHITE_CBT`.
 - `isCBT`: a `boolean` to indicate if the modal should show the CBT details in the modal
 
 **Notes**
