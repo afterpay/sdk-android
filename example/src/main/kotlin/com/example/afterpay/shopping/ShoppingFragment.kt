@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afterpay.android.view.AfterpayIntroText
 import com.afterpay.android.view.AfterpayModalTheme
 import com.afterpay.android.view.AfterpayPriceBreakdown
+import com.afterpay.android.view.MoreInfoOptions
 import com.example.afterpay.R
 import com.example.afterpay.data.Product
 import com.example.afterpay.nav_graph
@@ -66,7 +67,9 @@ class ShoppingFragment : Fragment() {
         val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
         afterpayBreakdown.introText = AfterpayIntroText.PAY_IN
         afterpayBreakdown.showInterestFreeText = false
-        afterpayBreakdown.modalTheme = AfterpayModalTheme.WHITE_CBT
+        afterpayBreakdown.moreInfoOptions = MoreInfoOptions(
+            modalTheme = AfterpayModalTheme.WHITE_CBT
+        )
 
         lifecycleScope.launchWhenCreated {
             viewModel.state.collectLatest { state ->
