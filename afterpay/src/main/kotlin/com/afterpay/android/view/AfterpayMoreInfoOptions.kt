@@ -3,16 +3,19 @@ package com.afterpay.android.view
 import com.afterpay.android.Afterpay
 
 class AfterpayMoreInfoOptions(
-    var modalTheme: AfterpayModalTheme = AfterpayModalTheme.DEFAULT,
-    var modalId: String? = null
+    var modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
+    var modalId: String? = null,
+    var isCBT: Boolean = false
 ) {
-
-    fun modalFile() : String {
+    internal fun modalFile() : String {
         modalId?.let {
             return "$it.html"
         }
 
         val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
-        return "$locale${modalTheme.slug}.html"
+        val cbt = if(isCBT) "-cbt" else ""
+        val theme = modalTheme.slug
+
+        return "$locale$theme$cbt.html"
     }
 }
