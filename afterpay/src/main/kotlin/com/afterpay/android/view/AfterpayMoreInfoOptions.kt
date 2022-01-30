@@ -5,7 +5,7 @@ import com.afterpay.android.Afterpay
 class AfterpayMoreInfoOptions(
     var modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
     var modalId: String? = null,
-    var isCBT: Boolean = false
+    var isCbtEnabled: Boolean = false
 ) {
     internal fun modalFile(): String {
         modalId?.let {
@@ -13,7 +13,7 @@ class AfterpayMoreInfoOptions(
         }
 
         val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
-        val cbt = if (isCBT) "-cbt" else ""
+        val cbt = if (isCbtEnabled) "-cbt" else ""
         val theme = modalTheme.slug
 
         return "$locale$theme$cbt.html"

@@ -342,10 +342,10 @@ Given the above, the price breakdown text will be rendered `Make 4 interest-free
 Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class takes three parameters:
 - `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
 - `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `MINT` (default) and `WHITE`.
-- `isCBT`: a `boolean` to indicate if the modal should show the CBT details in the modal
+- `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
 
 **Notes**
-If both `modalId` is set `modalTheme` and `isCBT` are ignored.
+If both `modalId` is set `modalTheme` and `isCbtEnabled` are ignored.
 Not all combinations of Locales and CBT are available.
 
 ```kotlin
