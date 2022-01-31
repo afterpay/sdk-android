@@ -348,7 +348,7 @@ The second takes two parameters:
 - `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
 
 **Notes**
-If both `modalId` is set `modalTheme` and `isCbtEnabled` are ignored.
+If `modalId` is set, both `modalTheme` and `isCbtEnabled` are ignored.
 Not all combinations of Locales and CBT are available.
 
 ```kotlin
