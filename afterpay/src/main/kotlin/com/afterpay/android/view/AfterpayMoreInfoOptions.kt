@@ -2,22 +2,37 @@ package com.afterpay.android.view
 
 import com.afterpay.android.Afterpay
 
-/**
- * Setting up options for the more info link in AfterpayPriceBreakdown
- *
- * **Notes:**
- * - If both `modalId` is set, `modalTheme` and `isCbtEnabled` are ignored.
- * - Not all combinations of Locales and CBT are available.
- *
- * @param modalId the filename of a modal hosted on Afterpay static
- * @param modalTheme the color theme used when displaying the modal
- * @param isCbtEnabled whether to show the Cross Border Trade details in the modal
- */
-class AfterpayMoreInfoOptions(
-    var modalId: String? = null,
-    var modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
-    var isCbtEnabled: Boolean = false
-) {
+class AfterpayMoreInfoOptions {
+    private var modalId: String? = null
+    private var modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT
+    private var isCbtEnabled: Boolean = false
+
+    /**
+     * Set up options for the more info link in AfterpayPriceBreakdown
+     *
+     * @param modalId the filename of a modal hosted on Afterpay static
+     */
+    constructor(modalId: String) {
+        this.modalId = modalId
+    }
+
+    /**
+     * Set up options for the more info link in AfterpayPriceBreakdown
+     *
+     * **Notes:**
+     * - Not all combinations of Locales and CBT are available.
+     *
+     * @param modalTheme the color theme used when displaying the modal
+     * @param isCbtEnabled whether to show the Cross Border Trade details in the modal
+     */
+    constructor(
+        modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
+        isCbtEnabled: Boolean = false
+    ) {
+        this.modalTheme = modalTheme
+        this.isCbtEnabled = isCbtEnabled
+    }
+
     internal fun modalFile(): String {
         modalId?.let {
             return "$it.html"

@@ -339,8 +339,11 @@ afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
 Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.##`
 
 ##### More Info Options
-Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class takes three parameters:
+Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class has two constructors.
+The first takes a single parameter:
 - `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
+
+The second takes two parameters:
 - `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `MINT` (default) and `WHITE`.
 - `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
 
