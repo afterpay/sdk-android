@@ -38,7 +38,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ```gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:3.1.0'
+    implementation 'com.afterpay:afterpay-android:3.2.0'
 }
 ```
 
@@ -121,7 +121,7 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options. 
+Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
 
 > When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here](https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28). See the [API reference][express-checkout] for more details! Failing to do so will cause undefined behavior.
 
@@ -266,7 +266,7 @@ class ReceiptFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // ...
-        
+
         view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
             .init(token, ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
     }
@@ -404,6 +404,27 @@ afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
 ```
 
 Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.##`
+
+##### More Info Options
+Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class has two constructors.
+The first takes a single parameter:
+- `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
+
+The second takes two parameters:
+- `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `MINT` (default) and `WHITE`.
+- `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
+
+**Note**
+Not all combinations of Locales and CBT are available.
+
+```kotlin
+val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
+afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
+    modalTheme = AfterpayModalTheme.WHITE
+)
+```
+
+Given the above, when clicking the more info "link", the modal that opens will be white in the current locale as set in configuration.
 
 ## Security
 
