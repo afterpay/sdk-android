@@ -135,12 +135,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 )
             )
         )
-        .apply {
-            val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
-            val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
-            val drawableWidth = drawableHeight * aspectRatio
-            setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
-        }
+            .apply {
+                val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
+                val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
+                val drawableWidth = drawableHeight * aspectRatio
+                setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
+            }
 
         val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
         val content = generateContent(instalment)
@@ -175,12 +175,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
                 } else if (linkStyle.text != null) {
-                        append(" ")
-                        append(
-                            resources.getString(linkStyle.text),
-                            AfterpayInfoSpan(infoUrl, linkStyle.underlined),
-                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-                        )
+                    append(" ")
+                    append(
+                        resources.getString(linkStyle.text),
+                        AfterpayInfoSpan(infoUrl, linkStyle.underlined),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
                 } else if (linkStyle.image != null && linkStyle.imageRenderingMode != null) {
                     append(" ")
 

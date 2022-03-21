@@ -8,7 +8,7 @@ import android.view.View
 internal class AfterpayInfoSpan(url: String) : URLSpan(url) {
     private var underlined: Boolean = true
 
-    constructor(url:String, underlined: Boolean) : this(url) {
+    constructor(url: String, underlined: Boolean) : this(url) {
         this.underlined = underlined
     }
 
