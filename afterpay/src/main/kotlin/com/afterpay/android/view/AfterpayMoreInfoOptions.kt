@@ -15,7 +15,8 @@ class AfterpayMoreInfoOptions {
      */
     constructor(
         modalId: String,
-        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT) {
+        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT
+    ) {
         this.modalId = modalId
         this.modalLinkStyle = modalLinkStyle
     }
