@@ -340,12 +340,14 @@ Given the above, the price breakdown text will be rendered `Make 4 interest-free
 
 ##### More Info Options
 Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class has two constructors.
-The first takes a single parameter:
+The first constructor takes two parameters:
 - `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
+- `modalLinkStyle`: an optional value of type `ModalLinkStyle`. See [Modal Link Style Options](#modal-link-style-options) for more details.
 
-The second takes two parameters:
+The second constructor takes three parameters:
 - `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `MINT` (default) and `WHITE`.
 - `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
+- `modalLinkStyle`: an optional value of type `ModalLinkStyle`. See [Modal Link Style Options](#modal-link-style-options) for more details.
 
 **Note**
 Not all combinations of Locales and CBT are available.
@@ -358,6 +360,37 @@ afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
 ```
 
 Given the above, when clicking the more info "link", the modal that opens will be white in the current locale as set in configuration.
+
+###### Modal Link Style Options
+A value that can be set on `moreInfoOptions` when initialised. Setting this is optional and is of type `ModalLinkStyle`.
+
+Available values are `CircledInfoIcon`, `MoreInfoText`, `LearnMoreText`, `CircledQuestionIcon`, `CircledLogo`, `Custom`, `None`.
+`CircledInfoIcon` is the default & `None` will remove the link all together.
+
+When using `Custom` the `setContent` (takes a single paramater of type `SpannableStringBuilder`) method should be called first (see second example below).
+
+```kotlin
+val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
+afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
+    modalLinkStyle  = AfterpayModalLinkStyle.CircledInfoIcon
+)
+```
+
+Given the above, the price breakdown modal link will be a circle containing a question mark.
+
+```kotlin
+val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
+val content = SpannableStringBuilder().apply {
+    append("Click ")
+    append("Here ", StyleSpan(Typeface.BOLD), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+}
+AfterpayModalLinkStyle.Custom.setContent(content)
+afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
+    modalLinkStyle  = AfterpayModalLinkStyle.Custom
+)
+```
+
+Given the above, the price breakdown modal link will be display "Click Here".
 
 ## Security
 

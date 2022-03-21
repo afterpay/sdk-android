@@ -10,9 +10,11 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.use
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
@@ -133,12 +135,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 )
             )
         )
-            .apply {
-                val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
-                val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
-                val drawableWidth = drawableHeight * aspectRatio
-                setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
-            }
+        .apply {
+            val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
+            val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
+            val drawableWidth = drawableHeight * aspectRatio
+            setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
+        }
 
         val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
         val content = generateContent(instalment)
@@ -162,12 +164,66 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
                 }
-                append(" ")
-                append(
-                    resources.getString(R.string.afterpay_price_breakdown_info_link),
-                    AfterpayInfoSpan(infoUrl),
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-                )
+
+                val linkStyle = moreInfoOptions.modalLinkStyle.config
+
+                if (linkStyle.customContent != null) {
+                    append(" ")
+                    append(
+                        linkStyle.customContent,
+                        AfterpayInfoSpan(infoUrl, false),
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
+                } else if (linkStyle.text != null) {
+                        append(" ")
+                        append(
+                            resources.getString(linkStyle.text),
+                            AfterpayInfoSpan(infoUrl, linkStyle.underlined),
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                } else if (linkStyle.image != null && linkStyle.imageRenderingMode != null) {
+                    append(" ")
+
+                    val imageDrawable = if (linkStyle.imageRenderingMode == AfterpayImageRenderingMode.TEMPLATE) {
+                        val typedValue = TypedValue()
+                        context.theme.resolveAttribute(
+                            android.R.attr.textColorSecondary,
+                            typedValue,
+                            true
+                        )
+
+                        context.coloredDrawable(
+                            drawableResId = linkStyle.image,
+                            colorResId = typedValue.resourceId
+                        )
+                    } else {
+                        ResourcesCompat.getDrawable(resources, linkStyle.image, null)
+                    }
+
+                    if (imageDrawable != null) {
+                        imageDrawable.apply {
+                            val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
+                            val drawableHeight = textView.paint.fontMetrics.run { descent - ascent }
+                            val drawableWidth = drawableHeight * aspectRatio
+                            setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
+                        }
+
+                        val accessibleLinkString =
+                            context.getString(R.string.afterpay_price_breakdown_link_more_info_text)
+                        append(
+                            accessibleLinkString,
+                            CenteredImageSpan(imageDrawable),
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+
+                        setSpan(
+                            AfterpayInfoSpan(infoUrl),
+                            this.length - accessibleLinkString.length,
+                            this.length,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                    }
+                }
             }
             contentDescription = content.description
         }

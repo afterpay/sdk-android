@@ -3,17 +3,21 @@ package com.afterpay.android.view
 import com.afterpay.android.Afterpay
 
 class AfterpayMoreInfoOptions {
-    private var modalId: String? = null
-    private var modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT
-    private var isCbtEnabled: Boolean = false
+    internal var modalId: String? = null
+    internal var modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT
+    internal var modalTheme: AfterpayModalTheme = AfterpayModalTheme.DEFAULT
+    internal var isCbtEnabled: Boolean = false
 
     /**
      * Set up options for the more info link in AfterpayPriceBreakdown
      *
      * @param modalId the filename of a modal hosted on Afterpay static
      */
-    constructor(modalId: String) {
+    constructor(
+        modalId: String,
+        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT) {
         this.modalId = modalId
+        this.modalLinkStyle = modalLinkStyle
     }
 
     /**
@@ -27,10 +31,12 @@ class AfterpayMoreInfoOptions {
      */
     constructor(
         modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
-        isCbtEnabled: Boolean = false
+        isCbtEnabled: Boolean = false,
+        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT
     ) {
         this.modalTheme = modalTheme
         this.isCbtEnabled = isCbtEnabled
+        this.modalLinkStyle = modalLinkStyle
     }
 
     internal fun modalFile(): String {
