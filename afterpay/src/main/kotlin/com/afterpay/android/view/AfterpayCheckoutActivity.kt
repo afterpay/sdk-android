@@ -30,7 +30,9 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             "portal.afterpay.com",
             "portal.sandbox.afterpay.com",
             "portal.clearpay.co.uk",
-            "portal.sandbox.clearpay.co.uk"
+            "portal.sandbox.clearpay.co.uk",
+            "checkout.clearpay.com",
+            "checkout.sandbox.clearpay.com"
         )
     }
 
@@ -47,6 +49,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             setAfterpayUserAgentString()
             settings.javaScriptEnabled = true
             settings.setSupportMultipleWindows(true)
+            settings.setDomStorageEnabled(true)
             webViewClient = AfterpayWebViewClient(
                 receivedError = ::handleError,
                 completed = ::finish
