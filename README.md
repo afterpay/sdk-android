@@ -365,9 +365,9 @@ Given the above, when clicking the more info "link", the modal that opens will b
 A value that can be set on `moreInfoOptions` when initialised. Setting this is optional and is of type `ModalLinkStyle`.
 
 Available values are `CircledInfoIcon`, `MoreInfoText`, `LearnMoreText`, `CircledQuestionIcon`, `CircledLogo`, `Custom`, `None`.
-`CircledInfoIcon` is the default & `None` will remove the link all together.
+`CircledInfoIcon` is the default & `None` will remove the link altogether.
 
-When using `Custom` the `setContent` (takes a single paramater of type `SpannableStringBuilder`) method should be called first (see second example below).
+When using `Custom` the `setContent` (takes a single parameter of type `SpannableStringBuilder`) method should be called first (see second example below).
 
 ```kotlin
 val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
@@ -390,7 +390,7 @@ afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
 )
 ```
 
-Given the above, the price breakdown modal link will be display "Click Here".
+Given the above, the price breakdown modal link will display "Click Here".
 
 ## Security
 
