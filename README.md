@@ -118,7 +118,7 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
-**Note:** v2 Checkout is not available at this time for the following locales: France, Italy, Spain.
+**Note:** Checkout v2 is not available at this time for the following regions: France, Italy, Spain.
 
 Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
 
