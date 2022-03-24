@@ -24,7 +24,9 @@
     <string name="afterpay_price_breakdown_no_configuration_description" translatable="false">Or pay with %1$s</string>
 
     <!--  More info  -->
-    <string name="afterpay_price_breakdown_info_link" translatable="false">Info</string>
+    <string name="afterpay_price_breakdown_link_circled_info_icon" translatable="false">\u24D8</string>
+    <string name="afterpay_price_breakdown_link_more_info_text" translatable="false">More Info</string>
+    <string name="afterpay_price_breakdown_link_learn_more_text" translatable="false">Learn More</string>
 
     <!--  Intro Text Options  -->
     <string name="afterpay_price_breakdown_intro_empty" translatable="false"></string>
