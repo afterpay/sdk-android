@@ -70,7 +70,7 @@ class ShoppingFragment : Fragment() {
         afterpayBreakdown.showInterestFreeText = false
         afterpayBreakdown.showWithText = false
         afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
-            modalLinkStyle = AfterpayModalLinkStyle.None,
+            modalLinkStyle = AfterpayModalLinkStyle.CircledLogo,
             modalTheme = AfterpayModalTheme.WHITE
         )
 

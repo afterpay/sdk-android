@@ -13,7 +13,6 @@
     <string name="afterpay_price_breakdown_intro_pay_in_title">Payez en</string>
     <string name="afterpay_price_breakdown_intro_pay_in">payez en</string>
     <string name="afterpay_price_breakdown_no_configuration_description">Ou payer avec %1$s</string>
-    <string name="afterpay_price_breakdown_info_link">Information</string>
     <string name="afterpay_price_breakdown_no_configuration">ou payer avec</string>
     <string name="afterpay_load_error_title">Erreur</string>
     <string name="afterpay_load_error_retry">Réessayer</string>
@@ -24,4 +23,6 @@
     <string name="afterpay_price_breakdown_with">"avec "</string>
     <string name="afterpay_price_breakdown_interest_free">"sans frais "</string>
     <string name="afterpay_price_breakdown_available_description">%1$s 4 paiements %2$sde %3$s %4$s%5$s</string>
+    <string name="afterpay_price_breakdown_link_learn_more_text">En savoir plus</string>
+    <string name="afterpay_price_breakdown_link_more_info_text">Plus d\'infos</string>
 </resources>

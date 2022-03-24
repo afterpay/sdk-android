@@ -13,7 +13,6 @@
     <string name="afterpay_price_breakdown_intro_make_title">Haga</string>
     <string name="afterpay_price_breakdown_intro_make">haga</string>
     <string name="afterpay_price_breakdown_no_configuration_description">O pagar con %1$s</string>
-    <string name="afterpay_price_breakdown_info_link">Información</string>
     <string name="afterpay_price_breakdown_no_configuration">o pagar con</string>
     <string name="afterpay_load_error_title">Error</string>
     <string name="afterpay_load_error_retry">Volver a intentar</string>
@@ -24,4 +23,6 @@
     <string name="afterpay_price_breakdown_with">"con "</string>
     <string name="afterpay_price_breakdown_interest_free">"sin coste "</string>
     <string name="afterpay_price_breakdown_available_description">%1$s 4 pagos %2$sde %3$s %4$s%5$s</string>
+    <string name="afterpay_price_breakdown_link_learn_more_text">Saber más</string>
+    <string name="afterpay_price_breakdown_link_more_info_text">Más infos</string>
 </resources>
