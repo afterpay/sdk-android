@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.afterpay.android.view.AfterpayIntroText
+import com.afterpay.android.view.AfterpayLogoType
 import com.afterpay.android.view.AfterpayModalLinkStyle
 import com.afterpay.android.view.AfterpayModalTheme
 import com.afterpay.android.view.AfterpayMoreInfoOptions
@@ -67,10 +68,9 @@ class ShoppingFragment : Fragment() {
         val totalCost = view.findViewById<TextView>(R.id.shopping_totalCost)
         val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
         afterpayBreakdown.introText = AfterpayIntroText.EMPTY
-        afterpayBreakdown.showInterestFreeText = false
-        afterpayBreakdown.showWithText = false
+        afterpayBreakdown.logoType = AfterpayLogoType.LOCKUP
         afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
-            modalLinkStyle = AfterpayModalLinkStyle.None,
+            modalLinkStyle = AfterpayModalLinkStyle.CircledInfoIcon,
             modalTheme = AfterpayModalTheme.WHITE
         )
 
