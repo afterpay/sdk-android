@@ -333,7 +333,7 @@ Can be any of `OR`, `OR_TITLE`, `MAKE`, `MAKE_TITLE`, `PAY`, `PAY_TITLE`, `IN`, 
 Intro text will be rendered lowercase unless using an option suffixed with `_TITLE` in which case title case will be rendered.
 
 ##### Logo Type
-Setting `logo` is optional, will default to `BADGE` and must be of type `AfterpayLogoType`.
+Setting `logoType` is optional, will default to `BADGE` and must be of type `AfterpayLogoType`.
 
 Can be either of `BADGE` of `LOCKUP`.
 When setting color scheme on logo type of `LOCKUP`, only the foreground color will be applied. (See example)
