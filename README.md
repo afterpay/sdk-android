@@ -335,7 +335,7 @@ Intro text will be rendered lowercase unless using an option suffixed with `_TIT
 ##### Logo Type
 Setting `logoType` is optional, will default to `BADGE` and must be of type `AfterpayLogoType`.
 
-Can be either of `BADGE` of `LOCKUP`.
+Can be either of `BADGE` or `LOCKUP`.
 When setting color scheme on logo type of `LOCKUP`, only the foreground color will be applied. (See example)
 
 ```kotlin
@@ -344,7 +344,7 @@ afterpayBreakdown.logoType = AfterpayLogoType.LOCKUP
 afterpayBreakdown.colorScheme = AfterpayColorScheme.MINT_ON_BLACK
 ```
 
-Given the above, the price breakdown will contain the lockup logo and will be be of color mint.
+Given the above, the price breakdown will contain the lockup logo and will be of color mint.
 
 ##### Optional Words
 Setting `showInterestFreeText` and / or `showWithText` is optional and is of type `Boolean`.
