@@ -258,6 +258,14 @@ The Afterpay badge can be added to your layout and scaled to suit the needs of y
 ![Black on White badge][badge-black-on-white]
 ![White on Black badge][badge-white-on-black]
 
+### Lockup
+
+The Afterpay lockup can be added to your layout and scaled to suit the needs of your app. Per branding guidelines it requires a minimum width of `64dp`.
+
+![Black Lockup][lockup-black]
+![White Lockup][lockup-white]
+![Mint Lockup][lockup-mint]
+
 **Attributes**
 ```xml
 app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
@@ -323,6 +331,20 @@ Setting `introText` is optional, will default to `OR` and must be of type `After
 
 Can be any of `OR`, `OR_TITLE`, `MAKE`, `MAKE_TITLE`, `PAY`, `PAY_TITLE`, `IN`, `IN_TITLE`, `PAY_IN`, `PAY_IN_TITLE` or `EMPTY` (no intro text).
 Intro text will be rendered lowercase unless using an option suffixed with `_TITLE` in which case title case will be rendered.
+
+##### Logo Type
+Setting `logoType` is optional, will default to `BADGE` and must be of type `AfterpayLogoType`.
+
+Can be either of `BADGE` or `LOCKUP`.
+When setting color scheme on logo type of `LOCKUP`, only the foreground color will be applied. (See example)
+
+```kotlin
+val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayPriceBreakdown)
+afterpayBreakdown.logoType = AfterpayLogoType.LOCKUP
+afterpayBreakdown.colorScheme = AfterpayColorScheme.MINT_ON_BLACK
+```
+
+Given the above, the price breakdown will contain the lockup logo and will be of color mint.
 
 ##### Optional Words
 Setting `showInterestFreeText` and / or `showWithText` is optional and is of type `Boolean`.
@@ -432,6 +454,9 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [badge-mint-on-black]: images/badge_mint_on_black.png
 [badge-black-on-white]: images/badge_black_on_white.png
 [badge-white-on-black]: images/badge_white_on_black.png
+[lockup-black]: images/lockup_black.png
+[lockup-white]: images/lockup_white.png
+[lockup-mint]: images/lockup_mint.png
 [breakdown-available]: images/price_breakdown_available.png
 [breakdown-no-configuration]: images/price_breakdown_no_configuration.png
 [breakdown-unavailable-min-max]: images/price_breakdown_unavailable_min_max.png
