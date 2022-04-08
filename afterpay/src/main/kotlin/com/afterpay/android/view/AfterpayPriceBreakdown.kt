@@ -66,6 +66,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             updateText()
         }
 
+    var logoType: AfterpayLogoType = AfterpayLogoType.DEFAULT
+        set(value) {
+            field = value
+            updateText()
+        }
+
     var moreInfoOptions: AfterpayMoreInfoOptions = AfterpayMoreInfoOptions()
         set(value) {
             field = value
@@ -122,27 +128,8 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun updateText() {
-        val drawable = LayerDrawable(
-            arrayOf(
-                context.coloredDrawable(
-                    drawableResId = R.drawable.afterpay_badge_bg,
-                    colorResId = colorScheme.backgroundColorResId
-                ),
-
-                context.coloredDrawable(
-                    drawableResId = Afterpay.brand.badgeForeground,
-                    colorResId = colorScheme.foregroundColorResId
-                )
-            )
-        )
-            .apply {
-                val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
-                val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * 2.5
-                val drawableWidth = drawableHeight * aspectRatio
-                setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
-            }
-
-        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
+        val drawable: Drawable = generateLogo()
+        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
         val content = generateContent(instalment)
 
         textView.apply {
@@ -230,6 +217,39 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             }
             contentDescription = content.description
         }
+    }
+
+    private fun generateLogo(): Drawable {
+        val drawable = if (logoType === AfterpayLogoType.LOCKUP) {
+            context.coloredDrawable(
+                drawableResId = Afterpay.brand.lockup,
+                colorResId = colorScheme.foregroundColorResId
+            )
+        } else {
+            LayerDrawable(
+                arrayOf(
+                    context.coloredDrawable(
+                        drawableResId = R.drawable.afterpay_badge_bg,
+                        colorResId = colorScheme.backgroundColorResId
+                    ),
+
+                    context.coloredDrawable(
+                        drawableResId = Afterpay.brand.badgeForeground,
+                        colorResId = colorScheme.foregroundColorResId
+                    )
+                )
+            )
+        }
+
+        drawable.apply {
+            val aspectRatio = intrinsicWidth / intrinsicHeight.toFloat()
+            val heightFactor = logoType.fontHeightMultiplier
+            val drawableHeight = textView.paint.fontMetrics.run { descent - ascent } * heightFactor
+            val drawableWidth = drawableHeight * aspectRatio
+            setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
+        }
+
+        return drawable
     }
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
