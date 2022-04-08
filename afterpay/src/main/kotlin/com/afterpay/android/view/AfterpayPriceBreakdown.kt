@@ -129,7 +129,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
     private fun updateText() {
         val drawable: Drawable = generateLogo()
-        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
+        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
         val content = generateContent(instalment)
 
         textView.apply {
