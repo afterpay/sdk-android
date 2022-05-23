@@ -84,9 +84,16 @@ internal sealed class AfterpayInstalment {
                 )
             }
 
-            val numberOfInstalments = 4.toBigDecimal()
+            val numberOfInstalments = numberOfInstalments(configuration.currency).toBigDecimal()
             val instalment = totalCost.divide(numberOfInstalments, 2, RoundingMode.HALF_EVEN)
             return Available(instalmentAmount = currencyFormatter.format(instalment))
+        }
+
+        fun numberOfInstalments(currency: Currency): Int {
+            return when (currency.currencyCode) {
+                "EUR" -> 3
+                else -> 4
+            }
         }
     }
 }

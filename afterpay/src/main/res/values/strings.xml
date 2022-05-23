@@ -30,8 +30,8 @@
     <string name="afterpay_price_breakdown_intro_pay_in" translatable="true">pay in</string>
 
     <string name="afterpay_payment_button_content_description">Pay now with %1$s</string>
-    <string name="afterpay_price_breakdown_available">%1$s 4 %2$spayments of %3$s %4$s</string>
+    <string name="afterpay_price_breakdown_available">%1$s %2$s %3$spayments of %4$s %5$s</string>
     <string name="afterpay_price_breakdown_with">"with "</string>
     <string name="afterpay_price_breakdown_interest_free">"interest-free "</string>
-    <string name="afterpay_price_breakdown_available_description">%1$s 4 %2$spayments of %3$s %4$s%5$s</string>
+    <string name="afterpay_price_breakdown_available_description">%1$s %2$s %3$spayments of %4$s %5$s%6$s</string>
 </resources>

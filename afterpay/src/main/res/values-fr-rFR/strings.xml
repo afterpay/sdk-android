@@ -19,10 +19,10 @@
     <string name="afterpay_load_error_cancel">Annuler</string>
     <string name="afterpay_load_error_message">Échec du chargement de la page de paiement 1%$s</string>
     <string name="afterpay_payment_button_content_description">Payez maintenant avec %1$s</string>
-    <string name="afterpay_price_breakdown_available">%1$s 4 paiements %2$sde %3$s %4$s</string>
+    <string name="afterpay_price_breakdown_available">%1$s %2$s paiements %3$sde %4$s %5$s</string>
     <string name="afterpay_price_breakdown_with">"avec "</string>
     <string name="afterpay_price_breakdown_interest_free">"sans frais "</string>
-    <string name="afterpay_price_breakdown_available_description">%1$s 4 paiements %2$sde %3$s %4$s%5$s</string>
+    <string name="afterpay_price_breakdown_available_description">%1$s %2$s paiements %3$sde %4$s %5$s%6$s</string>
     <string name="afterpay_price_breakdown_link_learn_more_text">En savoir plus</string>
     <string name="afterpay_price_breakdown_link_more_info_text">Plus d\'infos</string>
 </resources>

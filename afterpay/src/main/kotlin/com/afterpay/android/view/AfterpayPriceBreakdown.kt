@@ -264,10 +264,15 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 else -> ""
             }
 
+            val numberOfInstalments: Int = Afterpay.configuration?.let {
+                AfterpayInstalment.numberOfInstalments(it.currency)
+            } ?: 4
+
             Content(
                 text = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_available),
                     resources.getString(introText.resourceID),
+                    numberOfInstalments.toString(),
                     interestFreeText,
                     afterpay.instalmentAmount,
                     withText
@@ -275,6 +280,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 description = String.format(
                     resources.getString(R.string.afterpay_price_breakdown_available_description),
                     resources.getString(introText.resourceID),
+                    numberOfInstalments.toString(),
                     interestFreeText,
                     afterpay.instalmentAmount,
                     withText,
