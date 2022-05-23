@@ -1,6 +1,7 @@
 package com.example.afterpay.checkout
 
 import android.content.SharedPreferences
+import android.util.Log
 import android.util.Patterns
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
@@ -41,6 +42,7 @@ class CheckoutViewModel(
     data class State(
         val emailAddress: String,
         val total: BigDecimal,
+        val useV1: Boolean,
         val express: Boolean,
         val buyNow: Boolean,
         val pickup: Boolean,
@@ -54,7 +56,8 @@ class CheckoutViewModel(
     }
 
     sealed class Command {
-        data class ShowAfterpayCheckout(val options: AfterpayCheckoutV2Options) : Command()
+        data class ShowAfterpayCheckoutV1(val checkoutUrl: String) : Command()
+        data class ShowAfterpayCheckoutV2(val options: AfterpayCheckoutV2Options) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
@@ -67,6 +70,7 @@ class CheckoutViewModel(
         State(
             emailAddress = preferences.getEmail(),
             total = totalCost,
+            useV1 = preferences.getVersion(),
             express = preferences.getExpress(),
             buyNow = preferences.getBuyNow(),
             pickup = preferences.getPickup(),
@@ -83,6 +87,8 @@ class CheckoutViewModel(
 
     fun checkExpress(checked: Boolean) = state.update { copy(express = checked) }
 
+    fun checkVersion(checked: Boolean) = state.update { copy(useV1 = checked) }
+
     fun checkBuyNow(checked: Boolean) = state.update { copy(buyNow = checked) }
 
     fun checkPickup(checked: Boolean) = state.update { copy(pickup = checked) }
@@ -92,23 +98,39 @@ class CheckoutViewModel(
     }
 
     fun showAfterpayCheckout() {
-        val (email, _, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
+        val (email, total, useV1, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
 
         preferences.edit {
             putEmail(email)
+            putVersion(useV1)
             putExpress(isExpress)
             putBuyNow(isBuyNow)
             putPickup(isPickup)
             putShippingOptionsRequired(isShippingOptionsRequired)
         }
 
-        val options = AfterpayCheckoutV2Options(
-            isPickup,
-            isBuyNow,
-            isShippingOptionsRequired,
-            enableSingleShippingOptionUpdate = true
-        )
-        commandChannel.trySend(Command.ShowAfterpayCheckout(options))
+        if (useV1) {
+            viewModelScope.launch {
+                try {
+                    val formatter = DecimalFormat("#,###.00")
+                    val response = withContext(Dispatchers.IO) {
+                        merchantApi.checkout(CheckoutRequest(email, formatter.format(total), CheckoutMode.STANDARD))
+                    }
+                    commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
+                } catch (error: Exception) {
+                    val message = error.message ?: "Failed to fetch checkout url"
+                    Log.e("ExampleError", message)
+                }
+            }
+        } else {
+            val options = AfterpayCheckoutV2Options(
+                isPickup,
+                isBuyNow,
+                isShippingOptionsRequired,
+                enableSingleShippingOptionUpdate = true
+            )
+            commandChannel.trySend(Command.ShowAfterpayCheckoutV2(options))
+        }
     }
 
     fun loadCheckoutToken() {
@@ -208,6 +230,7 @@ class CheckoutViewModel(
 
 private object PreferenceKey {
     const val email = "email"
+    const val useV1 = "useV1"
     const val express = "express"
     const val buyNow = "buyNow"
     const val pickup = "pickup"
@@ -220,6 +243,10 @@ private fun SharedPreferences.Editor.putEmail(email: String) = putString(Prefere
 private fun SharedPreferences.getExpress(): Boolean = getBoolean(PreferenceKey.express, false)
 private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) =
     putBoolean(PreferenceKey.express, isExpress)
+
+private fun SharedPreferences.getVersion(): Boolean = getBoolean(PreferenceKey.useV1, false)
+private fun SharedPreferences.Editor.putVersion(useV1: Boolean) =
+    putBoolean(PreferenceKey.useV1, useV1)
 
 private fun SharedPreferences.getBuyNow(): Boolean = getBoolean(PreferenceKey.buyNow, false)
 private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) =

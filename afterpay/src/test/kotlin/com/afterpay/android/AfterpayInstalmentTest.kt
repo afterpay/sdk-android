@@ -29,7 +29,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30.00€", instalments.eur.instalmentAmount)
+        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -41,7 +41,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30.00€", instalments.eur.instalmentAmount)
+        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -53,7 +53,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30,00€", instalments.eur.instalmentAmount)
+        assertEquals("40,00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -65,7 +65,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30.00€", instalments.eur.instalmentAmount)
+        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -77,7 +77,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30.00€", instalments.eur.instalmentAmount)
+        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -89,7 +89,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("NZ$30.00", instalments.nzd.instalmentAmount)
         assertEquals("$30.00", instalments.usd.instalmentAmount)
-        assertEquals("30.00€", instalments.eur.instalmentAmount)
+        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -101,7 +101,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30,00 €", instalments.eur.instalmentAmount)
+        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -113,7 +113,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30,00 €", instalments.eur.instalmentAmount)
+        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -125,7 +125,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("30,00 €", instalments.eur.instalmentAmount)
+        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     /**
@@ -145,7 +145,7 @@ class AfterpayInstalmentTest {
         assertEquals("£30.25", instalments.gbp.instalmentAmount)
         assertEquals("$30.25 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.25 USD", instalments.usd.instalmentAmount)
-        assertEquals("30.25€", instalments.eur.instalmentAmount)
+        assertEquals("40.33€", instalments.eur.instalmentAmount)
     }
 
     private data class AllInstallments(
