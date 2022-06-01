@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 data class ShippingAddress(
     val name: String?,
     val address1: String?,
-    val address2: String?,
-    val countryCode: String?,
+    val address2: String? = null,
+    val countryCode: String? = null,
     val postcode: String?,
-    val phoneNumber: String?,
-    val state: String?,
-    val suburb: String?
+    val phoneNumber: String? = null,
+    val state: String? = null,
+    val suburb: String? = null
 )
