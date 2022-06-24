@@ -81,6 +81,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
         if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
             webView.loadUrl(checkoutUrl)
+        } else if (checkoutUrl == "LANGUAGE_NOT_SUPPORTED") {
+            finish(CancellationStatus.LANGUAGE_NOT_SUPPORTED)
         } else {
             finish(CancellationStatus.INVALID_CHECKOUT_URL)
         }

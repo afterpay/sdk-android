@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
+import com.afterpay.android.CancellationStatus.LANGUAGE_NOT_SUPPORTED
 import com.afterpay.android.CancellationStatus.NO_CHECKOUT_HANDLER
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
@@ -118,6 +119,9 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     }
 
     private fun loadCheckoutToken() {
+        if (!Afterpay.enabled) {
+            return finish(LANGUAGE_NOT_SUPPORTED)
+        }
         val handler = Afterpay.checkoutV2Handler ?: return finish(NO_CHECKOUT_HANDLER)
         val configuration =
             Afterpay.configuration ?: return finish(CancellationStatus.NO_CONFIGURATION)

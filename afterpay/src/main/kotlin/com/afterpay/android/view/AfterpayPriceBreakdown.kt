@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
@@ -108,6 +109,10 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     AfterpayColorScheme.DEFAULT.ordinal
                 )
             ]
+        }
+
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
         }
 
         updateText()

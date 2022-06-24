@@ -32,7 +32,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.Currency
+import java.util.Locale
 
 class CheckoutViewModel(
     totalCost: BigDecimal,
@@ -112,7 +114,8 @@ class CheckoutViewModel(
         if (useV1) {
             viewModelScope.launch {
                 try {
-                    val formatter = DecimalFormat("#,###.00")
+                    val symbols = DecimalFormatSymbols(Locale.US)
+                    val formatter = DecimalFormat("#,###.00", symbols)
                     val response = withContext(Dispatchers.IO) {
                         merchantApi.checkout(CheckoutRequest(email, formatter.format(total), CheckoutMode.STANDARD))
                     }
@@ -135,7 +138,8 @@ class CheckoutViewModel(
 
     fun loadCheckoutToken() {
         val (email, total, isExpress) = state.value
-        val amount = DecimalFormat("0.00").format(total)
+        val symbols = DecimalFormatSymbols(Locale.US)
+        val amount = DecimalFormat("0.00", symbols).format(total)
         val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {

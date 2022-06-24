@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Message
 import android.util.AttributeSet
+import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -68,6 +69,10 @@ class AfterpayWidgetView @JvmOverloads constructor(
         this.onError = onError
         configureWebView(onExternalRequest, onError) {
             loadWidget(""""$token"""", totalCost = null, showLogo, showHeading)
+        }
+
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
         }
     }
 

@@ -9,6 +9,7 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
+import com.afterpay.android.internal.getRegionLanguage
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
@@ -32,8 +33,14 @@ object Afterpay {
     internal val brand: Brand
         get() = Brand.forLocale(locale)
 
+    internal val language: Locale?
+        get() = getRegionLanguage(locale, Locale.getDefault())
+
+    internal val enabled: Boolean
+        get() = language != null
+
     internal val strings: AfterpayString
-        get() = AfterpayString.forLocales(locale, Locale.getDefault())
+        get() = AfterpayString.forLocale()
 
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
@@ -44,9 +51,11 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
-        Intent(context, AfterpayCheckoutActivity::class.java)
-            .putCheckoutUrlExtra(checkoutUrl)
+    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+        val url = if (enabled) { checkoutUrl } else { "LANGUAGE_NOT_SUPPORTED" }
+        return Intent(context, AfterpayCheckoutActivity::class.java)
+            .putCheckoutUrlExtra(url)
+    }
 
     /**
      * Returns an [Intent] for the given [context] and [options] that can be passed to
