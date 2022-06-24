@@ -1,23 +1,23 @@
 package com.afterpay.android.view
 
-import com.afterpay.android.R
+import com.afterpay.android.Afterpay
 
-enum class AfterpayIntroText(val resourceID: Int) {
-    EMPTY(R.string.afterpay_price_breakdown_intro_empty),
-    MAKE_TITLE(R.string.afterpay_price_breakdown_intro_make_title),
-    MAKE(R.string.afterpay_price_breakdown_intro_make),
-    PAY_TITLE(R.string.afterpay_price_breakdown_intro_pay_title),
-    PAY(R.string.afterpay_price_breakdown_intro_pay),
-    IN_TITLE(R.string.afterpay_price_breakdown_intro_in_title),
-    IN(R.string.afterpay_price_breakdown_intro_in),
-    OR_TITLE(R.string.afterpay_price_breakdown_intro_or_title),
-    OR(R.string.afterpay_price_breakdown_intro_or),
-    PAY_IN_TITLE(R.string.afterpay_price_breakdown_intro_pay_in_title),
-    PAY_IN(R.string.afterpay_price_breakdown_intro_pay_in);
+enum class AfterpayIntroText(val string: String) {
+    EMPTY(""),
+    MAKE_TITLE(Afterpay.strings.introMakeTitle),
+    MAKE(Afterpay.strings.introMake),
+    PAY_TITLE(Afterpay.strings.introPayTitle),
+    PAY(Afterpay.strings.introPay),
+    IN_TITLE(Afterpay.strings.introInTitle),
+    IN(Afterpay.strings.introIn),
+    OR_TITLE(Afterpay.strings.introOrTitle),
+    OR(Afterpay.strings.introOr),
+    PAY_IN_TITLE(Afterpay.strings.introPayInTitle),
+    PAY_IN(Afterpay.strings.introPayIn);
 
     internal companion object {
 
         @JvmField
-        val DEFAULT = AfterpayIntroText.OR
+        val DEFAULT = OR
     }
 }

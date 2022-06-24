@@ -39,7 +39,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
     init {
         contentDescription = String.format(
-            resources.getString(R.string.afterpay_payment_button_content_description),
+            Afterpay.strings.paymentButtonContentDescription,
             resources.getString(Afterpay.brand.description)
         )
         scaleType = FIT_CENTER
