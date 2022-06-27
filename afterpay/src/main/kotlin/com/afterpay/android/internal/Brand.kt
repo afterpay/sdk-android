@@ -24,10 +24,6 @@ internal enum class Brand(
     @StringRes val description: Int,
     @DrawableRes val badgeForeground: Int,
     @DrawableRes val lockup: Int,
-    @DrawableRes val payNowButtonForeground: Int,
-    @DrawableRes val buyNowButtonForeground: Int,
-    @DrawableRes val checkoutButtonForeground: Int,
-    @DrawableRes val placeOrderButtonForeground: Int
 ) {
 
     AFTERPAY(
@@ -35,10 +31,6 @@ internal enum class Brand(
         description = R.string.afterpay_service_name_description,
         badgeForeground = R.drawable.afterpay_badge_fg,
         lockup = R.drawable.afterpay_lockup,
-        payNowButtonForeground = R.drawable.afterpay_button_pay_now_fg,
-        buyNowButtonForeground = R.drawable.afterpay_button_buy_now_fg,
-        checkoutButtonForeground = R.drawable.afterpay_button_checkout_fg,
-        placeOrderButtonForeground = R.drawable.afterpay_button_place_order_fg
     ),
 
     CLEARPAY(
@@ -46,10 +38,6 @@ internal enum class Brand(
         description = R.string.clearpay_service_name_description,
         badgeForeground = R.drawable.clearpay_badge_fg,
         lockup = R.drawable.clearpay_lockup,
-        payNowButtonForeground = R.drawable.clearpay_button_pay_now_fg,
-        buyNowButtonForeground = R.drawable.clearpay_button_buy_now_fg,
-        checkoutButtonForeground = R.drawable.clearpay_button_checkout_fg,
-        placeOrderButtonForeground = R.drawable.clearpay_button_place_order_fg
     );
 
     companion object {

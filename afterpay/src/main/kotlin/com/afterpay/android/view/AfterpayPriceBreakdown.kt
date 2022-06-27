@@ -111,14 +111,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             ]
         }
 
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
-        }
-
         updateText()
     }
 
     private val configurationObserver = Observer { _, _ ->
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        }
+
         updateText()
     }
 
