@@ -22,9 +22,11 @@ import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
 import com.afterpay.android.internal.ConfigurationObservable
+import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
+import java.util.Currency
 import java.util.Observer
 
 class AfterpayPriceBreakdown @JvmOverloads constructor(
@@ -258,12 +260,16 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
         is AfterpayInstalment.Available -> {
+            val isUkLocale = Afterpay.configuration?.locale == Locales.EN_GB
+            val isGbpCurrency = Afterpay.configuration?.currency == Currency.getInstance(Locales.EN_GB)
+
             val withText: String = when {
                 showWithText -> Afterpay.strings.priceBreakdownWith
                 else -> ""
             }
 
             val interestFreeText: String = when {
+                isUkLocale || isGbpCurrency -> ""
                 showInterestFreeText -> Afterpay.strings.priceBreakdownInterestFree
                 else -> ""
             }
