@@ -2,6 +2,7 @@ package com.afterpay.android.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -140,9 +141,9 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
     private fun open(url: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, url)
-        if (intent.resolveActivity(packageManager) != null) {
+        try {
             startActivity(intent)
-        }
+        } catch (ex: ActivityNotFoundException) {}
     }
 
     private fun errorAlert(retryAction: () -> Unit) =
@@ -305,7 +306,7 @@ private class BootstrapJavascriptInterface(
                 when (message) {
                     is CheckoutLogMessage -> Log.d(
                         javaClass.simpleName,
-                        message.payload.run { "${severity.capitalize(Locale.ROOT)}: $message" }
+                        message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" }
                     )
 
                     is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
