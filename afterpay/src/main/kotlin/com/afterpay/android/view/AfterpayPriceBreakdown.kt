@@ -168,7 +168,6 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         AfterpayInfoSpan(infoUrl, false),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
-                    append(" ")
                 } else if (linkStyle.text != null) {
                     append(" ")
                     append(
@@ -176,7 +175,6 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         AfterpayInfoSpan(infoUrl, linkStyle.underlined),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
-                    append("\u200B")
                 } else if (linkStyle.image != null && linkStyle.imageRenderingMode != null) {
                     append(" ")
 
@@ -218,7 +216,6 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                             Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                         )
                     }
-                    append("\u200B")
                 }
             }
             contentDescription = content.description
