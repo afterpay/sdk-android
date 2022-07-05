@@ -22,7 +22,7 @@ enum class AfterpayIntroText(val id: Int) {
         val DEFAULT = OR
 
         fun fromId(id: Int): String {
-            return when(id) {
+            return when (id) {
                 EMPTY.id -> ""
                 MAKE_TITLE.id -> Afterpay.strings.introMakeTitle
                 MAKE.id -> Afterpay.strings.introMake
