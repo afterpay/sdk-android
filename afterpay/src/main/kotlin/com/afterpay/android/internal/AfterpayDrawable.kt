@@ -14,11 +14,11 @@ import com.afterpay.android.internal.Locales.FR_FR
 import com.afterpay.android.internal.Locales.IT_IT
 
 private val localeLanguages = mapOf(
-    EN_AU to AfterpayDrawable.EN,
-    EN_GB to AfterpayDrawable.EN_GB,
-    EN_NZ to AfterpayDrawable.EN,
-    EN_US to AfterpayDrawable.EN,
-    EN_CA to AfterpayDrawable.EN,
+    EN_AU to AfterpayDrawable.EN_AFTERPAY,
+    EN_GB to AfterpayDrawable.EN_CLEARPAY,
+    EN_NZ to AfterpayDrawable.EN_AFTERPAY,
+    EN_US to AfterpayDrawable.EN_AFTERPAY,
+    EN_CA to AfterpayDrawable.EN_AFTERPAY,
     FR_CA to AfterpayDrawable.FR_CA,
     FR_FR to AfterpayDrawable.FR,
     IT_IT to AfterpayDrawable.IT,
@@ -31,13 +31,13 @@ internal enum class AfterpayDrawable(
     @DrawableRes val buttonPayNowForeground: Int,
     @DrawableRes val buttonPlaceOrderForeground: Int,
 ) {
-    EN(
+    EN_AFTERPAY(
         buttonBuyNowForeground = R.drawable.afterpay_button_buy_now_fg_en,
         buttonCheckoutForeground = R.drawable.afterpay_button_checkout_fg_en,
         buttonPayNowForeground = R.drawable.afterpay_button_pay_now_fg_en,
         buttonPlaceOrderForeground = R.drawable.afterpay_button_place_order_fg_en,
     ),
-    EN_GB(
+    EN_CLEARPAY(
         buttonBuyNowForeground = R.drawable.clearpay_button_buy_now_fg_en,
         buttonCheckoutForeground = R.drawable.clearpay_button_checkout_fg_en,
         buttonPayNowForeground = R.drawable.clearpay_button_pay_now_fg_en,
@@ -70,7 +70,7 @@ internal enum class AfterpayDrawable(
 
     companion object {
         fun forLocale(): AfterpayDrawable {
-            return localeLanguages[Afterpay.language] ?: EN
+            return localeLanguages[Afterpay.language] ?: EN_AFTERPAY
         }
     }
 }
