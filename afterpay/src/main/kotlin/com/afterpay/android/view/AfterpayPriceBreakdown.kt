@@ -278,7 +278,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             Content(
                 text = String.format(
                     Afterpay.strings.priceBreakdownAvailable,
-                    introText.string,
+                    AfterpayIntroText.fromId(introText.id),
                     numberOfInstalments.toString(),
                     interestFreeText,
                     afterpay.instalmentAmount,
@@ -286,7 +286,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 ).trim(),
                 description = String.format(
                     Afterpay.strings.priceBreakdownAvailableDescription,
-                    introText.string,
+                    AfterpayIntroText.fromId(introText.id),
                     numberOfInstalments.toString(),
                     interestFreeText,
                     afterpay.instalmentAmount,
