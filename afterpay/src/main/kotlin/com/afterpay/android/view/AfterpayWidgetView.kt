@@ -69,7 +69,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         } else {
             visibility = View.VISIBLE
         }
-        
+
         check(token.isNotBlank()) { "Supplied token is empty" }
         this.onUpdate = onUpdate
         this.onError = onError
