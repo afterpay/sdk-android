@@ -64,15 +64,17 @@ class AfterpayWidgetView @JvmOverloads constructor(
         showLogo: Boolean = true,
         showHeading: Boolean = true
     ) {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+        
         check(token.isNotBlank()) { "Supplied token is empty" }
         this.onUpdate = onUpdate
         this.onError = onError
         configureWebView(onExternalRequest, onError) {
             loadWidget(""""$token"""", totalCost = null, showLogo, showHeading)
-        }
-
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
         }
     }
 
@@ -97,6 +99,12 @@ class AfterpayWidgetView @JvmOverloads constructor(
         showLogo: Boolean = true,
         showHeading: Boolean = true
     ) {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+
         this.onUpdate = onUpdate
         this.onError = onError
         configureWebView(onExternalRequest, onError) {
@@ -209,6 +217,12 @@ class AfterpayWidgetView @JvmOverloads constructor(
      * Results in an [IllegalStateException] if the configuration has not been set.
      */
     fun update(totalCost: BigDecimal) {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+
         evaluateJavascript(
             "updateAmount(${totalCost.toAmount()});",
             null

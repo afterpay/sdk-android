@@ -133,6 +133,8 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     private fun updateText() {
         if (!Afterpay.enabled) {
             visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
         }
 
         val drawable: Drawable = generateLogo()

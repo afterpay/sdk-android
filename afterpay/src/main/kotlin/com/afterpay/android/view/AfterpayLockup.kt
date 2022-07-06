@@ -40,13 +40,15 @@ class AfterpayLockup @JvmOverloads constructor(
                 )
             ]
         }
-
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
-        }
     }
 
     private fun update() {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+
         setImageDrawable(
             context.coloredDrawable(
                 drawableResId = Afterpay.brand.lockup,

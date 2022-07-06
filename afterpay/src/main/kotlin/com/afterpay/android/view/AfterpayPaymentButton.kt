@@ -85,6 +85,8 @@ class AfterpayPaymentButton @JvmOverloads constructor(
     private fun update() {
         if (!Afterpay.enabled) {
             visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
         }
 
         setImageDrawable(
