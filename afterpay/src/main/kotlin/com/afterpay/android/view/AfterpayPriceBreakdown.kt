@@ -117,10 +117,6 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private val configurationObserver = Observer { _, _ ->
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
-        }
-
         updateText()
     }
 
@@ -135,6 +131,10 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun updateText() {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        }
+
         val drawable: Drawable = generateLogo()
         val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
         val content = generateContent(instalment)
