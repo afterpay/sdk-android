@@ -67,7 +67,7 @@ class ShoppingFragment : Fragment() {
 
         val totalCost = view.findViewById<TextView>(R.id.shopping_totalCost)
         val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.shopping_afterpayPriceBreakdown)
-        afterpayBreakdown.introText = AfterpayIntroText.EMPTY
+        afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
         afterpayBreakdown.logoType = AfterpayLogoType.LOCKUP
         afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
             modalLinkStyle = AfterpayModalLinkStyle.CircledInfoIcon,

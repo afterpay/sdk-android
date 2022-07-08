@@ -30,7 +30,9 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             "portal.afterpay.com",
             "portal.sandbox.afterpay.com",
             "portal.clearpay.co.uk",
-            "portal.sandbox.clearpay.co.uk"
+            "portal.sandbox.clearpay.co.uk",
+            "checkout.clearpay.com",
+            "checkout.sandbox.clearpay.com"
         )
     }
 
@@ -47,6 +49,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             setAfterpayUserAgentString()
             settings.javaScriptEnabled = true
             settings.setSupportMultipleWindows(true)
+            settings.setDomStorageEnabled(true)
             webViewClient = AfterpayWebViewClient(
                 receivedError = ::handleError,
                 completed = ::finish
@@ -78,6 +81,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
         if (validCheckoutUrls.contains(Uri.parse(checkoutUrl).host)) {
             webView.loadUrl(checkoutUrl)
+        } else if (checkoutUrl == "LANGUAGE_NOT_SUPPORTED") {
+            finish(CancellationStatus.LANGUAGE_NOT_SUPPORTED)
         } else {
             finish(CancellationStatus.INVALID_CHECKOUT_URL)
         }
@@ -95,18 +100,18 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         webView.loadUrl("about:blank")
 
         AlertDialog.Builder(this)
-            .setTitle(R.string.afterpay_load_error_title)
+            .setTitle(Afterpay.strings.loadErrorTitle)
             .setMessage(
                 String.format(
-                    resources.getString(R.string.afterpay_load_error_message),
+                    Afterpay.strings.loadErrorMessage,
                     resources.getString(Afterpay.brand.title)
                 )
             )
-            .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
+            .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 loadCheckoutUrl()
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
+            .setNegativeButton(Afterpay.strings.loadErrorCancel) { dialog, _ ->
                 dialog.cancel()
             }
             .setOnCancelListener {

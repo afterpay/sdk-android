@@ -2,6 +2,8 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import com.afterpay.android.internal.AfterpayDrawable
+import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.ApiV3
 import com.afterpay.android.internal.Brand
 import com.afterpay.android.internal.CheckoutV3
@@ -11,6 +13,7 @@ import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getCancellationStatusExtraErrorV3
 import com.afterpay.android.internal.getCancellationStatusExtraV3
 import com.afterpay.android.internal.getOrderTokenExtra
+import com.afterpay.android.internal.getRegionLanguage
 import com.afterpay.android.internal.getResultDataExtra
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
@@ -46,10 +49,22 @@ object Afterpay {
         private set
 
     internal val locale: Locale
-        get() = configuration?.locale ?: Locales.US
+        get() = configuration?.locale ?: Locales.EN_US
 
     internal val brand: Brand
         get() = Brand.forLocale(locale)
+
+    internal val language: Locale?
+        get() = getRegionLanguage(locale, Locale.getDefault())
+
+    internal val enabled: Boolean
+        get() = language != null
+
+    internal val strings: AfterpayString
+        get() = AfterpayString.forLocale()
+
+    internal val drawables: AfterpayDrawable
+        get() = AfterpayDrawable.forLocale()
 
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
@@ -60,9 +75,11 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent =
-        Intent(context, AfterpayCheckoutActivity::class.java)
-            .putCheckoutUrlExtra(checkoutUrl)
+    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+        val url = if (enabled) { checkoutUrl } else { "LANGUAGE_NOT_SUPPORTED" }
+        return Intent(context, AfterpayCheckoutActivity::class.java)
+            .putCheckoutUrlExtra(url)
+    }
 
     /**
      * Returns an [Intent] for the given [context] and [options] that can be passed to
