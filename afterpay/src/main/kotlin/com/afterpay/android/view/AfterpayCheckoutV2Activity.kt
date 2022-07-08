@@ -2,6 +2,7 @@ package com.afterpay.android.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
+import com.afterpay.android.CancellationStatus.LANGUAGE_NOT_SUPPORTED
 import com.afterpay.android.CancellationStatus.NO_CHECKOUT_HANDLER
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
@@ -118,6 +120,9 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     }
 
     private fun loadCheckoutToken() {
+        if (!Afterpay.enabled) {
+            return finish(LANGUAGE_NOT_SUPPORTED)
+        }
         val handler = Afterpay.checkoutV2Handler ?: return finish(NO_CHECKOUT_HANDLER)
         val configuration =
             Afterpay.configuration ?: return finish(CancellationStatus.NO_CONFIGURATION)
@@ -136,25 +141,25 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
     private fun open(url: Uri) {
         val intent = Intent(Intent.ACTION_VIEW, url)
-        if (intent.resolveActivity(packageManager) != null) {
+        try {
             startActivity(intent)
-        }
+        } catch (ex: ActivityNotFoundException) {}
     }
 
     private fun errorAlert(retryAction: () -> Unit) =
         AlertDialog.Builder(this)
-            .setTitle(R.string.afterpay_load_error_title)
+            .setTitle(Afterpay.strings.loadErrorTitle)
             .setMessage(
                 String.format(
-                    resources.getString(R.string.afterpay_load_error_message),
+                    Afterpay.strings.loadErrorMessage,
                     resources.getString(Afterpay.brand.title)
                 )
             )
-            .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
+            .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 retryAction()
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
+            .setNegativeButton(Afterpay.strings.loadErrorCancel) { dialog, _ ->
                 dialog.cancel()
             }
             .setOnCancelListener {
@@ -301,7 +306,7 @@ private class BootstrapJavascriptInterface(
                 when (message) {
                     is CheckoutLogMessage -> Log.d(
                         javaClass.simpleName,
-                        message.payload.run { "${severity.capitalize(Locale.ROOT)}: $message" }
+                        message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" }
                     )
 
                     is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {

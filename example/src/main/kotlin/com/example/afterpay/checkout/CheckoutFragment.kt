@@ -74,6 +74,11 @@ class CheckoutFragment : Fragment() {
         expressRow.setOnClickListener { expressCheckBox.toggle() }
         expressCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkExpress(checked) }
 
+        val versionRow = view.findViewById<View>(R.id.cart_v1Row)
+        val versionCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_v1CheckBox)
+        versionRow.setOnClickListener { versionCheckBox.toggle() }
+        versionCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkVersion(checked) }
+
         val buyNowRow = view.findViewById<View>(R.id.cart_buyNowRow)
         val buyNowCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_buyNowCheckBox)
         buyNowRow.setOnClickListener { buyNowCheckBox.toggle() }
@@ -109,8 +114,12 @@ class CheckoutFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             viewModel.commands().collectLatest { command ->
                 when (command) {
-                    is Command.ShowAfterpayCheckout -> {
+                    is Command.ShowAfterpayCheckoutV2 -> {
                         val intent = Afterpay.createCheckoutV2Intent(requireContext(), command.options)
+                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+                    }
+                    is Command.ShowAfterpayCheckoutV1 -> {
+                        val intent = Afterpay.createCheckoutIntent(requireContext(), command.checkoutUrl)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
                     is Command.ProvideCheckoutTokenResult ->

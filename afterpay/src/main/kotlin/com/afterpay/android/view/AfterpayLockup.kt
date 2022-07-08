@@ -2,6 +2,7 @@ package com.afterpay.android.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.use
@@ -42,6 +43,12 @@ class AfterpayLockup @JvmOverloads constructor(
     }
 
     private fun update() {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+
         setImageDrawable(
             context.coloredDrawable(
                 drawableResId = Afterpay.brand.lockup,

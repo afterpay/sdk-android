@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
@@ -21,9 +22,11 @@ import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
 import com.afterpay.android.internal.ConfigurationObservable
+import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import java.math.BigDecimal
+import java.util.Currency
 import java.util.Observer
 
 class AfterpayPriceBreakdown @JvmOverloads constructor(
@@ -128,8 +131,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun updateText() {
+        if (!Afterpay.enabled) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+
         val drawable: Drawable = generateLogo()
-        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration)
+        val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
         val content = generateContent(instalment)
 
         textView.apply {
@@ -164,7 +173,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 } else if (linkStyle.text != null) {
                     append(" ")
                     append(
-                        resources.getString(linkStyle.text),
+                        linkStyle.text,
                         AfterpayInfoSpan(infoUrl, linkStyle.underlined),
                         Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                     )
@@ -195,8 +204,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                             setBounds(0, 0, drawableWidth.toInt(), drawableHeight.toInt())
                         }
 
-                        val accessibleLinkString =
-                            context.getString(R.string.afterpay_price_breakdown_link_more_info_text)
+                        val accessibleLinkString = Afterpay.strings.priceBreakdownLinkMoreInfo
                         append(
                             accessibleLinkString,
                             CenteredImageSpan(imageDrawable),
@@ -251,26 +259,40 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
     private fun generateContent(afterpay: AfterpayInstalment): Content = when (afterpay) {
         is AfterpayInstalment.Available -> {
-            val template: AfterpayOptionalText = if (showInterestFreeText && showWithText) {
-                AfterpayOptionalText.INTEREST_FREE_AND_WITH
-            } else if (showInterestFreeText) {
-                AfterpayOptionalText.INTEREST_FREE_AND_WITH
-            } else if (showWithText) {
-                AfterpayOptionalText.WITH
-            } else {
-                AfterpayOptionalText.NONE
+            val isUkLocale = Afterpay.configuration?.locale == Locales.EN_GB
+            val isGbpCurrency = Afterpay.configuration?.currency == Currency.getInstance(Locales.EN_GB)
+
+            val withText: String = when {
+                showWithText -> Afterpay.strings.priceBreakdownWith
+                else -> ""
             }
+
+            val interestFreeText: String = when {
+                isUkLocale || isGbpCurrency -> ""
+                showInterestFreeText -> Afterpay.strings.priceBreakdownInterestFree
+                else -> ""
+            }
+
+            val numberOfInstalments: Int = Afterpay.configuration?.let {
+                AfterpayInstalment.numberOfInstalments(it.currency)
+            } ?: 4
 
             Content(
                 text = String.format(
-                    resources.getString(template.textResourceID),
-                    resources.getString(introText.resourceID),
-                    afterpay.instalmentAmount
+                    Afterpay.strings.priceBreakdownAvailable,
+                    AfterpayIntroText.fromId(introText.id),
+                    numberOfInstalments.toString(),
+                    interestFreeText,
+                    afterpay.instalmentAmount,
+                    withText
                 ).trim(),
                 description = String.format(
-                    resources.getString(template.descriptionResourceId),
-                    resources.getString(introText.resourceID),
+                    Afterpay.strings.priceBreakdownAvailableDescription,
+                    AfterpayIntroText.fromId(introText.id),
+                    numberOfInstalments.toString(),
+                    interestFreeText,
                     afterpay.instalmentAmount,
+                    withText,
                     resources.getString(Afterpay.brand.description)
                 ).trim()
             )
@@ -279,12 +301,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             if (afterpay.minimumAmount != null)
                 Content(
                     text = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_limit),
+                        Afterpay.strings.breakdownLimit,
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
                     ),
                     description = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_limit_description),
+                        Afterpay.strings.breakdownLimitDescription,
                         resources.getString(Afterpay.brand.description),
                         afterpay.minimumAmount,
                         afterpay.maximumAmount
@@ -293,20 +315,22 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             else
                 Content(
                     text = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_upper_limit),
+                        Afterpay.strings.breakdownLimit,
+                        "1",
                         afterpay.maximumAmount
                     ),
                     description = String.format(
-                        resources.getString(R.string.afterpay_price_breakdown_upper_limit_description),
+                        Afterpay.strings.breakdownLimitDescription,
                         resources.getString(Afterpay.brand.description),
+                        "1",
                         afterpay.maximumAmount
                     )
                 )
         AfterpayInstalment.NoConfiguration ->
             Content(
-                text = resources.getString(R.string.afterpay_price_breakdown_no_configuration),
+                text = Afterpay.strings.noConfiguration,
                 description = String.format(
-                    resources.getString(R.string.afterpay_price_breakdown_no_configuration_description),
+                    Afterpay.strings.noConfigurationDescription,
                     resources.getString(Afterpay.brand.description)
                 )
             )

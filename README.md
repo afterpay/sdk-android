@@ -118,6 +118,8 @@ class ExampleActivity: Activity {
 
 ### Launching the Checkout (v2)
 
+**Note:** Checkout v2 is not available at this time for the following regions: France, Italy, Spain.
+
 Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
 
 > When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here](https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28). See the [API reference][express-checkout] for more details! Failing to do so will cause undefined behavior.
