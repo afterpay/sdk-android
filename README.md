@@ -38,7 +38,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ```gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:3.3.1'
+    implementation 'com.afterpay:afterpay-android:4.0.0'
 }
 ```
 
@@ -120,6 +120,8 @@ class ExampleActivity: Activity {
 ```
 
 ### Launching the Checkout (v2)
+
+**Note:** Checkout v2 is not available at this time for the following regions: France, Italy, Spain.
 
 Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
 

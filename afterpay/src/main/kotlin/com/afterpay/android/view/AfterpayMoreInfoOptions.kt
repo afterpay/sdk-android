@@ -1,6 +1,7 @@
 package com.afterpay.android.view
 
 import com.afterpay.android.Afterpay
+import com.afterpay.android.internal.Locales
 
 class AfterpayMoreInfoOptions {
     internal var modalId: String? = null
@@ -45,7 +46,8 @@ class AfterpayMoreInfoOptions {
             return "$it.html"
         }
 
-        val locale = "${Afterpay.locale.language}_${Afterpay.locale.country}"
+        val languageLocale = Afterpay.language ?: Locales.EN_GB
+        val locale = "${languageLocale.language}_${Afterpay.locale.country}"
         val cbt = if (isCbtEnabled) "-cbt" else ""
         val theme = modalTheme.slug
 
