@@ -4,6 +4,6 @@ import com.afterpay.android.internal.Locales
 import java.util.Locale
 
 enum class AfterpayRegion(val locale: Locale, val currencyCode: String) {
-    US(Locales.US, "USD"),
-    CA(Locales.CANADA, "CAD")
+    US(Locales.EN_US, "USD"),
+    CA(Locales.EN_CA, "CAD")
 }

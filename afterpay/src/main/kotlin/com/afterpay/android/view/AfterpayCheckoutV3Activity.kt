@@ -16,6 +16,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
 import com.afterpay.android.internal.CheckoutV3ViewModel
@@ -92,9 +93,9 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
         webView.loadUrl("about:blank")
 
         AlertDialog.Builder(this)
-            .setTitle(R.string.afterpay_load_error_title)
-            .setMessage(R.string.afterpay_load_error_message)
-            .setPositiveButton(R.string.afterpay_load_error_retry) { dialog, _ ->
+            .setTitle(Afterpay.strings.loadErrorTitle)
+            .setMessage(Afterpay.strings.loadErrorMessage)
+            .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 val options = intent.getCheckoutV3OptionsExtra()
                 val retryUrl = options?.redirectUrl ?: options?.checkoutUrl
                 retryUrl?.let {
@@ -102,7 +103,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton(R.string.afterpay_load_error_cancel) { dialog, _ ->
+            .setNegativeButton(Afterpay.strings.loadErrorCancel) { dialog, _ ->
                 dialog.cancel()
             }
             .setOnCancelListener {
