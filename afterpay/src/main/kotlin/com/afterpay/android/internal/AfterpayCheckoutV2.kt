@@ -1,5 +1,6 @@
 package com.afterpay.android.internal
 
+import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.BuildConfig
 import com.afterpay.android.model.Configuration
@@ -14,7 +15,8 @@ internal data class AfterpayCheckoutV2(
     val pickup: Boolean?,
     val buyNow: Boolean?,
     val shippingOptionRequired: Boolean?,
-    val checkoutRedesignForced: Boolean?
+    val checkoutRedesignForced: Boolean?,
+    val consumerLocale: String?,
 ) {
     constructor(
         token: String,
@@ -28,6 +30,7 @@ internal data class AfterpayCheckoutV2(
         pickup = options.pickup,
         buyNow = options.buyNow,
         shippingOptionRequired = options.shippingOptionRequired,
-        checkoutRedesignForced = options.enableSingleShippingOptionUpdate
+        checkoutRedesignForced = options.enableSingleShippingOptionUpdate,
+        consumerLocale = Afterpay.language.toString()
     )
 }
