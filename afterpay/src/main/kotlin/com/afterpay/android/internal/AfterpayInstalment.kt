@@ -78,9 +78,12 @@ internal sealed class AfterpayInstalment {
 
             val minimumAmount = configuration.minimumAmount ?: BigDecimal.ZERO
             if (totalCost < minimumAmount || totalCost > configuration.maximumAmount) {
+                val currencyFormatterNoDecimals = currencyFormatter.clone() as DecimalFormat
+                currencyFormatterNoDecimals.maximumFractionDigits = 0
+
                 return NotAvailable(
-                    minimumAmount = configuration.minimumAmount?.let(currencyFormatter::format),
-                    maximumAmount = currencyFormatter.format(configuration.maximumAmount)
+                    minimumAmount = configuration.minimumAmount?.let(currencyFormatterNoDecimals::format),
+                    maximumAmount = currencyFormatterNoDecimals.format(configuration.maximumAmount)
                 )
             }
 
