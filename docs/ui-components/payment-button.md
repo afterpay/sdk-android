@@ -38,7 +38,7 @@ app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 app:afterpayButtonText="payNow|buyNow|checkout|placeOrder"
 ```
 
-[button-black-on-mint]: /images/button_black_on_mint.png
-[button-mint-on-black]: /images/button_mint_on_black.png
-[button-black-on-white]: /images/button_black_on_white.png
-[button-white-on-black]: /images/button_white_on_black.png
+[button-black-on-mint]: ../images/button_black_on_mint.png
+[button-mint-on-black]: ../images/button_mint_on_black.png
+[button-black-on-white]: ../images/button_black_on_white.png
+[button-white-on-black]: ../images/button_white_on_black.png

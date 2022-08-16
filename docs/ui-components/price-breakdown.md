@@ -138,7 +138,7 @@ afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
 
 Given the above, the price breakdown modal link will display "Click Here".
 
-[breakdown-available]: /images/price_breakdown_available.png
-[breakdown-no-configuration]: /images/price_breakdown_no_configuration.png
-[breakdown-unavailable-min-max]: /images/price_breakdown_unavailable_min_max.png
-[breakdown-unavailable-max]: /images/price_breakdown_unavailable_max.png
+[breakdown-available]: ../images/price_breakdown_available.png
+[breakdown-no-configuration]: ../images/price_breakdown_no_configuration.png
+[breakdown-unavailable-min-max]: ../images/price_breakdown_unavailable_min_max.png
+[breakdown-unavailable-max]: ../images/price_breakdown_unavailable_max.png

@@ -84,4 +84,4 @@ The widget can be updated to reflect changes to the order total caused by promo 
 widget.update("50.00".toBigDecimal())
 ```
 
-[widget]: /images/widget.png
+[widget]: ../images/widget.png

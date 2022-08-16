@@ -40,10 +40,10 @@ The Afterpay lockup can be added to your layout and scaled to suit the needs of 
 app:afterpayColorScheme="blackOnMint|mintOnBlack|blackOnWhite|whiteOnBlack"
 ```
 
-[badge-black-on-mint]: /images/badge_black_on_mint.png
-[badge-mint-on-black]: /images/badge_mint_on_black.png
-[badge-black-on-white]: /images/badge_black_on_white.png
-[badge-white-on-black]: /images/badge_white_on_black.png
-[lockup-black]: /images/lockup_black.png
-[lockup-white]: /images/lockup_white.png
-[lockup-mint]: /images/lockup_mint.png
+[badge-black-on-mint]: ../images/badge_black_on_mint.png
+[badge-mint-on-black]: ../images/badge_mint_on_black.png
+[badge-black-on-white]: ../images/badge_black_on_white.png
+[badge-white-on-black]: ../images/badge_white_on_black.png
+[lockup-black]: ../images/lockup_black.png
+[lockup-white]: ../images/lockup_white.png
+[lockup-mint]: ../images/lockup_mint.png
