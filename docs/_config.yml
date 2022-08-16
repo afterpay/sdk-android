@@ -1,6 +1,8 @@
 remote_theme: just-the-docs/just-the-docs
 color_scheme: afterpay
 
+baseurl: "/sdk-android"
+
 title: Afterpay Android SDK
 permalink: pretty
 
