@@ -17,9 +17,9 @@ Checkout V2 requires setting options of type `AfterpayCheckoutV2Options` and cre
 Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
 
 {: .info }
-> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here](https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28). See the [API reference][express-checkout] for more details! Failing to do so will cause undefined behavior.
+> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here][example-server-param]{:target="_blank"}. See the [API reference][express-checkout]{:target="_blank"} for more details! Failing to do so will cause undefined behavior.
 
-For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout].
+For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout]{:target="_blank"}.
 
 ```kotlin
 class ExampleActivity: Activity {
@@ -74,3 +74,6 @@ class ExampleActivity: Activity {
     }
 }
 ```
+
+[example-server-param]: https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28
+[express-checkout]: https://developers.afterpay.com/afterpay-online/reference#what-is-express-checkout
