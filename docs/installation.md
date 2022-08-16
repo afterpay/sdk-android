@@ -23,6 +23,6 @@ dependencies {
 
 If you are using R8 the shrinking and obfuscation rules are included automatically.
 
-Proguard users will need to manually apply the rules defined in [`consumer-rules.pro`][proguard-rules].
+Proguard users will need to manually apply the rules defined in [`consumer-rules.pro`][proguard-rules]{:target="_blank"}.
 
-[proguard-rules]: afterpay/consumer-rules.pro
+[proguard-rules]: https://github.com/afterpay/sdk-android/blob/master/afterpay/consumer-rules.pro
