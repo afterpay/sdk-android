@@ -31,5 +31,5 @@ Afterpay.setConfiguration(
 > - Configuring the SDK with a UK locale will display Clearpay assets and branding, T&Cs, and currency formatting.
 
 
-[example-configuration]: https://github.com/afterpay/sdk-android/blob/master/example/src/main/kotlin/com/example/afterpay/MainActivity.kt#L108-L114
-[docs-configuration]: https://github.com/afterpay/sdk-android/blob/master/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L65
+[example-configuration]: https://github.com/afterpay/sdk-android/blob/65d27d5106efd40d15513d011e96ef2b7c19babf/example/src/main/kotlin/com/example/afterpay/MainActivity.kt#L108-L114
+[docs-configuration]: https://github.com/afterpay/sdk-android/blob/dabdc39b6c61b3b683984fd69d3bb16a56eddd4b/afterpay/src/main/kotlin/com/afterpay/android/Afterpay.kt#L103

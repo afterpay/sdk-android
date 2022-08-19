@@ -75,5 +75,5 @@ class ExampleActivity: Activity {
 }
 ```
 
-[example-server-param]: https://github.com/afterpay/sdk-example-server/blob/master/src/routes/checkout.ts#L28
+[example-server-param]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L28
 [express-checkout]: https://developers.afterpay.com/afterpay-online/reference#what-is-express-checkout
