@@ -8,16 +8,16 @@ nav_order: 3
 # Checkout V2
 
 {: .alert }
-> Checkout v2 is not available at this time for the following regions: France, Italy, Spain.
+> Checkout V2 is not available at this time for the following regions: France, Italy, Spain.
 
 Checkout V2 requires setting options of type `AfterpayCheckoutV2Options` and creating handler methods for user interactions.
 
 ## Launching the Checkout
 
-Launch the Afterpay checkout v2 flow by starting the intent provided by the SDK for the given options.
+Launch the Afterpay checkout V2 flow by starting the intent provided by the SDK for the given options.
 
 {: .info }
-> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here][example-server-param]{:target="_blank"}. See the [API reference][express-checkout]{:target="_blank"} for more details! Failing to do so will cause undefined behavior.
+> When creating a checkout token, `popupOriginUrl` must be set to `https://static.afterpay.com`. The SDK’s example merchant server sets the parameter [here][example-server-param]{:target="_blank"}. See the [API reference][express-checkout]{:target="_blank"} for more details. Failing to do so will cause undefined behavior.
 
 For more information on express checkout, including the available options and callbacks, please check the [API reference][express-checkout]{:target="_blank"}.
 

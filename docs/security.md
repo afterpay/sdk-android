@@ -23,6 +23,6 @@ Add the following configuration to your `res/xml/network_security_configuration.
 ```
 
 {: .note }
-> It is necessary to keep the certificate PINs updated to ensure pinning will not be bypassed beyond the expiry date of the certificate.
+> It is necessary to keep the certificate pins updated to ensure pinning will not be bypassed beyond the expiry date of the certificate.
 
 [network-config]: https://developer.android.com/training/articles/security-config#CertificatePinning

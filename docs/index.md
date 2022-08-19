@@ -6,11 +6,11 @@ nav_order: 1
 
 # Welcome
 
-Welcome to the Afterpay Android SDk.
+Welcome to the Afterpay Android SDK.
 
 The Afterpay Android SDK makes it quick and easy to provide an excellent payment experience in your Android app. We provide powerful and customizable UI elements that can be used out-of-the-box to allow your users to shop now and pay later.
 
-This documentation is the main source of documentation for developers implementing Afterpay / Clearpay in their Android Apps. If this is your first time hearing about Afterpay or Clearpay or to view the developer docs, we recommend starting with the relavant links below.
+This documentation is the main source of documentation for developers implementing Afterpay / Clearpay in their Android Apps. If this is your first time hearing about Afterpay or Clearpay or to view the developer docs, we recommend starting with the relevant links below.
 
 #### Website
 
@@ -39,5 +39,5 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [afterpay-developer-site]: https://developers.afterpay.com/
 [clearpay-uk-website]: https://www.clearpay.co.uk/
 [clearpay-uk-developer-site]: https://developers.clearpay.co.uk/
-[clearpay-eu-website]: https://www.clearpay.co.uk/
-[clearpay-eu-developer-site]: https://developers.clearpay.co.uk/
+[clearpay-eu-website]: https://www.clearpay.com/
+[clearpay-eu-developer-site]: https://developers.clearpay.com/

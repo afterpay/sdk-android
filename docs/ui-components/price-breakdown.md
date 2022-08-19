@@ -18,9 +18,9 @@ nav_order: 4
 </details>
 
 
-The price breakdown component displays information about Afterpay instalments and handles a number of common configurations.
+The price breakdown component displays information about Afterpay installments and handles a number of common configurations.
 
-A total payment amount (represented as a `BigDecimal`) must be programatically set on the component to display Afterpay instalment information.
+A total payment amount (represented as a `BigDecimal`) must be programatically set on the component to display Afterpay installment information.
 
 ```kotlin
 val totalAmount: BigDecimal = getTotalAmount()
@@ -29,19 +29,19 @@ val paymentBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.priceBreak
 paymentBreakdown.totalAmount = totalAmount
 ```
 
-When the breakdown component is assigned a total amount that is valid for the merchant account, the 4 instalment amounts will be displayed.
+When the breakdown component is assigned a total amount that is valid for the merchant account, the 4 installment amounts will be displayed.
 
-![Price breakdown Afterpay instalments are available][breakdown-available]
+![Price breakdown Afterpay installments are available][breakdown-available]
 
 When the total amount is not within the minimum and maximum payment values for the merchant account, the amounts available for Afterpay will be shown in the component.
 
-![Price breakdown Afterpay instalments are unavailable][breakdown-unavailable-min-max]
+![Price breakdown Afterpay installments are unavailable][breakdown-unavailable-min-max]
 
 When no minimum amount is set and the total amount is greater than the maximum payment values for the merchant account, the maximum amount available for Afterpay will be shown in the component.
 
-![Price breakdown Afterpay instalments are unavailable][breakdown-unavailable-max]
+![Price breakdown Afterpay installments are unavailable][breakdown-unavailable-max]
 
-When no payment amount has been set or the merchant account configuration has not been applied to the SDK, the component will default to a message stating Afterpay is available.
+When no payment amount has been set or the merchant account configuration has not been applied to the SDK, the component will default to a message stating Afterpay is unavailable.
 
 ![Price breakdown no merchant account configuration][breakdown-no-configuration]
 
@@ -73,7 +73,7 @@ Given the above, the price breakdown will contain the lockup logo and will be of
 ### Optional Words
 Setting `showInterestFreeText` and / or `showWithText` is optional and is of type `Boolean`.
 
-Both default to true. This will show the text `pay in 4 interest-free payents of $#.##`.
+Both default to true. This will show the text `pay in 4 interest-free payents of $#.## with`.
 Setting `showInterestFreeText` to false will remove "interest-free" from the sentence.
 Setting `showWithText` to false will remove the word "with" from the sentence.
 
@@ -82,17 +82,17 @@ val afterpayBreakdown = view.findViewById<AfterpayPriceBreakdown>(R.id.afterpayP
 afterpayBreakdown.introText = AfterpayIntroText.MAKE_TITLE
 ```
 
-Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.##`
+Given the above, the price breakdown text will be rendered `Make 4 interest-free payments of $##.## with`
 
 ### More Info Options
 Setting `moreInfoOptions` is optional and of type `AfterpayMoreInfoOptions`. This class has two constructors.
 The first constructor takes two parameters:
-- `modalId`: a `string` that is the filename of a modal hosted on Afterpay static.
+- `modalId`: a `string` that is the filename of a modal hosted on the Afterpay static CDN.
 - `modalLinkStyle`: an optional value of type `ModalLinkStyle`. See [Modal Link Style Options](#modal-link-style-options) for more details.
 
 The second constructor takes three parameters:
 - `modalTheme`: an enum of type `AfterpayModalTheme` with the following options: `MINT` (default) and `WHITE`.
-- `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal
+- `isCbtEnabled`: a `boolean` to indicate if the modal should show the Cross Border Trade details in the modal.
 - `modalLinkStyle`: an optional value of type `ModalLinkStyle`. See [Modal Link Style Options](#modal-link-style-options) for more details.
 
 {: .note }
@@ -108,7 +108,7 @@ afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
 Given the above, when clicking the more info "link", the modal that opens will be white in the current locale as set in configuration.
 
 ### Modal Link Style Options
-A value that can be set on `moreInfoOptions` when initialised. Setting this is optional and is of type `ModalLinkStyle`.
+A value that can be set on `moreInfoOptions` when initialized. Setting this is optional and is of type `ModalLinkStyle`.
 
 Available values are `CircledInfoIcon`, `MoreInfoText`, `LearnMoreText`, `CircledQuestionIcon`, `CircledLogo`, `Custom`, `None`.
 `CircledInfoIcon` is the default & `None` will remove the link altogether.

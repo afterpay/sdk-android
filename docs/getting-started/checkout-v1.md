@@ -7,7 +7,7 @@ nav_order: 2
 
 # Checkout V1
 
-Checkout V1 requires a url to be generated using the checkout API and using it to start the intent provided by the SDK
+Checkout V1 requires a URL to be generated using the checkout API and using it to start the intent provided by the SDK.
 
 ## Launching the Checkout
 

@@ -7,6 +7,7 @@ nav_order: 2
 # Installation
 
 ## Requirements
+
 - Android 7.0 (API level 24) and above
 
 ## Configuration

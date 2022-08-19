@@ -17,9 +17,9 @@ nav_order: 1
 {:toc}
 </details>
 
-The checkout widget displays the consumer's payment schedule, and can be updated as the order total changes. It should be shown if the order value is going to change after the Afterpay Express checkout has finished. For example, the order total may change in response to shipping costs and promo codes. It can also be used to show if there are any barriers to completing the purchase, like if the customer has gone over their Afterpay payment limit.
+The checkout widget displays the consumer's payment schedule, and can be updated as the order total changes. It should be shown if the order value is going to change after the Afterpay Express checkout has finished. For example, the order total may change in response to shipping costs and promo codes. It can also be used to show if there are any barriers to completing the purchase, like if the consumer has exceeded their Afterpay payment limit.
 
-The widget can be added to a layout or instantiated in code but an instance must always be initialised in one of the two ways demonstrated below and provided with the required callbacks which will notify your app when the widget is updated or an error occurs, or when an attempt to load an external URL is made.
+The widget can be added to a layout or instantiated in code, but an instance must always be initialized in one of the two ways demonstrated below and provided with the required callbacks. These callbacks will notify your app when the widget is updated or an error occurs, or when an attempt to load an external URL is made.
 
 The widget will resize to fit the internal content and should not be made smaller so as to maintain legibility.
 
@@ -28,7 +28,7 @@ The widget will resize to fit the internal content and should not be made smalle
 
 ## Adding the Widget
 
-Initialising the widget with a token received upon completion of checkout v2 will populate it with information about the transaction.
+Initializing the widget with a token received upon completion of checkout V2 will populate it with information about the transaction.
 
 ```kotlin
 class ReceiptFragment : Fragment() {
@@ -54,7 +54,7 @@ class ReceiptFragment : Fragment() {
 }
 ```
 
-Alternatively, if checkout has not been completed or your app is not using checkout v2, the widget may be initialised in tokenless mode with a `BigDecimal` representing the total cost of the purchase.
+Alternatively, if checkout has not been completed or your app is not using checkout V2, the widget may be initialized in tokenless mode with a `BigDecimal` representing the total cost of the purchase.
 ```kotlin
 view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
     .init("50.00".toBigDecimal(), ::onWidgetExternalLink, ::onWidgetUpdate, ::onWidgetError)
@@ -62,7 +62,7 @@ view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)
 
 ## Styling the Widget
 
-By default the widget will show the Afterpay logo and header but these may be independently disabled when initialising the widget.
+By default the widget will show the Afterpay logo and header but these may be independently disabled when initializing the widget.
 
 ```kotlin
 view.findViewById<AfterpayWidgetView>(R.id.afterpay_widget)

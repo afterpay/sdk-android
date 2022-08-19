@@ -11,7 +11,7 @@ Each merchant has configuration specific to their account which is accessible fr
 
 The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how best to supply the locale.
 
-Environment is required only for checkout v2; it's recommended to use `AfterpayEnvironment.PRODUCTION` for release builds and `AfterpayEnvironment.SANDBOX` for all others.
+Environment is required only for checkout V2; it's recommended to use `AfterpayEnvironment.PRODUCTION` for release builds and `AfterpayEnvironment.SANDBOX` for all others.
 
 ```kotlin
 val configuration = api.getConfiguration()
