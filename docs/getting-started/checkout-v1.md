@@ -13,6 +13,9 @@ Checkout V1 requires a URL to be generated using the checkout API and using it t
 
 Launch the Afterpay standard checkout flow by starting the intent provided by the SDK for a given checkout URL.
 
+{: .info }
+> When creating a checkout token, both `redirectConfirmUrl` and `redirectCancelUrl` must be set. The SDK’s example merchant server sets the parameter [here][example-server-props]{:target='_blank'}. See more at by checking the [api reference][api-reference-props]{:target='_blank'}. Failing to do so will cause undefined behavior.
+
 ```kotlin
 class ExampleActivity: Activity {
     private companion object {
@@ -46,3 +49,6 @@ class ExampleActivity: Activity {
     }
 }
 ```
+
+[example-server-props]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L26-L27
+[api-reference-props]: https://developers.afterpay.com/afterpay-online/reference/javascript-afterpayjs#redirect-method

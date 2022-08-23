@@ -42,6 +42,8 @@ class ExampleActivity: Activity {
                 TODO("Use the address to form shipping options and pass to completion")
             }
 
+            // To update the shipping method, pass in a ShippingOptionUpdate object to
+            // completion, otherwise pass nil
             override fun shippingOptionDidChange(
                 shippingOption: ShippingOption,
                 onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit
