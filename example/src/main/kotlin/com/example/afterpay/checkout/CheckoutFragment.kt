@@ -37,7 +37,7 @@ class CheckoutFragment : Fragment() {
             preferences = getDependencies().sharedPreferences
         )
     }
-    
+
     // when launching the checkout with V2, the token must be generated
     // with 'popupOriginUrl' set to 'https://static.afterpay.com' under the
     // top level 'merchant' object
