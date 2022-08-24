@@ -137,7 +137,7 @@ class CheckoutViewModel(
     }
 
     fun loadCheckoutToken() {
-        val (email, total, isExpress) = state.value
+        val (email, total, _, isExpress) = state.value
         val symbols = DecimalFormatSymbols(Locale.US)
         val amount = DecimalFormat("0.00", symbols).format(total)
         val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
