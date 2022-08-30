@@ -200,6 +200,8 @@ class CheckoutViewModel(
             val currency = Currency.getInstance(configuration.currency)
             val result: ShippingOptionUpdateResult?
 
+            // if standard shipping was selected, update the amounts
+            // otherwise leave as is by passing null
             if (shippingOption.id == "standard") {
                 val updatedShippingOption = ShippingOptionUpdate(
                     "standard",
