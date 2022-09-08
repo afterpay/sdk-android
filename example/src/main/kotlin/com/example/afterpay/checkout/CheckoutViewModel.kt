@@ -137,7 +137,7 @@ class CheckoutViewModel(
     }
 
     fun loadCheckoutToken() {
-        val (email, total, isExpress) = state.value
+        val (email, total, _, isExpress) = state.value
         val symbols = DecimalFormatSymbols(Locale.US)
         val amount = DecimalFormat("0.00", symbols).format(total)
         val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
@@ -200,6 +200,8 @@ class CheckoutViewModel(
             val currency = Currency.getInstance(configuration.currency)
             val result: ShippingOptionUpdateResult?
 
+            // if standard shipping was selected, update the amounts
+            // otherwise leave as is by passing null
             if (shippingOption.id == "standard") {
                 val updatedShippingOption = ShippingOptionUpdate(
                     "standard",
