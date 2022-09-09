@@ -105,6 +105,9 @@ Thumbs.db
 *.war
 *.ear
 
+# Generate doc files #
+docs/_site
+
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
