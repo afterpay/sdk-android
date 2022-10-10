@@ -58,7 +58,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
 
-        val onBackPressedCallback: OnBackPressedCallback = object:OnBackPressedCallback(true ) {
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finish(CancellationStatus.USER_INITIATED)
             }

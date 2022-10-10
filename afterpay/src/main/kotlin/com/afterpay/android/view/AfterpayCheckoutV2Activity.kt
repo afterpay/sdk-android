@@ -57,7 +57,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val onBackPressedCallback: OnBackPressedCallback = object: OnBackPressedCallback(true ) {
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finish(CancellationStatus.USER_INITIATED)
             }
