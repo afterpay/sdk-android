@@ -28,6 +28,13 @@ class ExampleActivity: Activity {
         val afterpayCheckoutButton = findViewById<Button>(R.id.button_afterpay)
         afterpayCheckoutButton.setOnClickListener {
             val checkoutUrl = api.checkoutWithAfterpay(cart)
+            /**
+             * the `createCheckoutIntent` method takes an optional 3rd paramater: `loadRedirectUrls`
+             * of type boolean. Setting this to true will allow the redirect urls that were set when
+             * creating the checkout to be loaded.
+             *
+             * The default & recommended value is false unless under specific circumstances this is required.
+             */
             val intent = Afterpay.createCheckoutIntent(this, checkoutUrl)
             startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
         }

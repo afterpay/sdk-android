@@ -11,6 +11,7 @@ private object AfterpayIntent {
     const val INFO_URL = "AFTERPAY_INFO_URL"
     const val ORDER_TOKEN = "AFTERPAY_ORDER_TOKEN"
     const val CANCELLATION_STATUS = "AFTERPAY_CANCELLATION_STATUS"
+    const val SHOULD_LOAD_REDIRECT_URLS = "AFTERPAY_SHOULD_LOAD_REDIRECT_URLS"
 }
 
 internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
@@ -18,6 +19,12 @@ internal fun Intent.putCheckoutUrlExtra(url: String): Intent =
 
 internal fun Intent.getCheckoutUrlExtra(): String? =
     getStringExtra(AfterpayIntent.CHECKOUT_URL)
+
+internal fun Intent.putCheckoutShouldLoadRedirectUrls(bool: Boolean): Intent =
+    putExtra(AfterpayIntent.SHOULD_LOAD_REDIRECT_URLS, bool)
+
+internal fun Intent.getCheckoutShouldLoadRedirectUrls(): Boolean =
+    getBooleanExtra(AfterpayIntent.SHOULD_LOAD_REDIRECT_URLS, false)
 
 internal fun Intent.putCheckoutV2OptionsExtra(options: AfterpayCheckoutV2Options): Intent =
     putExtra(AfterpayIntent.CHECKOUT_OPTIONS, options)

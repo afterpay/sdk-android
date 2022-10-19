@@ -3,6 +3,7 @@ package com.afterpay.android.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
+import com.afterpay.android.internal.getCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
@@ -52,7 +54,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             settings.setDomStorageEnabled(true)
             webViewClient = AfterpayWebViewClient(
                 receivedError = ::handleError,
-                completed = ::finish
+                completed = ::finish,
+                shouldLoadRedirectUrls = intent.getCheckoutShouldLoadRedirectUrls()
             )
             webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
@@ -140,7 +143,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
 private class AfterpayWebViewClient(
     private val receivedError: () -> Unit,
-    private val completed: (CheckoutStatus) -> Unit
+    private val completed: (CheckoutStatus) -> Unit,
+    private val shouldLoadRedirectUrls: Boolean,
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
@@ -148,11 +152,34 @@ private class AfterpayWebViewClient(
 
         return when {
             status != null -> {
+                if (shouldLoadRedirectUrls) {
+                    return false
+                }
+
                 completed(status)
                 true
             }
 
             else -> false
+        }
+    }
+
+    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+
+        if (url.equals("about:blank")) {
+            return
+        }
+
+        val uri = Uri.parse(url)
+        val status = CheckoutStatus.fromUrl(uri)
+
+        when {
+            status != null -> {
+                completed(status)
+            }
+
+            else -> {}
         }
     }
 
@@ -195,10 +222,15 @@ private sealed class CheckoutStatus {
     object Cancelled : CheckoutStatus()
 
     companion object {
-        fun fromUrl(url: Uri): CheckoutStatus? = when (url.getQueryParameter("status")) {
-            "SUCCESS" -> url.getQueryParameter("orderToken")?.let(::Success)
-            "CANCELLED" -> Cancelled
-            else -> null
+        fun fromUrl(url: Uri): CheckoutStatus? {
+            return when (url.getQueryParameter("status")) {
+                "SUCCESS" -> {
+                    val token = url.getQueryParameter("orderToken") ?: url.getQueryParameter("token")
+                    token?.let(::Success)
+                }
+                "CANCELLED" -> Cancelled
+                else -> null
+            }
         }
     }
 }
