@@ -298,7 +298,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             )
         }
         is AfterpayInstalment.NotAvailable ->
-            if (afterpay.minimumAmount != null)
+            if (afterpay.minimumAmount != null) {
                 Content(
                     text = String.format(
                         Afterpay.strings.breakdownLimit,
@@ -312,7 +312,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         afterpay.maximumAmount
                     )
                 )
-            else
+            } else {
                 Content(
                     text = String.format(
                         Afterpay.strings.breakdownLimit,
@@ -326,6 +326,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         afterpay.maximumAmount
                     )
                 )
+            }
         AfterpayInstalment.NoConfiguration ->
             Content(
                 text = Afterpay.strings.noConfiguration,

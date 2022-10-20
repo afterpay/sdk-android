@@ -17,8 +17,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.model.Money
 import com.afterpay.android.view.AfterpayWidgetView
+import com.example.afterpay.NavGraph
 import com.example.afterpay.R
-import com.example.afterpay.nav_graph
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.onEach
 class ReceiptFragment : Fragment() {
 
     private val token: String
-        get() = requireNotNull(arguments?.getString(nav_graph.args.checkout_token))
+        get() = requireNotNull(arguments?.getString(NavGraph.args.checkout_token))
 
     private val viewModel by viewModels<ReceiptViewModel> { ReceiptViewModel.factory(token) }
 
@@ -44,7 +44,7 @@ class ReceiptFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(nav_graph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.action.back_to_shopping)
         }
 
         view.findViewById<AfterpayWidgetView>(R.id.receipt_afterpayWidget)

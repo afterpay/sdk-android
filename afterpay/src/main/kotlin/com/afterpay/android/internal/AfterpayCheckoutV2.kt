@@ -15,7 +15,7 @@ internal data class AfterpayCheckoutV2(
     val buyNow: Boolean?,
     val shippingOptionRequired: Boolean?,
     val checkoutRedesignForced: Boolean?,
-    val consumerLocale: String?,
+    val consumerLocale: String?
 ) {
     constructor(
         token: String,

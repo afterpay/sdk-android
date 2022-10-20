@@ -16,10 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayPaymentButton
+import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.getDependencies
-import com.example.afterpay.nav_graph
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +32,7 @@ class CheckoutFragment : Fragment() {
 
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
-            totalCost = requireNotNull(arguments?.get(nav_graph.args.total_cost) as? BigDecimal),
+            totalCost = requireNotNull(arguments?.get(NavGraph.args.total_cost) as? BigDecimal),
             merchantApi = getDependencies().merchantApi,
             preferences = getDependencies().sharedPreferences
         )
@@ -150,8 +150,8 @@ class CheckoutFragment : Fragment() {
                     "A token is always associated with a successful Afterpay transaction"
                 }
                 findNavController().navigate(
-                    nav_graph.action.to_receipt,
-                    bundleOf(nav_graph.args.checkout_token to token)
+                    NavGraph.action.to_receipt,
+                    bundleOf(NavGraph.args.checkout_token to token)
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {

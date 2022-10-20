@@ -20,7 +20,7 @@ private val localeLanguages = mapOf(
     FR_CA to AfterpayString.FR_CA,
     FR_FR to AfterpayString.FR,
     IT_IT to AfterpayString.IT,
-    ES_ES to AfterpayString.ES,
+    ES_ES to AfterpayString.ES
 )
 
 internal enum class AfterpayString(
@@ -107,7 +107,7 @@ internal enum class AfterpayString(
         priceBreakdownWith = "avec ",
         priceBreakdownInterestFree = "sans intérêts ",
         priceBreakdownLinkLearnMore = "En savoir plus",
-        priceBreakdownLinkMoreInfo = "Plus d'infos",
+        priceBreakdownLinkMoreInfo = "Plus d'infos"
     ),
     FR(
         breakdownLimit = "disponible pour les montants entre %1\$s – %2\$s",
@@ -134,7 +134,7 @@ internal enum class AfterpayString(
         priceBreakdownWith = "avec ",
         priceBreakdownInterestFree = "sans frais ",
         priceBreakdownLinkLearnMore = "En savoir plus",
-        priceBreakdownLinkMoreInfo = "Plus d'infos",
+        priceBreakdownLinkMoreInfo = "Plus d'infos"
     ),
     IT(
         breakdownLimit = "disponibile per importi fra %1\$s – %2\$s",
@@ -161,7 +161,7 @@ internal enum class AfterpayString(
         priceBreakdownWith = "con ",
         priceBreakdownInterestFree = "senza interessi ",
         priceBreakdownLinkLearnMore = "Scopri di piú",
-        priceBreakdownLinkMoreInfo = "Maggiori info",
+        priceBreakdownLinkMoreInfo = "Maggiori info"
     ),
     ES(
         breakdownLimit = "disponible para importes entre %1\$s – %2\$s",
@@ -188,7 +188,7 @@ internal enum class AfterpayString(
         priceBreakdownWith = "con ",
         priceBreakdownInterestFree = "sin coste ",
         priceBreakdownLinkLearnMore = "Saber más",
-        priceBreakdownLinkMoreInfo = "Más infos",
+        priceBreakdownLinkMoreInfo = "Más infos"
     );
 
     companion object {

@@ -22,9 +22,9 @@ import com.afterpay.android.view.AfterpayModalLinkStyle
 import com.afterpay.android.view.AfterpayModalTheme
 import com.afterpay.android.view.AfterpayMoreInfoOptions
 import com.afterpay.android.view.AfterpayPriceBreakdown
+import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.data.Product
-import com.example.afterpay.nav_graph
 import com.example.afterpay.shopping.ShoppingViewModel.Command
 import com.example.afterpay.shopping.ShoppingViewModel.ShoppingItem
 import kotlinx.coroutines.flow.collectLatest
@@ -87,8 +87,8 @@ class ShoppingFragment : Fragment() {
                 when (command) {
                     is Command.Checkout ->
                         findNavController().navigate(
-                            nav_graph.action.to_checkout,
-                            bundleOf(nav_graph.args.total_cost to command.totalCost)
+                            NavGraph.action.to_checkout,
+                            bundleOf(NavGraph.args.total_cost to command.totalCost)
                         )
                 }
             }
