@@ -90,7 +90,7 @@ class ShoppingViewModel(val cart: Cart) : ViewModel() {
     fun checkout() {
         viewModelScope.launch {
             val summary = cart.summary.first()
-            commandChannel.offer(Command.Checkout(totalCost = summary.totalCost))
+            commandChannel.trySend(Command.Checkout(totalCost = summary.totalCost)).isSuccess
         }
     }
 

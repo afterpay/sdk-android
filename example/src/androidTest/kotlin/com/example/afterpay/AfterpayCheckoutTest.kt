@@ -1,5 +1,6 @@
 package com.example.afterpay
 
+import android.util.Log
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.navigation.NavController
@@ -10,6 +11,7 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
@@ -51,6 +53,7 @@ class AfterpayCheckoutTest {
 
     private val destinationObserver =
         NavController.OnDestinationChangedListener { _, destination, _ ->
+            Log.d("mylogger1", "${destination.id} // ${NavGraph.dest.receipt}")
             idlingResource.isIdleNow(destination.id == NavGraph.dest.receipt)
         }
 
@@ -82,7 +85,7 @@ class AfterpayCheckoutTest {
         onView(withId(R.id.shopping_button_viewCart)).perform(click())
 
         onView(withId(R.id.cart_editText_emailAddress))
-            .perform(typeText("user@example.com"))
+            .perform(replaceText("user@example.com"))
 
         onView(withId(R.id.cart_expressCheckBox)).check(matches(isNotChecked()))
         onView(withId(R.id.cart_buyNowCheckBox)).check(matches(isNotChecked()))
@@ -90,11 +93,9 @@ class AfterpayCheckoutTest {
         onView(withId(R.id.cart_shippingOptionsRequiredCheckBox)).check(matches(isNotChecked()))
 
         onView(withId(R.id.cart_button_checkout)).perform(click())
-
         IdlingRegistry.getInstance().register(idlingResource)
 
         onView(withId(R.id.receipt_afterpayWidget_container)).check(matches(isDisplayed()))
-
         IdlingRegistry.getInstance().unregister(idlingResource)
 
         onWebView(withId(R.id.receipt_afterpayWidget))
@@ -135,7 +136,10 @@ class AfterpayCheckoutTest {
 
         private val isIdle = AtomicBoolean(false)
 
-        override fun getName(): String = javaClass.name
+        override fun getName(): String {
+            Log.d("mylogger", "${javaClass.name}")
+            return javaClass.name
+        }
 
         override fun isIdleNow(): Boolean = isIdle.get()
 
@@ -144,6 +148,9 @@ class AfterpayCheckoutTest {
         }
 
         fun isIdleNow(isIdle: Boolean) {
+            if (isIdle) {
+                this.callback.onTransitionToIdle();
+            }
             this.isIdle.set(isIdle)
         }
     }

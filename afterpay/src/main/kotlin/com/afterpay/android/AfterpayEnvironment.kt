@@ -5,5 +5,5 @@ import java.util.Locale
 enum class AfterpayEnvironment {
     SANDBOX, PRODUCTION;
 
-    override fun toString(): String = name.toLowerCase(Locale.ROOT)
+    override fun toString(): String = name.lowercase(Locale.ROOT)
 }
