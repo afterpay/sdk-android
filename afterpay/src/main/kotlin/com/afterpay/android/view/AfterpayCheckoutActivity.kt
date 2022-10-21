@@ -13,6 +13,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
@@ -60,6 +61,13 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
 
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish(CancellationStatus.USER_INITIATED)
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
         loadCheckoutUrl()
     }
 
@@ -72,10 +80,6 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         }
 
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        finish(CancellationStatus.USER_INITIATED)
     }
 
     private fun loadCheckoutUrl() {
