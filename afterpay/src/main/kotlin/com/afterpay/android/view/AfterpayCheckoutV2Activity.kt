@@ -21,6 +21,7 @@ import android.webkit.WebView.VISIBLE
 import android.webkit.WebView.WebViewTransport
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
@@ -55,6 +56,13 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish(CancellationStatus.USER_INITIATED)
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         bootstrapUrl = getString(R.string.afterpay_url_checkout_express)
 
@@ -113,10 +121,6 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         }
 
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        finish(CancellationStatus.USER_INITIATED)
     }
 
     private fun loadCheckoutToken() {
