@@ -3,9 +3,7 @@ package com.afterpay.android.view
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 
-sealed class AfterpayModalLinkStyle(val config: ModalLinkConfig) {
-    constructor(string: String, config: ModalLinkConfig) : this(config)
-
+sealed class AfterpayModalLinkStyle(internal val config: ModalLinkConfig) {
     object CircledInfoIcon : AfterpayModalLinkStyle(
         ModalLinkConfig(
             text = "\u24D8",

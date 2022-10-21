@@ -1,6 +1,5 @@
 package com.example.afterpay
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.navigation.NavController
@@ -53,7 +52,6 @@ class AfterpayCheckoutTest {
 
     private val destinationObserver =
         NavController.OnDestinationChangedListener { _, destination, _ ->
-            Log.d("mylogger1", "${destination.id} // ${NavGraph.dest.receipt}")
             idlingResource.isIdleNow(destination.id == NavGraph.dest.receipt)
         }
 
@@ -137,7 +135,6 @@ class AfterpayCheckoutTest {
         private val isIdle = AtomicBoolean(false)
 
         override fun getName(): String {
-            Log.d("mylogger", "${javaClass.name}")
             return javaClass.name
         }
 
@@ -149,7 +146,7 @@ class AfterpayCheckoutTest {
 
         fun isIdleNow(isIdle: Boolean) {
             if (isIdle) {
-                this.callback.onTransitionToIdle();
+                this.callback.onTransitionToIdle()
             }
             this.isIdle.set(isIdle)
         }

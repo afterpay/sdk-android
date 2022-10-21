@@ -2,6 +2,7 @@ package com.example.afterpay.checkout
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +67,7 @@ class CheckoutFragment : Fragment() {
         emailField.addTextChangedListener { text ->
             viewModel.enterEmailAddress(email = text.toString())
         }
-
+        
         val checkoutButton = view.findViewById<AfterpayPaymentButton>(R.id.cart_button_checkout)
         checkoutButton.setOnClickListener { viewModel.showAfterpayCheckout() }
 
@@ -106,6 +107,7 @@ class CheckoutFragment : Fragment() {
                 }
 
                 totalCost.text = state.totalCost
+                versionCheckBox.isChecked = state.useV1
                 expressCheckBox.isChecked = state.express
                 buyNowCheckBox.isChecked = state.buyNow
                 pickupCheckBox.isChecked = state.pickup
