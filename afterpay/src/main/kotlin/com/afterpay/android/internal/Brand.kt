@@ -16,29 +16,30 @@ import java.util.Locale
 
 private val brandLocales = mapOf(
     setOf(EN_AU, EN_CA, FR_CA, EN_NZ, EN_US) to Brand.AFTERPAY,
-    setOf(EN_GB, IT_IT, FR_FR, ES_ES) to Brand.CLEARPAY
+    setOf(EN_GB, IT_IT, FR_FR, ES_ES) to Brand.CLEARPAY,
 )
 
 internal enum class Brand(
     @StringRes val title: Int,
     @StringRes val description: Int,
     @DrawableRes val badgeForeground: Int,
-    @DrawableRes val lockup: Int
+    @DrawableRes val lockup: Int,
 ) {
 
     AFTERPAY(
         title = R.string.afterpay_service_name,
         description = R.string.afterpay_service_name_description,
         badgeForeground = R.drawable.afterpay_badge_fg,
-        lockup = R.drawable.afterpay_lockup
+        lockup = R.drawable.afterpay_lockup,
     ),
 
     CLEARPAY(
         title = R.string.clearpay_service_name,
         description = R.string.clearpay_service_name_description,
         badgeForeground = R.drawable.clearpay_badge_fg,
-        lockup = R.drawable.clearpay_lockup
-    );
+        lockup = R.drawable.clearpay_lockup,
+    ),
+    ;
 
     companion object {
 

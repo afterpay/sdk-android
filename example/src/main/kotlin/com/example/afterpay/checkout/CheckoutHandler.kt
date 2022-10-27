@@ -9,7 +9,7 @@ import com.afterpay.android.model.ShippingOptionsResult
 class CheckoutHandler(
     val onDidCommenceCheckout: () -> Unit,
     val onShippingAddressDidChange: (ShippingAddress) -> Unit,
-    val onShippingOptionDidChange: (ShippingOption) -> Unit
+    val onShippingOptionDidChange: (ShippingOption) -> Unit,
 ) : AfterpayCheckoutV2Handler {
     private var onTokenLoaded: (Result<String>) -> Unit = {}
 
@@ -23,7 +23,7 @@ class CheckoutHandler(
 
     override fun shippingAddressDidChange(
         address: ShippingAddress,
-        onProvideShippingOptions: (ShippingOptionsResult) -> Unit
+        onProvideShippingOptions: (ShippingOptionsResult) -> Unit,
     ) = onShippingAddressDidChange(address).also {
         this.onProvideShippingOptions = onProvideShippingOptions
     }
@@ -35,7 +35,7 @@ class CheckoutHandler(
 
     override fun shippingOptionDidChange(
         shippingOption: ShippingOption,
-        onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit
+        onProvideShippingOptionUpdate: (ShippingOptionUpdateResult?) -> Unit,
     ) = onShippingOptionDidChange(shippingOption).also {
         this.onProvideShippingOptionUpdate = onProvideShippingOptionUpdate
     }

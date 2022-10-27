@@ -20,26 +20,26 @@ private val allProducts = listOf(
         id = UUID.randomUUID(),
         name = "Coffee",
         description = "Ground 250g",
-        price = BigDecimal(12.99)
+        price = BigDecimal(12.99),
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Milk",
         description = "Full Cream 2L",
-        price = BigDecimal(3.49)
+        price = BigDecimal(3.49),
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Nestle Milo",
         description = "Malted Drinking Chocolate 460g",
-        price = BigDecimal(7.00)
+        price = BigDecimal(7.00),
     ),
     Product(
         id = UUID.randomUUID(),
         name = "Coca-cola",
         description = "Bottle 600ml",
-        price = BigDecimal(3.75)
-    )
+        price = BigDecimal(3.75),
+    ),
 )
 
 class ShoppingViewModel(val cart: Cart) : ViewModel() {

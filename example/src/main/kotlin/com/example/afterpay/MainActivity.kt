@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
         AfterpayRepository(
             merchantApi = getDependencies().merchantApi,
-            preferences = getDependencies().sharedPreferences
+            preferences = getDependencies().sharedPreferences,
         )
     }
 
@@ -110,14 +110,14 @@ class MainActivity : AppCompatActivity() {
                 maximumAmount = configuration.maximumAmount,
                 currencyCode = configuration.currency,
                 locale = Locale(configuration.language, configuration.country),
-                environment = AfterpayEnvironment.SANDBOX
+                environment = AfterpayEnvironment.SANDBOX,
             )
         } catch (e: Exception) {
             Snackbar
                 .make(
                     findViewById(android.R.id.content),
                     R.string.configuration_error_message,
-                    Snackbar.LENGTH_INDEFINITE
+                    Snackbar.LENGTH_INDEFINITE,
                 )
                 .setAction(R.string.configuration_error_action_retry) {
                     lifecycleScope.launch {

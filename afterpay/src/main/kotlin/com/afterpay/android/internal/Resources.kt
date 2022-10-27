@@ -18,7 +18,7 @@ internal val Float.dp: Float
     get() = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
         this,
-        Resources.getSystem().displayMetrics
+        Resources.getSystem().displayMetrics,
     )
 
 internal val Int.dp: Int
@@ -40,7 +40,7 @@ internal fun Context.color(@ColorRes colorResId: Int): Int {
 
 internal fun Context.coloredDrawable(
     @DrawableRes drawableResId: Int,
-    @ColorRes colorResId: Int
+    @ColorRes colorResId: Int,
 ): Drawable = ContextCompat.getDrawable(this, drawableResId).let {
     checkNotNull(it) { "Drawable resource not found" }
     val wrappedDrawable = DrawableCompat.wrap(it)
@@ -50,9 +50,9 @@ internal fun Context.coloredDrawable(
 
 internal fun Context.rippleDrawable(
     @ColorRes rippleColorResId: Int,
-    drawable: Drawable
+    drawable: Drawable,
 ): Drawable = RippleDrawable(
     ColorStateList.valueOf(color(rippleColorResId)),
     drawable,
-    null
+    null,
 )

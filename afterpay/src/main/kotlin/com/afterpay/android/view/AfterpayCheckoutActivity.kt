@@ -33,7 +33,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             "portal.clearpay.co.uk",
             "portal.sandbox.clearpay.co.uk",
             "checkout.clearpay.com",
-            "checkout.sandbox.clearpay.com"
+            "checkout.sandbox.clearpay.com",
         )
     }
 
@@ -53,7 +53,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             settings.setDomStorageEnabled(true)
             webViewClient = AfterpayWebViewClient(
                 receivedError = ::handleError,
-                completed = ::finish
+                completed = ::finish,
             )
             webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
@@ -108,8 +108,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             .setMessage(
                 String.format(
                     Afterpay.strings.loadErrorMessage,
-                    resources.getString(Afterpay.brand.title)
-                )
+                    resources.getString(Afterpay.brand.title),
+                ),
             )
             .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 loadCheckoutUrl()
@@ -144,7 +144,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
 private class AfterpayWebViewClient(
     private val receivedError: () -> Unit,
-    private val completed: (CheckoutStatus) -> Unit
+    private val completed: (CheckoutStatus) -> Unit,
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
@@ -163,7 +163,7 @@ private class AfterpayWebViewClient(
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
-        error: WebResourceError?
+        error: WebResourceError?,
     ) {
         if (request?.isForMainFrame == true) {
             receivedError()
@@ -172,7 +172,7 @@ private class AfterpayWebViewClient(
 }
 
 private class AfterpayWebChromeClient(
-    private val openExternalLink: (Uri) -> Unit
+    private val openExternalLink: (Uri) -> Unit,
 ) : WebChromeClient() {
     companion object {
         const val URL_KEY = "url"
@@ -182,7 +182,7 @@ private class AfterpayWebChromeClient(
         view: WebView?,
         isDialog: Boolean,
         isUserGesture: Boolean,
-        resultMsg: Message?
+        resultMsg: Message?,
     ): Boolean {
         val hrefMessage = view?.handler?.obtainMessage()
         view?.requestFocusNodeHref(hrefMessage)

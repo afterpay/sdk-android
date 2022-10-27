@@ -40,7 +40,7 @@ class ShoppingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.fragment_shopping, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class ShoppingFragment : Fragment() {
         viewManager = LinearLayoutManager(requireContext())
         viewAdapter = ShoppingListAdapter(
             onAddProduct = viewModel::add,
-            onRemoveProduct = viewModel::remove
+            onRemoveProduct = viewModel::remove,
         )
 
         recyclerView = view.findViewById<RecyclerView>(R.id.shopping_recyclerView).apply {
@@ -71,7 +71,7 @@ class ShoppingFragment : Fragment() {
         afterpayBreakdown.logoType = AfterpayLogoType.LOCKUP
         afterpayBreakdown.moreInfoOptions = AfterpayMoreInfoOptions(
             modalLinkStyle = AfterpayModalLinkStyle.CircledInfoIcon,
-            modalTheme = AfterpayModalTheme.WHITE
+            modalTheme = AfterpayModalTheme.WHITE,
         )
 
         lifecycleScope.launchWhenCreated {
@@ -88,7 +88,7 @@ class ShoppingFragment : Fragment() {
                     is Command.Checkout ->
                         findNavController().navigate(
                             NavGraph.action.to_checkout,
-                            bundleOf(NavGraph.args.total_cost to command.totalCost)
+                            bundleOf(NavGraph.args.total_cost to command.totalCost),
                         )
                 }
             }
@@ -98,7 +98,7 @@ class ShoppingFragment : Fragment() {
 
 class ShoppingListAdapter(
     private val onAddProduct: (Product) -> Unit,
-    private val onRemoveProduct: (Product) -> Unit
+    private val onRemoveProduct: (Product) -> Unit,
 ) : ListAdapter<ShoppingItem, ShoppingListAdapter.ViewHolder>(itemDiff) {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.shoppingItem_title)
@@ -110,7 +110,7 @@ class ShoppingListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.view_shopping_item, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.view_shopping_item, parent, false),
     )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

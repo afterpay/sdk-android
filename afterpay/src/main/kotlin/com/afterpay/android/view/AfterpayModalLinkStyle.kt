@@ -7,30 +7,30 @@ sealed class AfterpayModalLinkStyle(internal val config: ModalLinkConfig) {
     object CircledInfoIcon : AfterpayModalLinkStyle(
         ModalLinkConfig(
             text = "\u24D8",
-            underlined = false
-        )
+            underlined = false,
+        ),
     )
     object MoreInfoText : AfterpayModalLinkStyle(
         ModalLinkConfig(
-            text = Afterpay.strings.priceBreakdownLinkMoreInfo
-        )
+            text = Afterpay.strings.priceBreakdownLinkMoreInfo,
+        ),
     )
     object LearnMoreText : AfterpayModalLinkStyle(
         ModalLinkConfig(
-            text = Afterpay.strings.priceBreakdownLinkLearnMore
-        )
+            text = Afterpay.strings.priceBreakdownLinkLearnMore,
+        ),
     )
     object CircledQuestionIcon : AfterpayModalLinkStyle(
         ModalLinkConfig(
             image = R.drawable.icon_circled_question,
-            imageRenderingMode = AfterpayImageRenderingMode.TEMPLATE
-        )
+            imageRenderingMode = AfterpayImageRenderingMode.TEMPLATE,
+        ),
     )
     object CircledLogo : AfterpayModalLinkStyle(
         ModalLinkConfig(
             image = R.drawable.afterpay_logo_small,
-            imageRenderingMode = AfterpayImageRenderingMode.ORIGINAL
-        )
+            imageRenderingMode = AfterpayImageRenderingMode.ORIGINAL,
+        ),
     )
     object Custom : AfterpayModalLinkStyle(ModalLinkConfig()) {
         public fun setContent(content: CharSequence) {
@@ -48,7 +48,7 @@ sealed class AfterpayModalLinkStyle(internal val config: ModalLinkConfig) {
 
 internal enum class AfterpayImageRenderingMode {
     ORIGINAL,
-    TEMPLATE
+    TEMPLATE,
 }
 
 internal data class ModalLinkConfig(
@@ -56,5 +56,5 @@ internal data class ModalLinkConfig(
     val image: Int? = null,
     val imageRenderingMode: AfterpayImageRenderingMode? = null,
     var customContent: CharSequence? = null,
-    val underlined: Boolean = true
+    val underlined: Boolean = true,
 )

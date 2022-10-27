@@ -37,7 +37,7 @@ class ReceiptFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.fragment_receipt, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

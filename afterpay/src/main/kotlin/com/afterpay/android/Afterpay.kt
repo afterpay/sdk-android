@@ -69,7 +69,7 @@ object Afterpay {
     @JvmStatic
     fun createCheckoutV2Intent(
         context: Context,
-        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options()
+        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
 
@@ -105,14 +105,14 @@ object Afterpay {
         maximumAmount: String,
         currencyCode: String,
         locale: Locale,
-        environment: AfterpayEnvironment
+        environment: AfterpayEnvironment,
     ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),
             maximumAmount = maximumAmount.toBigDecimal(),
             currency = Currency.getInstance(currencyCode),
             locale = locale.clone() as Locale,
-            environment = environment
+            environment = environment,
         ).also { configuration ->
             if (configuration.maximumAmount < BigDecimal.ZERO) {
                 throw IllegalArgumentException("Maximum order amount is invalid")
@@ -126,7 +126,7 @@ object Afterpay {
                 val validCountries = Locales.validSet.map { it.country }
                 throw IllegalArgumentException(
                     "Locale contains an unsupported country: ${configuration.locale.country}. " +
-                        "Supported countries include: ${validCountries.joinToString(",")}"
+                        "Supported countries include: ${validCountries.joinToString(",")}",
                 )
             }
         }

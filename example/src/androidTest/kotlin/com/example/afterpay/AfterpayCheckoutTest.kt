@@ -76,8 +76,8 @@ class AfterpayCheckoutTest {
         onView(withId(R.id.shopping_recyclerView)).perform(
             actionOnItemAtPosition<ShoppingListAdapter.ViewHolder>(
                 0,
-                clickChildWithId(R.id.shoppingItem_button_addToCart)
-            )
+                clickChildWithId(R.id.shoppingItem_button_addToCart),
+            ),
         )
 
         onView(withId(R.id.shopping_button_viewCart)).perform(click())

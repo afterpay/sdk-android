@@ -34,7 +34,7 @@ class CheckoutFragment : Fragment() {
         CheckoutViewModel.factory(
             totalCost = requireNotNull(arguments?.get(NavGraph.args.total_cost) as? BigDecimal),
             merchantApi = getDependencies().merchantApi,
-            preferences = getDependencies().sharedPreferences
+            preferences = getDependencies().sharedPreferences,
         )
     }
 
@@ -44,7 +44,7 @@ class CheckoutFragment : Fragment() {
     private val checkoutHandler = CheckoutHandler(
         onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
         onShippingAddressDidChange = { viewModel.selectAddress(it) },
-        onShippingOptionDidChange = { viewModel.selectShippingOption(it) }
+        onShippingOptionDidChange = { viewModel.selectShippingOption(it) },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class CheckoutFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.fragment_checkout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,7 +132,7 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
                     is Command.ProvideShippingOptionUpdateResult ->
                         checkoutHandler.provideShippingOptionUpdateResult(
-                            command.shippingOptionUpdateResult
+                            command.shippingOptionUpdateResult,
                         )
                 }
             }
@@ -152,7 +152,7 @@ class CheckoutFragment : Fragment() {
                 }
                 findNavController().navigate(
                     NavGraph.action.to_receipt,
-                    bundleOf(NavGraph.args.checkout_token to token)
+                    bundleOf(NavGraph.args.checkout_token to token),
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {

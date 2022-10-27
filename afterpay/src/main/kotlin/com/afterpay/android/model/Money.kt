@@ -9,5 +9,5 @@ import java.util.Currency
 @Serializable
 data class Money(
     @Serializable(with = BigDecimalSerializer::class) val amount: BigDecimal,
-    @Serializable(with = CurrencySerializer::class) val currency: Currency
+    @Serializable(with = CurrencySerializer::class) val currency: Currency,
 )

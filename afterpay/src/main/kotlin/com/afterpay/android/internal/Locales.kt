@@ -10,7 +10,7 @@ private val validRegionLanguages = mapOf(
     Locales.EN_CA.country to setOf(Locales.EN_CA, Locales.FR_CA),
     Locales.FR_FR.country to setOf(Locales.FR_FR, Locales.EN_GB),
     Locales.IT_IT.country to setOf(Locales.IT_IT, Locales.EN_GB),
-    Locales.ES_ES.country to setOf(Locales.ES_ES, Locales.EN_GB)
+    Locales.ES_ES.country to setOf(Locales.ES_ES, Locales.EN_GB),
 )
 
 internal object Locales {
@@ -33,7 +33,7 @@ internal object Locales {
         EN_US,
         IT_IT,
         FR_FR,
-        ES_ES
+        ES_ES,
     )
 }
 
