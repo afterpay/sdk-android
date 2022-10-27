@@ -11,6 +11,7 @@ import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.getRegionLanguage
+import com.afterpay.android.internal.putCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
@@ -55,10 +56,11 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+    fun createCheckoutIntent(context: Context, checkoutUrl: String, loadRedirectUrls: Boolean = false): Intent {
         val url = if (enabled) { checkoutUrl } else { "LANGUAGE_NOT_SUPPORTED" }
         return Intent(context, AfterpayCheckoutActivity::class.java)
             .putCheckoutUrlExtra(url)
+            .putCheckoutShouldLoadRedirectUrls(loadRedirectUrls)
     }
 
     /**
