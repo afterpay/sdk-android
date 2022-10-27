@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 
 inline fun <reified T : ViewModel> viewModelFactory(
     viewModelClass: Class<T> = T::class.java,
-    crossinline factory: () -> T
+    crossinline factory: () -> T,
 ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T =

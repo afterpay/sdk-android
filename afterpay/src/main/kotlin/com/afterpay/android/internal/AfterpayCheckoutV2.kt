@@ -20,7 +20,7 @@ internal data class AfterpayCheckoutV2(
     constructor(
         token: String,
         configuration: Configuration,
-        options: AfterpayCheckoutV2Options
+        options: AfterpayCheckoutV2Options,
     ) : this(
         token = token,
         locale = configuration.locale.toString(),
@@ -30,6 +30,6 @@ internal data class AfterpayCheckoutV2(
         buyNow = options.buyNow,
         shippingOptionRequired = options.shippingOptionRequired,
         checkoutRedesignForced = options.enableSingleShippingOptionUpdate,
-        consumerLocale = Afterpay.language.toString()
+        consumerLocale = Afterpay.language.toString(),
     )
 }

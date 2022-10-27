@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val afterpayRepository by lazy {
         AfterpayRepository(
             merchantApi = getDependencies().merchantApi,
-            preferences = getDependencies().sharedPreferences
+            preferences = getDependencies().sharedPreferences,
         )
     }
 
@@ -39,31 +39,31 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         val navController = findNavController(R.id.nav_host_fragment).apply {
-            graph = createGraph(nav_graph.id, nav_graph.dest.shopping) {
-                fragment<ShoppingFragment>(nav_graph.dest.shopping) {
+            graph = createGraph(NavGraph.id, NavGraph.dest.shopping) {
+                fragment<ShoppingFragment>(NavGraph.dest.shopping) {
                     label = getString(R.string.title_shopping)
-                    action(nav_graph.action.to_checkout) {
-                        destinationId = nav_graph.dest.checkout
+                    action(NavGraph.action.to_checkout) {
+                        destinationId = NavGraph.dest.checkout
                     }
                 }
-                fragment<CheckoutFragment>(nav_graph.dest.checkout) {
+                fragment<CheckoutFragment>(NavGraph.dest.checkout) {
                     label = getString(R.string.title_checkout)
-                    argument(nav_graph.args.total_cost) {
+                    argument(NavGraph.args.total_cost) {
                         type = NavType.ParcelableType(BigDecimal::class.java)
                     }
-                    action(nav_graph.action.to_receipt) {
-                        destinationId = nav_graph.dest.receipt
+                    action(NavGraph.action.to_receipt) {
+                        destinationId = NavGraph.dest.receipt
                     }
                 }
-                fragment<ReceiptFragment>(nav_graph.dest.receipt) {
+                fragment<ReceiptFragment>(NavGraph.dest.receipt) {
                     label = getString(R.string.title_receipt)
-                    argument(nav_graph.args.checkout_token) {
+                    argument(NavGraph.args.checkout_token) {
                         type = NavType.StringType
                     }
-                    action(nav_graph.action.back_to_shopping) {
-                        destinationId = nav_graph.dest.shopping
+                    action(NavGraph.action.back_to_shopping) {
+                        destinationId = NavGraph.dest.shopping
                         navOptions {
-                            popUpTo(nav_graph.dest.shopping) {
+                            popUpTo(NavGraph.dest.shopping) {
                                 inclusive = true
                             }
                             launchSingleTop = true
@@ -110,14 +110,14 @@ class MainActivity : AppCompatActivity() {
                 maximumAmount = configuration.maximumAmount,
                 currencyCode = configuration.currency,
                 locale = Locale(configuration.language, configuration.country),
-                environment = AfterpayEnvironment.SANDBOX
+                environment = AfterpayEnvironment.SANDBOX,
             )
         } catch (e: Exception) {
             Snackbar
                 .make(
                     findViewById(android.R.id.content),
                     R.string.configuration_error_message,
-                    Snackbar.LENGTH_INDEFINITE
+                    Snackbar.LENGTH_INDEFINITE,
                 )
                 .setAction(R.string.configuration_error_action_retry) {
                     lifecycleScope.launch {

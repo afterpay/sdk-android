@@ -8,14 +8,14 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class AfterpayRepository(
     private val merchantApi: MerchantApi,
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences,
 ) {
     data class Configuration(
         val minimumAmount: String?,
         val maximumAmount: String,
         val currency: String,
         val language: String,
-        val country: String
+        val country: String,
     )
 
     suspend fun fetchConfiguration(forceRefresh: Boolean = false): Configuration {
@@ -28,7 +28,7 @@ class AfterpayRepository(
                     maximumAmount = it.maximumAmount.amount,
                     currency = it.maximumAmount.currency,
                     language = it.locale.language,
-                    country = it.locale.country
+                    country = it.locale.country,
                 )
             }.also { configuration ->
                 preferences.edit {
@@ -68,7 +68,7 @@ private fun SharedPreferences.getConfiguration(): AfterpayRepository.Configurati
         maximumAmount = getString(PreferenceKey.maximumAmount, null) ?: return null,
         currency = getString(PreferenceKey.currency, null) ?: return null,
         language = getString(PreferenceKey.language, null) ?: return null,
-        country = getString(PreferenceKey.country, null) ?: return null
+        country = getString(PreferenceKey.country, null) ?: return null,
     )
 }
 

@@ -16,7 +16,7 @@ class ExampleApplication : Application() {
                 StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
-                    .build()
+                    .build(),
             )
             StrictMode.setVmPolicy(
                 StrictMode.VmPolicy.Builder()
@@ -24,7 +24,7 @@ class ExampleApplication : Application() {
                     .detectLeakedClosableObjects()
                     .detectLeakedRegistrationObjects()
                     .penaltyLog()
-                    .build()
+                    .build(),
             )
         }
 

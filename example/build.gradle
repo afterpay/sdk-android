@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion versions.compile_sdk
+    compileSdkVersion versions.example_compile_sdk
     buildToolsVersion versions.build_tools
 
     defaultConfig {
         applicationId "com.example.afterpay"
         minSdkVersion versions.min_sdk
-        targetSdkVersion versions.compile_sdk
+        targetSdkVersion versions.example_compile_sdk
         versionCode 1
         versionName '1.0'
 
@@ -49,9 +49,6 @@ android {
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
-    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlin.Experimental"]
-    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
-    kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.FlowPreview"]
     kotlinOptions.freeCompilerArgs += ["-Xallow-result-return-type"]
 }
 

@@ -1,6 +1,6 @@
 package com.example.afterpay
 
-object nav_graph {
+object NavGraph {
     private var uniqueId = 1
         get() = field++
 
