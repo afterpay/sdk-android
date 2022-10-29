@@ -32,7 +32,7 @@ import java.math.BigDecimal
 class AfterpayWidgetView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : WebView(context, attrs, defStyleAttr) {
 
     private val configuration: Configuration
@@ -62,7 +62,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String) -> Unit,
         showLogo: Boolean = true,
-        showHeading: Boolean = true
+        showHeading: Boolean = true,
     ) {
         if (!Afterpay.enabled) {
             visibility = View.GONE
@@ -97,7 +97,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         onUpdate: (dueToday: Money, checksum: String?) -> Unit,
         onError: (error: String) -> Unit,
         showLogo: Boolean = true,
-        showHeading: Boolean = true
+        showHeading: Boolean = true,
     ) {
         if (!Afterpay.enabled) {
             visibility = View.GONE
@@ -119,7 +119,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     private fun configureWebView(
         onExternalRequest: (Uri) -> Unit,
         onError: (String) -> Unit,
-        onPageFinished: () -> Unit
+        onPageFinished: () -> Unit,
     ) {
         setAfterpayUserAgentString()
         @SuppressLint("SetJavaScriptEnabled")
@@ -135,14 +135,14 @@ class AfterpayWidgetView @JvmOverloads constructor(
                     webView: WebView?,
                     isDialog: Boolean,
                     isUserGesture: Boolean,
-                    resultMsg: Message?
+                    resultMsg: Message?,
                 ): Boolean {
                     val message = webView?.handler?.obtainMessage()
                     webView?.requestFocusNodeHref(message)
                     message?.data?.getString("url")?.let { onExternalRequest(Uri.parse(it)) }
                     return false
                 }
-            }
+            },
         )
 
         super.setWebViewClient(
@@ -157,7 +157,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
                 override fun onReceivedError(
                     webView: WebView?,
                     request: WebResourceRequest?,
-                    error: WebResourceError?
+                    error: WebResourceError?,
                 ) {
                     checkNotNull(webView) { "A WebView was expected but not received" }
                     if (request?.isForMainFrame == true) {
@@ -169,14 +169,14 @@ class AfterpayWidgetView @JvmOverloads constructor(
                     webView: WebView?,
                     errorCode: Int,
                     description: String?,
-                    failingUrl: String?
+                    failingUrl: String?,
                 ) {
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                         checkNotNull(webView) { "A WebView was expected but not received" }
                         onError(description.orDefaultError())
                     }
                 }
-            }
+            },
         )
 
         val widgetScriptUrl = context.resources.getString(R.string.afterpay_url_widget)
@@ -202,12 +202,12 @@ class AfterpayWidgetView @JvmOverloads constructor(
         token: String?,
         totalCost: String?,
         showLogo: Boolean,
-        showHeading: Boolean
+        showHeading: Boolean,
     ) {
         val style = "{ \"logo\": $showLogo, \"heading\": $showHeading }"
         evaluateJavascript(
             "createAfterpayWidget($token, $totalCost, \"${configuration.locale}\", $style);",
-            null
+            null,
         )
     }
 
@@ -225,7 +225,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
 
         evaluateJavascript(
             "updateAmount(${totalCost.toAmount()});",
-            null
+            null,
         )
     }
 
@@ -263,7 +263,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
         val isValid: Boolean,
         val amountDueToday: Money? = null,
         val paymentScheduleChecksum: String? = null,
-        val error: Error? = null
+        val error: Error? = null,
     ) {
 
         @Serializable
@@ -271,7 +271,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
             val errorCode: String? = null,
             val errorId: String? = null,
             val message: String? = null,
-            val httpStatusCode: Int? = null
+            val httpStatusCode: Int? = null,
         )
     }
 }

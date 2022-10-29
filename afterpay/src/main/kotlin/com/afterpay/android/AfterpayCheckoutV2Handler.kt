@@ -10,11 +10,11 @@ interface AfterpayCheckoutV2Handler {
 
     fun shippingAddressDidChange(
         address: ShippingAddress,
-        onProvideShippingOptions: (ShippingOptionsResult) -> Unit
+        onProvideShippingOptions: (ShippingOptionsResult) -> Unit,
     )
 
     fun shippingOptionDidChange(
         shippingOption: ShippingOption,
-        onProvideShippingOption: (ShippingOptionUpdateResult?) -> Unit
+        onProvideShippingOption: (ShippingOptionUpdateResult?) -> Unit,
     )
 }

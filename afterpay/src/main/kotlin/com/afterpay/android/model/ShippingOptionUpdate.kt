@@ -7,5 +7,5 @@ data class ShippingOptionUpdate(
     val id: String,
     var shippingAmount: Money,
     var orderAmount: Money,
-    var taxAmount: Money?
+    var taxAmount: Money?,
 )

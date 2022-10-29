@@ -41,7 +41,7 @@ import java.util.Locale
 class CheckoutViewModel(
     totalCost: BigDecimal,
     private val merchantApi: MerchantApi,
-    private val preferences: SharedPreferences
+    private val preferences: SharedPreferences,
 ) : ViewModel() {
     data class State(
         val emailAddress: String,
@@ -50,7 +50,7 @@ class CheckoutViewModel(
         val express: Boolean,
         val buyNow: Boolean,
         val pickup: Boolean,
-        val shippingOptionsRequired: Boolean
+        val shippingOptionsRequired: Boolean,
     ) {
         val totalCost: String
             get() = total.asCurrency()
@@ -67,7 +67,7 @@ class CheckoutViewModel(
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
-            val shippingOptionUpdateResult: ShippingOptionUpdateResult?
+            val shippingOptionUpdateResult: ShippingOptionUpdateResult?,
         ) : Command()
     }
 
@@ -79,8 +79,8 @@ class CheckoutViewModel(
             express = preferences.getExpress(),
             buyNow = preferences.getBuyNow(),
             pickup = preferences.getPickup(),
-            shippingOptionsRequired = preferences.getShippingOptionsRequired()
-        )
+            shippingOptionsRequired = preferences.getShippingOptionsRequired(),
+        ),
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
 
@@ -153,7 +153,7 @@ class CheckoutViewModel(
                     "",
                     Money("0.00".toBigDecimal(), currency),
                     Money("50.00".toBigDecimal(), currency),
-                    Money("0.00".toBigDecimal(), currency)
+                    Money("0.00".toBigDecimal(), currency),
                 ),
                 ShippingOption(
                     "priority",
@@ -161,8 +161,8 @@ class CheckoutViewModel(
                     "Next business day",
                     Money("10.00".toBigDecimal(), currency),
                     Money("60.00".toBigDecimal(), currency),
-                    null
-                )
+                    null,
+                ),
             )
 
             val result = ShippingOptionsSuccessResult(shippingOptions)
@@ -189,7 +189,7 @@ class CheckoutViewModel(
                     "standard",
                     Money("0.00".toBigDecimal(), currency),
                     Money("50.00".toBigDecimal(), currency),
-                    Money("2.00".toBigDecimal(), currency)
+                    Money("2.00".toBigDecimal(), currency),
                 )
 
                 result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
@@ -205,12 +205,12 @@ class CheckoutViewModel(
         fun factory(
             totalCost: BigDecimal,
             merchantApi: MerchantApi,
-            preferences: SharedPreferences
+            preferences: SharedPreferences,
         ) = viewModelFactory {
             CheckoutViewModel(
                 totalCost = totalCost,
                 merchantApi = merchantApi,
-                preferences = preferences
+                preferences = preferences,
             )
         }
     }

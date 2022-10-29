@@ -14,14 +14,14 @@ import androidx.navigation.fragment.findNavController
 import com.afterpay.android.model.CheckoutV3Data
 import com.afterpay.android.model.VirtualCard
 import com.example.afterpay.R
-import com.example.afterpay.nav_graph
+import com.example.afterpay.NavGraph
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class DetailsFragment : Fragment() {
 
     private val resultData: CheckoutV3Data
-        get() = requireNotNull(arguments?.getParcelable(nav_graph.args.result_data_v3))
+        get() = requireNotNull(arguments?.getParcelable(NavGraph.args.result_data_v3))
 
     private val viewModel by viewModels<DetailsViewModel> { DetailsViewModel.factory(resultData) }
 
@@ -35,7 +35,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(nav_graph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.action.back_to_shopping)
         }
 
         val cardDetails = resultData.cardDetails

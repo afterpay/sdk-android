@@ -19,7 +19,7 @@ internal object MoneyBigDecimalSerializer : KSerializer<BigDecimal> {
 
     override val descriptor = PrimitiveSerialDescriptor(
         serialName = "BigDecimal",
-        kind = PrimitiveKind.STRING
+        kind = PrimitiveKind.STRING,
     )
 
     override fun deserialize(decoder: Decoder) = decoder.decodeString().toBigDecimal()
@@ -36,7 +36,7 @@ internal object CurrencySerializer : KSerializer<Currency> {
 
     override val descriptor = PrimitiveSerialDescriptor(
         serialName = "Currency",
-        kind = PrimitiveKind.STRING
+        kind = PrimitiveKind.STRING,
     )
 
     override fun deserialize(decoder: Decoder): Currency =

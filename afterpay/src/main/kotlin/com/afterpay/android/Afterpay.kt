@@ -15,6 +15,7 @@ import com.afterpay.android.internal.getCancellationStatusExtraV3
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.getRegionLanguage
 import com.afterpay.android.internal.getResultDataExtra
+import com.afterpay.android.internal.putCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
@@ -75,10 +76,11 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+    fun createCheckoutIntent(context: Context, checkoutUrl: String, loadRedirectUrls: Boolean = false): Intent {
         val url = if (enabled) { checkoutUrl } else { "LANGUAGE_NOT_SUPPORTED" }
         return Intent(context, AfterpayCheckoutActivity::class.java)
             .putCheckoutUrlExtra(url)
+            .putCheckoutShouldLoadRedirectUrls(loadRedirectUrls)
     }
 
     /**
@@ -89,7 +91,7 @@ object Afterpay {
     @JvmStatic
     fun createCheckoutV2Intent(
         context: Context,
-        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options()
+        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
 
@@ -125,7 +127,7 @@ object Afterpay {
         maximumAmount: String,
         currencyCode: String,
         locale: Locale,
-        environment: AfterpayEnvironment
+        environment: AfterpayEnvironment,
     ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),

@@ -22,14 +22,14 @@ class AfterpayInstalmentPriceTest {
         40.04 to "$10.01",
         40.009 to "$10.00",
         40.019 to "$10.00",
-        40.3934567 to "$10.10"
+        40.3934567 to "$10.10",
     )
 
     private val priceCasesInt = mapOf(
         40 to "$10.00",
         41 to "$10.25",
         100 to "$25.00",
-        103 to "$25.75"
+        103 to "$25.75",
     )
 
     @Test
@@ -38,7 +38,7 @@ class AfterpayInstalmentPriceTest {
             val instalments = availableInstalment(
                 amount.toBigDecimal(),
                 Currency.getInstance("AUD"),
-                Locales.EN_AU
+                Locales.EN_AU,
             )
             Assert.assertEquals(instalmentAmount, instalments.instalmentAmount)
         }
@@ -50,7 +50,7 @@ class AfterpayInstalmentPriceTest {
             val instalments = availableInstalment(
                 amount.toBigDecimal(),
                 Currency.getInstance("AUD"),
-                Locales.EN_AU
+                Locales.EN_AU,
             )
             Assert.assertEquals(instalmentAmount, instalments.instalmentAmount)
         }
@@ -69,7 +69,7 @@ class AfterpayInstalmentPriceTest {
         val instalments = availableInstalment(
             oneHundredAndTwentyOne,
             Currency.getInstance("AUD"),
-            Locales.EN_AU
+            Locales.EN_AU,
         )
 
         Assert.assertEquals("$30.25", instalments.instalmentAmount)
@@ -78,14 +78,14 @@ class AfterpayInstalmentPriceTest {
     private fun availableInstalment(
         amount: BigDecimal,
         currency: Currency,
-        locale: Locale
+        locale: Locale,
     ): AfterpayInstalment.Available {
         val configuration = Configuration(
             2.toBigDecimal(),
             1000.toBigDecimal(),
             currency,
             locale,
-            AfterpayEnvironment.SANDBOX
+            AfterpayEnvironment.SANDBOX,
         )
         return AfterpayInstalment.of(amount, configuration, locale) as AfterpayInstalment.Available
     }

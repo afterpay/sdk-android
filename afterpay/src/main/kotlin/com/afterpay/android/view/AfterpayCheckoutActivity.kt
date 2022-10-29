@@ -3,6 +3,7 @@ package com.afterpay.android.view
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Message
@@ -12,11 +13,13 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
+import com.afterpay.android.internal.getCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
@@ -32,7 +35,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             "portal.clearpay.co.uk",
             "portal.sandbox.clearpay.co.uk",
             "checkout.clearpay.com",
-            "checkout.sandbox.clearpay.com"
+            "checkout.sandbox.clearpay.com",
         )
     }
 
@@ -52,10 +55,18 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             settings.setDomStorageEnabled(true)
             webViewClient = AfterpayWebViewClient(
                 receivedError = ::handleError,
-                completed = ::finish
+                completed = ::finish,
+                shouldLoadRedirectUrls = intent.getCheckoutShouldLoadRedirectUrls(),
             )
             webChromeClient = AfterpayWebChromeClient(openExternalLink = ::open)
         }
+
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish(CancellationStatus.USER_INITIATED)
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
         loadCheckoutUrl()
     }
@@ -69,10 +80,6 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
         }
 
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        finish(CancellationStatus.USER_INITIATED)
     }
 
     private fun loadCheckoutUrl() {
@@ -104,8 +111,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
             .setMessage(
                 String.format(
                     Afterpay.strings.loadErrorMessage,
-                    resources.getString(Afterpay.brand.title)
-                )
+                    resources.getString(Afterpay.brand.title),
+                ),
             )
             .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 loadCheckoutUrl()
@@ -140,7 +147,8 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
 private class AfterpayWebViewClient(
     private val receivedError: () -> Unit,
-    private val completed: (CheckoutStatus) -> Unit
+    private val completed: (CheckoutStatus) -> Unit,
+    private val shouldLoadRedirectUrls: Boolean,
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
@@ -148,6 +156,10 @@ private class AfterpayWebViewClient(
 
         return when {
             status != null -> {
+                if (shouldLoadRedirectUrls) {
+                    return false
+                }
+
                 completed(status)
                 true
             }
@@ -156,10 +168,29 @@ private class AfterpayWebViewClient(
         }
     }
 
+    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+
+        if (url.equals("about:blank")) {
+            return
+        }
+
+        val uri = Uri.parse(url)
+        val status = CheckoutStatus.fromUrl(uri)
+
+        when {
+            status != null -> {
+                completed(status)
+            }
+
+            else -> {}
+        }
+    }
+
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
-        error: WebResourceError?
+        error: WebResourceError?,
     ) {
         if (request?.isForMainFrame == true) {
             receivedError()
@@ -168,7 +199,7 @@ private class AfterpayWebViewClient(
 }
 
 private class AfterpayWebChromeClient(
-    private val openExternalLink: (Uri) -> Unit
+    private val openExternalLink: (Uri) -> Unit,
 ) : WebChromeClient() {
     companion object {
         const val URL_KEY = "url"
@@ -178,7 +209,7 @@ private class AfterpayWebChromeClient(
         view: WebView?,
         isDialog: Boolean,
         isUserGesture: Boolean,
-        resultMsg: Message?
+        resultMsg: Message?,
     ): Boolean {
         val hrefMessage = view?.handler?.obtainMessage()
         view?.requestFocusNodeHref(hrefMessage)
@@ -195,10 +226,15 @@ private sealed class CheckoutStatus {
     object Cancelled : CheckoutStatus()
 
     companion object {
-        fun fromUrl(url: Uri): CheckoutStatus? = when (url.getQueryParameter("status")) {
-            "SUCCESS" -> url.getQueryParameter("orderToken")?.let(::Success)
-            "CANCELLED" -> Cancelled
-            else -> null
+        fun fromUrl(url: Uri): CheckoutStatus? {
+            return when (url.getQueryParameter("status")) {
+                "SUCCESS" -> {
+                    val token = url.getQueryParameter("orderToken") ?: url.getQueryParameter("token")
+                    token?.let(::Success)
+                }
+                "CANCELLED" -> Cancelled
+                else -> null
+            }
         }
     }
 }

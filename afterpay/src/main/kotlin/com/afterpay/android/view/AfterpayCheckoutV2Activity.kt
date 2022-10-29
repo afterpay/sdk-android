@@ -21,6 +21,7 @@ import android.webkit.WebView.VISIBLE
 import android.webkit.WebView.WebViewTransport
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
@@ -56,6 +57,13 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish(CancellationStatus.USER_INITIATED)
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
         bootstrapUrl = getString(R.string.afterpay_url_checkout_express)
 
         setContentView(R.layout.activity_express_web_checkout)
@@ -84,14 +92,14 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
                 onOpenWebView = { checkoutWebView = it },
                 onPageFinished = { frameLayout.removeView(loadingWebView) },
                 receivedError = ::handleCheckoutError,
-                openExternalLink = ::open
+                openExternalLink = ::open,
             )
 
             val javascriptInterface = BootstrapJavascriptInterface(
                 activity = activity,
                 webView = this,
                 complete = ::finish,
-                cancel = ::finish
+                cancel = ::finish,
             )
 
             addJavascriptInterface(javascriptInterface, "Android")
@@ -113,10 +121,6 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
         }
 
         super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        finish(CancellationStatus.USER_INITIATED)
     }
 
     private fun loadCheckoutToken() {
@@ -152,8 +156,8 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
             .setMessage(
                 String.format(
                     Afterpay.strings.loadErrorMessage,
-                    resources.getString(Afterpay.brand.title)
-                )
+                    resources.getString(Afterpay.brand.title),
+                ),
             )
             .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
                 retryAction()
@@ -197,7 +201,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
 private class BootstrapWebViewClient(
     private val onPageFinished: () -> Unit,
-    private val receivedError: () -> Unit
+    private val receivedError: () -> Unit,
 ) : WebViewClient() {
     override fun onPageFinished(view: WebView?, url: String?) {
         onPageFinished()
@@ -206,7 +210,7 @@ private class BootstrapWebViewClient(
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
-        error: WebResourceError?
+        error: WebResourceError?,
     ) {
         if (request?.isForMainFrame == true) {
             receivedError()
@@ -220,7 +224,7 @@ private class BootstrapWebChromeClient(
     private val onOpenWebView: (WebView) -> Unit,
     private val onPageFinished: () -> Unit,
     private val receivedError: () -> Unit,
-    private val openExternalLink: (Uri) -> Unit
+    private val openExternalLink: (Uri) -> Unit,
 ) : WebChromeClient() {
     companion object {
         const val URL_KEY = "url"
@@ -231,7 +235,7 @@ private class BootstrapWebChromeClient(
         view: WebView?,
         isDialog: Boolean,
         isUserGesture: Boolean,
-        resultMsg: Message?
+        resultMsg: Message?,
     ): Boolean {
         val webView = WebView(context)
         webView.setAfterpayUserAgentString()
@@ -249,7 +253,7 @@ private class BootstrapWebChromeClient(
             override fun onReceivedError(
                 view: WebView?,
                 request: WebResourceRequest?,
-                error: WebResourceError?
+                error: WebResourceError?,
             ) {
                 if (request?.isForMainFrame == true) {
                     receivedError()
@@ -262,7 +266,7 @@ private class BootstrapWebChromeClient(
                 view: WebView?,
                 isDialog: Boolean,
                 isUserGesture: Boolean,
-                resultMsg: Message?
+                resultMsg: Message?,
             ): Boolean {
                 val hrefMessage = view?.handler?.obtainMessage()
                 view?.requestFocusNodeHref(hrefMessage)
@@ -290,7 +294,7 @@ private class BootstrapJavascriptInterface(
     private val activity: Activity,
     private val webView: WebView,
     private val complete: (AfterpayCheckoutCompletion) -> Unit,
-    private val cancel: (CancellationStatus) -> Unit
+    private val cancel: (CancellationStatus) -> Unit,
 ) {
 
     private val json = Json { ignoreUnknownKeys = true }
@@ -306,7 +310,7 @@ private class BootstrapJavascriptInterface(
                 when (message) {
                     is CheckoutLogMessage -> Log.d(
                         javaClass.simpleName,
-                        message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" }
+                        message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" },
                     )
 
                     is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {

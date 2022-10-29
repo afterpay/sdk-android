@@ -10,12 +10,12 @@ import java.util.Locale
 
 internal sealed class AfterpayInstalment {
     data class Available(
-        val instalmentAmount: String
+        val instalmentAmount: String,
     ) : AfterpayInstalment()
 
     data class NotAvailable(
         val minimumAmount: String?,
-        val maximumAmount: String
+        val maximumAmount: String,
     ) : AfterpayInstalment()
 
     object NoConfiguration : AfterpayInstalment()
@@ -84,7 +84,7 @@ internal sealed class AfterpayInstalment {
 
                 return NotAvailable(
                     minimumAmount = configuration.minimumAmount?.let(currencyFormatterNoDecimals::format),
-                    maximumAmount = currencyFormatterNoDecimals.format(configuration.maximumAmount)
+                    maximumAmount = currencyFormatterNoDecimals.format(configuration.maximumAmount),
                 )
             }
 

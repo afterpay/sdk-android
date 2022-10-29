@@ -14,7 +14,7 @@ private const val MIN_WIDTH: Int = 64
 
 class AfterpayBadge @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
     var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
@@ -35,8 +35,8 @@ class AfterpayBadge @JvmOverloads constructor(
             colorScheme = AfterpayColorScheme.values()[
                 attributes.getInteger(
                     R.styleable.Afterpay_afterpayColorScheme,
-                    AfterpayColorScheme.DEFAULT.ordinal
-                )
+                    AfterpayColorScheme.DEFAULT.ordinal,
+                ),
             ]
         }
     }
@@ -45,13 +45,13 @@ class AfterpayBadge @JvmOverloads constructor(
         setImageDrawable(
             context.coloredDrawable(
                 drawableResId = Afterpay.brand.badgeForeground,
-                colorResId = colorScheme.foregroundColorResId
-            )
+                colorResId = colorScheme.foregroundColorResId,
+            ),
         )
 
         background = context.coloredDrawable(
             R.drawable.afterpay_badge_bg,
-            colorScheme.backgroundColorResId
+            colorScheme.backgroundColorResId,
         )
 
         invalidate()

@@ -14,7 +14,8 @@ enum class AfterpayIntroText(val id: Int) {
     OR_TITLE(8),
     OR(9),
     PAY_IN_TITLE(10),
-    PAY_IN(11);
+    PAY_IN(11),
+    ;
 
     internal companion object {
 

@@ -15,7 +15,7 @@ private const val MIN_WIDTH: Int = 64
 
 class AfterpayLockup @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
     var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
@@ -36,8 +36,8 @@ class AfterpayLockup @JvmOverloads constructor(
             colorScheme = AfterpayColorScheme.values()[
                 attributes.getInteger(
                     R.styleable.Afterpay_afterpayColorScheme,
-                    AfterpayColorScheme.DEFAULT.ordinal
-                )
+                    AfterpayColorScheme.DEFAULT.ordinal,
+                ),
             ]
         }
     }
@@ -52,8 +52,8 @@ class AfterpayLockup @JvmOverloads constructor(
         setImageDrawable(
             context.coloredDrawable(
                 drawableResId = Afterpay.brand.lockup,
-                colorResId = colorScheme.foregroundColorResId
-            )
+                colorResId = colorScheme.foregroundColorResId,
+            ),
         )
 
         invalidate()

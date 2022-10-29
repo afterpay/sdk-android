@@ -10,11 +10,11 @@ import java.util.UUID
 class Cart {
     private data class State(
         val lastUpdated: Date,
-        val items: MutableMap<UUID, Item>
+        val items: MutableMap<UUID, Item>,
     )
 
     data class Summary(
-        val items: List<Item>
+        val items: List<Item>,
     ) {
         val totalCost: BigDecimal
             get() = items.fold(0.toBigDecimal()) { acc, item -> acc + item.totalCost }
@@ -25,7 +25,7 @@ class Cart {
 
     data class Item(
         val product: Product,
-        var quantity: Int
+        var quantity: Int,
     ) {
         val totalCost: BigDecimal
             get() = product.price * quantity.toBigDecimal()

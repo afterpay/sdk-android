@@ -33,7 +33,7 @@ internal object Locales {
         EN_US,
         IT_IT,
         FR_FR,
-        ES_ES
+        ES_ES,
     )
 }
 
