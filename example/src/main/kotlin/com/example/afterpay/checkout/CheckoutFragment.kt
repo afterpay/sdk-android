@@ -134,16 +134,16 @@ class CheckoutFragment : Fragment() {
                             orderTotal = OrderTotal(
                                 total = command.total,
                                 shipping = BigDecimal.ZERO,
-                                tax = BigDecimal.ZERO
+                                tax = BigDecimal.ZERO,
                             ),
                             items = arrayOf(
                                 Item(
                                     name = "Coffee",
                                     quantity = 1u,
-                                    price = BigDecimal(13.37)
-                                )
+                                    price = BigDecimal(13.37),
+                                ),
                             ),
-                            buyNow = command.buyNow
+                            buyNow = command.buyNow,
                         )
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY_V3)
                     }
@@ -189,7 +189,7 @@ class CheckoutFragment : Fragment() {
                 }
                 findNavController().navigate(
                     NavGraph.action.to_details_v3,
-                    bundleOf(NavGraph.args.result_data_v3 to resultData)
+                    bundleOf(NavGraph.args.result_data_v3 to resultData),
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
@@ -232,6 +232,6 @@ class CheckoutFragment : Fragment() {
         override val pageUrl: URL? = null,
         override val imageUrl: URL? = null,
         override val categories: List<List<String>>? = null,
-        override val estimatedShipmentDate: String? = null
+        override val estimatedShipmentDate: String? = null,
     ) : CheckoutV3Item
 }

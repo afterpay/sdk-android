@@ -29,7 +29,7 @@ class CheckoutV3ViewModel(private var options: AfterpayCheckoutV3Options) : View
             options = options.copy(
                 redirectUrl = url,
                 singleUseCardToken = response.singleUseCardToken,
-                token = response.token
+                token = response.token,
             )
             url
         }
@@ -42,21 +42,21 @@ class CheckoutV3ViewModel(private var options: AfterpayCheckoutV3Options) : View
             val tokens = CheckoutV3Tokens(
                 token = requireNotNull(options.token),
                 singleUseCardToken = requireNotNull(options.singleUseCardToken),
-                ppaConfirmToken = ppaConfirmToken
+                ppaConfirmToken = ppaConfirmToken,
             )
 
             val response = withContext(Dispatchers.IO) {
                 ApiV3.request<CheckoutV3.Confirmation.Response, CheckoutV3Tokens>(
                     confirmationUrl,
                     ApiV3.HttpVerb.POST,
-                    tokens
+                    tokens,
                 )
             }.getOrThrow()
 
             CheckoutV3Data(
                 cardDetails = response.paymentDetails.virtualCard ?: response.paymentDetails.virtualCardToken!!,
                 cardValidUntilInternal = response.cardValidUntil,
-                tokens = tokens
+                tokens = tokens,
             )
         }
     }

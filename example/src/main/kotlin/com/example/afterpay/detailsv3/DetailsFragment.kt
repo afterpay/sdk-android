@@ -13,8 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.model.CheckoutV3Data
 import com.afterpay.android.model.VirtualCard
-import com.example.afterpay.R
 import com.example.afterpay.NavGraph
+import com.example.afterpay.R
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -28,7 +28,7 @@ class DetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.fragment_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

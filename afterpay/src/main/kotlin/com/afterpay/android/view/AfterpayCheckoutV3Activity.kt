@@ -48,7 +48,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
             settings.setSupportMultipleWindows(true)
             webViewClient = AfterpayWebViewClientV3(
                 receivedError = ::handleError,
-                received = ::received
+                received = ::received,
             )
             webChromeClient = AfterpayWebChromeClientV3(openExternalLink = ::open)
             val htmlData = Base64.encodeToString(Html.loading.toByteArray(), Base64.NO_PADDING)
@@ -145,7 +145,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
 private class AfterpayWebViewClientV3(
     private val receivedError: () -> Unit,
-    private val received: (CheckoutStatusV3) -> Unit
+    private val received: (CheckoutStatusV3) -> Unit,
 ) : WebViewClient() {
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         val url = request?.url ?: return false
@@ -164,7 +164,7 @@ private class AfterpayWebViewClientV3(
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
-        error: WebResourceError?
+        error: WebResourceError?,
     ) {
         if (request?.isForMainFrame == true) {
             receivedError()
@@ -174,14 +174,14 @@ private class AfterpayWebViewClientV3(
 
 private class AfterpayWebChromeClientV3(
     private val openExternalLink: (Uri) -> Unit,
-    private val URL_KEY: String = "url"
+    private val URL_KEY: String = "url",
 ) : WebChromeClient() {
 
     override fun onCreateWindow(
         view: WebView?,
         isDialog: Boolean,
         isUserGesture: Boolean,
-        resultMsg: Message?
+        resultMsg: Message?,
     ): Boolean {
         val hrefMessage = view?.handler?.obtainMessage()
         view?.requestFocusNodeHref(hrefMessage)

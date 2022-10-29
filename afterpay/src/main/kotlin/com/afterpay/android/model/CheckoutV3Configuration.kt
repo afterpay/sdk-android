@@ -7,7 +7,7 @@ import java.net.URL
 data class CheckoutV3Configuration(
     val shopDirectoryMerchantId: String,
     val region: AfterpayRegion,
-    val environment: AfterpayEnvironment
+    val environment: AfterpayEnvironment,
 ) {
     internal val shopDirectoryId: String
         get() = when (region) {
