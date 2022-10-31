@@ -25,7 +25,7 @@ private const val PADDING: Int = 0
 
 class AfterpayPaymentButton @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : AppCompatImageButton(context, attrs) {
 
     var buttonText: ButtonText = ButtonText.DEFAULT
@@ -57,7 +57,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
     init {
         contentDescription = String.format(
             Afterpay.strings.paymentButtonContentDescription,
-            resources.getString(Afterpay.brand.description)
+            resources.getString(Afterpay.brand.description),
         )
         scaleType = FIT_CENTER
         adjustViewBounds = true
@@ -67,15 +67,15 @@ class AfterpayPaymentButton @JvmOverloads constructor(
             buttonText = ButtonText.values()[
                 attributes.getInteger(
                     R.styleable.Afterpay_afterpayButtonText,
-                    ButtonText.DEFAULT.ordinal
-                )
+                    ButtonText.DEFAULT.ordinal,
+                ),
             ]
 
             colorScheme = values()[
                 attributes.getInteger(
                     R.styleable.Afterpay_afterpayColorScheme,
-                    AfterpayColorScheme.DEFAULT.ordinal
-                )
+                    AfterpayColorScheme.DEFAULT.ordinal,
+                ),
             ]
         }
 
@@ -92,8 +92,8 @@ class AfterpayPaymentButton @JvmOverloads constructor(
         setImageDrawable(
             context.coloredDrawable(
                 drawableResId = buttonText.drawableResId,
-                colorResId = colorScheme.foregroundColorResId
-            )
+                colorResId = colorScheme.foregroundColorResId,
+            ),
         )
 
         val rippleColorResId = when (colorScheme) {
@@ -105,8 +105,8 @@ class AfterpayPaymentButton @JvmOverloads constructor(
             rippleColorResId = rippleColorResId,
             drawable = context.coloredDrawable(
                 drawableResId = R.drawable.afterpay_button_bg,
-                colorResId = colorScheme.backgroundColorResId
-            )
+                colorResId = colorScheme.backgroundColorResId,
+            ),
         )
 
         invalidate()
@@ -118,7 +118,8 @@ class AfterpayPaymentButton @JvmOverloads constructor(
         PAY_NOW(drawableResId = Afterpay.drawables.buttonPayNowForeground),
         BUY_NOW(drawableResId = Afterpay.drawables.buttonBuyNowForeground),
         CHECKOUT(drawableResId = Afterpay.drawables.buttonCheckoutForeground),
-        PLACE_ORDER(drawableResId = Afterpay.drawables.buttonPlaceOrderForeground);
+        PLACE_ORDER(drawableResId = Afterpay.drawables.buttonPlaceOrderForeground),
+        ;
 
         companion object {
 

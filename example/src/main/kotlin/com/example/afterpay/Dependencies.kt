@@ -23,15 +23,15 @@ fun initializeDependencies(application: Application) = check(dependencies == nul
                 MoshiConverterFactory.create(
                     Moshi.Builder()
                         .add(KotlinJsonAdapterFactory())
-                        .build()
-                )
+                        .build(),
+                ),
             )
             .build()
             .create(MerchantApi::class.java),
         sharedPreferences = application.getSharedPreferences(
             application.getString(R.string.preferences),
-            Context.MODE_PRIVATE
-        )
+            Context.MODE_PRIVATE,
+        ),
     )
 }
 

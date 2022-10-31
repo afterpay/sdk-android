@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MerchantConfigurationV3(
     val minimumAmount: Money,
-    val maximumAmount: Money
+    val maximumAmount: Money,
 )

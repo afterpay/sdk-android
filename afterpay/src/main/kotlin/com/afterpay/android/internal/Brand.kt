@@ -38,7 +38,8 @@ internal enum class Brand(
         description = R.string.clearpay_service_name_description,
         badgeForeground = R.drawable.clearpay_badge_fg,
         lockup = R.drawable.clearpay_lockup,
-    );
+    ),
+    ;
 
     companion object {
 

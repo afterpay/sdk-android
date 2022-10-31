@@ -53,7 +53,7 @@ internal enum class AfterpayString(
     val priceBreakdownWith: String,
     val priceBreakdownInterestFree: String,
     val priceBreakdownLinkLearnMore: String,
-    val priceBreakdownLinkMoreInfo: String
+    val priceBreakdownLinkMoreInfo: String,
 ) {
     EN(
         breakdownLimit = "available for orders between %1\$s – %2\$s",
@@ -80,7 +80,7 @@ internal enum class AfterpayString(
         priceBreakdownWith = "with ",
         priceBreakdownInterestFree = "interest-free ",
         priceBreakdownLinkLearnMore = "Learn More",
-        priceBreakdownLinkMoreInfo = "More Info"
+        priceBreakdownLinkMoreInfo = "More Info",
     ),
     FR_CA(
         breakdownLimit = "disponible pour les montants entre %1\$s – %2\$s",
@@ -189,7 +189,8 @@ internal enum class AfterpayString(
         priceBreakdownInterestFree = "sin coste ",
         priceBreakdownLinkLearnMore = "Saber más",
         priceBreakdownLinkMoreInfo = "Más infos",
-    );
+    ),
+    ;
 
     companion object {
         fun forLocale(): AfterpayString {

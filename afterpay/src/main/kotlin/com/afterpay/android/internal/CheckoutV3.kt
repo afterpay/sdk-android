@@ -17,7 +17,7 @@ internal object CheckoutV3 {
         val merchantReference: String,
         val token: String,
         val singleUseCardToken: String,
-        val ppaConfirmToken: String
+        val ppaConfirmToken: String,
     )
 
     @Serializable
@@ -25,7 +25,7 @@ internal object CheckoutV3 {
         val token: String,
         val confirmMustBeCalledBefore: String?,
         val redirectCheckoutUrl: String,
-        val singleUseCardToken: String
+        val singleUseCardToken: String,
     )
 
     @Serializable
@@ -41,7 +41,7 @@ internal object CheckoutV3 {
         val consumer: Consumer,
         val merchant: Merchant,
         val shipping: Contact?,
-        val billing: Contact?
+        val billing: Contact?,
     ) {
         companion object {
             @JvmStatic
@@ -49,7 +49,7 @@ internal object CheckoutV3 {
                 consumer: CheckoutV3Consumer,
                 orderTotal: OrderTotal,
                 items: Array<CheckoutV3Item>,
-                configuration: CheckoutV3Configuration
+                configuration: CheckoutV3Configuration,
             ): Request {
                 val currency = Currency.getInstance(configuration.region.currencyCode)
 
@@ -58,7 +58,7 @@ internal object CheckoutV3 {
                     shopDirectoryMerchantId = configuration.shopDirectoryMerchantId,
                     amount = Money(
                         orderTotal.total,
-                        currency
+                        currency,
                     ),
                     shippingAmount = Money(orderTotal.shipping, currency),
                     taxAmount = Money(orderTotal.tax, currency),
@@ -67,14 +67,14 @@ internal object CheckoutV3 {
                         email = consumer.email,
                         givenNames = consumer.givenNames,
                         surname = consumer.surname,
-                        phoneNumber = consumer.phoneNumber
+                        phoneNumber = consumer.phoneNumber,
                     ),
                     merchant = Merchant(
                         redirectConfirmUrl = "https://static.afterpay.com",
-                        redirectCancelUrl = "https://static.afterpay.com"
+                        redirectCancelUrl = "https://static.afterpay.com",
                     ),
                     shipping = Contact.create(consumer.shippingInformation),
-                    billing = Contact.create(consumer.billingInformation)
+                    billing = Contact.create(consumer.billingInformation),
                 )
             }
         }
@@ -89,7 +89,7 @@ internal object CheckoutV3 {
         val pageUrl: String?,
         val imageUrl: String?,
         val categories: List<List<String>>?,
-        val estimatedShipmentDate: String?
+        val estimatedShipmentDate: String?,
     ) {
         companion object {
             @JvmStatic
@@ -103,7 +103,7 @@ internal object CheckoutV3 {
                     pageUrl = item.pageUrl.toString(),
                     imageUrl = item.imageUrl.toString(),
                     categories = item.categories,
-                    estimatedShipmentDate = item.estimatedShipmentDate
+                    estimatedShipmentDate = item.estimatedShipmentDate,
                 )
             }
         }
@@ -112,7 +112,7 @@ internal object CheckoutV3 {
     @Serializable
     data class Merchant(
         val redirectConfirmUrl: String,
-        val redirectCancelUrl: String
+        val redirectCancelUrl: String,
     )
 
     @Serializable
@@ -120,7 +120,7 @@ internal object CheckoutV3 {
         val email: String,
         val givenNames: String?,
         val surname: String?,
-        val phoneNumber: String?
+        val phoneNumber: String?,
     )
 
     @Serializable
@@ -133,7 +133,7 @@ internal object CheckoutV3 {
         val region: String?,
         val postcode: String?,
         val countryCode: String,
-        val phoneNumber: String?
+        val phoneNumber: String?,
     ) {
         companion object {
             @JvmStatic
@@ -148,7 +148,7 @@ internal object CheckoutV3 {
                     region = contact.region,
                     postcode = contact.postcode,
                     countryCode = contact.countryCode,
-                    phoneNumber = contact.phoneNumber
+                    phoneNumber = contact.phoneNumber,
                 )
             }
         }
@@ -160,13 +160,13 @@ internal object CheckoutV3 {
         data class Response(
             val paymentDetails: PaymentDetails,
             val cardValidUntil: String?,
-            val authToken: String
+            val authToken: String,
         )
 
         @Serializable
         data class PaymentDetails(
             val virtualCard: VirtualCard.Card? = null,
-            val virtualCardToken: VirtualCard.TokenizedCard? = null
+            val virtualCardToken: VirtualCard.TokenizedCard? = null,
         )
     }
 }

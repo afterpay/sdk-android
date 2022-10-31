@@ -15,6 +15,7 @@ import com.afterpay.android.internal.getCancellationStatusExtraV3
 import com.afterpay.android.internal.getOrderTokenExtra
 import com.afterpay.android.internal.getRegionLanguage
 import com.afterpay.android.internal.getResultDataExtra
+import com.afterpay.android.internal.putCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
@@ -75,10 +76,11 @@ object Afterpay {
      * Afterpay checkout.
      */
     @JvmStatic
-    fun createCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+    fun createCheckoutIntent(context: Context, checkoutUrl: String, loadRedirectUrls: Boolean = false): Intent {
         val url = if (enabled) { checkoutUrl } else { "LANGUAGE_NOT_SUPPORTED" }
         return Intent(context, AfterpayCheckoutActivity::class.java)
             .putCheckoutUrlExtra(url)
+            .putCheckoutShouldLoadRedirectUrls(loadRedirectUrls)
     }
 
     /**
@@ -89,7 +91,7 @@ object Afterpay {
     @JvmStatic
     fun createCheckoutV2Intent(
         context: Context,
-        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options()
+        options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
 
@@ -125,14 +127,14 @@ object Afterpay {
         maximumAmount: String,
         currencyCode: String,
         locale: Locale,
-        environment: AfterpayEnvironment
+        environment: AfterpayEnvironment,
     ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),
             maximumAmount = maximumAmount.toBigDecimal(),
             currency = Currency.getInstance(currencyCode),
             locale = locale.clone() as Locale,
-            environment = environment
+            environment = environment,
         ).also { validateConfiguration(it) }
     }
 
@@ -192,7 +194,7 @@ object Afterpay {
         orderTotal: OrderTotal,
         items: Array<CheckoutV3Item> = arrayOf(),
         buyNow: Boolean,
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): Intent {
         requireNotNull(configuration) {
             "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
@@ -207,7 +209,7 @@ object Afterpay {
             buyNow = buyNow,
             checkoutPayload = Json.encodeToString(checkoutRequest),
             checkoutUrl = configuration.v3CheckoutUrl,
-            confirmUrl = configuration.v3CheckoutConfirmationUrl
+            confirmUrl = configuration.v3CheckoutConfirmationUrl,
         )
 
         return Intent(context, AfterpayCheckoutV3Activity::class.java)
@@ -221,7 +223,7 @@ object Afterpay {
     fun updateMerchantReferenceV3(
         merchantReference: String,
         tokens: CheckoutV3Tokens,
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): Result<Unit> {
         requireNotNull(configuration) {
             "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
@@ -231,13 +233,13 @@ object Afterpay {
             merchantReference,
             token = tokens.token,
             ppaConfirmToken = tokens.ppaConfirmToken,
-            singleUseCardToken = tokens.singleUseCardToken
+            singleUseCardToken = tokens.singleUseCardToken,
         )
 
         return ApiV3.requestUnit(
             configuration.v3CheckoutUrl,
             ApiV3.HttpVerb.PUT,
-            payload
+            payload,
         )
     }
 
@@ -256,7 +258,7 @@ object Afterpay {
             updateMerchantReferenceV3(merchantReference, tokens, configuration)
                 .fold(
                     onSuccess = { null },
-                    onFailure = { throw it }
+                    onFailure = { throw it },
                 )
         }
     }
@@ -266,7 +268,7 @@ object Afterpay {
      */
     @JvmSynthetic
     fun fetchMerchantConfigurationV3(
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): Result<Configuration> {
         requireNotNull(configuration) {
             "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
@@ -279,7 +281,7 @@ object Afterpay {
                     maximumAmount = it.maximumAmount.amount,
                     currency = Currency.getInstance(configuration.region.currencyCode),
                     locale = configuration.region.locale,
-                    environment = configuration.environment
+                    environment = configuration.environment,
                 )
             }
     }
@@ -291,7 +293,7 @@ object Afterpay {
     @JvmStatic
     @JvmOverloads
     fun fetchMerchantConfigurationV3Async(
-        configuration: CheckoutV3Configuration? = checkoutV3Configuration
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): CompletableFuture<Configuration> {
         requireNotNull(configuration) {
             "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
@@ -305,13 +307,13 @@ object Afterpay {
                         maximumAmount = it.maximumAmount.amount,
                         currency = Currency.getInstance(configuration.region.currencyCode),
                         locale = configuration.region.locale,
-                        environment = configuration.environment
+                        environment = configuration.environment,
                     )
                 }
 
             result.fold(
                 onSuccess = { it },
-                onFailure = { throw it }
+                onFailure = { throw it },
             )
         }
     }

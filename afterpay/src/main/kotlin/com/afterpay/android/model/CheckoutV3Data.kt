@@ -16,12 +16,12 @@ data class CheckoutV3Data(
     /** The time before which an authorization needs to be made on the virtual card. */
     internal val cardValidUntilInternal: String?,
     /** The collection of tokens required to update the merchant reference or cancel the virtual card */
-    val tokens: CheckoutV3Tokens
+    val tokens: CheckoutV3Tokens,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         cardDetails = parcel.readString()?.let { Json.decodeFromString(it) } ?: throw IllegalArgumentException("Missing Serialized value for `cardDetails`"),
         cardValidUntilInternal = parcel.readString(),
-        tokens = parcel.readString()?.let { Json.decodeFromString(it) } ?: throw IllegalArgumentException("Missing Serialized value `tokens`")
+        tokens = parcel.readString()?.let { Json.decodeFromString(it) } ?: throw IllegalArgumentException("Missing Serialized value `tokens`"),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

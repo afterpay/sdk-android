@@ -13,5 +13,5 @@ data class OrderTotal(
     /** The shipping amount, included for fraud detection purposes. */
     val shipping: BigDecimal,
     /** The tax amount, included for fraud detection purposes. */
-    val tax: BigDecimal
+    val tax: BigDecimal,
 )

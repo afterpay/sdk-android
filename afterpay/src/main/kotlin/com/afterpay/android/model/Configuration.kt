@@ -10,5 +10,5 @@ data class Configuration(
     val maximumAmount: BigDecimal,
     val currency: Currency,
     val locale: Locale,
-    val environment: AfterpayEnvironment
+    val environment: AfterpayEnvironment,
 )

@@ -11,5 +11,5 @@ data class ShippingAddress(
     val postcode: String?,
     val phoneNumber: String? = null,
     val state: String? = null,
-    val suburb: String? = null
+    val suburb: String? = null,
 )

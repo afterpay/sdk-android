@@ -13,29 +13,29 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.afterpay.android.model.CheckoutV3Data
 import com.afterpay.android.model.VirtualCard
+import com.example.afterpay.NavGraph
 import com.example.afterpay.R
-import com.example.afterpay.nav_graph
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class DetailsFragment : Fragment() {
 
     private val resultData: CheckoutV3Data
-        get() = requireNotNull(arguments?.getParcelable(nav_graph.args.result_data_v3))
+        get() = requireNotNull(arguments?.getParcelable(NavGraph.args.result_data_v3))
 
     private val viewModel by viewModels<DetailsViewModel> { DetailsViewModel.factory(resultData) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = inflater.inflate(R.layout.fragment_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(nav_graph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.action.back_to_shopping)
         }
 
         val cardDetails = resultData.cardDetails

@@ -12,5 +12,5 @@ enum class CancellationStatus {
 enum class CancellationStatusV3 {
     USER_INITIATED,
     CONFIGURATION_ERROR,
-    REQUEST_ERROR
+    REQUEST_ERROR,
 }

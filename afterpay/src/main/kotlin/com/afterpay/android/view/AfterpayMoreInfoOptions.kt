@@ -16,7 +16,7 @@ class AfterpayMoreInfoOptions {
      */
     constructor(
         modalId: String,
-        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT
+        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT,
     ) {
         this.modalId = modalId
         this.modalLinkStyle = modalLinkStyle
@@ -34,7 +34,7 @@ class AfterpayMoreInfoOptions {
     constructor(
         modalTheme: AfterpayModalTheme = AfterpayModalTheme.MINT,
         isCbtEnabled: Boolean = false,
-        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT
+        modalLinkStyle: AfterpayModalLinkStyle = AfterpayModalLinkStyle.DEFAULT,
     ) {
         this.modalTheme = modalTheme
         this.isCbtEnabled = isCbtEnabled

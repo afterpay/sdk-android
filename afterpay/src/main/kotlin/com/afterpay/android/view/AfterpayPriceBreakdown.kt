@@ -31,12 +31,12 @@ import java.util.Observer
 
 class AfterpayPriceBreakdown @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null
+    attrs: AttributeSet? = null,
 ) : FrameLayout(context, attrs) {
 
     private data class Content(
         val text: String,
-        val description: String
+        val description: String,
     )
 
     var totalAmount: BigDecimal = BigDecimal.ZERO
@@ -108,8 +108,8 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
             colorScheme = AfterpayColorScheme.values()[
                 attributes.getInteger(
                     R.styleable.Afterpay_afterpayColorScheme,
-                    AfterpayColorScheme.DEFAULT.ordinal
-                )
+                    AfterpayColorScheme.DEFAULT.ordinal,
+                ),
             ]
         }
 
@@ -147,7 +147,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(
                         context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
-                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                     )
                     append(" ")
                     append(content.text)
@@ -157,7 +157,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(
                         context.getString(Afterpay.brand.title),
                         CenteredImageSpan(drawable),
-                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                     )
                 }
 
@@ -168,14 +168,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     append(
                         linkStyle.customContent,
                         AfterpayInfoSpan(infoUrl, false),
-                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                     )
                 } else if (linkStyle.text != null) {
                     append(" ")
                     append(
                         linkStyle.text,
                         AfterpayInfoSpan(infoUrl, linkStyle.underlined),
-                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                     )
                 } else if (linkStyle.image != null && linkStyle.imageRenderingMode != null) {
                     append(" ")
@@ -185,12 +185,12 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         context.theme.resolveAttribute(
                             android.R.attr.textColorSecondary,
                             typedValue,
-                            true
+                            true,
                         )
 
                         context.coloredDrawable(
                             drawableResId = linkStyle.image,
-                            colorResId = typedValue.resourceId
+                            colorResId = typedValue.resourceId,
                         )
                     } else {
                         ResourcesCompat.getDrawable(resources, linkStyle.image, null)
@@ -208,14 +208,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         append(
                             accessibleLinkString,
                             CenteredImageSpan(imageDrawable),
-                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                         )
 
                         setSpan(
                             AfterpayInfoSpan(infoUrl),
                             this.length - accessibleLinkString.length,
                             this.length,
-                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE,
                         )
                     }
                 }
@@ -228,21 +228,21 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
         val drawable = if (logoType === AfterpayLogoType.LOCKUP) {
             context.coloredDrawable(
                 drawableResId = Afterpay.brand.lockup,
-                colorResId = colorScheme.foregroundColorResId
+                colorResId = colorScheme.foregroundColorResId,
             )
         } else {
             LayerDrawable(
                 arrayOf(
                     context.coloredDrawable(
                         drawableResId = R.drawable.afterpay_badge_bg,
-                        colorResId = colorScheme.backgroundColorResId
+                        colorResId = colorScheme.backgroundColorResId,
                     ),
 
                     context.coloredDrawable(
                         drawableResId = Afterpay.brand.badgeForeground,
-                        colorResId = colorScheme.foregroundColorResId
-                    )
-                )
+                        colorResId = colorScheme.foregroundColorResId,
+                    ),
+                ),
             )
         }
 
@@ -284,7 +284,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     numberOfInstalments.toString(),
                     interestFreeText,
                     afterpay.instalmentAmount,
-                    withText
+                    withText,
                 ).trim(),
                 description = String.format(
                     Afterpay.strings.priceBreakdownAvailableDescription,
@@ -293,46 +293,47 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                     interestFreeText,
                     afterpay.instalmentAmount,
                     withText,
-                    resources.getString(Afterpay.brand.description)
-                ).trim()
+                    resources.getString(Afterpay.brand.description),
+                ).trim(),
             )
         }
         is AfterpayInstalment.NotAvailable ->
-            if (afterpay.minimumAmount != null)
+            if (afterpay.minimumAmount != null) {
                 Content(
                     text = String.format(
                         Afterpay.strings.breakdownLimit,
                         afterpay.minimumAmount,
-                        afterpay.maximumAmount
+                        afterpay.maximumAmount,
                     ),
                     description = String.format(
                         Afterpay.strings.breakdownLimitDescription,
                         resources.getString(Afterpay.brand.description),
                         afterpay.minimumAmount,
-                        afterpay.maximumAmount
-                    )
+                        afterpay.maximumAmount,
+                    ),
                 )
-            else
+            } else {
                 Content(
                     text = String.format(
                         Afterpay.strings.breakdownLimit,
                         "1",
-                        afterpay.maximumAmount
+                        afterpay.maximumAmount,
                     ),
                     description = String.format(
                         Afterpay.strings.breakdownLimitDescription,
                         resources.getString(Afterpay.brand.description),
                         "1",
-                        afterpay.maximumAmount
-                    )
+                        afterpay.maximumAmount,
+                    ),
                 )
+            }
         AfterpayInstalment.NoConfiguration ->
             Content(
                 text = Afterpay.strings.noConfiguration,
                 description = String.format(
                     Afterpay.strings.noConfigurationDescription,
-                    resources.getString(Afterpay.brand.description)
-                )
+                    resources.getString(Afterpay.brand.description),
+                ),
             )
     }
 }
@@ -346,7 +347,7 @@ private class CenteredImageSpan(drawable: Drawable) : ImageSpan(drawable) {
         text: CharSequence,
         start: Int,
         end: Int,
-        fontMetricsInt: Paint.FontMetricsInt?
+        fontMetricsInt: Paint.FontMetricsInt?,
     ): Int {
         val drawable = drawable
         val bounds = drawable.bounds
@@ -373,7 +374,7 @@ private class CenteredImageSpan(drawable: Drawable) : ImageSpan(drawable) {
         top: Int,
         y: Int,
         bottom: Int,
-        paint: Paint
+        paint: Paint,
     ) {
         val drawable = drawable
         canvas.save()

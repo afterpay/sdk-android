@@ -13,7 +13,7 @@ sealed class VirtualCard {
         val cvc: String,
         private val expiry: String,
         @Transient var expiryYear: Int = -1,
-        @Transient var expiryMonth: Int = -1
+        @Transient var expiryMonth: Int = -1,
     ) : VirtualCard() {
         init {
             val components = expiry.split("-").map { it.toInt() }
@@ -28,7 +28,7 @@ sealed class VirtualCard {
         val cardToken: String?,
         private val expiry: String,
         @Transient var expiryYear: Int = -1,
-        @Transient var expiryMonth: Int = -1
+        @Transient var expiryMonth: Int = -1,
     ) : VirtualCard() {
         init {
             val components = expiry.split("-").map { it.toInt() }

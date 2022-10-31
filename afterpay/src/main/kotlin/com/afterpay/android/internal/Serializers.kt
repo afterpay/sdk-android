@@ -19,7 +19,7 @@ internal object MoneyBigDecimalSerializer : KSerializer<BigDecimal> {
 
     override val descriptor = PrimitiveSerialDescriptor(
         serialName = "BigDecimal",
-        kind = PrimitiveKind.STRING
+        kind = PrimitiveKind.STRING,
     )
 
     override fun deserialize(decoder: Decoder) = decoder.decodeString().toBigDecimal()
@@ -27,7 +27,7 @@ internal object MoneyBigDecimalSerializer : KSerializer<BigDecimal> {
     // Round to two decimals, as per ISO-4217, using banker's rounding
     override fun serialize(encoder: Encoder, value: BigDecimal) {
         return encoder.encodeString(
-            value.setScale(2, RoundingMode.HALF_EVEN).toPlainString()
+            value.setScale(2, RoundingMode.HALF_EVEN).toPlainString(),
         )
     }
 }
@@ -36,7 +36,7 @@ internal object CurrencySerializer : KSerializer<Currency> {
 
     override val descriptor = PrimitiveSerialDescriptor(
         serialName = "Currency",
-        kind = PrimitiveKind.STRING
+        kind = PrimitiveKind.STRING,
     )
 
     override fun deserialize(decoder: Decoder): Currency =

@@ -9,5 +9,5 @@ data class ShippingOption(
     val description: String,
     var shippingAmount: Money,
     var orderAmount: Money,
-    var taxAmount: Money?
+    var taxAmount: Money?,
 )

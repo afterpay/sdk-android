@@ -15,7 +15,7 @@ class AfterpayTest {
             maximumAmount = "100.00",
             currencyCode = "AUD",
             locale = Locale.US,
-            environment = environment
+            environment = environment,
         )
     }
 
@@ -26,7 +26,7 @@ class AfterpayTest {
             maximumAmount = "100.00",
             currencyCode = "AUD",
             locale = Locale.US,
-            environment = environment
+            environment = environment,
         )
     }
 
@@ -38,7 +38,7 @@ class AfterpayTest {
                 maximumAmount = "100.00",
                 currencyCode = "foo",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -51,7 +51,7 @@ class AfterpayTest {
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -64,7 +64,7 @@ class AfterpayTest {
                 maximumAmount = "foo",
                 currencyCode = "AUD",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -77,7 +77,7 @@ class AfterpayTest {
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -90,7 +90,7 @@ class AfterpayTest {
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -103,7 +103,7 @@ class AfterpayTest {
                 maximumAmount = "-2.00",
                 currencyCode = "AUD",
                 locale = Locale.US,
-                environment = environment
+                environment = environment,
             )
         }
     }
@@ -116,7 +116,7 @@ class AfterpayTest {
                 maximumAmount = "100.00",
                 currencyCode = "AUD",
                 locale = Locale.JAPAN,
-                environment = environment
+                environment = environment,
             )
         }
     }

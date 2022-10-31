@@ -129,6 +129,6 @@ internal object ApiV3 {
         val errorCode: String,
         val errorId: String,
         val message: String,
-        val httpStatusCode: Int
+        val httpStatusCode: Int,
     )
 }

@@ -241,7 +241,7 @@ class AfterpayInstalmentLocaleTest {
         val gbp: AfterpayInstalment.Available,
         val nzd: AfterpayInstalment.Available,
         val usd: AfterpayInstalment.Available,
-        val eur: AfterpayInstalment.Available
+        val eur: AfterpayInstalment.Available,
     )
 
     private data class AllUnavailableInstallments(
@@ -250,7 +250,7 @@ class AfterpayInstalmentLocaleTest {
         val gbp: AfterpayInstalment.NotAvailable,
         val nzd: AfterpayInstalment.NotAvailable,
         val usd: AfterpayInstalment.NotAvailable,
-        val eur: AfterpayInstalment.NotAvailable
+        val eur: AfterpayInstalment.NotAvailable,
     )
 
     private fun createAllAvailableInstalments(amount: BigDecimal, locale: Locale): AllAvailableInstallments {
@@ -260,7 +260,7 @@ class AfterpayInstalmentLocaleTest {
             gbp = availableInstalment(amount, poundSterling, locale),
             nzd = availableInstalment(amount, newZealandDollar, locale),
             usd = availableInstalment(amount, unitedStatesDollar, locale),
-            eur = availableInstalment(amount, euro, locale)
+            eur = availableInstalment(amount, euro, locale),
         )
     }
 
@@ -271,21 +271,21 @@ class AfterpayInstalmentLocaleTest {
             gbp = unavailableInstalment(amount, poundSterling, locale),
             nzd = unavailableInstalment(amount, newZealandDollar, locale),
             usd = unavailableInstalment(amount, unitedStatesDollar, locale),
-            eur = unavailableInstalment(amount, euro, locale)
+            eur = unavailableInstalment(amount, euro, locale),
         )
     }
 
     private fun availableInstalment(
         amount: BigDecimal,
         currency: Currency,
-        locale: Locale
+        locale: Locale,
     ): AfterpayInstalment.Available {
         val configuration = Configuration(
             50.toBigDecimal(),
             1000.toBigDecimal(),
             currency,
             locale,
-            AfterpayEnvironment.SANDBOX
+            AfterpayEnvironment.SANDBOX,
         )
         return AfterpayInstalment.of(amount, configuration, locale) as AfterpayInstalment.Available
     }
@@ -293,14 +293,14 @@ class AfterpayInstalmentLocaleTest {
     private fun unavailableInstalment(
         amount: BigDecimal,
         currency: Currency,
-        locale: Locale
+        locale: Locale,
     ): AfterpayInstalment.NotAvailable {
         val configuration = Configuration(
             10.toBigDecimal(),
             20.toBigDecimal(),
             currency,
             locale,
-            AfterpayEnvironment.SANDBOX
+            AfterpayEnvironment.SANDBOX,
         )
         return AfterpayInstalment.of(amount, configuration, locale) as AfterpayInstalment.NotAvailable
     }

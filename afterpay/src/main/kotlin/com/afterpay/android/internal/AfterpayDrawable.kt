@@ -66,7 +66,8 @@ internal enum class AfterpayDrawable(
         buttonCheckoutForeground = R.drawable.clearpay_button_checkout_fg_es,
         buttonPayNowForeground = R.drawable.clearpay_button_pay_now_fg_es,
         buttonPlaceOrderForeground = R.drawable.clearpay_button_place_order_fg_es,
-    );
+    ),
+    ;
 
     companion object {
         fun forLocale(): AfterpayDrawable {
