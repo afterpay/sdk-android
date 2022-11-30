@@ -43,11 +43,7 @@ class AfterpayLockup @JvmOverloads constructor(
     }
 
     private fun update() {
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
-        } else {
-            visibility = View.VISIBLE
-        }
+        visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
 
         setImageDrawable(
             context.coloredDrawable(

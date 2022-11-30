@@ -13,7 +13,7 @@ import com.afterpay.android.internal.dp
 
 private const val MIN_WIDTH: Int = 64
 
-class AfterpayBadge @JvmOverloads constructor(
+class AfterpayBadgeNarrow @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
@@ -53,7 +53,7 @@ class AfterpayBadge @JvmOverloads constructor(
         )
 
         background = context.coloredDrawable(
-            R.drawable.afterpay_badge_bg,
+            R.drawable.afterpay_badge_narrow_bg,
             colorScheme.backgroundColorResId,
         )
 

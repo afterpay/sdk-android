@@ -29,14 +29,14 @@ internal enum class Brand(
     AFTERPAY(
         title = R.string.afterpay_service_name,
         description = R.string.afterpay_service_name_description,
-        badgeForeground = R.drawable.afterpay_badge_fg,
+        badgeForeground = R.drawable.afterpay_badge_fg_cropped,
         lockup = R.drawable.afterpay_lockup,
     ),
 
     CLEARPAY(
         title = R.string.clearpay_service_name,
         description = R.string.clearpay_service_name_description,
-        badgeForeground = R.drawable.clearpay_badge_fg,
+        badgeForeground = R.drawable.clearpay_badge_fg_cropped,
         lockup = R.drawable.clearpay_lockup,
     ),
     ;

@@ -11,6 +11,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
@@ -131,11 +132,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     }
 
     private fun updateText() {
-        if (!Afterpay.enabled) {
-            visibility = View.GONE
-        } else {
-            visibility = View.VISIBLE
-        }
+        visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
 
         val drawable: Drawable = generateLogo()
         val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
@@ -224,26 +221,73 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
         }
     }
 
+    private fun getWidthToHeightRatioFromDrawableId(id: Int): Double {
+        val bmForeground = ResourcesCompat.getDrawable(resources, id, null)!!
+        val width = bmForeground.intrinsicWidth
+        val height = bmForeground.intrinsicHeight
+        return width.toDouble() / height.toDouble()
+    }
+
     private fun generateLogo(): Drawable {
-        val drawable = if (logoType === AfterpayLogoType.LOCKUP) {
-            context.coloredDrawable(
+        val drawable = when (logoType) {
+            AfterpayLogoType.LOCKUP -> context.coloredDrawable(
                 drawableResId = Afterpay.brand.lockup,
                 colorResId = colorScheme.foregroundColorResId,
             )
-        } else {
-            LayerDrawable(
-                arrayOf(
-                    context.coloredDrawable(
-                        drawableResId = R.drawable.afterpay_badge_bg,
-                        colorResId = colorScheme.backgroundColorResId,
-                    ),
+            AfterpayLogoType.NARROW_BADGE -> {
+                val foreGround = Afterpay.brand.badgeForeground
+                val ratio = getWidthToHeightRatioFromDrawableId(foreGround)
 
-                    context.coloredDrawable(
-                        drawableResId = Afterpay.brand.badgeForeground,
-                        colorResId = colorScheme.foregroundColorResId,
+                val badge = LayerDrawable(
+                    arrayOf(
+                        context.coloredDrawable(
+                            drawableResId = R.drawable.afterpay_badge_narrow_bg,
+                            colorResId = colorScheme.backgroundColorResId,
+                        ),
+
+                        context.coloredDrawable(
+                            drawableResId = foreGround,
+                            colorResId = colorScheme.foregroundColorResId,
+                        ),
                     ),
-                ),
-            )
+                )
+
+                badge.setLayerSize(
+                    1,
+                    (40 * ratio * logoType.fontHeightMultiplier).toInt(),
+                    (40 * logoType.fontHeightMultiplier).toInt()
+                )
+                badge.setLayerGravity(1, Gravity.CENTER)
+
+                badge
+            }
+            AfterpayLogoType.BADGE -> {
+                val foreGround = Afterpay.brand.badgeForeground
+                val ratio = getWidthToHeightRatioFromDrawableId(foreGround)
+
+                val badge = LayerDrawable(
+                    arrayOf(
+                        context.coloredDrawable(
+                            drawableResId = R.drawable.afterpay_badge_bg,
+                            colorResId = colorScheme.backgroundColorResId,
+                        ),
+
+                        context.coloredDrawable(
+                            drawableResId = Afterpay.brand.badgeForeground,
+                            colorResId = colorScheme.foregroundColorResId,
+                        ),
+                    ),
+                )
+
+                badge.setLayerSize(
+                    1,
+                    (22 * ratio * logoType.fontHeightMultiplier).toInt(),
+                    (22 * logoType.fontHeightMultiplier).toInt()
+                )
+                badge.setLayerGravity(1, Gravity.CENTER)
+
+                badge
+            }
         }
 
         drawable.apply {
