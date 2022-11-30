@@ -235,7 +235,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 colorResId = colorScheme.foregroundColorResId,
             )
             AfterpayLogoType.NARROW_BADGE -> {
-                val foreGround = Afterpay.brand.badgeForeground
+                val foreGround = Afterpay.brand.badgeForegroundCropped
                 val ratio = getWidthToHeightRatioFromDrawableId(foreGround)
 
                 val badge = LayerDrawable(
@@ -261,11 +261,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
                 badge
             }
-            AfterpayLogoType.BADGE -> {
-                val foreGround = Afterpay.brand.badgeForeground
-                val ratio = getWidthToHeightRatioFromDrawableId(foreGround)
-
-                val badge = LayerDrawable(
+            AfterpayLogoType.BADGE -> LayerDrawable(
                     arrayOf(
                         context.coloredDrawable(
                             drawableResId = R.drawable.afterpay_badge_bg,
@@ -278,16 +274,6 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                         ),
                     ),
                 )
-
-                badge.setLayerSize(
-                    1,
-                    (22 * ratio * logoType.fontHeightMultiplier).toInt(),
-                    (22 * logoType.fontHeightMultiplier).toInt()
-                )
-                badge.setLayerGravity(1, Gravity.CENTER)
-
-                badge
-            }
         }
 
         drawable.apply {
