@@ -234,7 +234,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 drawableResId = Afterpay.brand.lockup,
                 colorResId = colorScheme.foregroundColorResId,
             )
-            AfterpayLogoType.NARROW_BADGE -> {
+            AfterpayLogoType.COMPACT_BADGE -> {
                 val foreGround = Afterpay.brand.badgeForegroundCropped
                 val ratio = getWidthToHeightRatioFromDrawableId(foreGround)
 
