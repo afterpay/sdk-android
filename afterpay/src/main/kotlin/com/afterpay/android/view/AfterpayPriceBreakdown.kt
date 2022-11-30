@@ -255,25 +255,25 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
                 badge.setLayerSize(
                     1,
                     (40 * ratio * logoType.fontHeightMultiplier).toInt(),
-                    (40 * logoType.fontHeightMultiplier).toInt()
+                    (40 * logoType.fontHeightMultiplier).toInt(),
                 )
                 badge.setLayerGravity(1, Gravity.CENTER)
 
                 badge
             }
             AfterpayLogoType.BADGE -> LayerDrawable(
-                    arrayOf(
-                        context.coloredDrawable(
-                            drawableResId = R.drawable.afterpay_badge_bg,
-                            colorResId = colorScheme.backgroundColorResId,
-                        ),
-
-                        context.coloredDrawable(
-                            drawableResId = Afterpay.brand.badgeForeground,
-                            colorResId = colorScheme.foregroundColorResId,
-                        ),
+                arrayOf(
+                    context.coloredDrawable(
+                        drawableResId = R.drawable.afterpay_badge_bg,
+                        colorResId = colorScheme.backgroundColorResId,
                     ),
-                )
+
+                    context.coloredDrawable(
+                        drawableResId = Afterpay.brand.badgeForeground,
+                        colorResId = colorScheme.foregroundColorResId,
+                    ),
+                ),
+            )
         }
 
         drawable.apply {
