@@ -7,6 +7,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
@@ -49,6 +50,7 @@ class CheckoutViewModel(
         val buyNow: Boolean,
         val pickup: Boolean,
         val shippingOptionsRequired: Boolean,
+        val cashAppPay: Boolean,
     ) {
         val totalCost: String
             get() = total.asCurrency()
@@ -60,7 +62,9 @@ class CheckoutViewModel(
     sealed class Command {
         data class ShowAfterpayCheckoutV1(val checkoutUrl: String) : Command()
         data class ShowAfterpayCheckoutV2(val options: AfterpayCheckoutV2Options) : Command()
+        data class LaunchCashAppPay(val handler: AfterpayCashAppHandler?) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
+        data class ProvideCashAppTokenResult(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
@@ -77,6 +81,7 @@ class CheckoutViewModel(
             buyNow = preferences.getBuyNow(),
             pickup = preferences.getPickup(),
             shippingOptionsRequired = preferences.getShippingOptionsRequired(),
+            cashAppPay = preferences.getCashAppPay(),
         ),
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
@@ -99,8 +104,19 @@ class CheckoutViewModel(
         copy(shippingOptionsRequired = checked)
     }
 
+    fun checkCashApp(checked: Boolean) = state.update { copy(cashAppPay = checked) }
+
     fun showAfterpayCheckout() {
-        val (email, total, useV1, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
+        val (
+            email,
+            total,
+            useV1,
+            isExpress,
+            isBuyNow,
+            isPickup,
+            isShippingOptionsRequired,
+            cashAppPay,
+        ) = state.value
 
         preferences.edit {
             putEmail(email)
@@ -109,46 +125,62 @@ class CheckoutViewModel(
             putBuyNow(isBuyNow)
             putPickup(isPickup)
             putShippingOptionsRequired(isShippingOptionsRequired)
+            putCashAppPay(cashAppPay)
         }
 
-        if (useV1) {
-            viewModelScope.launch {
-                try {
-                    val symbols = DecimalFormatSymbols(Locale.US)
-                    val formatter = DecimalFormat("#,###.00", symbols)
-                    val response = withContext(Dispatchers.IO) {
-                        merchantApi.checkout(CheckoutRequest(email, formatter.format(total), CheckoutMode.STANDARD))
-                    }
-                    commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
-                } catch (error: Exception) {
-                    val message = error.message ?: "Failed to fetch checkout url"
-                    Log.e("ExampleError", message)
+        when {
+            cashAppPay -> {
+                viewModelScope.launch {
+                    commandChannel.trySend(Command.LaunchCashAppPay(null))
                 }
             }
-        } else {
-            val options = AfterpayCheckoutV2Options(
-                isPickup,
-                isBuyNow,
-                isShippingOptionsRequired,
-                enableSingleShippingOptionUpdate = true,
-            )
-            commandChannel.trySend(Command.ShowAfterpayCheckoutV2(options))
+            useV1 -> {
+                viewModelScope.launch {
+                    try {
+                        val symbols = DecimalFormatSymbols(Locale.US)
+                        val formatter = DecimalFormat("#,###.00", symbols)
+                        val response = withContext(Dispatchers.IO) {
+                            merchantApi.checkout(CheckoutRequest(
+                                email = email,
+                                amount = formatter.format(total),
+                                mode = CheckoutMode.STANDARD,
+                            ))
+                        }
+                        commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
+                    } catch (error: Exception) {
+                        val message = error.message ?: "Failed to fetch checkout url"
+                        Log.e("ExampleError", "useV1: $message")
+                    }
+                }
+            }
+            else -> {
+                val options = AfterpayCheckoutV2Options(
+                    isPickup,
+                    isBuyNow,
+                    isShippingOptionsRequired,
+                    enableSingleShippingOptionUpdate = true,
+                )
+                commandChannel.trySend(Command.ShowAfterpayCheckoutV2(options))
+            }
         }
     }
 
     fun loadCheckoutToken() {
-        val (email, total, _, isExpress) = state.value
+        val (email, total, _, isExpress, _, _, _, isCashApp) = state.value
         val symbols = DecimalFormatSymbols(Locale.US)
         val amount = DecimalFormat("0.00", symbols).format(total)
-        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
+        val mode = if (isExpress && !isCashApp) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {
-            val request = CheckoutRequest(email, amount, mode)
+            val request = CheckoutRequest(email, amount, mode, isCashApp)
             val response = runCatching {
                 withContext(Dispatchers.IO) { merchantApi.checkout(request) }
             }
             val tokenResult = response.map { it.token }
-            val command = Command.ProvideCheckoutTokenResult(tokenResult)
+            val command = when (isCashApp) {
+                true -> Command.ProvideCashAppTokenResult(tokenResult)
+                else -> Command.ProvideCheckoutTokenResult(tokenResult)
+            }
             commandChannel.trySend(command)
         }
     }
@@ -198,11 +230,10 @@ class CheckoutViewModel(
             }
 
             val currency = Currency.getInstance(configuration.currency)
-            val result: ShippingOptionUpdateResult?
 
             // if standard shipping was selected, update the amounts
             // otherwise leave as is by passing null
-            if (shippingOption.id == "standard") {
+            val result: ShippingOptionUpdateResult? = if (shippingOption.id == "standard") {
                 val updatedShippingOption = ShippingOptionUpdate(
                     "standard",
                     Money("0.00".toBigDecimal(), currency),
@@ -210,9 +241,9 @@ class CheckoutViewModel(
                     Money("2.00".toBigDecimal(), currency),
                 )
 
-                result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
+                ShippingOptionUpdateSuccessResult(updatedShippingOption)
             } else {
-                result = null
+                null
             }
 
             commandChannel.trySend(Command.ProvideShippingOptionUpdateResult(result))
@@ -241,6 +272,7 @@ private object PreferenceKey {
     const val buyNow = "buyNow"
     const val pickup = "pickup"
     const val shippingOptionsRequired = "shippingOptionsRequired"
+    const val cashAppPay = "cashAppPay"
 }
 
 private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
@@ -267,3 +299,9 @@ private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
 
 private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
     putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)
+
+private fun SharedPreferences.getCashAppPay(): Boolean =
+    getBoolean(PreferenceKey.cashAppPay, false)
+
+private fun SharedPreferences.Editor.putCashAppPay(cashAppPay: Boolean) =
+    putBoolean(PreferenceKey.cashAppPay, cashAppPay)

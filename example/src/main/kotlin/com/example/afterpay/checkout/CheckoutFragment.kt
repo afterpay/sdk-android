@@ -1,12 +1,14 @@
 package com.example.afterpay.checkout
 
-import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -47,10 +49,18 @@ class CheckoutFragment : Fragment() {
         onShippingOptionDidChange = { viewModel.selectShippingOption(it) },
     )
 
+    private val cashAppHandler = CashAppHandler(
+        onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
+        onDidReceiveResponse = {
+            Log.d("mylogger", "Pass the result to cash app ($it)")
+        }
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Afterpay.setCheckoutV2Handler(checkoutHandler)
+        Afterpay.setCashAppHandler(cashAppHandler)
     }
 
     override fun onCreateView(
@@ -99,6 +109,11 @@ class CheckoutFragment : Fragment() {
             viewModel.checkShippingOptionsRequired(checked)
         }
 
+        val cashAppRow = view.findViewById<View>(R.id.cart_cashAppRow)
+        val cashAppCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_cashAppCheckBox)
+        cashAppRow.setOnClickListener { cashAppCheckBox.toggle() }
+        cashAppCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkCashApp(checked) }
+
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
                 if (emailField.text.toString() != state.emailAddress) {
@@ -120,14 +135,18 @@ class CheckoutFragment : Fragment() {
                 when (command) {
                     is Command.ShowAfterpayCheckoutV2 -> {
                         val intent = Afterpay.createCheckoutV2Intent(requireContext(), command.options)
-                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+                        getCheckoutResult.launch(intent)
                     }
                     is Command.ShowAfterpayCheckoutV1 -> {
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.checkoutUrl)
-                        startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
+                        getCheckoutResult.launch(intent)
                     }
+                    is Command.LaunchCashAppPay ->
+                        Afterpay.retrieveCashAppData()
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
+                    is Command.ProvideCashAppTokenResult ->
+                        cashAppHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideShippingOptionsResult ->
                         checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
                     is Command.ProvideShippingOptionUpdateResult ->
@@ -139,30 +158,32 @@ class CheckoutFragment : Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode to resultCode) {
-            CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_OK -> {
-                val intent = checkNotNull(data) {
-                    "Intent should always be populated by the SDK"
+    private val getCheckoutResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            when (result.resultCode) {
+                AppCompatActivity.RESULT_OK -> {
+                    val intent = checkNotNull(result.data) {
+                        "Intent should always be populated by the SDK"
+                    }
+                    val token = checkNotNull(Afterpay.parseCheckoutSuccessResponse(intent)) {
+                        "A token is always associated with a successful Afterpay transaction"
+                    }
+                    findNavController().navigate(
+                        NavGraph.action.to_receipt,
+                        bundleOf(NavGraph.args.checkout_token to token),
+                    )
                 }
-                val token = checkNotNull(Afterpay.parseCheckoutSuccessResponse(intent)) {
-                    "A token is always associated with a successful Afterpay transaction"
+                AppCompatActivity.RESULT_CANCELED -> {
+                    val intent = requireNotNull(result.data) {
+                        "Intent should always be populated by the SDK"
+                    }
+                    val status =
+                        checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
+                            "A cancelled Afterpay transaction always contains a status"
+                        }
+                    Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT)
+                        .show()
                 }
-                findNavController().navigate(
-                    NavGraph.action.to_receipt,
-                    bundleOf(NavGraph.args.checkout_token to token),
-                )
-            }
-            CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
-                val intent = requireNotNull(data) {
-                    "Intent should always be populated by the SDK"
-                }
-                val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
-                    "A cancelled Afterpay transaction always contains a status"
-                }
-                Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
             }
         }
     }

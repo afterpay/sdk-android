@@ -19,6 +19,7 @@
     <string name="cart_buyNowLabel" translatable="false">Buy Now</string>
     <string name="cart_pickupLabel" translatable="false">Pickup</string>
     <string name="cart_expressLabel" translatable="false">Express</string>
+    <string name="cart_cashAppLabel" translatable="false">Cash App</string>
     <string name="cart_shippingOptionsRequiredLabel" translatable="false">Shipping Options Required</string>
     <string name="receipt_totalCost_hint" translatable="false">0.00</string>
 </resources>

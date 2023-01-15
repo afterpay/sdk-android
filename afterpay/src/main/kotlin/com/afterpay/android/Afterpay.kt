@@ -2,6 +2,8 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import com.afterpay.android.cashapp.AfterpayCashAppHandler
+import com.afterpay.android.cashapp.AfterpayCashAppCheckout
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.Brand
@@ -50,6 +52,9 @@ object Afterpay {
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
 
+    internal var cashAppHandler: AfterpayCashAppHandler? = null
+        private set
+
     /**
      * Returns an [Intent] for the given [context] and [checkoutUrl] that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
@@ -74,6 +79,12 @@ object Afterpay {
         options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
+
+    @JvmStatic
+    fun retrieveCashAppData(handler: AfterpayCashAppHandler? = null) {
+        val cashApp = AfterpayCashAppCheckout(handler)
+        cashApp.commenceCheckout()
+    }
 
     /**
      * Returns the [token][String] parsed from the given [intent] returned by a successful
@@ -140,5 +151,13 @@ object Afterpay {
     @JvmStatic
     fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
         checkoutV2Handler = handler
+    }
+
+    /**
+     * Sets the global [handler] used to provide callbacks for CashApp.
+     */
+    @JvmStatic
+    fun setCashAppHandler(handler: AfterpayCashAppHandler?) {
+        cashAppHandler = handler
     }
 }
