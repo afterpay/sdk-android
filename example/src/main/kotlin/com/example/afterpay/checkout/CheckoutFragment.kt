@@ -1,6 +1,5 @@
 package com.example.afterpay.checkout
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
@@ -156,17 +154,16 @@ class CheckoutFragment : Fragment() {
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.checkoutUrl)
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY)
                     }
-                    is Command.LaunchCashAppPay -> viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
-                    is Command.ProvideCashAppTokenResult ->
-                        cashAppHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideShippingOptionsResult ->
                         checkoutHandler.provideShippingOptionsResult(command.shippingOptionsResult)
                     is Command.ProvideShippingOptionUpdateResult ->
                         checkoutHandler.provideShippingOptionUpdateResult(
                             command.shippingOptionUpdateResult,
                         )
+                    is Command.ProvideCashAppTokenResult -> cashAppHandler.provideTokenResult(command.tokenResult)
+                    is Command.LaunchCashAppPay -> viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
                     is Command.CashReceipt -> {
                         val customerResponseData = command.customerResponseData
                         val grant = customerResponseData.grants?.get(0)
