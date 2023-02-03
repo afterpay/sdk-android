@@ -1,12 +1,18 @@
 package com.example.afterpay.checkout
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.util.Patterns
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.paykit.core.CashAppPayKit
+import app.cash.paykit.core.models.response.CustomerResponseData
+import app.cash.paykit.core.models.sdk.PayKitCurrency
+import app.cash.paykit.core.models.sdk.PayKitPaymentAction
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.cashapp.AfterpayCashApp
 import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
@@ -50,7 +56,6 @@ class CheckoutViewModel(
         val buyNow: Boolean,
         val pickup: Boolean,
         val shippingOptionsRequired: Boolean,
-        val cashAppPay: Boolean,
     ) {
         val totalCost: String
             get() = total.asCurrency()
@@ -70,6 +75,26 @@ class CheckoutViewModel(
         data class ProvideShippingOptionUpdateResult(
             val shippingOptionUpdateResult: ShippingOptionUpdateResult?,
         ) : Command()
+        data class CashReceipt(val customerResponseData: CustomerResponseData) : Command()
+    }
+
+    fun createCustomerRequest(cashAppData: AfterpayCashApp, payKitInstance: CashAppPayKit?) {
+        if (payKitInstance != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val request = PayKitPaymentAction.OneTimeAction(
+                    redirectUri = "aftersnack://callback",
+                    currency = PayKitCurrency.USD,
+                    amount = (cashAppData.amount * 100).toInt(),
+                    scopeId = cashAppData.merchantId
+                )
+
+                payKitInstance.createCustomerRequest(request)
+            }
+        }
+    }
+
+    fun authorizePayKitCustomerRequest(context: Context, payKitInstance: CashAppPayKit?) {
+        payKitInstance?.authorizeCustomerRequest(context)
     }
 
     private val state = MutableStateFlow(
@@ -81,7 +106,6 @@ class CheckoutViewModel(
             buyNow = preferences.getBuyNow(),
             pickup = preferences.getPickup(),
             shippingOptionsRequired = preferences.getShippingOptionsRequired(),
-            cashAppPay = preferences.getCashAppPay(),
         ),
     )
     private val commandChannel = Channel<Command>(Channel.CONFLATED)
@@ -104,9 +128,7 @@ class CheckoutViewModel(
         copy(shippingOptionsRequired = checked)
     }
 
-    fun checkCashApp(checked: Boolean) = state.update { copy(cashAppPay = checked) }
-
-    fun showAfterpayCheckout() {
+    fun showAfterpayCheckout(cashAppPay: Boolean = false) {
         val (
             email,
             total,
@@ -115,7 +137,6 @@ class CheckoutViewModel(
             isBuyNow,
             isPickup,
             isShippingOptionsRequired,
-            cashAppPay,
         ) = state.value
 
         preferences.edit {
@@ -125,7 +146,6 @@ class CheckoutViewModel(
             putBuyNow(isBuyNow)
             putPickup(isPickup)
             putShippingOptionsRequired(isShippingOptionsRequired)
-            putCashAppPay(cashAppPay)
         }
 
         when {
@@ -165,8 +185,8 @@ class CheckoutViewModel(
         }
     }
 
-    fun loadCheckoutToken() {
-        val (email, total, _, isExpress, _, _, _, isCashApp) = state.value
+    fun loadCheckoutToken(isCashApp: Boolean = false) {
+        val (email, total, _, isExpress) = state.value
         val symbols = DecimalFormatSymbols(Locale.US)
         val amount = DecimalFormat("0.00", symbols).format(total)
         val mode = if (isExpress && !isCashApp) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
@@ -250,6 +270,12 @@ class CheckoutViewModel(
         }
     }
 
+    fun cashReceipt(customerResponseData: CustomerResponseData) {
+        viewModelScope.launch {
+            commandChannel.trySend(Command.CashReceipt(customerResponseData = customerResponseData)).isSuccess
+        }
+    }
+
     companion object {
         fun factory(
             totalCost: BigDecimal,
@@ -272,7 +298,6 @@ private object PreferenceKey {
     const val buyNow = "buyNow"
     const val pickup = "pickup"
     const val shippingOptionsRequired = "shippingOptionsRequired"
-    const val cashAppPay = "cashAppPay"
 }
 
 private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
@@ -299,9 +324,3 @@ private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
 
 private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
     putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)
-
-private fun SharedPreferences.getCashAppPay(): Boolean =
-    getBoolean(PreferenceKey.cashAppPay, false)
-
-private fun SharedPreferences.Editor.putCashAppPay(cashAppPay: Boolean) =
-    putBoolean(PreferenceKey.cashAppPay, cashAppPay)

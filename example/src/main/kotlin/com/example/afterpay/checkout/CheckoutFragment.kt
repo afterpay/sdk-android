@@ -16,22 +16,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import app.cash.paykit.core.CashAppPayKit
+import app.cash.paykit.core.PayKitState
+import app.cash.paykit.core.ui.CashPayKitButton
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayPaymentButton
+import com.example.afterpay.MainActivity
+import com.example.afterpay.MainCommands
 import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.data.CashResponseData
 import com.example.afterpay.getDependencies
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class CheckoutFragment : Fragment() {
-    private companion object {
-        const val CHECKOUT_WITH_AFTERPAY = 1234
-    }
-
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
             totalCost = requireNotNull(arguments?.get(NavGraph.args.total_cost) as? BigDecimal),
@@ -39,6 +43,17 @@ class CheckoutFragment : Fragment() {
             preferences = getDependencies().sharedPreferences,
         )
     }
+
+    private lateinit var cashButton: CashPayKitButton
+
+    private var payKitInstance: CashAppPayKit? = null
+        get() {
+            if (activity is MainActivity) {
+                return (activity as MainActivity).payKit
+            }
+
+            return null
+        }
 
     // when launching the checkout with V2, the token must be generated
     // with 'popupOriginUrl' set to 'https://static.afterpay.com' under the
@@ -50,9 +65,9 @@ class CheckoutFragment : Fragment() {
     )
 
     private val cashAppHandler = CashAppHandler(
-        onDidCommenceCheckout = { viewModel.loadCheckoutToken() },
+        onDidCommenceCheckout = { viewModel.loadCheckoutToken(isCashApp = true) },
         onDidReceiveResponse = {
-            Log.d("mylogger", "Pass the result to cash app ($it)")
+            viewModel.createCustomerRequest(it, payKitInstance)
         }
     )
 
@@ -61,6 +76,14 @@ class CheckoutFragment : Fragment() {
 
         Afterpay.setCheckoutV2Handler(checkoutHandler)
         Afterpay.setCashAppHandler(cashAppHandler)
+    }
+
+    private fun enableCashButton() {
+        cashButton.isEnabled = true
+    }
+
+    private fun disableCashButton() {
+        cashButton.isEnabled = false
     }
 
     override fun onCreateView(
@@ -109,11 +132,6 @@ class CheckoutFragment : Fragment() {
             viewModel.checkShippingOptionsRequired(checked)
         }
 
-        val cashAppRow = view.findViewById<View>(R.id.cart_cashAppRow)
-        val cashAppCheckBox = view.findViewById<MaterialCheckBox>(R.id.cart_cashAppCheckBox)
-        cashAppRow.setOnClickListener { cashAppCheckBox.toggle() }
-        cashAppCheckBox.setOnCheckedChangeListener { _, checked -> viewModel.checkCashApp(checked) }
-
         lifecycleScope.launchWhenCreated {
             viewModel.state().collectLatest { state ->
                 if (emailField.text.toString() != state.emailAddress) {
@@ -141,8 +159,7 @@ class CheckoutFragment : Fragment() {
                         val intent = Afterpay.createCheckoutIntent(requireContext(), command.checkoutUrl)
                         getCheckoutResult.launch(intent)
                     }
-                    is Command.LaunchCashAppPay ->
-                        Afterpay.retrieveCashAppData()
+                    is Command.LaunchCashAppPay -> viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
                     is Command.ProvideCheckoutTokenResult ->
                         checkoutHandler.provideTokenResult(command.tokenResult)
                     is Command.ProvideCashAppTokenResult ->
@@ -153,7 +170,53 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideShippingOptionUpdateResult(
                             command.shippingOptionUpdateResult,
                         )
+                    is Command.CashReceipt -> {
+                        val customerResponseData = command.customerResponseData
+                        val grant = customerResponseData.grants?.get(0)
+                        val centsDevisor = 100
+
+                        val responseData = CashResponseData(
+                            cashTag = customerResponseData.customerProfile?.cashTag,
+                            amount = (grant?.action?.amount_cents?.toBigDecimal()?.divide(centsDevisor.toBigDecimal())).toString(),
+                            grantId = grant?.id
+                        )
+
+                        findNavController().navigate(
+                            NavGraph.action.to_cash_receipt,
+                            bundleOf(NavGraph.args.cash_response_data to responseData),
+                        )
+                    }
                 }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            MainCommands.commands().collectLatest { command ->
+                if (command is MainCommands.Command.PayKitStateChange) {
+                    when (val state = command.state) {
+                        is PayKitState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
+                        is PayKitState.ReadyToAuthorize -> enableCashButton()
+                        is PayKitState.PayKitException -> Log.e("CheckoutFragment", "${state.exception}")
+                        else -> Log.d("CheckoutFragment", "Pay Kit State: ${command.state}")
+                    }
+                }
+            }
+        }
+
+        view.let {
+            cashButton = it.findViewById(R.id.cart_button_cash)
+            cashButton.setOnClickListener { viewModel.showAfterpayCheckout(cashAppPay = true) }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        view?.let {
+            disableCashButton()
+
+            lifecycleScope.launch(Dispatchers.Unconfined) {
+                Afterpay.retrieveCashAppData()
             }
         }
     }

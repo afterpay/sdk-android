@@ -41,21 +41,22 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
 
     private suspend fun signPayment(token: String): Result<AfterpayCashAppSigningResponse> {
         return runBlocking {
-            // TODO: convert this to a variable based on the environment
-            val urlString = "https://api-plus.us-sandbox.afterpay.com/v2/payments/sign-payment"
-            val url = URL(urlString)
+            Afterpay.environment?.payKitSigningUrl?.let {
+                val urlString = it
+                val url = URL(urlString)
 
-            val payload = """{ "token": "$token" }"""
+                val payload = """{ "token": "$token" }"""
 
-            val response = withContext(Dispatchers.Unconfined) {
-                AfterpayCashAppApi.cashRequest<AfterpayCashAppSigningResponse, String>(
-                    url = url,
-                    method = AfterpayCashAppApi.CashHttpVerb.POST,
-                    body = payload
-                )
-            }
+                val response = withContext(Dispatchers.Unconfined) {
+                    AfterpayCashAppApi.cashRequest<AfterpayCashAppSigningResponse, String>(
+                        url = url,
+                        method = AfterpayCashAppApi.CashHttpVerb.POST,
+                        body = payload
+                    )
+                }
 
-            response
+                response
+            } ?: Result.failure(Exception("Environment not set"))
         }
     }
 

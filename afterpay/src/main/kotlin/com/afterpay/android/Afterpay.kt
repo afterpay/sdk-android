@@ -55,6 +55,9 @@ object Afterpay {
     internal var cashAppHandler: AfterpayCashAppHandler? = null
         private set
 
+    val environment: AfterpayEnvironment?
+        get() = configuration?.environment
+
     /**
      * Returns an [Intent] for the given [context] and [checkoutUrl] that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
