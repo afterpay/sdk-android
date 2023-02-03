@@ -250,10 +250,11 @@ class CheckoutViewModel(
             }
 
             val currency = Currency.getInstance(configuration.currency)
+            val result: ShippingOptionUpdateResult?
 
             // if standard shipping was selected, update the amounts
             // otherwise leave as is by passing null
-            val result: ShippingOptionUpdateResult? = if (shippingOption.id == "standard") {
+            if (shippingOption.id == "standard") {
                 val updatedShippingOption = ShippingOptionUpdate(
                     "standard",
                     Money("0.00".toBigDecimal(), currency),
@@ -261,9 +262,9 @@ class CheckoutViewModel(
                     Money("2.00".toBigDecimal(), currency),
                 )
 
-                ShippingOptionUpdateSuccessResult(updatedShippingOption)
+                result = ShippingOptionUpdateSuccessResult(updatedShippingOption)
             } else {
-                null
+                result = null
             }
 
             commandChannel.trySend(Command.ProvideShippingOptionUpdateResult(result))
