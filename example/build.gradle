@@ -79,7 +79,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.jakewharton.threetenabp:threetenabp:${versions.android_three_ten}"
     implementation "app.cash.paykit:core:${versions.cash_app_sdk}"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${versions.kotlinx_serialization}"
 
     androidTestUtil "androidx.test:orchestrator:${versions.androidx_test_orchestrator}"
 
