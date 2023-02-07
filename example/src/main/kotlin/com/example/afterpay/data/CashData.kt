@@ -3,10 +3,10 @@ package com.example.afterpay.data
 import android.os.Parcel
 import android.os.Parcelable
 
-data class CashResponseData(
+data class CashData(
     val cashTag: String? = null,
     val amount: String? = null,
-    val grantId: String? = null
+    val grantId: String? = null,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -24,12 +24,12 @@ data class CashResponseData(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<CashResponseData> {
-        override fun createFromParcel(parcel: Parcel): CashResponseData {
-            return CashResponseData(parcel)
+    companion object CREATOR : Parcelable.Creator<CashData> {
+        override fun createFromParcel(parcel: Parcel): CashData {
+            return CashData(parcel)
         }
 
-        override fun newArray(size: Int): Array<CashResponseData?> {
+        override fun newArray(size: Int): Array<CashData?> {
             return arrayOfNulls(size)
         }
     }

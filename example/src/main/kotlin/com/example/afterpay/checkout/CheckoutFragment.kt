@@ -19,13 +19,14 @@ import app.cash.paykit.core.CashAppPayKit
 import app.cash.paykit.core.PayKitState
 import app.cash.paykit.core.ui.CashPayKitButton
 import com.afterpay.android.Afterpay
+import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.MainActivity
 import com.example.afterpay.MainCommands
 import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
-import com.example.afterpay.data.CashResponseData
+import com.example.afterpay.data.CashData
 import com.example.afterpay.getDependencies
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
@@ -58,6 +59,8 @@ class CheckoutFragment : Fragment() {
             return null
         }
 
+    private var cashJwt: String? = null
+
     // when launching the checkout with V2, the token must be generated
     // with 'popupOriginUrl' set to 'https://static.afterpay.com' under the
     // top level 'merchant' object
@@ -70,6 +73,7 @@ class CheckoutFragment : Fragment() {
     private val cashAppHandler = CashAppHandler(
         onDidCommenceCheckout = { viewModel.loadCheckoutToken(isCashApp = true) },
         onDidReceiveResponse = {
+            cashJwt = it.jwt
             viewModel.createCustomerRequest(it, payKitInstance)
         }
     )
@@ -165,20 +169,42 @@ class CheckoutFragment : Fragment() {
                     is Command.ProvideCashAppTokenResult -> cashAppHandler.provideTokenResult(command.tokenResult)
                     is Command.LaunchCashAppPay -> viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
                     is Command.CashReceipt -> {
-                        val customerResponseData = command.customerResponseData
-                        val grant = customerResponseData.grants?.get(0)
-                        val centsDivisor = 100
+                        cashJwt?.also { jwt ->
+                            val customerResponseData = command.customerResponseData
+                            val grant = customerResponseData.grants?.get(0)
+                            val centsDivisor = 100
 
-                        val responseData = CashResponseData(
-                            cashTag = customerResponseData.customerProfile?.cashTag,
-                            amount = (grant?.action?.amount_cents?.toBigDecimal()?.divide(centsDivisor.toBigDecimal())).toString(),
-                            grantId = grant?.id
-                        )
+                            if (
+                                cashJwt != null &&
+                                grant?.id != null &&
+                                customerResponseData.customerProfile?.id != null
+                            ) {
+                                Afterpay.validateCashPayment(
+                                    jwt,
+                                    grant.id,
+                                    customerResponseData.customerProfile!!.id
+                                ) { validationResult ->
+                                    when (validationResult) {
+                                        is CashAppValidationResponse.Success -> {
+                                            val responseData = CashData(
+                                                cashTag = customerResponseData.customerProfile?.cashTag,
+                                                amount = (grant.action.amount_cents?.toBigDecimal()
+                                                    ?.divide(centsDivisor.toBigDecimal())).toString(),
+                                                grantId = grant.id,
+                                            )
 
-                        findNavController().navigate(
-                            NavGraph.action.to_cash_receipt,
-                            bundleOf(NavGraph.args.cash_response_data to responseData),
-                        )
+                                            findNavController().navigate(
+                                                NavGraph.action.to_cash_receipt,
+                                                bundleOf(NavGraph.args.cash_response_data to responseData),
+                                            )
+                                        }
+                                        is CashAppValidationResponse.Failure -> {
+                                            Snackbar.make(requireView(), "CashApp not valid: ${validationResult.error}", Snackbar.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        } ?: Snackbar.make(requireView(), "Something went wrong (missing jwt)", Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -189,9 +215,7 @@ class CheckoutFragment : Fragment() {
                 if (command is MainCommands.Command.PayKitStateChange) {
                     when (val state = command.state) {
                         is PayKitState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
-                        is PayKitState.Declined -> {
-                            Snackbar.make(requireView(), "CashApp Declined", Snackbar.LENGTH_SHORT).show()
-                        }
+                        is PayKitState.Declined -> Snackbar.make(requireView(), "CashApp Declined", Snackbar.LENGTH_SHORT).show()
                         is PayKitState.ReadyToAuthorize -> cashButton.isEnabled = true
                         is PayKitState.PayKitException -> Log.e("CheckoutFragment", "${state.exception}")
                         else -> Log.d("CheckoutFragment", "Pay Kit State: ${command.state}")
@@ -213,7 +237,7 @@ class CheckoutFragment : Fragment() {
             cashButton.isEnabled = false
 
             lifecycleScope.launch(Dispatchers.Unconfined) {
-                Afterpay.retrieveCashAppData()
+                Afterpay.createCashAppOrder()
             }
         }
     }

@@ -5,4 +5,5 @@ data class AfterpayCashApp(
     val redirectUri: String,
     val merchantId: String,
     val brandId: String,
+    val jwt: String,
 )

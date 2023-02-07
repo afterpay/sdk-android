@@ -15,6 +15,13 @@ data class AfterpayCashAppSigningResponse(
 )
 
 @Serializable
+data class AfterpayCashAppValidationResponse(
+    var cashAppTag: String,
+    var status: String,
+    var callbackBaseUrl: String
+)
+
+@Serializable
 data class AfterpayCashAppJwt(
     var amount: AfterpayCashAppAmount,
     var token: String,

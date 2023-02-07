@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
+import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.Brand
@@ -84,9 +85,19 @@ object Afterpay {
         .putCheckoutV2OptionsExtra(options)
 
     @JvmStatic
-    fun retrieveCashAppData(handler: AfterpayCashAppHandler? = null) {
+    fun createCashAppOrder(handler: AfterpayCashAppHandler? = null) {
         val cashApp = AfterpayCashAppCheckout(handler)
         cashApp.commenceCheckout()
+    }
+
+    @JvmStatic
+    fun validateCashPayment(
+        jwt: String,
+        customerId: String,
+        grantId: String,
+        complete: (CashAppValidationResponse) -> Unit
+    ) {
+        AfterpayCashAppCheckout.validatePayment(jwt, customerId, grantId, complete)
     }
 
     /**

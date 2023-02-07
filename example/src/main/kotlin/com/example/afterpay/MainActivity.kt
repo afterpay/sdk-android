@@ -19,7 +19,7 @@ import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayEnvironment
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.AfterpayRepository
-import com.example.afterpay.data.CashResponseData
+import com.example.afterpay.data.CashData
 import com.example.afterpay.receipt.CashReceiptFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), CashAppPayKitListener {
                 fragment<CashReceiptFragment>(NavGraph.dest.cash_receipt) {
                     label = getString(R.string.title_cash_receipt)
                     argument(NavGraph.args.cash_response_data) {
-                        type = NavType.ParcelableType(CashResponseData::class.java)
+                        type = NavType.ParcelableType(CashData::class.java)
                     }
                     action(NavGraph.action.back_to_shopping) {
                         destinationId = NavGraph.dest.shopping

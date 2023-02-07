@@ -11,11 +11,13 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 internal object AfterpayCashAppApi {
+    private val json = Json { ignoreUnknownKeys = true }
+
     internal inline fun <reified T, reified B> cashRequest(url: URL, method: CashHttpVerb, body: B): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
-            val payload = (body as? String) ?: Json.encodeToString(body)
+            val payload = (body as? String) ?: json.encodeToString(body)
 
             val outputStreamWriter = OutputStreamWriter(connection.outputStream)
             outputStreamWriter.write(payload)
@@ -24,7 +26,7 @@ internal object AfterpayCashAppApi {
             if (connection.errorStream == null && connection.responseCode < 400) {
                 val data = connection.inputStream.bufferedReader().readText()
                 connection.inputStream.close()
-                val result = Json.decodeFromString<T>(data)
+                val result = json.decodeFromString<T>(data)
                 Result.success(result)
             } else {
                 throw InvalidObjectException("Unexpected response code: ${connection.responseCode}")
@@ -33,7 +35,7 @@ internal object AfterpayCashAppApi {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 connection.errorStream.close()
-                val result = Json.decodeFromString<ApiErrorCashApp>(data)
+                val result = json.decodeFromString<ApiErrorCashApp>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
                 Result.failure(exception)

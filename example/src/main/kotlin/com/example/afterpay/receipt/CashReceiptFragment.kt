@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.afterpay.NavGraph
 import com.example.afterpay.R
-import com.example.afterpay.data.CashResponseData
+import com.example.afterpay.data.CashData
 
 class CashReceiptFragment : Fragment() {
     override fun onCreateView(
@@ -26,17 +26,18 @@ class CashReceiptFragment : Fragment() {
             findNavController().navigate(NavGraph.action.back_to_shopping)
         }
 
-        val responseData = requireNotNull(arguments?.get(NavGraph.args.cash_response_data) as CashResponseData)
+        val responseData = requireNotNull(arguments?.get(NavGraph.args.cash_response_data) as CashData)
+        val (cashTag, amount, grantId) = responseData
 
         context?.let { ctx ->
             val cashTagText = view.findViewById<TextView>(R.id.cash_receipt_tag_text)
-            cashTagText.text = String.format(ctx.getString(R.string.cash_tag), responseData.cashTag)
+            cashTagText.text = String.format(ctx.getString(R.string.cash_tag), cashTag)
 
             val cashAmountText = view.findViewById<TextView>(R.id.cash_receipt_amount_text)
-            cashAmountText.text = String.format(ctx.getString(R.string.cash_amount), responseData.amount)
+            cashAmountText.text = String.format(ctx.getString(R.string.cash_amount), amount)
 
             val cashGrantIdText = view.findViewById<TextView>(R.id.cash_receipt_grant_id_text)
-            cashGrantIdText.text = String.format(ctx.getString(R.string.cash_grant_id), responseData.grantId)
+            cashGrantIdText.text = String.format(ctx.getString(R.string.cash_grant_id), grantId)
         }
     }
 }
