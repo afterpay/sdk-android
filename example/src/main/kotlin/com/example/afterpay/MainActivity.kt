@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), CashAppPayKitListener {
         )
     }
 
-    var payKit : CashAppPayKit? = null
+    var payKit: CashAppPayKit? = null
 
     private fun setupPayKit() {
         Afterpay.environment?.let { env ->
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity(), CashAppPayKitListener {
 
 object MainCommands {
     sealed class Command {
-        data class PayKitStateChange(val state: PayKitState): Command()
+        data class PayKitStateChange(val state: PayKitState) : Command()
     }
 
     internal val commandChannel = Channel<Command>(Channel.CONFLATED)

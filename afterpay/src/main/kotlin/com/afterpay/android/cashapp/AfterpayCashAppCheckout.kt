@@ -5,13 +5,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-sealed class  CashAppCreateOrderResult {
-    data class Success(val response : AfterpayCashApp) : CashAppCreateOrderResult()
+sealed class CashAppCreateOrderResult {
+    data class Success(val response: AfterpayCashApp) : CashAppCreateOrderResult()
     data class Failure(val error: Throwable) : CashAppCreateOrderResult()
 }
 
 sealed class CashAppValidationResponse {
-    data class Success(val response : AfterpayCashAppValidationResponse) : CashAppValidationResponse()
+    data class Success(val response: AfterpayCashAppValidationResponse) : CashAppValidationResponse()
     data class Failure(val error: Throwable) : CashAppValidationResponse()
 }
 
@@ -38,9 +38,7 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
 
                         handler?.didReceiveCashAppData(CashAppCreateOrderResult.Success(cashApp))
                     } ?: run {
-                        handler?.didReceiveCashAppData(
-                            CashAppCreateOrderResult.Failure(Exception("Could not decode jwt"))
-                        )
+                        handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(Exception("Could not decode jwt")))
                     }
                 }
                 .onFailure {
@@ -58,7 +56,7 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
                 AfterpayCashAppApi.cashRequest<AfterpayCashAppSigningResponse, String>(
                     url = url,
                     method = AfterpayCashAppApi.CashHttpVerb.POST,
-                    body = payload
+                    body = payload,
                 )
             }.getOrThrow()
 
@@ -71,7 +69,7 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
             jwt: String,
             customerId: String,
             grantId: String,
-            complete: (validationResponse: CashAppValidationResponse) -> Unit
+            complete: (validationResponse: CashAppValidationResponse) -> Unit,
         ) {
             return runBlocking {
                 Afterpay.environment?.cashAppPaymentValidationUrl?.let { url ->
@@ -87,7 +85,7 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
                         AfterpayCashAppApi.cashRequest<AfterpayCashAppValidationResponse, String>(
                             url = url,
                             method = AfterpayCashAppApi.CashHttpVerb.POST,
-                            body = payload
+                            body = payload,
                         )
                     }
 

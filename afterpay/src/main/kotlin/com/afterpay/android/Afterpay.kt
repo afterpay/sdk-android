@@ -3,8 +3,8 @@ package com.afterpay.android
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.WorkerThread
-import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
+import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
@@ -93,7 +93,7 @@ object Afterpay {
     @WorkerThread
     suspend fun signCashAppOrder(
         token: String,
-        handler: AfterpayCashAppHandler? = null
+        handler: AfterpayCashAppHandler? = null,
     ) {
         val cashApp = AfterpayCashAppCheckout(handler)
         cashApp.performSignPaymentRequest(token)
@@ -104,7 +104,7 @@ object Afterpay {
     @JvmOverloads
     fun signCashAppOrderAsync(
         token: String,
-        handler: AfterpayCashAppHandler? = null
+        handler: AfterpayCashAppHandler? = null,
     ): CompletableFuture<Unit?> {
         return GlobalScope.future {
             signCashAppOrder(token, handler)
@@ -116,7 +116,7 @@ object Afterpay {
         jwt: String,
         customerId: String,
         grantId: String,
-        complete: (CashAppValidationResponse) -> Unit
+        complete: (CashAppValidationResponse) -> Unit,
     ) {
         AfterpayCashAppCheckout.validatePayment(jwt, customerId, grantId, complete)
     }

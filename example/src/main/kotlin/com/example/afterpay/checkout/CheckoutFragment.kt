@@ -51,7 +51,7 @@ class CheckoutFragment : Fragment() {
 
     private lateinit var cashButton: CashPayKitButton
 
-    private var payKitInstance: CashAppPayKit? = null
+    private val payKitInstance: CashAppPayKit?
         get() {
             if (activity is MainActivity) {
                 return (activity as MainActivity).payKit
@@ -85,7 +85,7 @@ class CheckoutFragment : Fragment() {
                     Snackbar.make(requireView(), "Error: ${createOrderResult.error.message}", Snackbar.LENGTH_SHORT).show()
                 }
             }
-        }
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -197,14 +197,16 @@ class CheckoutFragment : Fragment() {
                                 Afterpay.validateCashAppOrder(
                                     jwt,
                                     grant.id,
-                                    customerResponseData.customerProfile!!.id
+                                    customerResponseData.customerProfile!!.id,
                                 ) { validationResult ->
                                     when (validationResult) {
                                         is CashAppValidationResponse.Success -> {
                                             val responseData = CashData(
                                                 cashTag = customerResponseData.customerProfile?.cashTag,
-                                                amount = (grant.action.amount_cents?.toBigDecimal()
-                                                    ?.divide(centsDivisor.toBigDecimal())).toString(),
+                                                amount = (
+                                                    grant.action.amount_cents?.toBigDecimal()
+                                                        ?.divide(centsDivisor.toBigDecimal())
+                                                    ).toString(),
                                                 grantId = grant.id,
                                             )
 

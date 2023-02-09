@@ -1,10 +1,10 @@
 package com.afterpay.android.cashapp
 
 import com.afterpay.android.BuildConfig
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.Serializable
 import java.io.InvalidObjectException
 import java.io.OutputStreamWriter
 import java.net.URL

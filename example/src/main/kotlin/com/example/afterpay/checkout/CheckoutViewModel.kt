@@ -85,7 +85,7 @@ class CheckoutViewModel(
                     redirectUri = "aftersnack://callback",
                     currency = PayKitCurrency.USD,
                     amount = (cashAppData.amount * 100).toInt(),
-                    scopeId = cashAppData.merchantId
+                    scopeId = cashAppData.merchantId,
                 )
 
                 payKitInstance.createCustomerRequest(request)
@@ -160,11 +160,13 @@ class CheckoutViewModel(
                         val symbols = DecimalFormatSymbols(Locale.US)
                         val formatter = DecimalFormat("#,###.00", symbols)
                         val response = withContext(Dispatchers.IO) {
-                            merchantApi.checkout(CheckoutRequest(
-                                email = email,
-                                amount = formatter.format(total),
-                                mode = CheckoutMode.STANDARD,
-                            ))
+                            merchantApi.checkout(
+                                CheckoutRequest(
+                                    email = email,
+                                    amount = formatter.format(total),
+                                    mode = CheckoutMode.STANDARD,
+                                ),
+                            )
                         }
                         commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
                     } catch (error: Exception) {

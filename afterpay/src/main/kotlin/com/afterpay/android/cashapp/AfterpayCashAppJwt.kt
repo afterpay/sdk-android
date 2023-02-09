@@ -18,7 +18,7 @@ data class AfterpayCashAppSigningResponse(
 data class AfterpayCashAppValidationResponse(
     var cashAppTag: String,
     var status: String,
-    var callbackBaseUrl: String
+    var callbackBaseUrl: String,
 )
 
 @Serializable
