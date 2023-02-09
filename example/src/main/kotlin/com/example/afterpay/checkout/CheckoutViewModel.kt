@@ -69,7 +69,7 @@ class CheckoutViewModel(
         data class ShowAfterpayCheckoutV2(val options: AfterpayCheckoutV2Options) : Command()
         data class LaunchCashAppPay(val handler: AfterpayCashAppHandler?) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
-        data class ProvideCashAppTokenResult(val tokenResult: Result<String>) : Command()
+        data class CreateCashAppOrder(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
@@ -198,7 +198,7 @@ class CheckoutViewModel(
             }
             val tokenResult = response.map { it.token }
             val command = when (isCashApp) {
-                true -> Command.ProvideCashAppTokenResult(tokenResult)
+                true -> Command.CreateCashAppOrder(tokenResult)
                 else -> Command.ProvideCheckoutTokenResult(tokenResult)
             }
             commandChannel.trySend(command)

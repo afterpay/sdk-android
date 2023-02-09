@@ -19,6 +19,7 @@ import app.cash.paykit.core.CashAppPayKit
 import app.cash.paykit.core.PayKitState
 import app.cash.paykit.core.ui.CashPayKitButton
 import com.afterpay.android.Afterpay
+import com.afterpay.android.cashapp.CashAppCreateOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.MainActivity
@@ -71,10 +72,17 @@ class CheckoutFragment : Fragment() {
     )
 
     private val cashAppHandler = CashAppHandler(
-        onDidCommenceCheckout = { viewModel.loadCheckoutToken(isCashApp = true) },
-        onDidReceiveResponse = {
-            cashJwt = it.jwt
-            viewModel.createCustomerRequest(it, payKitInstance)
+        onDidReceiveResponse = { createOrderResult ->
+            when (createOrderResult) {
+                is CashAppCreateOrderResult.Success -> {
+                    val (response) = createOrderResult
+                    cashJwt = response.jwt
+                    viewModel.createCustomerRequest(response, payKitInstance)
+                }
+                is CashAppCreateOrderResult.Failure -> {
+                    Snackbar.make(requireView(), "Error: ${createOrderResult.error.message}", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
     )
 
@@ -166,7 +174,13 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideShippingOptionUpdateResult(
                             command.shippingOptionUpdateResult,
                         )
-                    is Command.ProvideCashAppTokenResult -> cashAppHandler.provideTokenResult(command.tokenResult)
+                    is Command.CreateCashAppOrder -> {
+                        command.tokenResult
+                            .onSuccess { Afterpay.createCashAppOrder(it) }
+                            .onFailure {
+                                Snackbar.make(requireView(), "Error: ${it.message}", Snackbar.LENGTH_SHORT).show()
+                            }
+                    }
                     is Command.LaunchCashAppPay -> viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
                     is Command.CashReceipt -> {
                         cashJwt?.also { jwt ->
@@ -237,7 +251,7 @@ class CheckoutFragment : Fragment() {
             cashButton.isEnabled = false
 
             lifecycleScope.launch(Dispatchers.Unconfined) {
-                Afterpay.createCashAppOrder()
+                viewModel.loadCheckoutToken(true)
             }
         }
     }

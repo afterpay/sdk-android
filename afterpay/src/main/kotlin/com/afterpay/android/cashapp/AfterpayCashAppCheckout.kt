@@ -5,6 +5,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
+sealed class  CashAppCreateOrderResult {
+    data class Success(val response : AfterpayCashApp) : CashAppCreateOrderResult()
+    data class Failure(val error: Throwable) : CashAppCreateOrderResult()
+}
 
 sealed class CashAppValidationResponse {
     data class Success(val response : AfterpayCashAppValidationResponse) : CashAppValidationResponse()
@@ -18,48 +22,47 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
         require(Afterpay.cashAppHandler != null) { "CashApp handler must be set and not null before attempting to retrieve data" }
     }
 
-    fun commenceCheckout() {
-        handler?.didCommenceCheckout { result ->
-            runBlocking {
-                result.onSuccess { token ->
-                    signPayment(token)
-                        .onSuccess { response ->
-                            val jwtBody = AfterpayCashAppJwt.decode(response.jwtToken)
-                            jwtBody?.let {
-                                val cashApp = AfterpayCashApp(
-                                    amount = jwtBody.amount.amount.toDouble(),
-                                    redirectUri = jwtBody.redirectUrl,
-                                    merchantId = jwtBody.externalMerchantId,
-                                    brandId = response.externalBrandId,
-                                    jwt = response.jwtToken,
-                                )
+    suspend fun performSignPaymentRequest(token: String) {
+        runCatching {
+            signPayment(token)
+                .onSuccess { response ->
+                    val jwtBody = AfterpayCashAppJwt.decode(response.jwtToken)
+                    jwtBody?.let {
+                        val cashApp = AfterpayCashApp(
+                            amount = jwtBody.amount.amount.toDouble(),
+                            redirectUri = jwtBody.redirectUrl,
+                            merchantId = jwtBody.externalMerchantId,
+                            brandId = response.externalBrandId,
+                            jwt = response.jwtToken,
+                        )
 
-                                handler!!.didReceiveCashAppData(cashApp)
-                            }
-                        }
-                        .onFailure {
-
-                        }
+                        handler?.didReceiveCashAppData(CashAppCreateOrderResult.Success(cashApp))
+                    } ?: run {
+                        handler?.didReceiveCashAppData(
+                            CashAppCreateOrderResult.Failure(Exception("Could not decode jwt"))
+                        )
+                    }
                 }
-            }
+                .onFailure {
+                    handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(it))
+                }
         }
     }
 
-    private fun signPayment(token: String): Result<AfterpayCashAppSigningResponse> {
-        return runBlocking {
-            Afterpay.environment?.cashAppPaymentSigningUrl?.let { url ->
-                val payload = """{ "token": "$token" }"""
+    private suspend fun signPayment(token: String): Result<AfterpayCashAppSigningResponse> {
+        return runCatching {
+            val url = Afterpay.environment?.cashAppPaymentSigningUrl ?: throw Exception("No signing url found")
+            val payload = """{ "token": "$token" }"""
 
-                val response = withContext(Dispatchers.Unconfined) {
-                    AfterpayCashAppApi.cashRequest<AfterpayCashAppSigningResponse, String>(
-                        url = url,
-                        method = AfterpayCashAppApi.CashHttpVerb.POST,
-                        body = payload
-                    )
-                }
+            val response = withContext(Dispatchers.IO) {
+                AfterpayCashAppApi.cashRequest<AfterpayCashAppSigningResponse, String>(
+                    url = url,
+                    method = AfterpayCashAppApi.CashHttpVerb.POST,
+                    body = payload
+                )
+            }.getOrThrow()
 
-                response
-            } ?: Result.failure(Exception("Environment not set"))
+            response
         }
     }
 

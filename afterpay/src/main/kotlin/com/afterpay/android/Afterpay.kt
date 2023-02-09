@@ -2,6 +2,7 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.WorkerThread
 import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
 import com.afterpay.android.cashapp.CashAppValidationResponse
@@ -19,9 +20,13 @@ import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
+import java.util.concurrent.CompletableFuture
 import kotlin.properties.Delegates.observable
 
 object Afterpay {
@@ -85,9 +90,25 @@ object Afterpay {
         .putCheckoutV2OptionsExtra(options)
 
     @JvmStatic
-    fun createCashAppOrder(handler: AfterpayCashAppHandler? = null) {
+    @WorkerThread
+    suspend fun createCashAppOrder(
+        token: String,
+        handler: AfterpayCashAppHandler? = null
+    ) {
         val cashApp = AfterpayCashAppCheckout(handler)
-        cashApp.commenceCheckout()
+        cashApp.performSignPaymentRequest(token)
+    }
+
+    @DelicateCoroutinesApi
+    @JvmStatic
+    @JvmOverloads
+    fun createCashAppOrderAsync(
+        token: String,
+        handler: AfterpayCashAppHandler? = null
+    ): CompletableFuture<Unit?> {
+        return GlobalScope.future {
+            createCashAppOrder(token, handler)
+        }
     }
 
     @JvmStatic
