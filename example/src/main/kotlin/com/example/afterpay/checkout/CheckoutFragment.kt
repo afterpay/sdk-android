@@ -178,7 +178,7 @@ class CheckoutFragment : Fragment() {
                         )
                     is Command.CreateCashAppOrder -> {
                         command.tokenResult
-                            .onSuccess { Afterpay.createCashAppOrder(it) }
+                            .onSuccess { Afterpay.signCashAppOrder(it) }
                             .onFailure {
                                 Snackbar.make(requireView(), "Error: ${it.message}", Snackbar.LENGTH_SHORT).show()
                             }
@@ -194,7 +194,7 @@ class CheckoutFragment : Fragment() {
                                 grant?.id != null &&
                                 customerResponseData.customerProfile?.id != null
                             ) {
-                                Afterpay.validateCashPayment(
+                                Afterpay.validateCashAppOrder(
                                     jwt,
                                     grant.id,
                                     customerResponseData.customerProfile!!.id

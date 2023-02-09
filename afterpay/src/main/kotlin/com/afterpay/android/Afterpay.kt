@@ -91,7 +91,7 @@ object Afterpay {
 
     @JvmStatic
     @WorkerThread
-    suspend fun createCashAppOrder(
+    suspend fun signCashAppOrder(
         token: String,
         handler: AfterpayCashAppHandler? = null
     ) {
@@ -102,17 +102,17 @@ object Afterpay {
     @DelicateCoroutinesApi
     @JvmStatic
     @JvmOverloads
-    fun createCashAppOrderAsync(
+    fun signCashAppOrderAsync(
         token: String,
         handler: AfterpayCashAppHandler? = null
     ): CompletableFuture<Unit?> {
         return GlobalScope.future {
-            createCashAppOrder(token, handler)
+            signCashAppOrder(token, handler)
         }
     }
 
     @JvmStatic
-    fun validateCashPayment(
+    fun validateCashAppOrder(
         jwt: String,
         customerId: String,
         grantId: String,
