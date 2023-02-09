@@ -62,6 +62,8 @@ class CheckoutFragment : Fragment() {
 
     private var cashJwt: String? = null
 
+    private var launchedCashApp = false
+
     // when launching the checkout with V2, the token must be generated
     // with 'popupOriginUrl' set to 'https://static.afterpay.com' under the
     // top level 'merchant' object
@@ -189,7 +191,6 @@ class CheckoutFragment : Fragment() {
                             val centsDivisor = 100
 
                             if (
-                                cashJwt != null &&
                                 grant?.id != null &&
                                 customerResponseData.customerProfile?.id != null
                             ) {
@@ -229,7 +230,11 @@ class CheckoutFragment : Fragment() {
                 if (command is MainCommands.Command.PayKitStateChange) {
                     when (val state = command.state) {
                         is PayKitState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
-                        is PayKitState.Declined -> Snackbar.make(requireView(), "CashApp Declined", Snackbar.LENGTH_SHORT).show()
+                        is PayKitState.Declined -> {
+                            launchedCashApp = false
+                            loadCashCheckoutToken()
+                            Snackbar.make(requireView(), "CashApp Declined", Snackbar.LENGTH_SHORT).show()
+                        }
                         is PayKitState.ReadyToAuthorize -> cashButton.isEnabled = true
                         is PayKitState.PayKitException -> Log.e("CheckoutFragment", "${state.exception}")
                         else -> Log.d("CheckoutFragment", "Pay Kit State: ${command.state}")
@@ -240,7 +245,10 @@ class CheckoutFragment : Fragment() {
 
         view.let {
             cashButton = it.findViewById(R.id.cart_button_cash)
-            cashButton.setOnClickListener { viewModel.showAfterpayCheckout(cashAppPay = true) }
+            cashButton.setOnClickListener {
+                launchedCashApp = true
+                viewModel.showAfterpayCheckout(cashAppPay = true)
+            }
         }
     }
 
@@ -249,7 +257,12 @@ class CheckoutFragment : Fragment() {
 
         view?.let {
             cashButton.isEnabled = false
+            loadCashCheckoutToken()
+        }
+    }
 
+    private fun loadCashCheckoutToken() {
+        if (!launchedCashApp) {
             lifecycleScope.launch(Dispatchers.Unconfined) {
                 viewModel.loadCheckoutToken(true)
             }
