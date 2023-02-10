@@ -26,20 +26,21 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
         runCatching {
             signPayment(token)
                 .onSuccess { response ->
-                    val jwtBody = AfterpayCashAppJwt.decode(response.jwtToken)
-                    jwtBody?.let {
-                        val cashApp = AfterpayCashApp(
-                            amount = jwtBody.amount.amount.toDouble(),
-                            redirectUri = jwtBody.redirectUrl,
-                            merchantId = jwtBody.externalMerchantId,
-                            brandId = response.externalBrandId,
-                            jwt = response.jwtToken,
-                        )
+                    AfterpayCashAppJwt.decode(response.jwtToken)
+                        .onSuccess { jwtBody ->
+                            val cashApp = AfterpayCashApp(
+                                amount = jwtBody.amount.amount.toDouble(),
+                                redirectUri = jwtBody.redirectUrl,
+                                merchantId = jwtBody.externalMerchantId,
+                                brandId = response.externalBrandId,
+                                jwt = response.jwtToken,
+                            )
 
-                        handler?.didReceiveCashAppData(CashAppCreateOrderResult.Success(cashApp))
-                    } ?: run {
-                        handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(Exception("Could not decode jwt")))
-                    }
+                            handler?.didReceiveCashAppData(CashAppCreateOrderResult.Success(cashApp))
+                        }
+                        .onFailure {
+                            handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(it))
+                        }
                 }
                 .onFailure {
                     handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(it))

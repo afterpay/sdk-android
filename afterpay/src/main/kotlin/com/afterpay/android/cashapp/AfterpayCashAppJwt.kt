@@ -1,11 +1,9 @@
 package com.afterpay.android.cashapp
 
 import android.util.Base64
-import android.util.Log
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.io.UnsupportedEncodingException
 
 @Serializable
 data class AfterpayCashAppSigningResponse(
@@ -29,21 +27,23 @@ data class AfterpayCashAppJwt(
     var redirectUrl: String,
 ) {
     companion object {
-        fun decode(jwt: String): AfterpayCashAppJwt? {
-            try {
+        fun decode(jwt: String): Result<AfterpayCashAppJwt> {
+            return runCatching {
                 val split = jwt.split(".").toTypedArray()
                 val jwtBody = getJson(split[1])
 
-                return Json.decodeFromString<AfterpayCashAppJwt>(jwtBody)
-            } catch (e: UnsupportedEncodingException) {
-                Log.d("mylogger JWT_UNSUPPORTED_ENCODING_EXCEPTION", e.toString())
-                // TODO: handle this better
-            } catch (e: Exception) {
-                Log.d("mylogger JWT_EXCEPTION", e.toString())
-                // TODO: handle this better
+                Json.decodeFromString(jwtBody)
             }
-
-            return null
+            // try {
+            // } catch (e: UnsupportedEncodingException) {
+            //     Log.d("mylogger JWT_UNSUPPORTED_ENCODING_EXCEPTION", e.toString())
+            //     // TODO: handle this better
+            // } catch (e: Exception) {
+            //     Log.d("mylogger JWT_EXCEPTION", e.toString())
+            //     // TODO: handle this better
+            // }
+            //
+            // return null
         }
 
         private fun getJson(strEncoded: String): String {
