@@ -34,16 +34,6 @@ data class AfterpayCashAppJwt(
 
                 Json.decodeFromString(jwtBody)
             }
-            // try {
-            // } catch (e: UnsupportedEncodingException) {
-            //     Log.d("mylogger JWT_UNSUPPORTED_ENCODING_EXCEPTION", e.toString())
-            //     // TODO: handle this better
-            // } catch (e: Exception) {
-            //     Log.d("mylogger JWT_EXCEPTION", e.toString())
-            //     // TODO: handle this better
-            // }
-            //
-            // return null
         }
 
         private fun getJson(strEncoded: String): String {
