@@ -46,10 +46,6 @@ android {
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
-
-    repositories {
-        maven { url 'https://oss.sonatype.org/service/local/repositories/snapshots/content' }
-    }
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile).all {
