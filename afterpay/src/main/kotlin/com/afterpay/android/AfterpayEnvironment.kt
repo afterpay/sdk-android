@@ -13,14 +13,14 @@ enum class AfterpayEnvironment(
 ) {
     SANDBOX(
         payKitId = "CAS-CI_AFTERPAY",
-        cashAppPaymentSigningUrl = URL("${API_PLUS_SANDBOX_BASE_URL}/v2/payments/sign-payment"),
-        cashAppPaymentValidationUrl = URL("${API_PLUS_SANDBOX_BASE_URL}/v2/payments/validate-payment"),
+        cashAppPaymentSigningUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/sign-payment"),
+        cashAppPaymentValidationUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/validate-payment"),
     ),
 
     PRODUCTION(
         payKitId = "CA-CI_AFTERPAY",
-        cashAppPaymentSigningUrl = URL("${API_PLUS_PRODUCTION_BASE_URL}/v2/payments/sign-payment"),
-        cashAppPaymentValidationUrl = URL("${API_PLUS_PRODUCTION_BASE_URL}/v2/payments/validate-payment"),
+        cashAppPaymentSigningUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/sign-payment"),
+        cashAppPaymentValidationUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/validate-payment"),
     ),
     ;
 
