@@ -7,6 +7,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
 import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
@@ -23,7 +24,7 @@ internal object AfterpayCashAppApi {
             outputStreamWriter.write(payload)
             outputStreamWriter.flush()
 
-            if (connection.errorStream == null && connection.responseCode < 400) {
+            if (connection.errorStream == null && connection.responseCode < HttpURLConnection.HTTP_BAD_REQUEST) {
                 val data = connection.inputStream.bufferedReader().readText()
                 connection.inputStream.close()
                 val result = json.decodeFromString<T>(data)
