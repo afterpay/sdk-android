@@ -9,5 +9,5 @@ data class CheckoutRequest(
     val email: String,
     val amount: String,
     val mode: CheckoutMode,
-    val isCashAppPay: Boolean? = null,
+    val isCashAppPay: Boolean = false,
 )
