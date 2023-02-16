@@ -5,9 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-sealed class CashAppCreateOrderResult {
-    data class Success(val response: AfterpayCashApp) : CashAppCreateOrderResult()
-    data class Failure(val error: Throwable) : CashAppCreateOrderResult()
+sealed class CashAppSignOrderResult {
+    data class Success(val response: AfterpayCashApp) : CashAppSignOrderResult()
+    data class Failure(val error: Throwable) : CashAppSignOrderResult()
 }
 
 sealed class CashAppValidationResponse {
@@ -32,14 +32,14 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
                                 jwt = response.jwtToken,
                             )
 
-                            handler?.didReceiveCashAppData(CashAppCreateOrderResult.Success(cashApp))
+                            handler?.didReceiveCashAppData(CashAppSignOrderResult.Success(cashApp))
                         }
                         .onFailure {
-                            handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(it))
+                            handler?.didReceiveCashAppData(CashAppSignOrderResult.Failure(it))
                         }
                 }
                 .onFailure {
-                    handler?.didReceiveCashAppData(CashAppCreateOrderResult.Failure(it))
+                    handler?.didReceiveCashAppData(CashAppSignOrderResult.Failure(it))
                 }
         }
     }

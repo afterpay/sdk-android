@@ -19,7 +19,7 @@ import app.cash.paykit.core.CashAppPayKit
 import app.cash.paykit.core.PayKitState
 import app.cash.paykit.core.ui.CashPayKitButton
 import com.afterpay.android.Afterpay
-import com.afterpay.android.cashapp.CashAppCreateOrderResult
+import com.afterpay.android.cashapp.CashAppSignOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.view.AfterpayPaymentButton
 import com.example.afterpay.MainActivity
@@ -76,12 +76,12 @@ class CheckoutFragment : Fragment() {
     private val cashAppHandler = CashAppHandler(
         onDidReceiveResponse = { createOrderResult ->
             when (createOrderResult) {
-                is CashAppCreateOrderResult.Success -> {
+                is CashAppSignOrderResult.Success -> {
                     val (response) = createOrderResult
                     cashJwt = response.jwt
                     viewModel.createCustomerRequest(response, payKitInstance)
                 }
-                is CashAppCreateOrderResult.Failure -> {
+                is CashAppSignOrderResult.Failure -> {
                     Snackbar.make(requireView(), "Error: ${createOrderResult.error.message}", Snackbar.LENGTH_SHORT).show()
                 }
             }
@@ -176,7 +176,7 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideShippingOptionUpdateResult(
                             command.shippingOptionUpdateResult,
                         )
-                    is Command.CreateCashAppOrder -> {
+                    is Command.SignCashAppOrder -> {
                         command.tokenResult
                             .onSuccess { Afterpay.signCashAppOrder(it) }
                             .onFailure {

@@ -7,5 +7,5 @@ interface AfterpayCashAppHandler {
      * be used when constructing the request for createCustomerRequest in the
      * Cash App PayKit SDK
      */
-    fun didReceiveCashAppData(cashAppData: CashAppCreateOrderResult)
+    fun didReceiveCashAppData(cashAppData: CashAppSignOrderResult)
 }
