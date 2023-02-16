@@ -89,6 +89,11 @@ object Afterpay {
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
 
+    /**
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * the `didReceiveCashAppData method for the [handler]. This method should
+     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     */
     @JvmStatic
     @WorkerThread
     suspend fun signCashAppOrder(
@@ -99,6 +104,13 @@ object Afterpay {
         cashApp.performSignPaymentRequest(token)
     }
 
+    /**
+     * Async version of the [signCashAppOrder] method.
+     *
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * the didReceiveCashAppData method for the [handler]. This method should
+     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     */
     @DelicateCoroutinesApi
     @JvmStatic
     @JvmOverloads
@@ -111,6 +123,11 @@ object Afterpay {
         }
     }
 
+    /**
+     * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
+     * and calls complete once finished. This method should be called for a One Time payment
+     * once the Cash App order is in the approved state
+     */
     @JvmStatic
     fun validateCashAppOrder(
         jwt: String,
