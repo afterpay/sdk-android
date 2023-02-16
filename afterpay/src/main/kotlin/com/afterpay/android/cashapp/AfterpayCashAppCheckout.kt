@@ -18,10 +18,6 @@ sealed class CashAppValidationResponse {
 class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
     private var handler: AfterpayCashAppHandler? = cashHandler ?: Afterpay.cashAppHandler
 
-    init {
-        require(Afterpay.cashAppHandler != null) { "CashApp handler must be set and not null before attempting to retrieve data" }
-    }
-
     suspend fun performSignPaymentRequest(token: String) {
         runCatching {
             signPayment(token)
