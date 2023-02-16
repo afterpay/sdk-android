@@ -29,15 +29,13 @@ class CashReceiptFragment : Fragment() {
         val responseData = requireNotNull(arguments?.get(NavGraph.args.cash_response_data) as CashData)
         val (cashTag, amount, grantId) = responseData
 
-        context?.let { ctx ->
-            val cashTagText = view.findViewById<TextView>(R.id.cash_receipt_tag_text)
-            cashTagText.text = String.format(ctx.getString(R.string.cash_tag), cashTag)
+        val cashTagText = view.findViewById<TextView>(R.id.cash_receipt_tag_text)
+        cashTagText.text = String.format(getString(R.string.cash_tag), cashTag)
 
-            val cashAmountText = view.findViewById<TextView>(R.id.cash_receipt_amount_text)
-            cashAmountText.text = String.format(ctx.getString(R.string.cash_amount), amount)
+        val cashAmountText = view.findViewById<TextView>(R.id.cash_receipt_amount_text)
+        cashAmountText.text = String.format(getString(R.string.cash_amount), amount)
 
-            val cashGrantIdText = view.findViewById<TextView>(R.id.cash_receipt_grant_id_text)
-            cashGrantIdText.text = String.format(ctx.getString(R.string.cash_grant_id), grantId)
-        }
+        val cashGrantIdText = view.findViewById<TextView>(R.id.cash_receipt_grant_id_text)
+        cashGrantIdText.text = String.format(getString(R.string.cash_grant_id), grantId)
     }
 }
