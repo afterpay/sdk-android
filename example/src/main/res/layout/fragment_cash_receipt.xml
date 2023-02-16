@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/cart_totalCostRow"
+        android:id="@+id/cart_total_cost_row"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
