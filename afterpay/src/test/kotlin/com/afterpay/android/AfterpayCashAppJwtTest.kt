@@ -1,8 +1,8 @@
 package com.afterpay.android
 
 import com.afterpay.android.cashapp.AfterpayCashAppJwt
-import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
