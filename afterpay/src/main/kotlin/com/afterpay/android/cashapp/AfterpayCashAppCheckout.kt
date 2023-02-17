@@ -4,6 +4,8 @@ import com.afterpay.android.Afterpay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class CashAppSignOrderResult {
     data class Success(val response: AfterpayCashApp) : CashAppSignOrderResult()
@@ -70,13 +72,13 @@ class AfterpayCashAppCheckout(cashHandler: AfterpayCashAppHandler?) {
         ) {
             return runBlocking {
                 Afterpay.environment?.cashAppPaymentValidationUrl?.let { url ->
-                    val payload = """
-                        {
-                            "jwt": "$jwt",
-                            "externalCustomerId": "$customerId",
-                            "externalGrantId": "$grantId"
-                        }
-                    """.trimIndent()
+                    val request = AfterpayCashAppValidationRequest(
+                        jwt = jwt,
+                        externalCustomerId = customerId,
+                        externalGrantId = grantId,
+                    )
+
+                    val payload = Json.encodeToString(request)
 
                     val response = withContext(Dispatchers.Unconfined) {
                         AfterpayCashAppApi.cashRequest<AfterpayCashAppValidationResponse, String>(

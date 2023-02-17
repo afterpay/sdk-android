@@ -13,6 +13,13 @@ data class AfterpayCashAppSigningResponse(
 )
 
 @Serializable
+data class AfterpayCashAppValidationRequest(
+    val jwt: String,
+    val externalCustomerId: String,
+    val externalGrantId: String,
+)
+
+@Serializable
 data class AfterpayCashAppValidationResponse(
     var cashAppTag: String,
     var status: String,
