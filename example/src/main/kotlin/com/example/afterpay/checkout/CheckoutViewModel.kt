@@ -93,10 +93,8 @@ class CheckoutViewModel(
         }
     }
 
-    fun authorizePayKitCustomerRequest(context: Context, payKitInstance: CashAppPayKit?): Result<Unit?> {
-        return runCatching {
-            payKitInstance?.authorizeCustomerRequest(context)
-        }
+    fun authorizePayKitCustomerRequest(context: Context, payKitInstance: CashAppPayKit?) {
+        payKitInstance?.authorizeCustomerRequest(context)
     }
 
     private val state = MutableStateFlow(

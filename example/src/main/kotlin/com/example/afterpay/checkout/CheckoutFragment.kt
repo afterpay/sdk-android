@@ -185,10 +185,6 @@ class CheckoutFragment : Fragment() {
                     }
                     is Command.LaunchCashAppPay -> {
                         viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
-                            .onFailure {
-                                Snackbar.make(requireView(), "Error: ${it.message}", Snackbar.LENGTH_SHORT).show()
-                                Log.e("CheckoutFragment", it.stackTraceToString())
-                            }
                     }
                     is Command.CashReceipt -> {
                         cashJwt?.also { jwt ->
