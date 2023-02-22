@@ -255,7 +255,7 @@ class CheckoutFragment : Fragment() {
                             makeAndShowSnackbar("CashApp Declined")
                         }
                         is PayKitState.ReadyToAuthorize -> cashButton.isEnabled = true
-                        is PayKitState.PayKitException -> {
+                        is PayKitState.PayKitExceptionState -> {
                             makeAndShowSnackbar(state.exception.toString())
                             logger.error(TAG, state.exception.toString(), state.exception.cause)
                         }
