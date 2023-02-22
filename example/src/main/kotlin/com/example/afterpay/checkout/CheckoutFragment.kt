@@ -29,6 +29,7 @@ import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
 import com.example.afterpay.data.CashData
 import com.example.afterpay.getDependencies
+import com.example.afterpay.util.LoggerFactory
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +38,12 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class CheckoutFragment : Fragment() {
+    val logger = LoggerFactory.getLogger()
+
     private companion object {
         const val CHECKOUT_WITH_AFTERPAY = 1234
+
+        const val TAG = "CheckoutFragment"
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
@@ -82,11 +87,17 @@ class CheckoutFragment : Fragment() {
                     viewModel.createCustomerRequest(response, payKitInstance)
                 }
                 is CashAppSignOrderResult.Failure -> {
-                    Snackbar.make(requireView(), "Error: ${createOrderResult.error.message}", Snackbar.LENGTH_SHORT).show()
+                    val (error) = createOrderResult
+                    makeAndShowSnackbar(error.message)
+                    logger.error(TAG, error.message, error)
                 }
             }
         },
     )
+
+    private fun makeAndShowSnackbar(message: String?) {
+        Snackbar.make(requireView(), "Error: $message", Snackbar.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,7 +191,8 @@ class CheckoutFragment : Fragment() {
                         command.tokenResult
                             .onSuccess { Afterpay.signCashAppOrder(it) }
                             .onFailure {
-                                Snackbar.make(requireView(), "Error: ${it.message}", Snackbar.LENGTH_SHORT).show()
+                                makeAndShowSnackbar("Error: ${it.message}")
+                                logger.error(TAG, it.message, it)
                             }
                     }
                     is Command.LaunchCashAppPay -> {
@@ -223,7 +235,10 @@ class CheckoutFragment : Fragment() {
                                     }
                                 }
                             }
-                        } ?: Snackbar.make(requireView(), "Something went wrong (missing jwt)", Snackbar.LENGTH_SHORT).show()
+                        } ?: run {
+                            makeAndShowSnackbar("Something went wrong (missing jwt)")
+                            logger.error(TAG, "JWT is missing")
+                        }
                     }
                 }
             }
@@ -237,10 +252,13 @@ class CheckoutFragment : Fragment() {
                         is PayKitState.Declined -> {
                             launchedCashApp = false
                             loadCashCheckoutToken()
-                            Snackbar.make(requireView(), "CashApp Declined", Snackbar.LENGTH_SHORT).show()
+                            makeAndShowSnackbar("CashApp Declined")
                         }
                         is PayKitState.ReadyToAuthorize -> cashButton.isEnabled = true
-                        is PayKitState.PayKitException -> Log.e("CheckoutFragment", "${state.exception}")
+                        is PayKitState.PayKitException -> {
+                            makeAndShowSnackbar(state.exception.toString())
+                            logger.error(TAG, state.exception.toString(), state.exception.cause)
+                        }
                         else -> Log.d("CheckoutFragment", "Pay Kit State: ${command.state}")
                     }
                 }
@@ -296,7 +314,7 @@ class CheckoutFragment : Fragment() {
                 val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
                     "A cancelled Afterpay transaction always contains a status"
                 }
-                Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
+                makeAndShowSnackbar("Cancelled: $status")
             }
         }
     }
