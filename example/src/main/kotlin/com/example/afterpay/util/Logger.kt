@@ -9,7 +9,7 @@ class Logger {
         Log.e(tag, message, tr)
     }
 
-    fun debug( tag: String = "ExampleApp", message: String? = null, tr: Throwable? = null) {
+    fun debug(tag: String = "ExampleApp", message: String? = null, tr: Throwable? = null) {
         Log.d(tag, message, tr)
     }
 
@@ -31,4 +31,3 @@ object LoggerFactory {
         return Logger()
     }
 }
-
