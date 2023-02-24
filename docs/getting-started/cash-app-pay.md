@@ -172,7 +172,22 @@ val request = PayKitPaymentAction.OneTimeAction(
 payKit.createCustomerRequest(request)
 ```
 
-### Step 5D: Validate the Cash App Pay Order
+## Step 6: Authorize the Customer Request
+
+### Step 6A: Add an Authorize Request Event to Cash App Pay button
+
+Once the Cash App PayKit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the Customer taps the button, you can authorize the customer request. Documentation for a Cash App Pay button component can be found [here][cash-button-docs]{:target='_blank'}
+
+``` kotlin
+payKit.authorizeCustomerRequest()
+```
+
+{: .info }
+> Currently, the Button provided by the SDK is unmanaged. This means that it's a stylized button which isn't aware of SDK events out-of-the-box. It is the developer's responsibility to call the above method when the button is clicked and also manage any disabled and loading states.
+
+Your app will redirect to Cash App for authorization. When the authorization is completed, your redirect URI will be called to open your app. The SDK will fetch your authorized request and return it to your callback listener as one of 2 states: `Approved` or `Declined`.
+
+### Step 6B: Validate the Cash App Pay Order
 
 {: .alert }
 > This step must not be skipped
@@ -191,19 +206,6 @@ Afterpay.validateCashAppOrder(
     }
 }
 ```
-
-## Step 6: Authorize the Customer Request
-
-Once the Cash App PayKit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the Customer taps the button, you can authorize the customer request. Documentation for a Cash App Pay button component can be found [here][cash-button-docs]{:target='_blank'}
-
-``` kotlin
-payKit.authorizeCustomerRequest()
-```
-
-{: .info }
-> Currently, the Button provided by the SDK is unmanaged. This means that it's a stylized button which isn't aware of SDK events out-of-the-box. It is the developer's responsibility to call the above method when the button is clicked and also manage any disabled and loading states.
-
-Your app will redirect to Cash App for authorization. When the authorization is completed, your redirect URI will be called to open your app. The SDK will fetch your authorized request and return it to your callback listener as one of 2 states: `Approved` or `Declined`.
 
 ## Step 7: Pass Grants to the Backend and Capture Payment
 
