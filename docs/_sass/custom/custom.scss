@@ -24,6 +24,10 @@ div.highlighter-rouge {
         background-color: $code-background;
         border-color: $code-background;
     }
+
+    code {
+        padding-right: 50px;
+    }
 }
 
 a code {
@@ -38,4 +42,12 @@ code {
 
 img {
     max-width: 400px;
+}
+
+h1 {
+    vertical-align: middle;
+}
+
+p.label {
+    text-transform: none;
 }
