@@ -6,9 +6,19 @@ nav_order: 4
 ---
 
 # Cash App Pay
-{: .d-inline-block }
+{: .d-inline-block .no_toc }
 NEW (v4.3.0)
 {: .label .label-green }
+
+
+<details markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
 
 
 {: .alert }
@@ -184,7 +194,7 @@ Afterpay.validateCashAppOrder(
 
 ## Step 6: Authorize the Customer Request
 
-Once the Cash App PayKit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the Customer taps the button, you can authorize the customer request.
+Once the Cash App PayKit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the Customer taps the button, you can authorize the customer request. Documentation for a Cash App Pay button component can be found [here][cash-button-docs]{:target='_blank'}
 
 ``` kotlin
 payKit.authorizeCustomerRequest()
@@ -194,7 +204,7 @@ payKit.authorizeCustomerRequest()
 
 Your app will redirect to Cash App for authorization. When the authorization is completed, your redirect URI will be called to open your app. The SDK will fetch your authorized request and return it to your callback listener as one of 2 states: `Approved` or `Declined`.
 
-### Step 7: Pass Grants to the Backend and Capture Payment
+## Step 7: Pass Grants to the Backend and Capture Payment
 
 The `Approved` state will contain a Grants list object associated with it and it can be used with Afterpay's capture payment API. Pass the grant id along with the token to capture using a server to server request.
 
@@ -204,3 +214,4 @@ The `Approved` state will contain a Grants list object associated with it and it
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters
 [example-server-props]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L26-L27
 [api-reference-props]: https://developers.afterpay.com/afterpay-online/reference/javascript-afterpayjs#redirect-method
+[cash-button-docs]: https://cashapp-pay.stoplight.io/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashpaykitbutton
