@@ -199,6 +199,7 @@ Once the Cash App PayKit SDK is in the `ReadyToAuthorize` state, you can display
 ``` kotlin
 payKit.authorizeCustomerRequest()
 ```
+
 {: .info }
 > Currently, the Button provided by the SDK is unmanaged. This means that it's a stylized button which isn't aware of SDK events out-of-the-box. It is the developer's responsibility to call the above method when the button is clicked and also manage any disabled and loading states.
 
