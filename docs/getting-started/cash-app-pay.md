@@ -67,7 +67,7 @@ val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.pa
 ```
 
 {: .info }
-**Optional:** We recommend using the [Cash App Sandbox App][sandbox-app]{:target="_blank"} to compare the Sandbox environment of the SDK during your development phase.
+**Optional:** We recommend using the [Cash App Sandbox App][sandbox-app]{:target="_blank"} to test the payment flow in the Sandbox environment during your development phase.
 
 ## Step 3: Register for State Updates
 
