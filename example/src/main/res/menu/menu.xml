@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_refresh_config"
-        android:icon="@drawable/ic_refresh_24"
-        android:title="@string/refresh_configuration"
+        android:id="@+id/devButton"
+        android:icon="@drawable/ic_logo_dev"
+        android:title="@string/dev_options_title"
         app:showAsAction="always" />
 </menu>

@@ -44,6 +44,10 @@ android {
         jvmTarget = versions.java
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
