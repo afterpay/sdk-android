@@ -2,6 +2,8 @@ package com.example.afterpay
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.MotionEvent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -11,52 +13,23 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import app.cash.paykit.core.CashAppPayKit
-import app.cash.paykit.core.CashAppPayKitFactory
-import app.cash.paykit.core.CashAppPayKitListener
 import app.cash.paykit.core.PayKitState
-import com.afterpay.android.Afterpay
-import com.afterpay.android.AfterpayEnvironment
+import com.example.afterpay.checkout.BottomSheetOptionsFragment
 import com.example.afterpay.checkout.CheckoutFragment
-import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.data.CashData
 import com.example.afterpay.receipt.CashReceiptFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.math.BigDecimal
-import java.util.Locale
 
-class MainActivity : AppCompatActivity(), CashAppPayKitListener {
-    private val afterpayRepository by lazy {
-        AfterpayRepository(
-            merchantApi = getDependencies().merchantApi,
-            preferences = getDependencies().sharedPreferences,
-        )
-    }
+class MainActivity : AppCompatActivity() {
 
-    var payKit: CashAppPayKit? = null
+    private val viewModel: MainViewModel by viewModels()
 
-    private fun setupPayKit() {
-        Afterpay.environment?.let { env ->
-            if (payKit != null) {
-                payKit?.unregisterFromStateUpdates()
-            }
-
-            payKit = when (env) {
-                AfterpayEnvironment.PRODUCTION -> CashAppPayKitFactory.create(env.payKitId)
-                else -> CashAppPayKitFactory.createSandbox(env.payKitId)
-            }
-
-            payKit?.registerForStateUpdates(this)
-        }
-    }
+    private val modalBottomSheet = BottomSheetOptionsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,11 +98,8 @@ class MainActivity : AppCompatActivity(), CashAppPayKitListener {
 
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.action_refresh_config -> {
-                        lifecycleScope.launch {
-                            applyAfterpayConfiguration(forceRefresh = true)
-                        }
-
+                    R.id.devButton -> {
+                        showBottomSheet()
                         true
                     }
 
@@ -139,43 +109,20 @@ class MainActivity : AppCompatActivity(), CashAppPayKitListener {
         }
 
         lifecycleScope.launchWhenStarted {
-            applyAfterpayConfiguration()
+            viewModel.applyAfterpayConfiguration()
         }
     }
 
-    private suspend fun applyAfterpayConfiguration(forceRefresh: Boolean = false) {
-        try {
-            val configuration = withContext(Dispatchers.IO) {
-                afterpayRepository.fetchConfiguration(forceRefresh)
-            }
-
-            Afterpay.setConfiguration(
-                minimumAmount = configuration.minimumAmount,
-                maximumAmount = configuration.maximumAmount,
-                currencyCode = configuration.currency,
-                locale = Locale(configuration.language, configuration.country),
-                environment = AfterpayEnvironment.SANDBOX,
-            )
-
-            setupPayKit()
-        } catch (e: Exception) {
-            Snackbar
-                .make(
-                    findViewById(android.R.id.content),
-                    R.string.configuration_error_message,
-                    Snackbar.LENGTH_INDEFINITE,
-                )
-                .setAction(R.string.configuration_error_action_retry) {
-                    lifecycleScope.launch {
-                        applyAfterpayConfiguration()
-                    }
-                }
-                .show()
-        }
+    private fun showBottomSheet() {
+        modalBottomSheet.show(supportFragmentManager, "BottomSheet")
     }
 
-    override fun payKitStateDidChange(newState: PayKitState) {
-        MainCommands.commandChannel.trySend(MainCommands.Command.PayKitStateChange(newState))
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // Swipe up on any static area of the screen will show up the bottom sheet.
+        if (event?.action == MotionEvent.ACTION_UP) {
+            showBottomSheet()
+        }
+        return true
     }
 }
 
