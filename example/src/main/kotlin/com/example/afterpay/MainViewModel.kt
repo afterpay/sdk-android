@@ -74,8 +74,8 @@ class MainViewModel : ViewModel(), CashAppPayKitListener {
             }
 
             payKit = when (env) {
-                AfterpayEnvironment.PRODUCTION -> CashAppPayKitFactory.create(env.payKitId)
-                else -> CashAppPayKitFactory.createSandbox(env.payKitId)
+                AfterpayEnvironment.PRODUCTION -> CashAppPayKitFactory.create(env.payKitClientId)
+                else -> CashAppPayKitFactory.createSandbox(env.payKitClientId)
             }
 
             payKit?.registerForStateUpdates(this)
