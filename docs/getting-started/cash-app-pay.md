@@ -50,7 +50,7 @@ To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientI
 > Ensure that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
 
 
-You should use CashAppPayKitFactory to create an instance of the Cash App Pay Kit SDK. When doing so, you'll need to specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
+You should use `CashAppPayKitFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you'll need to specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
 
 {: .info }
 > You should use the Sandbox environment during the development phase and Production for your actual production releases.
