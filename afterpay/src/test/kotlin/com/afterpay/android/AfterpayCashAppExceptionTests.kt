@@ -19,4 +19,3 @@ class AfterpayCashAppExceptionTests {
         assertEquals("cashAppHandler or the handler parameter must be set and not null before attempting to sign a Cash App order", exception.message)
     }
 }
-
