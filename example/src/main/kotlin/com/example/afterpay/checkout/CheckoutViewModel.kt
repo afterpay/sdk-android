@@ -28,6 +28,18 @@ import com.example.afterpay.data.CheckoutRequest
 import com.example.afterpay.data.MerchantApi
 import com.example.afterpay.getDependencies
 import com.example.afterpay.util.asCurrency
+import com.example.afterpay.util.getBuyNow
+import com.example.afterpay.util.getEmail
+import com.example.afterpay.util.getExpress
+import com.example.afterpay.util.getPickup
+import com.example.afterpay.util.getShippingOptionsRequired
+import com.example.afterpay.util.getVersion
+import com.example.afterpay.util.putBuyNow
+import com.example.afterpay.util.putEmail
+import com.example.afterpay.util.putExpress
+import com.example.afterpay.util.putPickup
+import com.example.afterpay.util.putShippingOptionsRequired
+import com.example.afterpay.util.putVersion
 import com.example.afterpay.util.update
 import com.example.afterpay.util.viewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -293,37 +305,3 @@ class CheckoutViewModel(
         }
     }
 }
-
-private object PreferenceKey {
-    const val email = "email"
-    const val useV1 = "useV1"
-    const val express = "express"
-    const val buyNow = "buyNow"
-    const val pickup = "pickup"
-    const val shippingOptionsRequired = "shippingOptionsRequired"
-}
-
-private fun SharedPreferences.getEmail(): String = getString(PreferenceKey.email, null) ?: ""
-private fun SharedPreferences.Editor.putEmail(email: String) = putString(PreferenceKey.email, email)
-
-private fun SharedPreferences.getExpress(): Boolean = getBoolean(PreferenceKey.express, false)
-private fun SharedPreferences.Editor.putExpress(isExpress: Boolean) =
-    putBoolean(PreferenceKey.express, isExpress)
-
-private fun SharedPreferences.getVersion(): Boolean = getBoolean(PreferenceKey.useV1, false)
-private fun SharedPreferences.Editor.putVersion(useV1: Boolean) =
-    putBoolean(PreferenceKey.useV1, useV1)
-
-private fun SharedPreferences.getBuyNow(): Boolean = getBoolean(PreferenceKey.buyNow, false)
-private fun SharedPreferences.Editor.putBuyNow(isBuyNow: Boolean) =
-    putBoolean(PreferenceKey.buyNow, isBuyNow)
-
-private fun SharedPreferences.getPickup(): Boolean = getBoolean(PreferenceKey.pickup, false)
-private fun SharedPreferences.Editor.putPickup(isPickup: Boolean) =
-    putBoolean(PreferenceKey.pickup, isPickup)
-
-private fun SharedPreferences.getShippingOptionsRequired(): Boolean =
-    getBoolean(PreferenceKey.shippingOptionsRequired, false)
-
-private fun SharedPreferences.Editor.putShippingOptionsRequired(isShippingOptionsRequired: Boolean) =
-    putBoolean(PreferenceKey.shippingOptionsRequired, isShippingOptionsRequired)

@@ -26,4 +26,15 @@
     <string name="cash_tag">Cash Tag: %1$s</string>
     <string name="cash_amount">Cash Amount: $%1$s</string>
     <string name="cash_grant_id">Cash Grant Id: %1$s</string>
+
+    <!-- Dev Options -->
+    <string name="dev_options_title">Dev Options</string>
+    <string name="dev_options_env_production">Production</string>
+    <string name="dev_options_env_sandbox">Sandbox</string>
+    <string name="dev_options_host_title">Base URL</string>
+    <string name="dev_options_afterpay_title">AfterPay Configuration</string>
+    <string name="dev_options_host_hint">Host</string>
+    <string name="dev_options_port_hint">Port</string>
+    <string name="dev_options_apply_changes">Apply Changes</string>
+    <string name="dev_options_restart_app">Restart app to enforce new config!</string>
 </resources>

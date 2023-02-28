@@ -12,18 +12,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import app.cash.paykit.core.CashAppPayKit
 import app.cash.paykit.core.PayKitState
 import app.cash.paykit.core.ui.CashPayKitButton
 import com.afterpay.android.Afterpay
 import com.afterpay.android.cashapp.CashAppSignOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.view.AfterpayPaymentButton
-import com.example.afterpay.MainActivity
 import com.example.afterpay.MainCommands
+import com.example.afterpay.MainViewModel
 import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
@@ -38,7 +38,9 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 class CheckoutFragment : Fragment() {
-    val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.getLogger()
+
+    private val activityViewModel: MainViewModel by activityViewModels()
 
     private companion object {
         const val CHECKOUT_WITH_AFTERPAY = 1234
@@ -55,15 +57,6 @@ class CheckoutFragment : Fragment() {
     }
 
     private lateinit var cashButton: CashPayKitButton
-
-    private val payKitInstance: CashAppPayKit?
-        get() {
-            if (activity is MainActivity) {
-                return (activity as MainActivity).payKit
-            }
-
-            return null
-        }
 
     private var cashJwt: String? = null
 
@@ -84,7 +77,7 @@ class CheckoutFragment : Fragment() {
                 is CashAppSignOrderResult.Success -> {
                     val (response) = createOrderResult
                     cashJwt = response.jwt
-                    viewModel.createCustomerRequest(response, payKitInstance)
+                    viewModel.createCustomerRequest(response, activityViewModel.payKit)
                 }
                 is CashAppSignOrderResult.Failure -> {
                     val (error) = createOrderResult
@@ -196,7 +189,7 @@ class CheckoutFragment : Fragment() {
                             }
                     }
                     is Command.LaunchCashAppPay -> {
-                        viewModel.authorizePayKitCustomerRequest(requireContext(), payKitInstance)
+                        viewModel.authorizePayKitCustomerRequest(requireContext(), activityViewModel.payKit)
                     }
                     is Command.CashReceipt -> {
                         cashJwt?.also { jwt ->
