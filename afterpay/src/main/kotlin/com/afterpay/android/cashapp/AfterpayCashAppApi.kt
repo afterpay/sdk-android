@@ -20,29 +20,22 @@ internal object AfterpayCashAppApi {
             configure(connection, method)
             val payload = (body as? String) ?: json.encodeToString(body)
 
-            val outputStreamWriter = OutputStreamWriter(connection.outputStream)
-            outputStreamWriter.write(payload)
-            outputStreamWriter.flush()
+            OutputStreamWriter(connection.outputStream).use { writer ->
+                writer.write(payload)
+                writer.flush()
+            }
 
             if (connection.errorStream == null && connection.responseCode < HttpURLConnection.HTTP_BAD_REQUEST) {
-                val data = connection.inputStream.bufferedReader().readText()
-                connection.inputStream.close()
-                val result = json.decodeFromString<T>(data)
-                Result.success(result)
+                connection.inputStream.bufferedReader().use { reader ->
+                    val data = reader.readText()
+                    val result = json.decodeFromString<T>(data)
+                    Result.success(result)
+                }
             } else {
-                throw InvalidObjectException("Unexpected response code: ${connection.responseCode}")
+                throw InvalidObjectException("Unexpected response code: ${connection.responseCode}.")
             }
         } catch (exception: Exception) {
-            try {
-                val data = connection.errorStream.bufferedReader().readText()
-                connection.errorStream.close()
-                val result = json.decodeFromString<ApiErrorCashApp>(data)
-                Result.failure(InvalidObjectException(result.message))
-            } catch (_: Exception) {
-                Result.failure(exception)
-            }
-        } finally {
-            connection.disconnect()
+            Result.failure(exception)
         }
     }
 
