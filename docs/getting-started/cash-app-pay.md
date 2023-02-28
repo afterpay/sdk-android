@@ -97,7 +97,7 @@ payKit.unregisterFromStateUpdates()
 
 | State  | Description |
 |:-------|:------------|
-| `ReadyToAuthorize` | Show a Cash App Pay button in your UI and call `authorizeCustomerRequest()` when it is tapped. |
+| `ReadyToAuthorize` | You should show the Cash App Pay button in your UI and call `authorizeCustomerRequest()` when it is tapped. |
 | `Approved` | Grants are ready for your backend to use to create a payment. |
 | `Declined` | Customer has declined the Cash App Pay authorization and must start the flow over or choose a new payment method. |
 | `PayKitExceptionState` | The general wrapper state for exceptions. These can range from integration errors to network errors. The exception states are emitted only for unrecoverable error states. |
