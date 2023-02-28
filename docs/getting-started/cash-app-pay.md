@@ -44,10 +44,10 @@ For definitions of other build systems, see [Cash App Pay Kit on Maven Central][
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
-To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientId`. This is a required field. This can be retrieved through the Afterpay object: `Afterpay.environment.payKitId`.
+To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientId`. This is a required field. This can be retrieved through the Afterpay object: `Afterpay.environment.payKitClientId`.
 
 {: .note }
-> Ensure that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitId`
+> Ensure that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
 
 
 You should use CashAppPayKitFactory to create an instance of the Cash App Pay Kit SDK. When doing so, you'll need to specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
@@ -58,12 +58,12 @@ You should use CashAppPayKitFactory to create an instance of the Cash App Pay Ki
 Creating a sandbox Cash App Pay Kit SDK instance:
 
 ``` kotlin
-val payKit : CashAppPayKit = CashAppPayKitFactory.createSandbox(Afterpay.environment.payKitId)
+val payKit : CashAppPayKit = CashAppPayKitFactory.createSandbox(Afterpay.environment.payKitClientId)
 ```
 
 Creating a production Cash App Pay Kit SDK instance:
 ``` kotlin
-val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.payKitId)
+val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.payKitClientId)
 ```
 
 {: .info }
