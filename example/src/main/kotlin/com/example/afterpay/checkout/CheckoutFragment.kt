@@ -71,23 +71,6 @@ class CheckoutFragment : Fragment() {
         onShippingOptionDidChange = { viewModel.selectShippingOption(it) },
     )
 
-    private val cashAppHandler = CashAppHandler(
-        onDidReceiveResponse = { createOrderResult ->
-            when (createOrderResult) {
-                is CashAppSignOrderResult.Success -> {
-                    val (response) = createOrderResult
-                    cashJwt = response.jwt
-                    viewModel.createCustomerRequest(response, activityViewModel.payKit)
-                }
-                is CashAppSignOrderResult.Failure -> {
-                    val (error) = createOrderResult
-                    makeAndShowSnackbar(error.message)
-                    logger.error(TAG, error.message, error)
-                }
-            }
-        },
-    )
-
     private fun makeAndShowSnackbar(message: String?) {
         Snackbar.make(requireView(), "Error: $message", Snackbar.LENGTH_SHORT).show()
     }
@@ -96,7 +79,6 @@ class CheckoutFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         Afterpay.setCheckoutV2Handler(checkoutHandler)
-        Afterpay.setCashAppHandler(cashAppHandler)
     }
 
     override fun onCreateView(
