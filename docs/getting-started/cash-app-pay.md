@@ -47,21 +47,21 @@ For definitions of other build systems, see [Cash App Pay Kit on Maven Central][
 To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientId`. This is a required field. This can be retrieved through the Afterpay object: `Afterpay.environment.payKitClientId`.
 
 {: .note }
-> Ensure that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
+> Confirm that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
 
 
-You should use `CashAppPayKitFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you'll need to specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
+You should use `CashAppPayKitFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you must specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
 
 {: .info }
-> You should use the Sandbox environment during the development phase and Production for your actual production releases.
+> You should use the Sandbox environment during the development phase and the Production environment for your production releases.
 
-Creating a sandbox Cash App Pay Kit SDK instance:
+Creating a Sandbox Cash App Pay Kit SDK instance:
 
 ``` kotlin
 val payKit : CashAppPayKit = CashAppPayKitFactory.createSandbox(Afterpay.environment.payKitClientId)
 ```
 
-Creating a production Cash App Pay Kit SDK instance:
+Creating a Production Cash App Pay Kit SDK instance:
 ``` kotlin
 val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.payKitClientId)
 ```
@@ -98,7 +98,7 @@ payKit.unregisterFromStateUpdates()
 | State  | Description |
 |:-------|:------------|
 | `ReadyToAuthorize` | You should show the Cash App Pay button in your UI and call `authorizeCustomerRequest()` when it is tapped. |
-| `Approved` | Grants are ready for your backend to use to create a payment. |
+| `Approved` | Grants are ready for your backend to use and to create a payment. |
 | `Declined` | Customer has declined the Cash App Pay authorization and must start the flow over or choose a new payment method. |
 | `PayKitExceptionState` | The general wrapper state for exceptions. These can range from integration errors to network errors. The exception states are emitted only for unrecoverable error states. |
 
@@ -124,11 +124,11 @@ Here’s an example of how this integration looks for your `AndroidManifest`:
 
 ## Step 5: Create a Customer Request
 
-You can create a customer request as soon as you know the amount you’d like to charge or if you'd like to create an on-file payment request. We suggest that you create this request as soon as your checkout view controller loads, so that your Customer can authorize the request without delay.
+You can create a customer request as soon as you know the amount you’d like to charge or if you'd like to create an on-file payment request. You can create this request as soon as your `checkout view controller` loads, so that your customer can authorize the request without delay.
 
 ### Step 5A: Sign the Order Token
 
-After retrieving the token from your server-to-server call, the order needs to be signed, so as to retrieve the JWT and associated data. This can be done either by the suspending function:
+After retrieving the token from your server-to-server call, you must sign the order, so that you can retrieve the JWT and associated data. This can be done either by the suspending function or with the asynchronous version of it. 
 
 ``` kotlin
 Afterpay.signCashAppOrder(token) { cashAppData ->
@@ -139,7 +139,7 @@ Afterpay.signCashAppOrder(token) { cashAppData ->
 }
 ```
 
-or with the async version of it:
+Example of the asynchronous version of the suspending function:
 
 ``` kotlin
 Afterpay.signCashAppOrderAsync(token) { cashAppData ->
@@ -169,7 +169,7 @@ payKit.createCustomerRequest(request)
 
 ### Step 6A: Add an Authorize Request Event to Cash App Pay button
 
-Once the Cash App Pay Kit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the Customer taps the button, you can authorize the customer request. Documentation for a Cash App Pay button component can be found [here][cash-button-docs]{:target='_blank'}
+Once the Cash App Pay Kit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the customer taps the button, you can authorize the customer request. See [Cash Button Docs][cash-button-docs]{:target='_blank'} to learn more about the Cash App Pay button component.
 
 ``` kotlin
 payKit.authorizeCustomerRequest()
