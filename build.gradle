@@ -31,7 +31,8 @@ buildscript {
         'espresso'                  : '3.4.0',
         'uiautomator'               : '2.2.0',
         'ktlint'                    : '0.47.1',
-        'cash_app_paykit_sdk'       : '1.0.3'
+        'cash_app_paykit_sdk'       : '1.0.3',
+        'mockk'                     : '1.13.4'
     ]
 
     repositories {
