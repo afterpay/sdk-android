@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.annotation.WorkerThread
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
 import com.afterpay.android.cashapp.AfterpayCashAppHandler
+import com.afterpay.android.cashapp.CashAppSignOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
@@ -96,19 +97,15 @@ object Afterpay {
      */
     @JvmStatic
     @WorkerThread
-    suspend fun signCashAppOrder(
+    suspend fun signCashAppOrderToken(
         token: String,
-        handler: AfterpayCashAppHandler? = null,
+        complete: (CashAppSignOrderResult) -> Unit,
     ) {
-        require(cashAppHandler != null || handler != null) {
-            "cashAppHandler or the handler parameter must be set and not null before attempting to sign a Cash App order"
-        }
-        val cashApp = AfterpayCashAppCheckout(handler)
-        cashApp.performSignPaymentRequest(token)
+        AfterpayCashAppCheckout.performSignPaymentRequest(token, complete)
     }
 
     /**
-     * Async version of the [signCashAppOrder] method.
+     * Async version of the [signCashAppOrderToken] method.
      *
      * Signs an Afterpay Cash App order for the relevant [token] and calls
      * the didReceiveCashAppData method for the [handler]. This method should
@@ -117,12 +114,12 @@ object Afterpay {
     @DelicateCoroutinesApi
     @JvmStatic
     @JvmOverloads
-    fun signCashAppOrderAsync(
+    fun signCashAppOrderTokenAsync(
         token: String,
-        handler: AfterpayCashAppHandler? = null,
+        complete: (CashAppSignOrderResult) -> Unit,
     ): CompletableFuture<Unit?> {
         return GlobalScope.future {
-            signCashAppOrder(token, handler)
+            signCashAppOrderToken(token, complete)
         }
     }
 

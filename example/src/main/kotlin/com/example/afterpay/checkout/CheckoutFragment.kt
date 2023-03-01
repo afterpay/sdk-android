@@ -182,7 +182,11 @@ class CheckoutFragment : Fragment() {
                         )
                     is Command.SignCashAppOrder -> {
                         command.tokenResult
-                            .onSuccess { Afterpay.signCashAppOrder(it) }
+                            .onSuccess { token ->
+                                Afterpay.signCashAppOrderToken(token) { cashTokenSigningResult ->
+                                    handleCashTokenSigningResult(cashTokenSigningResult)
+                                }
+                            }
                             .onFailure {
                                 makeAndShowSnackbar("Error: ${it.message}")
                                 logger.error(TAG, it.message, it)
@@ -263,6 +267,21 @@ class CheckoutFragment : Fragment() {
             cashButton.setOnClickListener {
                 launchedCashApp = true
                 viewModel.showAfterpayCheckout(cashAppPay = true)
+            }
+        }
+    }
+
+    private fun handleCashTokenSigningResult(createOrderResult: CashAppSignOrderResult) {
+        when (createOrderResult) {
+            is CashAppSignOrderResult.Success -> {
+                val (response) = createOrderResult
+                cashJwt = response.jwt
+                viewModel.createCustomerRequest(response, activityViewModel.payKit)
+            }
+            is CashAppSignOrderResult.Failure -> {
+                val (error) = createOrderResult
+                makeAndShowSnackbar(error.message)
+                logger.error(TAG, error.message, error)
             }
         }
     }
