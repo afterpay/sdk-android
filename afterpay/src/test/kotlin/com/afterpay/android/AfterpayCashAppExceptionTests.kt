@@ -12,7 +12,7 @@ class AfterpayCashAppExceptionTests {
     fun `should throw on signCashAppOrder if handler not setup`() {
         val exception = assertThrows(Exception::class.java) {
             runTest {
-                Afterpay.signCashAppOrder("123")
+                Afterpay.signCashAppOrderToken("123")
             }
         }
 

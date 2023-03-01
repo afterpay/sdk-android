@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.annotation.WorkerThread
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
-import com.afterpay.android.cashapp.AfterpayCashAppHandler
+import com.afterpay.android.cashapp.CashAppSignOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
@@ -58,9 +58,6 @@ object Afterpay {
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
 
-    internal var cashAppHandler: AfterpayCashAppHandler? = null
-        private set
-
     val environment: AfterpayEnvironment?
         get() = configuration?.environment
 
@@ -91,47 +88,43 @@ object Afterpay {
 
     /**
      * Signs an Afterpay Cash App order for the relevant [token] and calls
-     * the `didReceiveCashAppData method for the [handler]. This method should
-     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     * calls [complete] when done. This method should be called prior to calling
+     * createCustomerRequest on the Cash App Pay Kit SDK
      */
     @JvmStatic
     @WorkerThread
-    suspend fun signCashAppOrder(
+    suspend fun signCashAppOrderToken(
         token: String,
-        handler: AfterpayCashAppHandler? = null,
+        complete: (CashAppSignOrderResult) -> Unit,
     ) {
-        require(cashAppHandler != null || handler != null) {
-            "cashAppHandler or the handler parameter must be set and not null before attempting to sign a Cash App order"
-        }
-        val cashApp = AfterpayCashAppCheckout(handler)
-        cashApp.performSignPaymentRequest(token)
+        AfterpayCashAppCheckout.performSignPaymentRequest(token, complete)
     }
 
     /**
-     * Async version of the [signCashAppOrder] method.
+     * Async version of the [signCashAppOrderToken] method.
      *
      * Signs an Afterpay Cash App order for the relevant [token] and calls
-     * the didReceiveCashAppData method for the [handler]. This method should
-     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     * [complete] when done. This method should be called prior to calling
+     * createCustomerRequest on the Cash App Pay Kit SDK
      */
     @DelicateCoroutinesApi
     @JvmStatic
-    @JvmOverloads
-    fun signCashAppOrderAsync(
+    fun signCashAppOrderTokenAsync(
         token: String,
-        handler: AfterpayCashAppHandler? = null,
+        complete: (CashAppSignOrderResult) -> Unit,
     ): CompletableFuture<Unit?> {
         return GlobalScope.future {
-            signCashAppOrder(token, handler)
+            signCashAppOrderToken(token, complete)
         }
     }
 
     /**
      * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
-     * and calls complete once finished. This method should be called for a One Time payment
+     * and calls [complete] once finished. This method should be called for a One Time payment
      * once the Cash App order is in the approved state
      */
     @JvmStatic
+    @WorkerThread
     fun validateCashAppOrder(
         jwt: String,
         customerId: String,
@@ -139,6 +132,26 @@ object Afterpay {
         complete: (CashAppValidationResponse) -> Unit,
     ) {
         AfterpayCashAppCheckout.validatePayment(jwt, customerId, grantId, complete)
+    }
+
+    /**
+     * Async version of the [validateCashAppOrder] method.
+     *
+     * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
+     * and calls [complete] once finished. This method should be called for a One Time payment
+     * once the Cash App order is in the approved state
+     */
+    @DelicateCoroutinesApi
+    @JvmStatic
+    fun validateCashAppOrderAsync(
+        jwt: String,
+        customerId: String,
+        grantId: String,
+        complete: (CashAppValidationResponse) -> Unit,
+    ): CompletableFuture<Unit> {
+        return GlobalScope.future {
+            validateCashAppOrder(jwt, customerId, grantId, complete)
+        }
     }
 
     /**
@@ -206,13 +219,5 @@ object Afterpay {
     @JvmStatic
     fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
         checkoutV2Handler = handler
-    }
-
-    /**
-     * Sets the global [handler] used to provide callbacks for CashApp.
-     */
-    @JvmStatic
-    fun setCashAppHandler(handler: AfterpayCashAppHandler?) {
-        cashAppHandler = handler
     }
 }

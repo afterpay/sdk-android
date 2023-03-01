@@ -13,7 +13,6 @@ import app.cash.paykit.core.models.sdk.PayKitCurrency
 import app.cash.paykit.core.models.sdk.PayKitPaymentAction
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.cashapp.AfterpayCashApp
-import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
@@ -79,7 +78,7 @@ class CheckoutViewModel(
     sealed class Command {
         data class ShowAfterpayCheckoutV1(val checkoutUrl: String) : Command()
         data class ShowAfterpayCheckoutV2(val options: AfterpayCheckoutV2Options) : Command()
-        data class LaunchCashAppPay(val handler: AfterpayCashAppHandler?) : Command()
+        data class LaunchCashAppPay(val token: String?) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
         data class SignCashAppOrder(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
