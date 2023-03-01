@@ -6,9 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.MissingFieldException
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import java.io.ByteArrayInputStream
@@ -117,5 +115,3 @@ class AfterpayCashAppApiTest {
         assertEquals("https://example.com/some/path/confirm", response.redirectUrl)
     }
 }
-
-
