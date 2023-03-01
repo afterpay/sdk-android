@@ -126,40 +126,33 @@ Here’s an example of how this integration looks for your `AndroidManifest`:
 
 You can create a customer request as soon as you know the amount you’d like to charge or if you'd like to create an on-file payment request. We suggest that you create this request as soon as your checkout view controller loads, so that your Customer can authorize the request without delay.
 
-### Step 5A: Setup the Afterpay Cash App Pay Handler
-
-Setup a handler to manage the data when received from signing the order token. Alternatively this can be passed in as the `handler` parameter in step 5B.
-
-``` kotlin
-class ExampleActivity: Activity {
-  Afterpay.setCashAppHandler(object : AfterpayCashAppHandler {
-    override fun didReceiveCashAppData(cashAppData: CashAppSignOrderResult) {
-      when (cashAppData) {
-        is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customemr request")
-        is CashAppSignOrderResult.Failure -> TODO("Display an error and restart payment flow")
-      }
-    }
-  })
-}
-```
-
-### Step 5B: Sign the Order Token
+### Step 5A: Sign the Order Token
 
 After retrieving the token from your server-to-server call, the order needs to be signed, so as to retrieve the JWT and associated data. This can be done either by the suspending function:
 
 ``` kotlin
-Afterpay.signCashAppOrder(token)
+Afterpay.signCashAppOrder(token) { cashAppData ->
+  when (cashAppData) {
+    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customemr request")
+    is CashAppSignOrderResult.Failure -> TODO("Display an error and restart payment flow")
+  }
+}
 ```
 
 or with the async version of it:
 
 ``` kotlin
-Afterpay.signCashAppOrderAsync(token)
+Afterpay.signCashAppOrderAsync(token) { cashAppData ->
+  when (cashAppData) {
+    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customemr request")
+    is CashAppSignOrderResult.Failure -> TODO("Display an error and restart payment flow")
+  }
+}
 ```
 
-### Step 5C: Create a Pay Kit Customer Request
+### Step 5B: Create a Pay Kit Customer Request
 
-To charge a one-time payment, your create request call might look like this (in the below example, `cashAppData` is the response object that is returned in the `didReceiveCashAppData` handler method, which would echo the amount from your server-to-server Create Checkout call):
+To charge a one-time payment, your create request call might look like this (in the below example, `cashAppData` is the response object that is returned in the traling lambda in step 5A, which would echo the amount from your server-to-server Create Checkout call):
 
 ``` kotlin
 val request = PayKitPaymentAction.OneTimeAction(
