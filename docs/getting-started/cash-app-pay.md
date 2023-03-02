@@ -102,7 +102,7 @@ payKit.unregisterFromStateUpdates()
 | `Declined` | Customer has declined the Cash App Pay authorization and must start the flow over or choose a new payment method. |
 | `PayKitExceptionState` | The general wrapper state for exceptions. These can range from integration errors to network errors. The exception states are emitted only for unrecoverable error states. |
 
-## Step 4: Implement Deep Linking Handling
+## Step 4: Implement Deep Linking
 
 The authorization flow will bring Cash App to the foreground on the Customer’s device. After the Customer either authorizes or declines, your app must be returned to the foreground, which means we need a way to call your app from Cash App.  This is accomplished by [declaring an incoming intent][intent-filter]{:target="_blank"} filter on your app's Android Manifest and passing a corresponding redirect URI that uses the SDK when creating a customer request (as can be seen on the next step).
 
