@@ -27,7 +27,7 @@ NEW (v4.3.0)
 You can addd Cash App Pay support using your Afterpay merchant account. To do this, you must generate a token by sending a server-to-server call to the [Afterpay API Create Checkout endpoint][create-checkout-endpoint-docs]{:target="_blank"} with the parameter `isCashAppPay` set to `true`. This method requires importing and implementing the Cash App Pay Kit SDK.
 
 {: .info }
-> When creating a checkout token, you must set both `redirectConfirmUrl` and `redirectCancelUrl`. If they are not set, an error will be returned from the server and the SDK will output a malformed JSON error. The SDK’s example merchant server sets the parameters [here][example-server-props]{:target='_blank'}. See more details at [api reference][api-reference-props]{:target='_blank'}.
+> When creating a checkout token, you must set both `redirectConfirmUrl` and `redirectCancelUrl`. If they are not set, an error will be returned from the server and the SDK will output a malformed JSON error. The SDK’s example merchant server sets the parameters [here][example-server-props]{:target='_blank'}. ee more details at [Redirect Method][api-reference-props]{:target='_blank'} in the Standard Checkout API.
 
 ## Step 1: Import the Cash App Pay Kit Dependency
 
@@ -85,7 +85,7 @@ You register with the SDK instance you’ve created above:
 payKit.registerForStateUpdates(this)
 ```
 
-You should also use the unregister function when you're done with the SDK:
+You should also use the **Unregister** function when you're done with the SDK:
 
 ``` kotlin
 payKit.unregisterFromStateUpdates()
