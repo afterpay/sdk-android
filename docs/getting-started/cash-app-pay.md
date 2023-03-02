@@ -187,7 +187,7 @@ Your app will redirect to Cash App for authorization. When the authorization is 
 {: .alert }
 > This step must not be skipped
 
-Finally the Cash App order must be validated. This looks something like the below:
+Finally, you must validate the Cash App order. This will look like the following example:
 
 ``` kotlin
 Afterpay.validateCashAppOrder(
