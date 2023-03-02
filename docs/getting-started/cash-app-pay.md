@@ -24,7 +24,7 @@ NEW (v4.3.0)
 {: .alert }
 > Cash App Pay is currently available in the following region(s): US
 
-You can addd Cash App Pay support using your Afterpay merchant account. To do this, you must generate a token by sending a server-to-server call to the [Afterpay API Create Checkout endpoint][create-checkout-endpoint-docs]{:target="_blank"} with the parameter `isCashAppPay` set to `true`. This method requires importing and implementing the Cash App Pay Kit SDK.
+With our latest enhancements, you can now support taking Cash App Pay payments using your Afterpay merchant account. To do this, you must generate a token by sending a server-to-server call to the [Afterpay API Create Checkout endpoint][create-checkout-endpoint-docs]{:target="_blank"} with the parameter `isCashAppPay` set to `true`. This method requires importing and implementing the Cash App Pay Kit SDK.
 
 {: .info }
 > When creating a checkout token, you must set both `redirectConfirmUrl` and `redirectCancelUrl`. If they are not set, an error will be returned from the server and the SDK will output a malformed JSON error. The SDK’s example merchant server sets the parameters [here][example-server-props]{:target='_blank'}. ee more details at [Redirect Method][api-reference-props]{:target='_blank'} in the Standard Checkout API.
