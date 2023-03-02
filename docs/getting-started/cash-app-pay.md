@@ -204,7 +204,7 @@ Afterpay.validateCashAppOrder(
 
 ## Step 7: Pass Grants to the Backend and Capture Payment
 
-The `Approved` state will contain a Grants list object associated with it and it can be used with Afterpay's "Immediate Payment Capture" or "Deferred Payment Auth" API. Pass the grant ID along with the token to capture/auth using a server-to-server request.
+The `Approved` state will contain a **Grants list** object associated with it and it can be used with Afterpay's **Immediate Payment Capture** or **Deferred Payment Auth** API. Pass the **grant ID** along with the token to capture/authorize using a server-to-server request.
 
 [cash-on-maven]: https://central.sonatype.com/artifact/app.cash.paykit/core/1.0.3/overview
 [configure-afterpay]: ../configuring-the-sdk
