@@ -1,12 +1,19 @@
 package com.example.afterpay.checkout
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.util.Patterns
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.paykit.core.CashAppPayKit
+import app.cash.paykit.core.models.response.CustomerResponseData
+import app.cash.paykit.core.models.sdk.PayKitCurrency
+import app.cash.paykit.core.models.sdk.PayKitPaymentAction
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.cashapp.AfterpayCashApp
+import com.afterpay.android.cashapp.AfterpayCashAppHandler
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
@@ -60,12 +67,34 @@ class CheckoutViewModel(
     sealed class Command {
         data class ShowAfterpayCheckoutV1(val checkoutUrl: String) : Command()
         data class ShowAfterpayCheckoutV2(val options: AfterpayCheckoutV2Options) : Command()
+        data class LaunchCashAppPay(val handler: AfterpayCashAppHandler?) : Command()
         data class ProvideCheckoutTokenResult(val tokenResult: Result<String>) : Command()
+        data class SignCashAppOrder(val tokenResult: Result<String>) : Command()
         data class ProvideShippingOptionsResult(val shippingOptionsResult: ShippingOptionsResult) :
             Command()
         data class ProvideShippingOptionUpdateResult(
             val shippingOptionUpdateResult: ShippingOptionUpdateResult?,
         ) : Command()
+        data class CashReceipt(val customerResponseData: CustomerResponseData) : Command()
+    }
+
+    fun createCustomerRequest(cashAppData: AfterpayCashApp, payKitInstance: CashAppPayKit?) {
+        if (payKitInstance != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val request = PayKitPaymentAction.OneTimeAction(
+                    redirectUri = "aftersnack://callback",
+                    currency = PayKitCurrency.USD,
+                    amount = (cashAppData.amount * 100).toInt(),
+                    scopeId = cashAppData.merchantId,
+                )
+
+                payKitInstance.createCustomerRequest(request)
+            }
+        }
+    }
+
+    fun authorizePayKitCustomerRequest(context: Context, payKitInstance: CashAppPayKit?) {
+        payKitInstance?.authorizeCustomerRequest(context)
     }
 
     private val state = MutableStateFlow(
@@ -99,8 +128,16 @@ class CheckoutViewModel(
         copy(shippingOptionsRequired = checked)
     }
 
-    fun showAfterpayCheckout() {
-        val (email, total, useV1, isExpress, isBuyNow, isPickup, isShippingOptionsRequired) = state.value
+    fun showAfterpayCheckout(cashAppPay: Boolean = false) {
+        val (
+            email,
+            total,
+            useV1,
+            isExpress,
+            isBuyNow,
+            isPickup,
+            isShippingOptionsRequired,
+        ) = state.value
 
         preferences.edit {
             putEmail(email)
@@ -111,44 +148,61 @@ class CheckoutViewModel(
             putShippingOptionsRequired(isShippingOptionsRequired)
         }
 
-        if (useV1) {
-            viewModelScope.launch {
-                try {
-                    val symbols = DecimalFormatSymbols(Locale.US)
-                    val formatter = DecimalFormat("#,###.00", symbols)
-                    val response = withContext(Dispatchers.IO) {
-                        merchantApi.checkout(CheckoutRequest(email, formatter.format(total), CheckoutMode.STANDARD))
-                    }
-                    commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
-                } catch (error: Exception) {
-                    val message = error.message ?: "Failed to fetch checkout url"
-                    Log.e("ExampleError", message)
+        when {
+            cashAppPay -> {
+                viewModelScope.launch {
+                    commandChannel.trySend(Command.LaunchCashAppPay(null))
                 }
             }
-        } else {
-            val options = AfterpayCheckoutV2Options(
-                isPickup,
-                isBuyNow,
-                isShippingOptionsRequired,
-                enableSingleShippingOptionUpdate = true,
-            )
-            commandChannel.trySend(Command.ShowAfterpayCheckoutV2(options))
+            useV1 -> {
+                viewModelScope.launch {
+                    try {
+                        val symbols = DecimalFormatSymbols(Locale.US)
+                        val formatter = DecimalFormat("#,###.00", symbols)
+                        val response = withContext(Dispatchers.IO) {
+                            merchantApi.checkout(
+                                CheckoutRequest(
+                                    email = email,
+                                    amount = formatter.format(total),
+                                    mode = CheckoutMode.STANDARD,
+                                ),
+                            )
+                        }
+                        commandChannel.trySend(Command.ShowAfterpayCheckoutV1(response.url))
+                    } catch (error: Exception) {
+                        val message = error.message ?: "Failed to fetch checkout url"
+                        Log.e("ExampleError", "useV1: $message")
+                    }
+                }
+            }
+            else -> {
+                val options = AfterpayCheckoutV2Options(
+                    isPickup,
+                    isBuyNow,
+                    isShippingOptionsRequired,
+                    enableSingleShippingOptionUpdate = true,
+                )
+                commandChannel.trySend(Command.ShowAfterpayCheckoutV2(options))
+            }
         }
     }
 
-    fun loadCheckoutToken() {
+    fun loadCheckoutToken(isCashApp: Boolean = false) {
         val (email, total, _, isExpress) = state.value
         val symbols = DecimalFormatSymbols(Locale.US)
         val amount = DecimalFormat("0.00", symbols).format(total)
-        val mode = if (isExpress) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
+        val mode = if (isExpress && !isCashApp) CheckoutMode.EXPRESS else CheckoutMode.STANDARD
 
         viewModelScope.launch {
-            val request = CheckoutRequest(email, amount, mode)
+            val request = CheckoutRequest(email, amount, mode, isCashApp)
             val response = runCatching {
                 withContext(Dispatchers.IO) { merchantApi.checkout(request) }
             }
             val tokenResult = response.map { it.token }
-            val command = Command.ProvideCheckoutTokenResult(tokenResult)
+            val command = when (isCashApp) {
+                true -> Command.SignCashAppOrder(tokenResult)
+                else -> Command.ProvideCheckoutTokenResult(tokenResult)
+            }
             commandChannel.trySend(command)
         }
     }
@@ -216,6 +270,12 @@ class CheckoutViewModel(
             }
 
             commandChannel.trySend(Command.ProvideShippingOptionUpdateResult(result))
+        }
+    }
+
+    fun cashReceipt(customerResponseData: CustomerResponseData) {
+        viewModelScope.launch {
+            commandChannel.trySend(Command.CashReceipt(customerResponseData = customerResponseData)).isSuccess
         }
     }
 

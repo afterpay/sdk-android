@@ -30,7 +30,8 @@ buildscript {
         'androidx_test_runner'      : '1.4.0',
         'espresso'                  : '3.4.0',
         'uiautomator'               : '2.2.0',
-        'ktlint'                    : '0.47.1'
+        'ktlint'                    : '0.47.1',
+        'cash_app_paykit_sdk'       : '1.0.3'
     ]
 
     repositories {

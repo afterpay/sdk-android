@@ -2,6 +2,10 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.WorkerThread
+import com.afterpay.android.cashapp.AfterpayCashAppCheckout
+import com.afterpay.android.cashapp.AfterpayCashAppHandler
+import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.Brand
@@ -16,9 +20,13 @@ import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
+import java.util.concurrent.CompletableFuture
 import kotlin.properties.Delegates.observable
 
 object Afterpay {
@@ -50,6 +58,12 @@ object Afterpay {
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
 
+    internal var cashAppHandler: AfterpayCashAppHandler? = null
+        private set
+
+    val environment: AfterpayEnvironment?
+        get() = configuration?.environment
+
     /**
      * Returns an [Intent] for the given [context] and [checkoutUrl] that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
@@ -74,6 +88,58 @@ object Afterpay {
         options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
+
+    /**
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * the `didReceiveCashAppData method for the [handler]. This method should
+     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     */
+    @JvmStatic
+    @WorkerThread
+    suspend fun signCashAppOrder(
+        token: String,
+        handler: AfterpayCashAppHandler? = null,
+    ) {
+        require(cashAppHandler != null || handler != null) {
+            "cashAppHandler or the handler parameter must be set and not null before attempting to sign a Cash App order"
+        }
+        val cashApp = AfterpayCashAppCheckout(handler)
+        cashApp.performSignPaymentRequest(token)
+    }
+
+    /**
+     * Async version of the [signCashAppOrder] method.
+     *
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * the didReceiveCashAppData method for the [handler]. This method should
+     * be called prior to calling createCustomerRequest on the Cash App PayKit SDK
+     */
+    @DelicateCoroutinesApi
+    @JvmStatic
+    @JvmOverloads
+    fun signCashAppOrderAsync(
+        token: String,
+        handler: AfterpayCashAppHandler? = null,
+    ): CompletableFuture<Unit?> {
+        return GlobalScope.future {
+            signCashAppOrder(token, handler)
+        }
+    }
+
+    /**
+     * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
+     * and calls complete once finished. This method should be called for a One Time payment
+     * once the Cash App order is in the approved state
+     */
+    @JvmStatic
+    fun validateCashAppOrder(
+        jwt: String,
+        customerId: String,
+        grantId: String,
+        complete: (CashAppValidationResponse) -> Unit,
+    ) {
+        AfterpayCashAppCheckout.validatePayment(jwt, customerId, grantId, complete)
+    }
 
     /**
      * Returns the [token][String] parsed from the given [intent] returned by a successful
@@ -140,5 +206,13 @@ object Afterpay {
     @JvmStatic
     fun setCheckoutV2Handler(handler: AfterpayCheckoutV2Handler?) {
         checkoutV2Handler = handler
+    }
+
+    /**
+     * Sets the global [handler] used to provide callbacks for CashApp.
+     */
+    @JvmStatic
+    fun setCashAppHandler(handler: AfterpayCashAppHandler?) {
+        cashAppHandler = handler
     }
 }
