@@ -1,16 +1,15 @@
 package com.example.afterpay.checkout
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.util.Patterns
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.paykit.core.CashAppPayKit
+import app.cash.paykit.core.CashAppPay
 import app.cash.paykit.core.models.response.CustomerResponseData
-import app.cash.paykit.core.models.sdk.PayKitCurrency
-import app.cash.paykit.core.models.sdk.PayKitPaymentAction
+import app.cash.paykit.core.models.sdk.CashAppPayCurrency
+import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.cashapp.AfterpayCashApp
 import com.afterpay.android.model.Money
@@ -89,12 +88,12 @@ class CheckoutViewModel(
         data class CashReceipt(val customerResponseData: CustomerResponseData) : Command()
     }
 
-    fun createCustomerRequest(cashAppData: AfterpayCashApp, payKitInstance: CashAppPayKit?) {
+    fun createCustomerRequest(cashAppData: AfterpayCashApp, payKitInstance: CashAppPay?) {
         if (payKitInstance != null) {
             viewModelScope.launch(Dispatchers.IO) {
-                val request = PayKitPaymentAction.OneTimeAction(
+                val request = CashAppPayPaymentAction.OneTimeAction(
                     redirectUri = "aftersnack://callback",
-                    currency = PayKitCurrency.USD,
+                    currency = CashAppPayCurrency.USD,
                     amount = (cashAppData.amount * 100).toInt(),
                     scopeId = cashAppData.merchantId,
                 )
@@ -104,8 +103,8 @@ class CheckoutViewModel(
         }
     }
 
-    fun authorizePayKitCustomerRequest(context: Context, payKitInstance: CashAppPayKit?) {
-        payKitInstance?.authorizeCustomerRequest(context)
+    fun authorizePayKitCustomerRequest(payKitInstance: CashAppPay?) {
+        payKitInstance?.authorizeCustomerRequest()
     }
 
     private val state = MutableStateFlow(
