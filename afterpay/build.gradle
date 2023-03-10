@@ -43,7 +43,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:${versions.kotlinx_coroutines}"
     implementation "androidx.core:core-ktx:${versions.core_ktx}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
+
     testImplementation "junit:junit:${versions.junit}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinx_coroutines}"
+    testImplementation "io.mockk:mockk:${versions.mockk}"
 }
 
 apply plugin: 'com.vanniktech.maven.publish'
