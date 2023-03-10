@@ -1,6 +1,5 @@
 package com.example.afterpay.checkout
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.util.Patterns
