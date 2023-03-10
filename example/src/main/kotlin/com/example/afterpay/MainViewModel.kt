@@ -2,10 +2,10 @@ package com.example.afterpay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.cash.paykit.core.CashAppPayKit
-import app.cash.paykit.core.CashAppPayKitFactory
-import app.cash.paykit.core.CashAppPayKitListener
-import app.cash.paykit.core.PayKitState
+import app.cash.paykit.core.CashAppPay
+import app.cash.paykit.core.CashAppPayFactory
+import app.cash.paykit.core.CashAppPayListener
+import app.cash.paykit.core.CashAppPayState
 import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayEnvironment
 import com.example.afterpay.data.AfterpayRepository
@@ -18,10 +18,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class MainViewModel : ViewModel(), CashAppPayKitListener {
+class MainViewModel : ViewModel(), CashAppPayListener {
 
-    private val _payKitState = MutableStateFlow<PayKitState>(PayKitState.NotStarted)
-    val payKitState: StateFlow<PayKitState> = _payKitState.asStateFlow()
+    private val _payKitState = MutableStateFlow<CashAppPayState>(CashAppPayState.NotStarted)
+    val payKitState: StateFlow<CashAppPayState> = _payKitState.asStateFlow()
 
     var environment: AfterpayEnvironment = AfterpayEnvironment.SANDBOX
         private set
@@ -33,7 +33,7 @@ class MainViewModel : ViewModel(), CashAppPayKitListener {
         )
     }
 
-    var payKit: CashAppPayKit? = null
+    var payKit: CashAppPay? = null
 
     suspend fun applyAfterpayConfiguration(forceRefresh: Boolean = false) {
         try {
@@ -62,7 +62,7 @@ class MainViewModel : ViewModel(), CashAppPayKitListener {
         }
     }
 
-    override fun payKitStateDidChange(newState: PayKitState) {
+    override fun cashAppPayStateDidChange(newState: CashAppPayState) {
         _payKitState.value = newState
         MainCommands.commandChannel.trySend(MainCommands.Command.PayKitStateChange(newState))
     }
@@ -74,8 +74,8 @@ class MainViewModel : ViewModel(), CashAppPayKitListener {
             }
 
             payKit = when (env) {
-                AfterpayEnvironment.PRODUCTION -> CashAppPayKitFactory.create(env.payKitClientId)
-                else -> CashAppPayKitFactory.createSandbox(env.payKitClientId)
+                AfterpayEnvironment.PRODUCTION -> CashAppPayFactory.create(env.payKitClientId)
+                else -> CashAppPayFactory.createSandbox(env.payKitClientId)
             }
 
             payKit?.registerForStateUpdates(this)

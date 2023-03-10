@@ -16,8 +16,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import app.cash.paykit.core.PayKitState
-import app.cash.paykit.core.ui.CashPayKitButton
+import app.cash.paykit.core.CashAppPayState
+import app.cash.paykit.core.ui.CashAppPayButton
 import com.afterpay.android.Afterpay
 import com.afterpay.android.cashapp.CashAppSignOrderResult
 import com.afterpay.android.cashapp.CashAppValidationResponse
@@ -56,7 +56,7 @@ class CheckoutFragment : Fragment() {
         )
     }
 
-    private lateinit var cashButton: CashPayKitButton
+    private lateinit var cashButton: CashAppPayButton
 
     private var cashJwt: String? = null
 
@@ -175,7 +175,7 @@ class CheckoutFragment : Fragment() {
                             }
                     }
                     is Command.LaunchCashAppPay -> {
-                        viewModel.authorizePayKitCustomerRequest(requireContext(), activityViewModel.payKit)
+                        viewModel.authorizePayKitCustomerRequest(activityViewModel.payKit)
                     }
                     is Command.CashReceipt -> {
                         cashJwt?.also { jwt ->
@@ -227,14 +227,14 @@ class CheckoutFragment : Fragment() {
             MainCommands.commands().collectLatest { command ->
                 if (command is MainCommands.Command.PayKitStateChange) {
                     when (val state = command.state) {
-                        is PayKitState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
-                        is PayKitState.Declined -> {
+                        is CashAppPayState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
+                        is CashAppPayState.Declined -> {
                             launchedCashApp = false
                             loadCashCheckoutToken()
                             makeAndShowSnackbar("CashApp Declined")
                         }
-                        is PayKitState.ReadyToAuthorize -> cashButton.isEnabled = true
-                        is PayKitState.PayKitExceptionState -> {
+                        is CashAppPayState.ReadyToAuthorize -> cashButton.isEnabled = true
+                        is CashAppPayState.CashAppPayExceptionState -> {
                             makeAndShowSnackbar(state.exception.toString())
                             logger.error(TAG, state.exception.toString(), state.exception.cause)
                         }

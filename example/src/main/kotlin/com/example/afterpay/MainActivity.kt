@@ -13,7 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import app.cash.paykit.core.PayKitState
+import app.cash.paykit.core.CashAppPayState
 import com.example.afterpay.checkout.BottomSheetOptionsFragment
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.CashData
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
 object MainCommands {
     sealed class Command {
-        data class PayKitStateChange(val state: PayKitState) : Command()
+        data class PayKitStateChange(val state: CashAppPayState) : Command()
     }
 
     internal val commandChannel = Channel<Command>(Channel.CONFLATED)
