@@ -2,6 +2,8 @@ package com.example.afterpay
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.MotionEvent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -11,26 +13,23 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.afterpay.android.Afterpay
-import com.afterpay.android.AfterpayEnvironment
+import app.cash.paykit.core.CashAppPayState
+import com.example.afterpay.checkout.BottomSheetOptionsFragment
 import com.example.afterpay.checkout.CheckoutFragment
-import com.example.afterpay.data.AfterpayRepository
+import com.example.afterpay.data.CashData
+import com.example.afterpay.receipt.CashReceiptFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import java.math.BigDecimal
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-    private val afterpayRepository by lazy {
-        AfterpayRepository(
-            merchantApi = getDependencies().merchantApi,
-            preferences = getDependencies().sharedPreferences,
-        )
-    }
+
+    private val viewModel: MainViewModel by viewModels()
+
+    private val modalBottomSheet = BottomSheetOptionsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +53,29 @@ class MainActivity : AppCompatActivity() {
                     action(NavGraph.action.to_receipt) {
                         destinationId = NavGraph.dest.receipt
                     }
+                    action(NavGraph.action.to_cash_receipt) {
+                        destinationId = NavGraph.dest.cash_receipt
+                    }
                 }
                 fragment<ReceiptFragment>(NavGraph.dest.receipt) {
                     label = getString(R.string.title_receipt)
                     argument(NavGraph.args.checkout_token) {
                         type = NavType.StringType
+                    }
+                    action(NavGraph.action.back_to_shopping) {
+                        destinationId = NavGraph.dest.shopping
+                        navOptions {
+                            popUpTo(NavGraph.dest.shopping) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    }
+                }
+                fragment<CashReceiptFragment>(NavGraph.dest.cash_receipt) {
+                    label = getString(R.string.title_cash_receipt)
+                    argument(NavGraph.args.cash_response_data) {
+                        type = NavType.ParcelableType(CashData::class.java)
                     }
                     action(NavGraph.action.back_to_shopping) {
                         destinationId = NavGraph.dest.shopping
@@ -81,11 +98,8 @@ class MainActivity : AppCompatActivity() {
 
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.action_refresh_config -> {
-                        lifecycleScope.launch {
-                            applyAfterpayConfiguration(forceRefresh = true)
-                        }
-
+                    R.id.devButton -> {
+                        showBottomSheet()
                         true
                     }
 
@@ -95,36 +109,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launchWhenStarted {
-            applyAfterpayConfiguration()
+            viewModel.applyAfterpayConfiguration()
         }
     }
 
-    private suspend fun applyAfterpayConfiguration(forceRefresh: Boolean = false) {
-        try {
-            val configuration = withContext(Dispatchers.IO) {
-                afterpayRepository.fetchConfiguration(forceRefresh)
-            }
-
-            Afterpay.setConfiguration(
-                minimumAmount = configuration.minimumAmount,
-                maximumAmount = configuration.maximumAmount,
-                currencyCode = configuration.currency,
-                locale = Locale(configuration.language, configuration.country),
-                environment = AfterpayEnvironment.SANDBOX,
-            )
-        } catch (e: Exception) {
-            Snackbar
-                .make(
-                    findViewById(android.R.id.content),
-                    R.string.configuration_error_message,
-                    Snackbar.LENGTH_INDEFINITE,
-                )
-                .setAction(R.string.configuration_error_action_retry) {
-                    lifecycleScope.launch {
-                        applyAfterpayConfiguration()
-                    }
-                }
-                .show()
-        }
+    private fun showBottomSheet() {
+        modalBottomSheet.show(supportFragmentManager, "BottomSheet")
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // Swipe up on any static area of the screen will show up the bottom sheet.
+        if (event?.action == MotionEvent.ACTION_UP) {
+            showBottomSheet()
+        }
+        return true
+    }
+}
+
+object MainCommands {
+    sealed class Command {
+        data class PayKitStateChange(val state: CashAppPayState) : Command()
+    }
+
+    internal val commandChannel = Channel<Command>(Channel.CONFLATED)
+
+    fun commands(): Flow<Command> = commandChannel.receiveAsFlow()
 }
