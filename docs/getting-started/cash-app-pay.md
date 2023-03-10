@@ -34,13 +34,13 @@ With our latest enhancements, you can now support taking Cash App Pay payments u
 You can get the the latest version of the SDK from Maven. This is the import definition using Gradle:
 
 ```gradle
-implementation "app.cash.paykit:core:1.0.3"
+implementation "app.cash.paykit:core:1.0.7"
 ```
 
 For definitions of other build systems, see [Cash App Pay Kit on Maven Central][cash-on-maven]{:target="_blank"}.
 
 {: .info }
-> Version `v1.0.3` of the SDK size is `12.3 kB`.
+> Version `v1.0.7` of the SDK size is `12.3 kB`.
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
@@ -50,7 +50,7 @@ To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientI
 > Confirm that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
 
 
-You should use `CashAppPayKitFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you must specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
+You should use `CashAppPayFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you must specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
 
 {: .info }
 > You should use the Sandbox environment during the development phase and the Production environment for your production releases.
@@ -58,12 +58,12 @@ You should use `CashAppPayKitFactory` to create an instance of the Cash App Pay 
 Creating a Sandbox Cash App Pay Kit SDK instance:
 
 ``` kotlin
-val payKit : CashAppPayKit = CashAppPayKitFactory.createSandbox(Afterpay.environment.payKitClientId)
+val payKit : CashAppPay = CashAppPayFactory.createSandbox(Afterpay.environment.payKitClientId)
 ```
 
 Creating a Production Cash App Pay Kit SDK instance:
 ``` kotlin
-val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.payKitClientId)
+val payKit : CashAppPay = CashAppPayFactory.create(Afterpay.environment.payKitClientId)
 ```
 
 {: .info }
@@ -71,11 +71,11 @@ val payKit : CashAppPayKit = CashAppPayKitFactory.create(Afterpay.environment.pa
 
 ## Step 3: Register for State Updates
 
-To receive updates from Pay Kit, you’ll need to implement the `CashAppPayKitListener` interface. The interface exposes a single function, which gets called whenever there’s an internal state change emitted by the SDK:
+To receive updates from Pay Kit, you’ll need to implement the `CashAppPayListener` interface. The interface exposes a single function, which gets called whenever there’s an internal state change emitted by the SDK:
 
 ``` kotlin
-interface CashAppPayKitListener {
-   fun payKitStateDidChange(newState: PayKitState)
+interface CashAppPayListener {
+   fun cashAppPayStateDidChange(newState: CashAppPayState)
 }
 ```
 
@@ -93,14 +93,14 @@ payKit.unregisterFromStateUpdates()
 
 ### States
 
-`PayKitState` is a sealed class parameter. We suggest that you use a Kotlin `when` statement on it. Some of these possible states are for information only, but most drive the logic of your integration. The most critical states to handle are in the table below:
+`CashAppPayState` is a sealed class parameter. We suggest that you use a Kotlin `when` statement on it. Some of these possible states are for information only, but most drive the logic of your integration. The most critical states to handle are in the table below:
 
 | State  | Description |
 |:-------|:------------|
 | `ReadyToAuthorize` | You should show the Cash App Pay button in your UI and call `authorizeCustomerRequest()` when it is tapped. |
 | `Approved` | Grants are ready for your backend to use and to create a payment. |
 | `Declined` | Customer has declined the Cash App Pay authorization and must start the flow over or choose a new payment method. |
-| `PayKitExceptionState` | The general wrapper state for exceptions. These can range from integration errors to network errors. The exception states are emitted only for unrecoverable error states. |
+| `CashAppPayExceptionState` | The general wrapper state for exceptions. These can range from integration errors to network errors. The exception states are emitted only for unrecoverable error states. |
 
 ## Step 4: Implement Deep Linking
 
@@ -157,9 +157,9 @@ Afterpay.signCashAppOrderAsync(token) { cashAppData ->
 To charge a one-time payment, your **Create Request** call might look like this (in the following example, `cashAppData` is the response object that is returned in the trailing lambda in step 5A, which would echo the amount from your server-to-server **Create Checkout** call):
 
 ``` kotlin
-val request = PayKitPaymentAction.OneTimeAction(
+val request = CashAppPayPaymentAction.OneTimeAction(
   redirectUri = cashAppData.redirectUri,
-  currency = PayKitCurrency.USD,
+  currency = CashAppPayCurrency.USD,
   amount = (cashAppData.amount * 100).toInt(),
   scopeId = cashAppData.merchantId,
 )
