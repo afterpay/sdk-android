@@ -10,9 +10,9 @@ import app.cash.paykit.core.models.response.CustomerResponseData
 import app.cash.paykit.core.models.sdk.CashAppPayCurrency
 import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.afterpay.android.AfterpayCheckoutV2Options
+import com.afterpay.android.cashapp.AfterpayCashApp
 import com.afterpay.android.model.CheckoutV3Consumer
 import com.afterpay.android.model.Consumer
-import com.afterpay.android.cashapp.AfterpayCashApp
 import com.afterpay.android.model.Money
 import com.afterpay.android.model.ShippingAddress
 import com.afterpay.android.model.ShippingOption
