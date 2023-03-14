@@ -23,6 +23,7 @@ internal enum class Brand(
     @StringRes val title: Int,
     @StringRes val description: Int,
     @DrawableRes val badgeForeground: Int,
+    @DrawableRes val badgeForegroundCropped: Int,
     @DrawableRes val lockup: Int,
 ) {
 
@@ -30,6 +31,7 @@ internal enum class Brand(
         title = R.string.afterpay_service_name,
         description = R.string.afterpay_service_name_description,
         badgeForeground = R.drawable.afterpay_badge_fg,
+        badgeForegroundCropped = R.drawable.afterpay_badge_fg_cropped,
         lockup = R.drawable.afterpay_lockup,
     ),
 
@@ -37,6 +39,7 @@ internal enum class Brand(
         title = R.string.clearpay_service_name,
         description = R.string.clearpay_service_name_description,
         badgeForeground = R.drawable.clearpay_badge_fg,
+        badgeForegroundCropped = R.drawable.clearpay_badge_fg_cropped,
         lockup = R.drawable.clearpay_lockup,
     ),
     ;
