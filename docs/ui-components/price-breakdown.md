@@ -59,7 +59,7 @@ Intro text will be rendered lowercase unless using an option suffixed with `_TIT
 ### Logo Type
 Setting `logoType` is optional, will default to `BADGE` and must be of type `AfterpayLogoType`.
 
-Can be either of `BADGE` or `LOCKUP`.
+Can be either of `BADGE`, `COMPACT_BADGE` or `LOCKUP`.
 When setting color scheme on logo type of `LOCKUP`, only the foreground color will be applied. (See example)
 
 ```kotlin

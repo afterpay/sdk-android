@@ -2,6 +2,7 @@ package com.example.afterpay.checkout
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,28 +12,46 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import app.cash.paykit.core.CashAppPayState
+import app.cash.paykit.core.ui.CashAppPayButton
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatusV3
+import com.afterpay.android.cashapp.CashAppSignOrderResult
+import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.model.CheckoutV3Item
 import com.afterpay.android.model.OrderTotal
 import com.afterpay.android.view.AfterpayPaymentButton
+import com.example.afterpay.MainCommands
+import com.example.afterpay.MainViewModel
 import com.example.afterpay.NavGraph
 import com.example.afterpay.R
 import com.example.afterpay.checkout.CheckoutViewModel.Command
+import com.example.afterpay.data.CashData
 import com.example.afterpay.getDependencies
+import com.example.afterpay.util.LoggerFactory
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.net.URL
 
 class CheckoutFragment : Fragment() {
+    private val logger = LoggerFactory.getLogger()
+
+    private val activityViewModel: MainViewModel by activityViewModels()
+
     private companion object {
         const val CHECKOUT_WITH_AFTERPAY = 1234
+
         const val CHECKOUT_WITH_AFTERPAY_V3 = 12345
+
+        const val TAG = "CheckoutFragment"
     }
 
     private val viewModel by viewModels<CheckoutViewModel> {
@@ -43,6 +62,12 @@ class CheckoutFragment : Fragment() {
         )
     }
 
+    private lateinit var cashButton: CashAppPayButton
+
+    private var cashJwt: String? = null
+
+    private var launchedCashApp = false
+
     // when launching the checkout with V2, the token must be generated
     // with 'popupOriginUrl' set to 'https://static.afterpay.com' under the
     // top level 'merchant' object
@@ -51,6 +76,10 @@ class CheckoutFragment : Fragment() {
         onShippingAddressDidChange = { viewModel.selectAddress(it) },
         onShippingOptionDidChange = { viewModel.selectShippingOption(it) },
     )
+
+    private fun makeAndShowSnackbar(message: String?) {
+        Snackbar.make(requireView(), "Error: $message", Snackbar.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -159,7 +188,125 @@ class CheckoutFragment : Fragment() {
                         checkoutHandler.provideShippingOptionUpdateResult(
                             command.shippingOptionUpdateResult,
                         )
+                    is Command.SignCashAppOrder -> {
+                        command.tokenResult
+                            .onSuccess { token ->
+                                Afterpay.signCashAppOrderToken(token) { cashTokenSigningResult ->
+                                    handleCashTokenSigningResult(cashTokenSigningResult)
+                                }
+                            }
+                            .onFailure {
+                                makeAndShowSnackbar("Error: ${it.message}")
+                                logger.error(TAG, it.message, it)
+                            }
+                    }
+                    is Command.LaunchCashAppPay -> {
+                        viewModel.authorizePayKitCustomerRequest(activityViewModel.payKit)
+                    }
+                    is Command.CashReceipt -> {
+                        cashJwt?.also { jwt ->
+                            val customerResponseData = command.customerResponseData
+                            val grant = customerResponseData.grants?.get(0)
+                            val centsDivisor = 100
+
+                            if (
+                                grant?.id != null &&
+                                customerResponseData.customerProfile?.id != null
+                            ) {
+                                Afterpay.validateCashAppOrder(
+                                    jwt,
+                                    grant.id,
+                                    customerResponseData.customerProfile!!.id,
+                                ) { validationResult ->
+                                    when (validationResult) {
+                                        is CashAppValidationResponse.Success -> {
+                                            val responseData = CashData(
+                                                cashTag = customerResponseData.customerProfile?.cashTag ?: "unknown",
+                                                amount = (
+                                                    grant.action.amount_cents?.toBigDecimal()
+                                                        ?.divide(centsDivisor.toBigDecimal())
+                                                    ).toString(),
+                                                grantId = grant.id,
+                                            )
+
+                                            findNavController().navigate(
+                                                NavGraph.action.to_cash_receipt,
+                                                bundleOf(NavGraph.args.cash_response_data to responseData),
+                                            )
+                                        }
+                                        is CashAppValidationResponse.Failure -> {
+                                            Snackbar.make(requireView(), "CashApp not valid: ${validationResult.error}", Snackbar.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        } ?: run {
+                            makeAndShowSnackbar("Something went wrong (missing jwt)")
+                            logger.error(TAG, "JWT is missing")
+                        }
+                    }
                 }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            MainCommands.commands().collectLatest { command ->
+                if (command is MainCommands.Command.PayKitStateChange) {
+                    when (val state = command.state) {
+                        is CashAppPayState.Approved -> viewModel.cashReceipt(customerResponseData = state.responseData)
+                        is CashAppPayState.Declined -> {
+                            launchedCashApp = false
+                            loadCashCheckoutToken()
+                            makeAndShowSnackbar("CashApp Declined")
+                        }
+                        is CashAppPayState.ReadyToAuthorize -> cashButton.isEnabled = true
+                        is CashAppPayState.CashAppPayExceptionState -> {
+                            makeAndShowSnackbar(state.exception.toString())
+                            logger.error(TAG, state.exception.toString(), state.exception.cause)
+                        }
+                        else -> Log.d("CheckoutFragment", "Pay Kit State: ${command.state}")
+                    }
+                }
+            }
+        }
+
+        view.let {
+            cashButton = it.findViewById(R.id.cart_button_cash)
+            cashButton.setOnClickListener {
+                launchedCashApp = true
+                viewModel.showAfterpayCheckout(cashAppPay = true)
+            }
+        }
+    }
+
+    private fun handleCashTokenSigningResult(createOrderResult: CashAppSignOrderResult) {
+        when (createOrderResult) {
+            is CashAppSignOrderResult.Success -> {
+                val (response) = createOrderResult
+                cashJwt = response.jwt
+                viewModel.createCustomerRequest(response, activityViewModel.payKit)
+            }
+            is CashAppSignOrderResult.Failure -> {
+                val (error) = createOrderResult
+                makeAndShowSnackbar(error.message)
+                logger.error(TAG, error.message, error)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        view?.let {
+            cashButton.isEnabled = false
+            loadCashCheckoutToken()
+        }
+    }
+
+    private fun loadCashCheckoutToken() {
+        if (!launchedCashApp) {
+            lifecycleScope.launch(Dispatchers.Unconfined) {
+                viewModel.loadCheckoutToken(true)
             }
         }
     }
@@ -199,7 +346,7 @@ class CheckoutFragment : Fragment() {
                 val status = checkNotNull(Afterpay.parseCheckoutCancellationResponse(intent)) {
                     "A cancelled Afterpay transaction always contains a status"
                 }
-                Snackbar.make(requireView(), "Cancelled: $status", Snackbar.LENGTH_SHORT).show()
+                makeAndShowSnackbar("Cancelled: $status")
             }
             CHECKOUT_WITH_AFTERPAY_V3 to AppCompatActivity.RESULT_CANCELED -> {
                 val intent = requireNotNull(data) {

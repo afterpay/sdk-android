@@ -2,6 +2,10 @@ package com.afterpay.android
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.WorkerThread
+import com.afterpay.android.cashapp.AfterpayCashAppCheckout
+import com.afterpay.android.cashapp.CashAppSignOrderResult
+import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.ApiV3
@@ -70,6 +74,9 @@ object Afterpay {
     internal var checkoutV2Handler: AfterpayCheckoutV2Handler? = null
         private set
 
+    val environment: AfterpayEnvironment?
+        get() = configuration?.environment
+
     /**
      * Returns an [Intent] for the given [context] and [checkoutUrl] that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
@@ -94,6 +101,74 @@ object Afterpay {
         options: AfterpayCheckoutV2Options = AfterpayCheckoutV2Options(),
     ): Intent = Intent(context, AfterpayCheckoutV2Activity::class.java)
         .putCheckoutV2OptionsExtra(options)
+
+    /**
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * calls [complete] when done. This method should be called prior to calling
+     * createCustomerRequest on the Cash App Pay Kit SDK
+     */
+    @JvmStatic
+    @WorkerThread
+    suspend fun signCashAppOrderToken(
+        token: String,
+        complete: (CashAppSignOrderResult) -> Unit,
+    ) {
+        AfterpayCashAppCheckout.performSignPaymentRequest(token, complete)
+    }
+
+    /**
+     * Async version of the [signCashAppOrderToken] method.
+     *
+     * Signs an Afterpay Cash App order for the relevant [token] and calls
+     * [complete] when done. This method should be called prior to calling
+     * createCustomerRequest on the Cash App Pay Kit SDK
+     */
+    @DelicateCoroutinesApi
+    @JvmStatic
+    fun signCashAppOrderTokenAsync(
+        token: String,
+        complete: (CashAppSignOrderResult) -> Unit,
+    ): CompletableFuture<Unit?> {
+        return GlobalScope.future {
+            signCashAppOrderToken(token, complete)
+        }
+    }
+
+    /**
+     * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
+     * and calls [complete] once finished. This method should be called for a One Time payment
+     * once the Cash App order is in the approved state
+     */
+    @JvmStatic
+    @WorkerThread
+    fun validateCashAppOrder(
+        jwt: String,
+        customerId: String,
+        grantId: String,
+        complete: (CashAppValidationResponse) -> Unit,
+    ) {
+        AfterpayCashAppCheckout.validatePayment(jwt, customerId, grantId, complete)
+    }
+
+    /**
+     * Async version of the [validateCashAppOrder] method.
+     *
+     * Validates the Cash App order for the relevant [jwt], [customerId] and [grantId]
+     * and calls [complete] once finished. This method should be called for a One Time payment
+     * once the Cash App order is in the approved state
+     */
+    @DelicateCoroutinesApi
+    @JvmStatic
+    fun validateCashAppOrderAsync(
+        jwt: String,
+        customerId: String,
+        grantId: String,
+        complete: (CashAppValidationResponse) -> Unit,
+    ): CompletableFuture<Unit> {
+        return GlobalScope.future {
+            validateCashAppOrder(jwt, customerId, grantId, complete)
+        }
+    }
 
     /**
      * Returns the [token][String] parsed from the given [intent] returned by a successful

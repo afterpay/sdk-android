@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    id "kotlin-parcelize"
 }
 
 android {
@@ -43,6 +44,10 @@ android {
         jvmTarget = versions.java
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
@@ -74,6 +79,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.jakewharton.threetenabp:threetenabp:${versions.android_three_ten}"
+    implementation "app.cash.paykit:core:${versions.cash_app_paykit_sdk}"
 
     androidTestUtil "androidx.test:orchestrator:${versions.androidx_test_orchestrator}"
 

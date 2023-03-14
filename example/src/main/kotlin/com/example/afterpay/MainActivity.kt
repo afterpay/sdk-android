@@ -2,6 +2,8 @@ package com.example.afterpay
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.MotionEvent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -11,18 +13,25 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import app.cash.paykit.core.CashAppPayState
 import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayEnvironment
 import com.afterpay.android.model.AfterpayRegion
 import com.afterpay.android.model.CheckoutV3Configuration
 import com.afterpay.android.model.CheckoutV3Data
+import com.example.afterpay.checkout.BottomSheetOptionsFragment
 import com.example.afterpay.checkout.CheckoutFragment
 import com.example.afterpay.data.AfterpayRepository
+import com.example.afterpay.data.CashData
 import com.example.afterpay.detailsv3.DetailsFragment
+import com.example.afterpay.receipt.CashReceiptFragment
 import com.example.afterpay.receipt.ReceiptFragment
 import com.example.afterpay.shopping.ShoppingFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
@@ -34,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             preferences = getDependencies().sharedPreferences,
         )
     }
+
+    private val viewModel: MainViewModel by viewModels()
+
+    private val modalBottomSheet = BottomSheetOptionsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +73,9 @@ class MainActivity : AppCompatActivity() {
                     action(NavGraph.action.to_details_v3) {
                         destinationId = NavGraph.dest.details_v3
                     }
+                    action(NavGraph.action.to_cash_receipt) {
+                        destinationId = NavGraph.dest.cash_receipt
+                    }
                 }
                 fragment<ReceiptFragment>(NavGraph.dest.receipt) {
                     label = getString(R.string.title_receipt)
@@ -80,6 +96,12 @@ class MainActivity : AppCompatActivity() {
                     label = "Single Use Card"
                     argument(NavGraph.args.result_data_v3) {
                         type = NavType.ParcelableType(CheckoutV3Data::class.java)
+                    }
+                }
+                fragment<CashReceiptFragment>(NavGraph.dest.cash_receipt) {
+                    label = getString(R.string.title_cash_receipt)
+                    argument(NavGraph.args.cash_response_data) {
+                        type = NavType.ParcelableType(CashData::class.java)
                     }
                     action(NavGraph.action.back_to_shopping) {
                         destinationId = NavGraph.dest.shopping
@@ -102,11 +124,8 @@ class MainActivity : AppCompatActivity() {
 
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.action_refresh_config -> {
-                        lifecycleScope.launch {
-                            applyAfterpayConfiguration(forceRefresh = true)
-                        }
-
+                    R.id.devButton -> {
+                        showBottomSheet()
                         true
                     }
 
@@ -116,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launchWhenStarted {
-            applyAfterpayConfiguration()
+            viewModel.applyAfterpayConfiguration()
         }
     }
 
@@ -149,4 +168,26 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
     }
+
+    private fun showBottomSheet() {
+        modalBottomSheet.show(supportFragmentManager, "BottomSheet")
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // Swipe up on any static area of the screen will show up the bottom sheet.
+        if (event?.action == MotionEvent.ACTION_UP) {
+            showBottomSheet()
+        }
+        return true
+    }
+}
+
+object MainCommands {
+    sealed class Command {
+        data class PayKitStateChange(val state: CashAppPayState) : Command()
+    }
+
+    internal val commandChannel = Channel<Command>(Channel.CONFLATED)
+
+    fun commands(): Flow<Command> = commandChannel.receiveAsFlow()
 }

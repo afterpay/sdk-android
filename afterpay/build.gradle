@@ -46,8 +46,11 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.core:core-ktx:${versions.core_ktx}"
     implementation "androidx.appcompat:appcompat:${versions.app_compat}"
+
     testImplementation "junit:junit:${versions.junit}"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinx_coroutines}"
+    testImplementation "io.mockk:mockk:${versions.mockk}"
 }
 
 apply plugin: 'com.vanniktech.maven.publish'
