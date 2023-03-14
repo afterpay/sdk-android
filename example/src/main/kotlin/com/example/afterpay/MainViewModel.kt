@@ -8,6 +8,8 @@ import app.cash.paykit.core.CashAppPayListener
 import app.cash.paykit.core.CashAppPayState
 import com.afterpay.android.Afterpay
 import com.afterpay.android.AfterpayEnvironment
+import com.afterpay.android.model.AfterpayRegion
+import com.afterpay.android.model.CheckoutV3Configuration
 import com.example.afterpay.data.AfterpayRepository
 import com.example.afterpay.util.Logger
 import kotlinx.coroutines.Dispatchers
@@ -37,19 +39,18 @@ class MainViewModel : ViewModel(), CashAppPayListener {
 
     suspend fun applyAfterpayConfiguration(forceRefresh: Boolean = false) {
         try {
-            val configuration = withContext(Dispatchers.IO) {
-                afterpayRepository.fetchConfiguration(forceRefresh)
-            }
-
-            Afterpay.setConfiguration(
-                minimumAmount = configuration.minimumAmount,
-                maximumAmount = configuration.maximumAmount,
-                currencyCode = configuration.currency,
-                locale = Locale(configuration.language, configuration.country),
-                environment = environment,
+            val afterpayConfigV3 = CheckoutV3Configuration(
+                shopDirectoryMerchantId = "822ce7ffc2fa41258904baad1d0fe07351e89375108949e8bd951d387ef0e932",
+                region = AfterpayRegion.US,
+                environment = AfterpayEnvironment.SANDBOX,
             )
+            Afterpay.setCheckoutV3Configuration(afterpayConfigV3)
 
-            setupPayKit()
+            val merchantConfig = withContext(Dispatchers.IO) {
+                Afterpay.fetchMerchantConfigurationV3()
+            }.getOrThrow()
+
+            Afterpay.setConfigurationV3(merchantConfig)
         } catch (e: Exception) {
             Logger().error(message = "Failed to get afterpay configuration.", tr = e)
         }

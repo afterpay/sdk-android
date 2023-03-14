@@ -49,6 +49,8 @@ class CheckoutFragment : Fragment() {
     private companion object {
         const val CHECKOUT_WITH_AFTERPAY = 1234
 
+        const val CHECKOUT_WITH_AFTERPAY_V3 = 12345
+
         const val TAG = "CheckoutFragment"
     }
 
