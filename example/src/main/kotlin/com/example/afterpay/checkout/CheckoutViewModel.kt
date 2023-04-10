@@ -92,13 +92,12 @@ class CheckoutViewModel(
         if (payKitInstance != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 val request = CashAppPayPaymentAction.OneTimeAction(
-                    redirectUri = "aftersnack://callback",
                     currency = CashAppPayCurrency.USD,
                     amount = (cashAppData.amount * 100).toInt(),
                     scopeId = cashAppData.merchantId,
                 )
 
-                payKitInstance.createCustomerRequest(request)
+                payKitInstance.createCustomerRequest(request, "aftersnack://callback")
             }
         }
     }

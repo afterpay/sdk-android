@@ -34,13 +34,13 @@ With our latest enhancements, you can now support taking Cash App Pay payments u
 You can get the the latest version of the SDK from Maven. This is the import definition using Gradle:
 
 ```gradle
-implementation "app.cash.paykit:core:1.0.7"
+implementation "app.cash.paykit:core:2.0.0"
 ```
 
 For definitions of other build systems, see [Cash App Pay Kit on Maven Central][cash-on-maven]{:target="_blank"}.
 
 {: .info }
-> Version `v1.0.7` of the SDK size is `12.3 kB`.
+> Version `v2.0.0` of the SDK size is `12.3 kB`.
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
@@ -158,13 +158,12 @@ To charge a one-time payment, your **Create Request** call might look like this 
 
 ``` kotlin
 val request = CashAppPayPaymentAction.OneTimeAction(
-  redirectUri = cashAppData.redirectUri,
   currency = CashAppPayCurrency.USD,
   amount = (cashAppData.amount * 100).toInt(),
   scopeId = cashAppData.merchantId,
 )
 
-payKit.createCustomerRequest(request)
+payKit.createCustomerRequest(request, cashAppData.redirectUri)
 ```
 
 ## Step 6: Authorize the Customer Request
