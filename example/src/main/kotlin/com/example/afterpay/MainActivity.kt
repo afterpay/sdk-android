@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 fragment<CheckoutFragment>(NavGraph.Dest.checkout) {
                     label = getString(R.string.title_checkout)
-                    argument(NavGraph.args.total_cost) {
+                    argument(NavGraph.Args.total_cost) {
                         type = NavType.ParcelableType(BigDecimal::class.java)
                     }
                     action(NavGraph.Action.to_receipt) {
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 fragment<ReceiptFragment>(NavGraph.Dest.receipt) {
                     label = getString(R.string.title_receipt)
-                    argument(NavGraph.args.checkout_token) {
+                    argument(NavGraph.Args.checkout_token) {
                         type = NavType.StringType
                     }
                     action(NavGraph.Action.back_to_shopping) {
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 fragment<CashReceiptFragment>(NavGraph.Dest.cash_receipt) {
                     label = getString(R.string.title_cash_receipt)
-                    argument(NavGraph.args.cash_response_data) {
+                    argument(NavGraph.Args.cash_response_data) {
                         type = NavType.ParcelableType(CashData::class.java)
                     }
                     action(NavGraph.Action.back_to_shopping) {

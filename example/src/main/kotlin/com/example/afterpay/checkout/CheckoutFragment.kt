@@ -50,7 +50,7 @@ class CheckoutFragment : Fragment() {
 
     private val viewModel by viewModels<CheckoutViewModel> {
         CheckoutViewModel.factory(
-            totalCost = requireNotNull(arguments?.get(NavGraph.args.total_cost) as? BigDecimal),
+            totalCost = requireNotNull(arguments?.get(NavGraph.Args.total_cost) as? BigDecimal),
             merchantApi = getDependencies().merchantApi,
             preferences = getDependencies().sharedPreferences,
         )
@@ -205,7 +205,7 @@ class CheckoutFragment : Fragment() {
 
                                             findNavController().navigate(
                                                 NavGraph.Action.to_cash_receipt,
-                                                bundleOf(NavGraph.args.cash_response_data to responseData),
+                                                bundleOf(NavGraph.Args.cash_response_data to responseData),
                                             )
                                         }
                                         is CashAppValidationResponse.Failure -> {
@@ -298,7 +298,7 @@ class CheckoutFragment : Fragment() {
                 }
                 findNavController().navigate(
                     NavGraph.Action.to_receipt,
-                    bundleOf(NavGraph.args.checkout_token to token),
+                    bundleOf(NavGraph.Args.checkout_token to token),
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {
