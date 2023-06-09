@@ -87,7 +87,7 @@ class ShoppingFragment : Fragment() {
                 when (command) {
                     is Command.Checkout ->
                         findNavController().navigate(
-                            NavGraph.action.to_checkout,
+                            NavGraph.Action.to_checkout,
                             bundleOf(NavGraph.args.total_cost to command.totalCost),
                         )
                 }

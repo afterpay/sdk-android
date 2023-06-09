@@ -204,7 +204,7 @@ class CheckoutFragment : Fragment() {
                                             )
 
                                             findNavController().navigate(
-                                                NavGraph.action.to_cash_receipt,
+                                                NavGraph.Action.to_cash_receipt,
                                                 bundleOf(NavGraph.args.cash_response_data to responseData),
                                             )
                                         }
@@ -297,7 +297,7 @@ class CheckoutFragment : Fragment() {
                     "A token is always associated with a successful Afterpay transaction"
                 }
                 findNavController().navigate(
-                    NavGraph.action.to_receipt,
+                    NavGraph.Action.to_receipt,
                     bundleOf(NavGraph.args.checkout_token to token),
                 )
             }

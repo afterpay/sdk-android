@@ -44,7 +44,7 @@ class ReceiptFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(NavGraph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.Action.back_to_shopping)
         }
 
         view.findViewById<AfterpayWidgetView>(R.id.receipt_afterpayWidget)
