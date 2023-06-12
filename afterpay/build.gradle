@@ -35,6 +35,7 @@ android {
     kotlinOptions {
         jvmTarget = versions.java
     }
+    namespace 'com.afterpay.android'
 }
 
 dependencies {
