@@ -6,11 +6,11 @@
     <title>Afterpay Test Checkout</title>
     <script type="text/javascript">
         function openCheckout(json) {
-            let app;
+            var app;
 
             try {
                 app = window.webkit.messageHandlers.iOS;
-            } catch {}
+            } catch(e) {}
 
             if (typeof app === "undefined" && typeof Android !== "undefined") {
                 app = Android;
