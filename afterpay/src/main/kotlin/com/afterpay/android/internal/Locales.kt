@@ -37,8 +37,8 @@ internal object Locales {
     )
 }
 
-internal fun getRegionLanguage(merchantLocale: Locale, clientLocale: Locale): Locale? {
+internal fun getRegionLanguage(merchantLocale: Locale, consumerLocale: Locale): Locale? {
     return validRegionLanguages[merchantLocale.country]?.find {
-        clientLocale.language == it.language
+        consumerLocale.language == it.language
     }
 }
