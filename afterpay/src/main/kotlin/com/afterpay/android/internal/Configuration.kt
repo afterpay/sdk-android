@@ -11,5 +11,5 @@ internal data class Configuration(
     val currency: Currency,
     val locale: Locale,
     val environment: AfterpayEnvironment,
-    val consumerLocale: Locale?,
+    val consumerLocale: Locale? = null,
 )
