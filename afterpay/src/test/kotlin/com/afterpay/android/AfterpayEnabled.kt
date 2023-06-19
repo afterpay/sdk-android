@@ -15,7 +15,7 @@ class AfterpayEnabled {
             currencyCode = "AUD",
             locale = Locale.US,
             environment = environment,
-            consumerLocale = Locale.ENGLISH
+            consumerLocale = Locale.ENGLISH,
         )
 
         Assert.assertEquals(true, Afterpay.enabled)
@@ -29,7 +29,7 @@ class AfterpayEnabled {
             currencyCode = "AUD",
             locale = Locale.US,
             environment = environment,
-            consumerLocale = Locale.FRANCE
+            consumerLocale = Locale.FRANCE,
         )
 
         Assert.assertEquals(false, Afterpay.enabled)
