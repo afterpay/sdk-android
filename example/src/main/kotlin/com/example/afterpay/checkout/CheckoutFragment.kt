@@ -279,7 +279,7 @@ class CheckoutFragment : Fragment() {
 
     private fun loadCashCheckoutToken() {
         if (!launchedCashApp) {
-            lifecycleScope.launch(Dispatchers.Unconfined) {
+            lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.loadCheckoutToken(true)
             }
         }
