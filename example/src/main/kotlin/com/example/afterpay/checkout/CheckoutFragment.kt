@@ -189,8 +189,8 @@ class CheckoutFragment : Fragment() {
                             ) {
                                 Afterpay.validateCashAppOrder(
                                     jwt,
-                                    grant.id,
                                     customerResponseData.customerProfile!!.id,
+                                    grant.id,
                                 ) { validationResult ->
                                     when (validationResult) {
                                         is CashAppValidationResponse.Success -> {

@@ -191,8 +191,8 @@ Finally, you must validate the Cash App order. This will look like the following
 ``` kotlin
 Afterpay.validateCashAppOrder(
     jwt,
-    grant.id,
     customerResponseData.customerProfile!!.id,
+    grant.id,
 ) { validationResult ->
     when (validationResult) {
       is CashAppValidationResponse.Success -> TODO("Capture payment with token and grant id")
