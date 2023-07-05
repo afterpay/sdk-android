@@ -6,7 +6,7 @@ object NavGraph {
 
     val id = uniqueId
 
-    object dest {
+    object Dest {
         val shopping = uniqueId
         val checkout = uniqueId
         val receipt = uniqueId
@@ -14,7 +14,7 @@ object NavGraph {
         val cash_receipt = uniqueId
     }
 
-    object action {
+    object Action {
         val to_checkout = uniqueId
         val to_receipt = uniqueId
         val to_cash_receipt = uniqueId
@@ -22,7 +22,7 @@ object NavGraph {
         val to_details_v3 = uniqueId
     }
 
-    object args {
+    object Args {
         const val cash_response_data = "cash_response_data"
         const val total_cost = "total_cost"
         const val checkout_token = "checkout_token"

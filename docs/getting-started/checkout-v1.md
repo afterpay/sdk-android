@@ -15,6 +15,8 @@ Launch the Afterpay standard checkout flow by starting the intent provided by th
 
 {: .info }
 > When creating a checkout token, both `redirectConfirmUrl` and `redirectCancelUrl` must be set. Failing to do so will cause undefined behavior. The SDK’s example merchant server sets the parameters [here][example-server-props]{:target='_blank'}. See more by checking the [api reference][api-reference-props]{:target='_blank'}.
+>
+> By default the SDK *will not* load these redirect URLs when the checkout is confirmed or cancelled, but will allow the result to be handled as seen in the example below. If it is required that these URLs be loaded, the `loadRedirectUrls` parameter can be set to `true` on the `createCheckoutIntent` method.
 
 ```kotlin
 class ExampleActivity: Activity {

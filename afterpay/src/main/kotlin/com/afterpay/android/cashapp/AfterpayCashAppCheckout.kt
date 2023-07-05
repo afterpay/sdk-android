@@ -77,7 +77,7 @@ object AfterpayCashAppCheckout {
 
                 val payload = Json.encodeToString(request)
 
-                val response = withContext(Dispatchers.Unconfined) {
+                val response = withContext(Dispatchers.IO) {
                     AfterpayCashAppApi.cashRequest<AfterpayCashAppValidationResponse, String>(
                         url = url,
                         method = AfterpayCashAppApi.CashHttpVerb.POST,

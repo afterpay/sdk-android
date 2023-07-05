@@ -55,58 +55,58 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         val navController = findNavController(R.id.nav_host_fragment).apply {
-            graph = createGraph(NavGraph.id, NavGraph.dest.shopping) {
-                fragment<ShoppingFragment>(NavGraph.dest.shopping) {
+            graph = createGraph(NavGraph.id, NavGraph.Dest.shopping) {
+                fragment<ShoppingFragment>(NavGraph.Dest.shopping) {
                     label = getString(R.string.title_shopping)
-                    action(NavGraph.action.to_checkout) {
-                        destinationId = NavGraph.dest.checkout
+                    action(NavGraph.Action.to_checkout) {
+                        destinationId = NavGraph.Dest.checkout
                     }
                 }
-                fragment<CheckoutFragment>(NavGraph.dest.checkout) {
+                fragment<CheckoutFragment>(NavGraph.Dest.checkout) {
                     label = getString(R.string.title_checkout)
-                    argument(NavGraph.args.total_cost) {
+                    argument(NavGraph.Args.total_cost) {
                         type = NavType.ParcelableType(BigDecimal::class.java)
                     }
-                    action(NavGraph.action.to_receipt) {
-                        destinationId = NavGraph.dest.receipt
+                    action(NavGraph.Action.to_receipt) {
+                        destinationId = NavGraph.Dest.receipt
                     }
-                    action(NavGraph.action.to_details_v3) {
-                        destinationId = NavGraph.dest.details_v3
+                    action(NavGraph.Action.to_details_v3) {
+                        destinationId = NavGraph.Dest.details_v3
                     }
-                    action(NavGraph.action.to_cash_receipt) {
-                        destinationId = NavGraph.dest.cash_receipt
+                    action(NavGraph.Action.to_cash_receipt) {
+                        destinationId = NavGraph.Dest.cash_receipt
                     }
                 }
-                fragment<ReceiptFragment>(NavGraph.dest.receipt) {
+                fragment<ReceiptFragment>(NavGraph.Dest.receipt) {
                     label = getString(R.string.title_receipt)
-                    argument(NavGraph.args.checkout_token) {
+                    argument(NavGraph.Args.checkout_token) {
                         type = NavType.StringType
                     }
-                    action(NavGraph.action.back_to_shopping) {
-                        destinationId = NavGraph.dest.shopping
+                    action(NavGraph.Action.back_to_shopping) {
+                        destinationId = NavGraph.Dest.shopping
                         navOptions {
-                            popUpTo(NavGraph.dest.shopping) {
+                            popUpTo(NavGraph.Dest.shopping) {
                                 inclusive = true
                             }
                             launchSingleTop = true
                         }
                     }
                 }
-                fragment<DetailsFragment>(NavGraph.dest.details_v3) {
+                fragment<DetailsFragment>(NavGraph.Dest.details_v3) {
                     label = "Single Use Card"
-                    argument(NavGraph.args.result_data_v3) {
+                    argument(NavGraph.Args.result_data_v3) {
                         type = NavType.ParcelableType(CheckoutV3Data::class.java)
                     }
                 }
-                fragment<CashReceiptFragment>(NavGraph.dest.cash_receipt) {
+                fragment<CashReceiptFragment>(NavGraph.Dest.cash_receipt) {
                     label = getString(R.string.title_cash_receipt)
-                    argument(NavGraph.args.cash_response_data) {
+                    argument(NavGraph.Args.cash_response_data) {
                         type = NavType.ParcelableType(CashData::class.java)
                     }
-                    action(NavGraph.action.back_to_shopping) {
-                        destinationId = NavGraph.dest.shopping
+                    action(NavGraph.Action.back_to_shopping) {
+                        destinationId = NavGraph.Dest.shopping
                         navOptions {
-                            popUpTo(NavGraph.dest.shopping) {
+                            popUpTo(NavGraph.Dest.shopping) {
                                 inclusive = true
                             }
                             launchSingleTop = true
