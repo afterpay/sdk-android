@@ -335,8 +335,8 @@ class CheckoutFragment : Fragment() {
                     "Result data is always associated with a successful V3 Afterpay transaction"
                 }
                 findNavController().navigate(
-                    NavGraph.action.to_details_v3,
-                    bundleOf(NavGraph.args.result_data_v3 to resultData),
+                    NavGraph.Action.to_details_v3,
+                    bundleOf(NavGraph.Args.result_data_v3 to resultData),
                 )
             }
             CHECKOUT_WITH_AFTERPAY to AppCompatActivity.RESULT_CANCELED -> {

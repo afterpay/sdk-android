@@ -211,6 +211,7 @@ object Afterpay {
             currency = Currency.getInstance(currencyCode),
             locale = locale.clone() as Locale,
             environment = environment,
+            consumerLocale = consumerLocale,
         ).also { validateConfiguration(it) }
     }
 
