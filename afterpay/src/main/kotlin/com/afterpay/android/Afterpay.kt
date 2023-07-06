@@ -60,7 +60,7 @@ object Afterpay {
         get() = Brand.forLocale(locale)
 
     internal val language: Locale?
-        get() = getRegionLanguage(locale, Locale.getDefault())
+        get() = getRegionLanguage(locale, configuration?.consumerLocale ?: Locale.getDefault())
 
     internal val enabled: Boolean
         get() = language != null
@@ -203,6 +203,7 @@ object Afterpay {
         currencyCode: String,
         locale: Locale,
         environment: AfterpayEnvironment,
+        consumerLocale: Locale? = null,
     ) {
         configuration = Configuration(
             minimumAmount = minimumAmount?.toBigDecimal(),
@@ -210,6 +211,7 @@ object Afterpay {
             currency = Currency.getInstance(currencyCode),
             locale = locale.clone() as Locale,
             environment = environment,
+            consumerLocale = consumerLocale,
         ).also { validateConfiguration(it) }
     }
 

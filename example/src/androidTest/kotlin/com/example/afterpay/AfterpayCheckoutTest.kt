@@ -52,7 +52,7 @@ class AfterpayCheckoutTest {
 
     private val destinationObserver =
         NavController.OnDestinationChangedListener { _, destination, _ ->
-            idlingResource.isIdleNow(destination.id == NavGraph.dest.receipt)
+            idlingResource.isIdleNow(destination.id == NavGraph.Dest.receipt)
         }
 
     @Before

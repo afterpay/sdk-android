@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.onEach
 class DetailsFragment : Fragment() {
 
     private val resultData: CheckoutV3Data
-        get() = requireNotNull(arguments?.getParcelable(NavGraph.args.result_data_v3))
+        get() = requireNotNull(arguments?.getParcelable(NavGraph.Args.result_data_v3))
 
     private val viewModel by viewModels<DetailsViewModel> { DetailsViewModel.factory(resultData) }
 
@@ -35,7 +35,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(NavGraph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.Action.back_to_shopping)
         }
 
         val cardDetails = resultData.cardDetails

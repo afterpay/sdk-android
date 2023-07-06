@@ -23,10 +23,10 @@ class CashReceiptFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigate(NavGraph.action.back_to_shopping)
+            findNavController().navigate(NavGraph.Action.back_to_shopping)
         }
 
-        val responseData = requireNotNull(arguments?.get(NavGraph.args.cash_response_data) as CashData)
+        val responseData = requireNotNull(arguments?.get(NavGraph.Args.cash_response_data) as CashData)
         val (cashTag, amount, grantId) = responseData
 
         val cashTagText = view.findViewById<TextView>(R.id.cash_receipt_tag_text)

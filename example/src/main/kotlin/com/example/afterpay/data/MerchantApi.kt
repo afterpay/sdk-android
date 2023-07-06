@@ -8,6 +8,6 @@ interface MerchantApi {
     @GET("configuration")
     suspend fun configuration(): ConfigurationResponse
 
-    @POST("checkouts")
+    @POST("checkout")
     suspend fun checkout(@Body request: CheckoutRequest): CheckoutResponse
 }
