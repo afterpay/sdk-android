@@ -84,7 +84,6 @@ class AfterpayInstalmentLocaleTest {
     fun `unavailable instalment in fr-CA locale`() {
         val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.FR_CA)
 
-
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
         assertEquals("10 $", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)

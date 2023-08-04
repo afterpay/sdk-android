@@ -47,7 +47,7 @@ class AfterpayEnabled {
 
     @Test
     fun `Afterpay is enabled for merchant locales`() {
-        for(locale in validMerchantLocales) {
+        for (locale in validMerchantLocales) {
             Afterpay.setConfiguration(
                 minimumAmount = "10.00",
                 maximumAmount = "1000.00",

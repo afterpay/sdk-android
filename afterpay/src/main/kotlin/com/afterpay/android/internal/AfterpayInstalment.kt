@@ -33,7 +33,7 @@ internal sealed class AfterpayInstalment {
                 currencyLocales.isEmpty() -> {
                     return NotAvailable(
                         minimumAmount = null,
-                        maximumAmount = "0"
+                        maximumAmount = "0",
                     )
                 }
                 currencyLocales.count() == 1 -> currencyLocales.first()

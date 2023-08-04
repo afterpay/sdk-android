@@ -13,7 +13,7 @@ class AfterpayTest {
         Locale.ITALY,
         Locale.FRANCE,
         Locale("es", "ES"),
-        Locale.JAPAN
+        Locale.JAPAN,
     )
 
     @Test
@@ -119,7 +119,7 @@ class AfterpayTest {
     @Test
     fun `setConfiguration throws for a locale not in the valid set`() {
         assertThrows(IllegalArgumentException::class.java) {
-            for(locale in invalidMerchantLocales) {
+            for (locale in invalidMerchantLocales) {
                 Afterpay.setConfiguration(
                     minimumAmount = "10.00",
                     maximumAmount = "1000.00",
