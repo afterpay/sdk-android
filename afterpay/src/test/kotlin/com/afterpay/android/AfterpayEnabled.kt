@@ -12,8 +12,8 @@ class AfterpayEnabled {
         Locales.EN_AU,
         Locales.EN_CA,
         Locales.EN_GB,
-        Locales.EN_US,
         Locales.EN_NZ,
+        Locales.EN_US,
         Locales.FR_CA,
     )
 
