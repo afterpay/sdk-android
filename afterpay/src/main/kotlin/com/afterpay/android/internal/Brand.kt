@@ -8,15 +8,12 @@ import com.afterpay.android.internal.Locales.EN_CA
 import com.afterpay.android.internal.Locales.EN_GB
 import com.afterpay.android.internal.Locales.EN_NZ
 import com.afterpay.android.internal.Locales.EN_US
-import com.afterpay.android.internal.Locales.ES_ES
 import com.afterpay.android.internal.Locales.FR_CA
-import com.afterpay.android.internal.Locales.FR_FR
-import com.afterpay.android.internal.Locales.IT_IT
 import java.util.Locale
 
 private val brandLocales = mapOf(
     setOf(EN_AU, EN_CA, FR_CA, EN_NZ, EN_US) to Brand.AFTERPAY,
-    setOf(EN_GB, IT_IT, FR_FR, ES_ES) to Brand.CLEARPAY,
+    setOf(EN_GB) to Brand.CLEARPAY,
 )
 
 internal enum class Brand(

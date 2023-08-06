@@ -47,7 +47,7 @@ object Afterpay {
         get() = getRegionLanguage(locale, configuration?.consumerLocale ?: Locale.getDefault())
 
     internal val enabled: Boolean
-        get() = language != null
+        get() = language != null && configuration?.locale != null
 
     internal val strings: AfterpayString
         get() = AfterpayString.forLocale()

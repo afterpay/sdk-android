@@ -19,6 +19,10 @@ class AfterpayInstalmentLocaleTest {
 
     private val oneHundredAndTwenty = 120.toBigDecimal()
 
+    private val itLocale = Locale.ITALY
+    private val frLocale = Locale.FRANCE
+    private val esLocale = Locale("es", "ES")
+
     @Test
     fun `available instalment in en-AU locale`() {
         val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.EN_AU)
@@ -28,7 +32,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -40,7 +43,7 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
@@ -52,7 +55,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -64,7 +66,7 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
@@ -76,7 +78,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40,00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -88,7 +89,7 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
@@ -100,7 +101,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -112,7 +112,7 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
@@ -124,7 +124,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("$30.00", instalments.nzd.instalmentAmount)
         assertEquals("$30.00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -136,7 +135,7 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
@@ -148,7 +147,6 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£30.00", instalments.gbp.instalmentAmount)
         assertEquals("NZ$30.00", instalments.nzd.instalmentAmount)
         assertEquals("$30.00", instalments.usd.instalmentAmount)
-        assertEquals("40.00€", instalments.eur.instalmentAmount)
     }
 
     @Test
@@ -160,79 +158,76 @@ class AfterpayInstalmentLocaleTest {
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("NZ$10", instalments.nzd.minimumAmount)
         assertEquals("$10", instalments.usd.minimumAmount)
-        assertEquals("10€", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
     fun `available instalment in it-IT locale`() {
-        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.IT_IT)
+        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, itLocale)
 
         assertEquals("$30,00 AUD", instalments.aud.instalmentAmount)
         assertEquals("$30,00 CAD", instalments.cad.instalmentAmount)
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     @Test
     fun `unavailable instalment in it-IT locale`() {
-        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.IT_IT)
+        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, itLocale)
 
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
         assertEquals("$10 CAD", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10 €", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
     fun `available instalment in fr-FR locale`() {
-        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.FR_FR)
+        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, frLocale)
 
         assertEquals("$30,00 AUD", instalments.aud.instalmentAmount)
         assertEquals("$30,00 CAD", instalments.cad.instalmentAmount)
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     @Test
     fun `unavailable instalment in fr-FR locale`() {
-        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.FR_FR)
+        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, frLocale)
 
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
         assertEquals("$10 CAD", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10 €", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     @Test
     fun `available instalment in es-ES locale`() {
-        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.ES_ES)
+        val instalments = createAllAvailableInstalments(oneHundredAndTwenty, esLocale)
 
         assertEquals("$30,00 AUD", instalments.aud.instalmentAmount)
         assertEquals("$30,00 CAD", instalments.cad.instalmentAmount)
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
-        assertEquals("40,00 €", instalments.eur.instalmentAmount)
     }
 
     @Test
     fun `unavailable instalment in es-ES locale`() {
-        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.ES_ES)
+        val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, esLocale)
 
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
         assertEquals("$10 CAD", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
-        assertEquals("10 €", instalments.eur.minimumAmount)
+        assertEquals(null, instalments.eur.minimumAmount)
     }
 
     private data class AllAvailableInstallments(
@@ -241,7 +236,6 @@ class AfterpayInstalmentLocaleTest {
         val gbp: AfterpayInstalment.Available,
         val nzd: AfterpayInstalment.Available,
         val usd: AfterpayInstalment.Available,
-        val eur: AfterpayInstalment.Available,
     )
 
     private data class AllUnavailableInstallments(
@@ -260,7 +254,6 @@ class AfterpayInstalmentLocaleTest {
             gbp = availableInstalment(amount, poundSterling, locale),
             nzd = availableInstalment(amount, newZealandDollar, locale),
             usd = availableInstalment(amount, unitedStatesDollar, locale),
-            eur = availableInstalment(amount, euro, locale),
         )
     }
 
