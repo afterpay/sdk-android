@@ -208,9 +208,9 @@ The `Approved` state will contain a **Grants list** object associated with it an
 
 [cash-on-maven]: https://central.sonatype.com/artifact/app.cash.paykit/core/1.0.3/overview
 [configure-afterpay]: ../configuring-the-sdk
-[sandbox-app]: https://cashapp-pay.stoplight.io/docs/api/technical-documentation/sandbox/sandbox-app
+[sandbox-app]: https://developers.cash.app/docs/api/technical-documentation/sandbox/sandbox-app
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters
 [example-server-props]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L26-L27
 [api-reference-props]: https://developers.afterpay.com/afterpay-online/reference/javascript-afterpayjs#redirect-method
-[cash-button-docs]: https://cashapp-pay.stoplight.io/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashapppaybutton
+[cash-button-docs]: https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashapppaybutton
 [create-checkout-endpoint-docs]: https://developers.afterpay.com/afterpay-online/reference/create-checkout-1
