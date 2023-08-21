@@ -34,13 +34,13 @@ With our latest enhancements, you can now support taking Cash App Pay payments u
 You can get the the latest version of the SDK from Maven. This is the import definition using Gradle:
 
 ```gradle
-implementation "app.cash.paykit:core:2.0.0"
+implementation "app.cash.paykit:core:2.3.0"
 ```
 
 For definitions of other build systems, see [Cash App Pay Kit on Maven Central][cash-on-maven]{:target="_blank"}.
 
 {: .info }
-> Version `v2.0.0` of the SDK size is `12.3 kB`.
+> Version `v2.3.0` of the SDK size is `12.3 kB`.
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
@@ -212,5 +212,5 @@ The `Approved` state will contain a **Grants list** object associated with it an
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters
 [example-server-props]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L26-L27
 [api-reference-props]: https://developers.afterpay.com/afterpay-online/reference/javascript-afterpayjs#redirect-method
-[cash-button-docs]: https://cashapp-pay.stoplight.io/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashpaykitbutton
+[cash-button-docs]: https://cashapp-pay.stoplight.io/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashapppaybutton
 [create-checkout-endpoint-docs]: https://developers.afterpay.com/afterpay-online/reference/create-checkout-1
