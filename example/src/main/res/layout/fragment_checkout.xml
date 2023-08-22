@@ -199,7 +199,8 @@
 
     </ScrollView>
 
-    <app.cash.paykit.core.ui.CashAppPayLightButton
+    <app.cash.paykit.core.ui.CashAppPayButton
+        style="@style/CAPButtonStyle.Light"
         android:id="@+id/cart_button_cash"
         android:layout_height="54dp"
         android:layout_marginHorizontal="24dp"
