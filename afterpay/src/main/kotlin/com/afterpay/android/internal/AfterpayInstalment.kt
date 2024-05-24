@@ -31,6 +31,12 @@ internal sealed class AfterpayInstalment {
             }
 
             val currencyLocale: Locale = when {
+                currencyLocales.isEmpty() -> {
+                    return NotAvailable(
+                        minimumAmount = null,
+                        maximumAmount = "0",
+                    )
+                }
                 currencyLocales.count() == 1 -> currencyLocales.first()
                 currencyLocales.contains(configuration.locale) -> configuration.locale
                 else -> Locales.validSet.first { Currency.getInstance(it) == configuration.currency }
@@ -41,7 +47,6 @@ internal sealed class AfterpayInstalment {
 
             val usCurrencySymbol = Currency.getInstance(Locales.EN_US).getSymbol(Locales.EN_US)
             val gbCurrencySymbol = Currency.getInstance(Locales.EN_GB).getSymbol(Locales.EN_GB)
-            val euCurrencySymbol = Currency.getInstance(Locales.FR_FR).getSymbol(Locales.FR_FR)
 
             val currencyFormatter = (NumberFormat.getCurrencyInstance(clientLocale) as DecimalFormat).apply {
                 this.currency = configuration.currency
@@ -49,10 +54,6 @@ internal sealed class AfterpayInstalment {
 
             if (clientLocale == Locales.EN_US) {
                 currencyFormatter.apply {
-                    when (currencySymbol) {
-                        euCurrencySymbol -> this.applyPattern("#,##0.00¤")
-                    }
-
                     decimalFormatSymbols = decimalFormatSymbols.apply {
                         this.currencySymbol = when (configuration.currency) {
                             Currency.getInstance(Locales.EN_AU) -> "A$"
@@ -72,7 +73,6 @@ internal sealed class AfterpayInstalment {
                     when (currencySymbol) {
                         usCurrencySymbol -> this.applyPattern("¤#,##0.00 ¤¤")
                         gbCurrencySymbol -> this.applyPattern("¤#,##0.00")
-                        euCurrencySymbol -> this.applyPattern("#,##0.00¤")
                     }
                 }
             }
@@ -94,10 +94,7 @@ internal sealed class AfterpayInstalment {
         }
 
         fun numberOfInstalments(currency: Currency): Int {
-            return when (currency.currencyCode) {
-                "EUR" -> 3
-                else -> 4
-            }
+            return 4
         }
     }
 }

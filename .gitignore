@@ -82,6 +82,9 @@ obj/
 .idea/gradle.xml
 .idea/jarRepositories.xml
 .idea/runConfigurations.xml
+.idea/deploymentTargetDropDown.xml
+.idea/kotlinc.xml
+.idea/appInsightsSettings.xml
 
 # OS-specific files
 .DS_Store
