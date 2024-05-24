@@ -221,7 +221,7 @@ class CheckoutFragment : Fragment() {
                                     when (validationResult) {
                                         is CashAppValidationResponse.Success -> {
                                             val responseData = CashData(
-                                                cashTag = customerResponseData.customerProfile?.cashTag ?: "unknown",
+                                                cashTag = customerResponseData.customerProfile?.cashTag?.toString() ?: "unknown",
                                                 amount = (
                                                     grant.action.amount_cents?.toBigDecimal()
                                                         ?.divide(centsDivisor.toBigDecimal())

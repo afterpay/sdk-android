@@ -8,9 +8,6 @@ private val validRegionLanguages = mapOf(
     Locales.EN_NZ.country to setOf(Locales.EN_NZ),
     Locales.EN_US.country to setOf(Locales.EN_US),
     Locales.EN_CA.country to setOf(Locales.EN_CA, Locales.FR_CA),
-    Locales.FR_FR.country to setOf(Locales.FR_FR, Locales.EN_GB),
-    Locales.IT_IT.country to setOf(Locales.IT_IT, Locales.EN_GB),
-    Locales.ES_ES.country to setOf(Locales.ES_ES, Locales.EN_GB),
 )
 
 internal object Locales {
@@ -20,9 +17,6 @@ internal object Locales {
     val EN_NZ: Locale = Locale("en", "NZ")
     val EN_GB: Locale = Locale.UK
     val EN_US: Locale = Locale.US
-    val IT_IT: Locale = Locale.ITALY
-    val FR_FR: Locale = Locale.FRANCE
-    val ES_ES: Locale = Locale("es", "ES")
 
     val validSet = setOf(
         EN_AU,
@@ -31,9 +25,6 @@ internal object Locales {
         EN_GB,
         EN_NZ,
         EN_US,
-        IT_IT,
-        FR_FR,
-        ES_ES,
     )
 }
 

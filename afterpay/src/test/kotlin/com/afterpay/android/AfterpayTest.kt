@@ -1,5 +1,6 @@
 package com.afterpay.android
 
+import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import java.util.Locale
@@ -7,6 +8,13 @@ import java.util.Locale
 class AfterpayTest {
 
     private val environment = AfterpayEnvironment.SANDBOX
+
+    private val invalidMerchantLocales: Array<Locale> = arrayOf(
+        Locale.ITALY,
+        Locale.FRANCE,
+        Locale("es", "ES"),
+        Locale.JAPAN,
+    )
 
     @Test
     fun `setConfiguration does not throw for valid configuration`() {
@@ -111,13 +119,17 @@ class AfterpayTest {
     @Test
     fun `setConfiguration throws for a locale not in the valid set`() {
         assertThrows(IllegalArgumentException::class.java) {
-            Afterpay.setConfiguration(
-                minimumAmount = "10.00",
-                maximumAmount = "100.00",
-                currencyCode = "AUD",
-                locale = Locale.JAPAN,
-                environment = environment,
-            )
+            for (locale in invalidMerchantLocales) {
+                Afterpay.setConfiguration(
+                    minimumAmount = "10.00",
+                    maximumAmount = "1000.00",
+                    currencyCode = "USD",
+                    locale = locale,
+                    environment = environment,
+                )
+
+                Assert.assertEquals(false, Afterpay.enabled)
+            }
         }
     }
 }
