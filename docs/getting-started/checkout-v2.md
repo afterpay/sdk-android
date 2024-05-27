@@ -6,9 +6,16 @@ nav_order: 3
 ---
 
 # Checkout V2
+{: .no_toc }
 
-{: .alert }
-> Checkout V2 is not available at this time for the following regions: France, Italy, Spain.
+<details markdown="block" open>
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+- TOC
+{:toc}
+</details>
 
 Checkout V2 requires setting options of type `AfterpayCheckoutV2Options` and creating handler methods for user interactions.
 
@@ -75,6 +82,52 @@ class ExampleActivity: Activity {
         }
     }
 }
+```
+
+## Sequence Diagram
+
+The below diagram describes the happy path.
+
+``` mermaid
+sequenceDiagram
+  participant App
+  participant Afterpay SDK
+  participant Proxy Server
+  participant Afterpay API
+
+  Note over App,Afterpay API: Setup
+
+  App->>Afterpay SDK: Configure the SDK
+
+  App->>Afterpay SDK: Setup checkout handlers
+
+  Note over App,Afterpay API: Create checkout and Capture
+
+  App->>Proxy Server: Get Checkout Token Request
+
+  Proxy Server->>Afterpay API: Create Checkout Request
+  Note over Proxy Server,Afterpay API: Ensure same environment<br>as Afterpay SDK config
+
+  Afterpay API-->>Proxy Server: Create Checkout Response
+  Note over Afterpay API,Proxy Server: Body contains a Token
+
+  Proxy Server-->>App: Get Token Response
+
+  App->>Afterpay SDK: Launch the checkout<br>with the Token
+
+  Note over App,Afterpay API: Consumer confirms Afterpay checkout
+
+  Afterpay SDK-->>App: Checkout result
+
+  App->>Proxy Server: Capture request
+
+  Proxy Server->>Afterpay API: Capture request
+
+  Afterpay API-->>Proxy Server: Capture response
+
+  Proxy Server-->>App: Capture Response
+
+  App->>App: Handle response
 ```
 
 [example-server-param]: https://github.com/afterpay/sdk-example-server/blob/5781eadb25d7f5c5d872e754fdbb7214a8068008/src/routes/checkout.ts#L28

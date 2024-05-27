@@ -26,3 +26,6 @@ callouts:
   info:
     title: Info
     color: blue
+
+mermaid:
+  version: "10.9.1"
