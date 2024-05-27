@@ -22,6 +22,7 @@ Afterpay.setConfiguration(
     currency = configuration.maximum.currency,
     locale = Locale.US,
     environment = AfterpayEnvironment.SANDBOX
+    consumerLocale = Locale.ENGLISH // optional. overrides the device language
 )
 ```
 
