@@ -24,23 +24,6 @@ class AfterpayCashAppJwtTest {
     private val validJwtValidPayload = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjRjYmMwNzY4NGQxYzRlZmIzMGY2YjA1M2VhZjM1Zjc1In0.eyJhbW91bnQiOnsiYW1vdW50IjoiODAuOCIsImN1cnJlbmN5IjoiVVNEIiwic3ltYm9sIjoiJCJ9LCJ0b2tlbiI6IjEyMyIsImV4dGVybmFsTWVyY2hhbnRJZCI6Im1lcmNoYW50X2FiYzEyMyIsInJlZGlyZWN0VXJsIjoiaHR0cHM6Ly9leGFtcGxlLmNvbSJ9.OJo_w8zisdC5572lxfAP2TYf434G_MH9KqpO0nInTabhTvJXIrtfWJsW2Ic4YupN0BfiRKUMdxAAD9f3jtszHQ"
 
     /**
-     * JWT was created with the following payload
-     *
-     * {
-     *   "amount": {
-     *       "amount": "80.8",
-     *       "currency": "USD",
-     *       "symbol": "$"
-     *   },
-     *   "token": "123",
-     *   "externalMerchantId": "merchant_abc123",
-     *   "redirectUrl": "https://example.com",
-     *   "randomKey": "122312dalfdj"
-     * }
-     */
-    private val validJwtUnknownKeys = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiIsImtpZCI6IjRjYmMwNzY4NGQxYzRlZmIzMGY2YjA1M2VhZjM1Zjc1In0.eyJhbW91bnQiOnsiYW1vdW50IjoiODAuOCIsImN1cnJlbmN5IjoiVVNEIiwic3ltYm9sIjoiJCJ9LCJ0b2tlbiI6IjEyMyIsImV4dGVybmFsTWVyY2hhbnRJZCI6Im1lcmNoYW50X2FiYzEyMyIsInJlZGlyZWN0VXJsIjoiaHR0cHM6Ly9leGFtcGxlLmNvbSIsInJhbmRvbUtleSI6IjEyMjMxMmRhbGZkaiJ9.XAr-rWeFDgDy7DgeZKdynU_NkCijTKpLcgnz3p-cgmmFW8QCDkHqGgViosA3DYsMLPY3aj-ngpxfkQS83pHLoQ"
-
-    /**
      * JWT was created randomly
      */
     private val invalidJwtRandomGenerated = "aw4j3kj32.2nkjgsjfkbr1kjbwekjbwejkbqjerbwrkb.ae4rargaggr"
