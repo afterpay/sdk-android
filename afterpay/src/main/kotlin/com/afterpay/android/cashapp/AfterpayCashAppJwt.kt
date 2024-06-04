@@ -2,7 +2,6 @@ package com.afterpay.android.cashapp
 
 import android.util.Base64
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @Serializable
@@ -39,7 +38,8 @@ data class AfterpayCashAppJwt(
                 val split = jwt.split(".").toTypedArray()
                 val jwtBody = getJson(split[1])
 
-                Json.decodeFromString(jwtBody)
+                val json = Json { ignoreUnknownKeys = true }
+                json.decodeFromString(jwtBody)
             }
         }
 
