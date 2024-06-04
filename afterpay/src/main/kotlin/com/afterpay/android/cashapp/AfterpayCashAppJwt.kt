@@ -2,7 +2,6 @@ package com.afterpay.android.cashapp
 
 import android.util.Base64
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 @Serializable

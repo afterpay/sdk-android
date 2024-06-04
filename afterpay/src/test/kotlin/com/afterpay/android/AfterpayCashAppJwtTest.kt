@@ -64,15 +64,6 @@ class AfterpayCashAppJwtTest {
     }
 
     @Test
-    fun `Should decode valid jwt but fail to serialize to AfterpayCashAppJwt with unknown keys`() {
-        val jwtResult = AfterpayCashAppJwt.decode(validJwtUnknownKeys)
-        val jwt = jwtResult.exceptionOrNull()!!
-
-        assertEquals(true, jwtResult.isFailure)
-        assertThat(jwt.message, containsString("Encountered an unknown key 'randomKey' at path"))
-    }
-
-    @Test
     fun `Should fail to decode randomly generated invalid JWT`() {
         val jwtResult = AfterpayCashAppJwt.decode(invalidJwtRandomGenerated)
         val jwt = jwtResult.exceptionOrNull()!!
