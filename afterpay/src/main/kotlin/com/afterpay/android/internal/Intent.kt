@@ -6,7 +6,6 @@ import com.afterpay.android.AfterpayCheckoutV3Options
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.model.CheckoutV3Data
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.lang.Exception
@@ -59,8 +58,9 @@ internal fun Intent.putResultDataV3(resultData: CheckoutV3Data): Intent {
 }
 
 internal fun Intent.getResultDataExtra(): CheckoutV3Data? {
-    val json = getStringExtra(AfterpayIntent.RESULT_DATA_V3) ?: return null
-    return Json.decodeFromString(json)
+    val data = getStringExtra(AfterpayIntent.RESULT_DATA_V3) ?: return null
+    val json = Json { ignoreUnknownKeys = true }
+    return json.decodeFromString(data)
 }
 
 internal fun Intent.putCancellationStatusExtra(status: CancellationStatus): Intent =

@@ -2,7 +2,6 @@ package com.afterpay.android.internal
 
 import com.afterpay.android.BuildConfig
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.InvalidObjectException
@@ -12,12 +11,13 @@ import javax.net.ssl.HttpsURLConnection
 import kotlin.Exception
 
 internal object ApiV3 {
+    private val json = Json { ignoreUnknownKeys = true }
 
     internal inline fun <reified T, reified B> request(url: URL, method: HttpVerb, body: B): Result<T> {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
-            val payload = (body as? String) ?: Json.encodeToString(body)
+            val payload = (body as? String) ?: json.encodeToString(body)
 
             val outputStreamWriter = OutputStreamWriter(connection.outputStream)
             outputStreamWriter.write(payload)
@@ -26,13 +26,13 @@ internal object ApiV3 {
             // TODO: Status code checking, error object decoding, bypass if return type is Unit
             val data = connection.inputStream.bufferedReader().readText()
             connection.inputStream.close()
-            val result = Json.decodeFromString<T>(data)
+            val result = json.decodeFromString<T>(data)
             Result.success(result)
         } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 connection.errorStream.close()
-                val result = Json.decodeFromString<ApiErrorV3>(data)
+                val result = json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
                 Result.failure(exception)
@@ -46,7 +46,7 @@ internal object ApiV3 {
         val connection = url.openConnection() as HttpsURLConnection
         return try {
             configure(connection, method)
-            val payload = (body as? String) ?: Json.encodeToString(body)
+            val payload = (body as? String) ?: json.encodeToString(body)
 
             val outputStreamWriter = OutputStreamWriter(connection.outputStream)
             outputStreamWriter.write(payload)
@@ -61,7 +61,7 @@ internal object ApiV3 {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 connection.errorStream.close()
-                val result = Json.decodeFromString<ApiErrorV3>(data)
+                val result = json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
                 Result.failure(exception)
@@ -78,13 +78,13 @@ internal object ApiV3 {
 
             val data = connection.inputStream.bufferedReader().readText()
             connection.inputStream.close()
-            val result = Json.decodeFromString<T>(data)
+            val result = json.decodeFromString<T>(data)
             Result.success(result)
         } catch (exception: Exception) {
             try {
                 val data = connection.errorStream.bufferedReader().readText()
                 connection.errorStream.close()
-                val result = Json.decodeFromString<ApiErrorV3>(data)
+                val result = json.decodeFromString<ApiErrorV3>(data)
                 Result.failure(InvalidObjectException(result.message))
             } catch (_: Exception) {
                 Result.failure(exception)
