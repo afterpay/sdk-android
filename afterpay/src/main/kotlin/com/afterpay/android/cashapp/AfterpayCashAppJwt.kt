@@ -36,10 +36,11 @@ data class AfterpayCashAppJwt(
     companion object {
         fun decode(jwt: String): Result<AfterpayCashAppJwt> {
             return runCatching {
+                val json = Json { ignoreUnknownKeys = true }
                 val split = jwt.split(".").toTypedArray()
                 val jwtBody = getJson(split[1])
 
-                Json.decodeFromString(jwtBody)
+                json.decodeFromString(jwtBody)
             }
         }
 
