@@ -173,6 +173,7 @@ class CheckoutFragment : Fragment() {
                                 ),
                             ),
                             buyNow = command.buyNow,
+                            isCashApp = false,
                         )
                         startActivityForResult(intent, CHECKOUT_WITH_AFTERPAY_V3)
                     }

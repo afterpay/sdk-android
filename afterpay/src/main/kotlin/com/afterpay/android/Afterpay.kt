@@ -262,6 +262,8 @@ object Afterpay {
      * Returns an [Intent] for the given [context] and options that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
      * Afterpay checkout.
+     *
+     * @param isCashApp Should this checkout be backed by Cash App (true) or Afterpay (false)
      */
     @JvmStatic
     @JvmOverloads
@@ -271,6 +273,7 @@ object Afterpay {
         orderTotal: OrderTotal,
         items: Array<CheckoutV3Item> = arrayOf(),
         buyNow: Boolean,
+        isCashApp: Boolean,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): Intent {
         requireNotNull(configuration) {
@@ -281,6 +284,7 @@ object Afterpay {
             orderTotal = orderTotal,
             items = items,
             configuration = configuration,
+            isCashAppPay = isCashApp,
         )
         val options = AfterpayCheckoutV3Options(
             buyNow = buyNow,
