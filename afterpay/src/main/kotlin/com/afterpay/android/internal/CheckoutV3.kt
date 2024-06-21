@@ -28,6 +28,7 @@ internal object CheckoutV3 {
         val singleUseCardToken: String,
     )
 
+
     @Serializable
     data class Request(
         val shopDirectoryId: String,
@@ -42,11 +43,13 @@ internal object CheckoutV3 {
         val merchant: Merchant,
         val shipping: Contact?,
         val billing: Contact?,
+        val isCashAppPay: Boolean?,
     ) {
         companion object {
             @JvmStatic
             fun create(
                 consumer: CheckoutV3Consumer,
+                isCashAppPay: Boolean?,
                 orderTotal: OrderTotal,
                 items: Array<CheckoutV3Item>,
                 configuration: CheckoutV3Configuration,
@@ -75,6 +78,8 @@ internal object CheckoutV3 {
                     ),
                     shipping = Contact.create(consumer.shippingInformation),
                     billing = Contact.create(consumer.billingInformation),
+                    // server only handles true or null
+                    isCashAppPay = isCashAppPay?.let { if (!it) null else true },
                 )
             }
         }
