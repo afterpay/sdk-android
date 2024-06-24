@@ -5,47 +5,19 @@ minSdk = "24"
 java = "1.8"
 buildTools = "30.0.3"
 
-testCore = "1.5.0"
-espresso = "3.5.1"
-junitVersion = "1.1.5"
-material = "1.9.0"
 androidGradlePlugin = "7.4.2"
 kotlin = "1.7.20"
 kotlinx_coroutines = "1.7.1"
 kotlinx_serialization = "1.5.1"
 maven_publish_plugin = "0.17.0"
-androidx_activity = "1.7.2"
-androidx_constraint_layout = "2.1.4"
-androidx_fragment = "1.6.0"
 androidx_lifecycle = "2.6.1"
 app_compat = "1.6.1"
 core_ktx = "1.10.1"
 junit = "4.13.2"
 mockk = "1.13.5"
-moshi = "1.15.0"
-moshiKotlin = "1.15.0"
-navigationFragmentKtx = "2.6.0"
-okhttp = "5.0.0-alpha.10"
-orchestrator = "1.4.2"
-recyclerview = "1.3.0"
-retrofit = "2.9.0"
-runner = "1.5.2"
-threetenabp = "1.4.6"
 tools_desugar_sdk = "1.1.5"
-uiautomator = "2.2.0"
 
 [libraries]
-converterMoshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
-espressoContrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espresso" }
-espressoCore = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
-espressoIdlingResource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espresso" }
-espressoWeb = { module = "androidx.test.espresso:espresso-web", version.ref = "espresso" }
-extJunit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
-
-paykit = "app.cash.paykit:core:2.3.0"
-
-kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
-
 kotlinxCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx_coroutines" }
 kotlinCoroutinesJdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx_coroutines" }
 kotlinCoroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
@@ -53,30 +25,12 @@ kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serializatio
 
 androidToolsDesugarJdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "tools_desugar_sdk" }
 
-androidXActivityKtx = { module = "androidx.activity:activity-ktx", version.ref = "androidx_activity" }
 androidxAppcompat = { module = "androidx.appcompat:appcompat", version.ref = "app_compat" }
-androidXConstraintLayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx_constraint_layout" }
 androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
-androidXFragmentKtx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx_fragment" }
-androidXLifecycleLivedataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx_lifecycle" }
 androidxLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx_lifecycle" }
-androidXLifecycleViewmodelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx_lifecycle" }
-androidxNavigationFragmentKtx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
-androidxNavigationUiKtx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
-androidXRecyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
-androidXTestCore = { module = "androidx.test:core", version.ref = "testCore" }
-androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "orchestrator" }
-androidXTestRunner = { module = "androidx.test:runner", version.ref = "runner" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
-material = { module = "com.google.android.material:material", version.ref = "material" }
 mockK = { module = "io.mockk:mockk", version.ref = "mockk" }
-moshiKotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
-okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-threetenabp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp" }
-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
