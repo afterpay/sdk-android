@@ -85,6 +85,8 @@ obj/
 .idea/deploymentTargetDropDown.xml
 .idea/kotlinc.xml
 .idea/appInsightsSettings.xml
+.idea/other.xml
+.idea/deploymentTargetSelector.xml
 
 # OS-specific files
 .DS_Store
