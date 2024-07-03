@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlinxCoroutinesAndroid)
+    implementation(libs.kotlinCoroutinesAndroid)
     implementation(libs.kotlinSerializationJson)
     implementation(libs.kotlinCoroutinesJdk8)
     implementation(libs.androidxLifecycleRuntimeKtx)

@@ -21,5 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AfterpaySDK"
 include(":afterpay")
+include(":sample")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

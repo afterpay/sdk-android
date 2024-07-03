@@ -204,6 +204,8 @@ object Afterpay {
      * Results in a [NumberFormatException] if an amount is not a valid representation of a number
      * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if
      * the minimum and maximum amount isn't correctly ordered, or if the locale is not supported.
+     *
+     * Must be called from main thread
      */
     @JvmStatic
     fun setConfiguration(
