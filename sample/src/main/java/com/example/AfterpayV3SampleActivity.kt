@@ -133,7 +133,7 @@ class AfterpayV3SampleActivity : AppCompatActivity() {
                              * to fetch them. You will need to pass Configuration to Afterpay on each app
                              * restart (before first transaction) by calling .setConfiguration()
                              *
-                             * Only once this function is called, will Afterpay enable the button.
+                             * Once this function is called, Afterpay will enable the button.
                              */
                             Log.d(tag, "Fetched merchant configs")
                             Afterpay.setConfigurationV3(merchantConfiguration)

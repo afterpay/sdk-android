@@ -70,7 +70,7 @@ internal fun createConsumer(): CheckoutV3Consumer {
         override val givenNames: String?
             get() = "Bob"
         override val phoneNumber: String?
-            get() = "4041234567"
+            get() = customerPhonenumber
         override val shippingInformation: CheckoutV3Contact?
             get() = createShippingInfo()
         override val surname: String?
@@ -99,7 +99,7 @@ internal fun createBillingInfo(): CheckoutV3Contact? {
             get() = "Bob"
             set(value) {}
         override var phoneNumber: String?
-            get() = null
+            get() = customerPhonenumber
             set(value) {}
         override var postcode: String?
             get() = "post code"
@@ -131,7 +131,7 @@ internal fun createShippingInfo(): CheckoutV3Contact? {
             get() = "Bob"
             set(value) {}
         override var phoneNumber: String?
-            get() = null
+            get() = customerPhonenumber
             set(value) {}
         override var postcode: String?
             get() = "post code"
@@ -143,3 +143,4 @@ internal fun createShippingInfo(): CheckoutV3Contact? {
 }
 
 val customerEmail = "example@squareup.com"
+val customerPhonenumber = "4045551234"
