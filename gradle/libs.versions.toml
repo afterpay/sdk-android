@@ -18,6 +18,8 @@ ktlint = "0.48.2"
 material = "1.12.0"
 maven_publish_plugin = "0.17.0"
 mockk = "1.13.5"
+moshi = "1.14.0" # latest version that is compatible with kotlin 1.7.x
+retrofit = "2.9.0" # latest version that is compatible with kotlin 1.7.x
 secretsGradlePlugin = "2.0.1"
 tools_desugar_sdk = "1.1.5"
 
@@ -38,6 +40,10 @@ app-cash-paykit = "app.cash.paykit:core:2.3.0"
 junit = { module = "junit:junit", version.ref = "junit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockK = { module = "io.mockk:mockk", version.ref = "mockk" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }

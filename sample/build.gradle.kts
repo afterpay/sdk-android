@@ -56,8 +56,8 @@ android {
 
 dependencies {
     // toggle between using Maven artifact and local module
-    // implementation(projects.afterpay)
-    implementation(libs.afterpay.android)
+    implementation(projects.afterpay)
+    // implementation(libs.afterpay.android)
 
     implementation(libs.app.cash.paykit)
 
@@ -65,6 +65,15 @@ dependencies {
     implementation(libs.androidxCoreKtx)
     implementation(libs.androidxLifecycleRuntimeKtx)
     implementation(libs.material)
+
+    /**
+     * Usage of retrofit / moshi is entirely preference to interact with
+     * sample Merchant API
+     */
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.moshi)
 }
 
 secrets {
