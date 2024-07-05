@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="afterpay_url_checkout_express" translatable="false">file:///android_asset/express_checkout.html</string>
-    <string name="afterpay_url_widget" translatable="false" />
-    <string name="afterpay_url_widget_bootstrap" translatable="false">file:///android_asset/widget/bootstrap.js</string>
+    <!-- local files -->
+<!--    <string name="afterpay_url_checkout_express" translatable="false">file:///android_asset/express_checkout.html</string>-->
+<!--    <string name="afterpay_url_widget" translatable="false" />-->
+<!--    <string name="afterpay_url_widget_bootstrap" translatable="false">file:///android_asset/widget/bootstrap.js</string>-->
+
+    <!-- sandbox URLs-->
+    <string name="afterpay_url_checkout_express" translatable="false">https://static.afterpay.com/mobile-sdk/bootstrap/index.html</string>
+    <string name="afterpay_url_widget" translatable="false">https://portal.sandbox.afterpay.com/afterpay.js?merchant_key=demo</string>
+    <string name="afterpay_url_widget_bootstrap" translatable="false">https://static.sandbox.afterpay.com/mobile-sdk/bootstrap/widget-bootstrap.js</string>
 </resources>
