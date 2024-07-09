@@ -5,12 +5,16 @@ import android.content.Intent
 import androidx.annotation.WorkerThread
 import com.afterpay.android.cashapp.AfterpayCashAppCheckout
 import com.afterpay.android.cashapp.CashAppSignOrderResult
+import com.afterpay.android.cashapp.CashAppSignOrderResult.Failure
+import com.afterpay.android.cashapp.CashAppSignOrderResult.Success
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.ApiV3
 import com.afterpay.android.internal.Brand
 import com.afterpay.android.internal.CheckoutV3
+import com.afterpay.android.internal.CheckoutV3.Confirmation.CashAppPayRequest
+import com.afterpay.android.internal.CheckoutV3.Confirmation.CashAppPayResponse
 import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.getCancellationStatusExtra
@@ -23,6 +27,7 @@ import com.afterpay.android.internal.putCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.putCheckoutUrlExtra
 import com.afterpay.android.internal.putCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCheckoutV3OptionsExtra
+import com.afterpay.android.model.CheckoutV3CashAppPay
 import com.afterpay.android.model.CheckoutV3Configuration
 import com.afterpay.android.model.CheckoutV3Consumer
 import com.afterpay.android.model.CheckoutV3Data
@@ -35,14 +40,18 @@ import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import com.afterpay.android.view.AfterpayCheckoutV3Activity
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 import java.util.concurrent.CompletableFuture
+import kotlin.Result.Companion.failure
+import kotlin.Result.Companion.success
 import kotlin.properties.Delegates.observable
 
 object Afterpay {
@@ -236,6 +245,7 @@ object Afterpay {
         checkoutV2Handler = handler
     }
 
+    // region: V3
     /**
      * Sets the global checkout configuration object.
      *
@@ -259,11 +269,138 @@ object Afterpay {
     }
 
     /**
+     * Start checkout process by requesting data to pass to Cash App Pay SDK
+     *
+     * @param consumer information about customer
+     * @param orderTotal pricing information about this order
+     * @param items list of items in customer's cart
+     * @param configuration must be provided if not previously set via [setCheckoutV3Configuration]
+     */
+    suspend fun beginCheckoutV3WithCashAppPay(
+        consumer: CheckoutV3Consumer,
+        orderTotal: OrderTotal,
+        items: Array<CheckoutV3Item> = arrayOf(),
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
+    ): Result<CheckoutV3CashAppPay> {
+        requireNotNull(configuration) {
+            "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+        }
+        val checkoutRequest = CheckoutV3.Request.create(
+            consumer = consumer,
+            orderTotal = orderTotal,
+            items = items,
+            configuration = configuration,
+            isCashAppPay = true,
+        )
+
+        val checkoutResponseResult = runCatching {
+            val checkoutUrl = configuration.v3CheckoutUrl
+            val checkoutPayload = requireNotNull(Json.encodeToString(checkoutRequest))
+            return@runCatching withContext(Dispatchers.IO) {
+                ApiV3.request<CheckoutV3.Response, String>(
+                    checkoutUrl,
+                    ApiV3.HttpVerb.POST,
+                    checkoutPayload,
+                )
+            }.getOrThrow()
+        }
+
+        // requesting checkout data failed
+        checkoutResponseResult.onFailure { error: Throwable ->
+            return failure(error)
+        }
+
+        // requesting checkout data success: sign the checkout response token
+        checkoutResponseResult.onSuccess { result: CheckoutV3.Response ->
+            AfterpayCashAppCheckout.performSignPaymentRequest(result.token)
+                .let { cashAppSignOrderResult: CashAppSignOrderResult ->
+                    return when (cashAppSignOrderResult) {
+                        // signing failed
+                        is Failure -> failure(cashAppSignOrderResult.error)
+
+                        // signing success
+                        is Success -> {
+                            // map Result<CashAppSignOrderResult> to Result<CheckoutV3CashAppPay>
+                            success(
+                                CheckoutV3CashAppPay(
+                                    token = result.token,
+                                    singleUseCardToken = result.singleUseCardToken,
+                                    amount = cashAppSignOrderResult.response.amount,
+                                    redirectUri = cashAppSignOrderResult.response.redirectUri,
+                                    merchantId = cashAppSignOrderResult.response.merchantId,
+                                    brandId = cashAppSignOrderResult.response.brandId,
+                                    jwt = cashAppSignOrderResult.response.jwt,
+                                ),
+                            )
+                        }
+                    }
+                }
+        }
+
+        // should never happen, compiler doesn't know success and failure are only options
+        throw IllegalStateException()
+    }
+
+    /**
+     * Confirm that checkout was completed with Cash App Pay SDK
+     *
+     * @param customerId customer ID, received from Cash App Pay SDK
+     * @param grantId grant ID received from Cash App Pay SDK
+     * @param token  token received from  [beginCheckoutV3WithCashAppPay]
+     * @param singleUseCardToken singleUseCardToken received from  [beginCheckoutV3WithCashAppPay]
+     * @param jwt JSON web token received from [beginCheckoutV3WithCashAppPay]
+     * @param configuration must be provided if not previously set via [setCheckoutV3Configuration]
+     */
+    suspend fun confirmCheckoutV3WithCashAppPay(
+        customerId: String,
+        grantId: String,
+        token: String,
+        singleUseCardToken: String,
+        jwt: String,
+        configuration: CheckoutV3Configuration? = checkoutV3Configuration,
+    ): Result<CheckoutV3Data> {
+        return runCatching {
+            requireNotNull(configuration) {
+                "`configuration` must be set via `setCheckoutV3Configuration` or passed into this function"
+            }
+
+            val confirmUrl = configuration.v3CheckoutConfirmationUrl
+
+            val request = CashAppPayRequest(
+                token = token,
+                singleUseCardToken = singleUseCardToken,
+                cashAppPspInfo = CashAppPayRequest.CashAppPspInfo(
+                    externalCustomerId = customerId,
+                    externalGrantId = grantId,
+                    jwt = jwt,
+                ),
+            )
+
+            val response = withContext(Dispatchers.IO) {
+                ApiV3.request<CashAppPayResponse, CashAppPayRequest>(
+                    url = confirmUrl,
+                    method = ApiV3.HttpVerb.POST,
+                    body = request,
+                )
+            }.getOrThrow()
+
+            CheckoutV3Data(
+                cardDetails = response.paymentDetails.virtualCard
+                    ?: response.paymentDetails.virtualCardToken!!,
+                cardValidUntilInternal = response.cardValidUntil,
+                tokens = CheckoutV3Tokens(
+                    token = token,
+                    singleUseCardToken = singleUseCardToken,
+                    ppaConfirmToken = "", // this token is not used in Cash App flow
+                ),
+            )
+        }
+    }
+
+    /**
      * Returns an [Intent] for the given [context] and options that can be passed to
      * [startActivityForResult][android.app.Activity.startActivityForResult] to initiate the
      * Afterpay checkout.
-     *
-     * @param isCashApp Should this checkout be backed by Cash App (true) or Afterpay (false)
      */
     @JvmStatic
     @JvmOverloads
@@ -273,7 +410,6 @@ object Afterpay {
         orderTotal: OrderTotal,
         items: Array<CheckoutV3Item> = arrayOf(),
         buyNow: Boolean,
-        isCashApp: Boolean,
         configuration: CheckoutV3Configuration? = checkoutV3Configuration,
     ): Intent {
         requireNotNull(configuration) {
@@ -284,7 +420,7 @@ object Afterpay {
             orderTotal = orderTotal,
             items = items,
             configuration = configuration,
-            isCashAppPay = isCashApp,
+            isCashAppPay = false,
         )
         val options = AfterpayCheckoutV3Options(
             buyNow = buyNow,
@@ -415,4 +551,5 @@ object Afterpay {
         intent.getCancellationStatusExtraV3()?.let {
             Pair(it, intent.getCancellationStatusExtraErrorV3())
         }
+    // endregion: v3
 }

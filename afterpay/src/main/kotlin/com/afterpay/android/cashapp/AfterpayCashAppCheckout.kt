@@ -18,6 +18,37 @@ sealed class CashAppValidationResponse {
 }
 
 object AfterpayCashAppCheckout {
+    suspend fun performSignPaymentRequest(token: String): CashAppSignOrderResult {
+        runCatching {
+            signPayment(token)
+                .let { result: Result<AfterpayCashAppSigningResponse> ->
+                    result.onSuccess { response ->
+                        AfterpayCashAppJwt.decode(response.jwtToken)
+                            .onSuccess { jwtBody ->
+                                val cashApp = AfterpayCashApp(
+                                    amount = jwtBody.amount.amount.toDouble(),
+                                    redirectUri = jwtBody.redirectUrl,
+                                    merchantId = jwtBody.externalMerchantId,
+                                    brandId = response.externalBrandId,
+                                    jwt = response.jwtToken,
+                                )
+
+                                return CashAppSignOrderResult.Success(cashApp)
+                            }
+                            .onFailure {
+                                return CashAppSignOrderResult.Failure(it)
+                            }
+                    }
+                        .onFailure {
+                            return CashAppSignOrderResult.Failure(it)
+                        }
+                }
+        }
+        // should never happen, compiler doesn't know success and failure are only options
+        throw IllegalStateException()
+    }
+
+    // TODO stop using this, no need for suspend *and* callback
     suspend fun performSignPaymentRequest(token: String, complete: (CashAppSignOrderResult) -> Unit) {
         runCatching {
             signPayment(token)

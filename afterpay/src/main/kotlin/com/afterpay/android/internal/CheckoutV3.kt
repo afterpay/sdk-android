@@ -160,6 +160,25 @@ internal object CheckoutV3 {
     }
 
     object Confirmation {
+        @Serializable
+        data class CashAppPayRequest(
+            val token: String,
+            val singleUseCardToken: String,
+            val cashAppPspInfo: CashAppPspInfo,
+        ) {
+            @Serializable
+            data class CashAppPspInfo(
+                val externalCustomerId: String,
+                val externalGrantId: String,
+                val jwt: String,
+            )
+        }
+
+        @Serializable
+        data class CashAppPayResponse(
+            val paymentDetails: PaymentDetails,
+            val cardValidUntil: String?,
+        )
 
         @Serializable
         data class Response(
