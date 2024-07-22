@@ -21,13 +21,13 @@ jobs:
           distribution: 'zulu'
 
       - name: Lint
-        run: ./gradlew afterpay:lint afterpay:spotlessCheck
+        run: ./gradlew afterpay:lintDebug afterpay:ktlint
 
       - name: Unit Tests
         run: ./gradlew afterpay:testDebugUnitTest
 
   build-example:
-    name: Build Sample Project
+    name: Build Example Project
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repository
@@ -40,4 +40,4 @@ jobs:
           distribution: 'zulu'
 
       - name: Build and Lint
-        run: ./gradlew sample:buildDebug sample:lintDebug sample:spotlessCheck
+        run: ./gradlew example:buildDebug example:lintDebug example:ktlint
