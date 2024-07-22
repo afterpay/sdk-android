@@ -34,7 +34,7 @@ androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" 
 androidxLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx_lifecycle" }
 
 afterpay-android = "com.afterpay:afterpay-android:4.3.0"
-app-cash-paykit = "app.cash.paykit:core:2.3.0"
+app-cash-paykit = "app.cash.paykit:core:2.5.0"
 junit = { module = "junit:junit", version.ref = "junit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 mockK = { module = "io.mockk:mockk", version.ref = "mockk" }
