@@ -34,13 +34,13 @@ With our latest enhancements, you can now support taking Cash App Pay payments u
 You can get the the latest version of the SDK from Maven. This is the import definition using Gradle:
 
 ```gradle
-implementation "app.cash.paykit:core:2.5.0"
+implementation "app.cash.paykit:core:2.3.0"
 ```
 
 For definitions of other build systems, see [Cash App Pay Kit on Maven Central][cash-on-maven]{:target="_blank"}.
 
 {: .info }
-> Version `v2.5.0` of the SDK size is `12.3 kB`.
+> Version `v2.3.0` of the SDK size is `12.3 kB`.
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
@@ -283,7 +283,7 @@ sequenceDiagram
   App->>App: Handle payment<br>capture response
 ```
 
-[cash-on-maven]: https://central.sonatype.com/artifact/app.cash.paykit/core/2.5.0/overview
+[cash-on-maven]: https://central.sonatype.com/artifact/app.cash.paykit/core/2.3.0/overview
 [configure-afterpay]: ../configuring-the-sdk
 [sandbox-app]: https://developers.cash.app/docs/api/technical-documentation/sandbox/sandbox-app
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters
