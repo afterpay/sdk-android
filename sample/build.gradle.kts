@@ -23,6 +23,7 @@ android {
     namespace = "com.example"
 
     compileSdk = libs.versions.exampleCompileSdk.get().toInt()
+    buildToolsVersion = libs.versions.buildTools.get()
 
     buildFeatures {
         viewBinding = true
