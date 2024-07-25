@@ -57,3 +57,7 @@ dependencies {
     implementation(libs.androidxLifecycleRuntimeKtx)
     implementation(libs.material)
 }
+
+secrets {
+    defaultPropertiesFileName = "local.defaults.properties"
+}
