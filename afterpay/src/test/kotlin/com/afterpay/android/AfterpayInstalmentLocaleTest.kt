@@ -1,8 +1,23 @@
+/*
+ * Copyright (C) 2024 Afterpay
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.afterpay.android
 
 import com.afterpay.android.internal.AfterpayInstalment
-import com.afterpay.android.internal.Configuration
 import com.afterpay.android.internal.Locales
+import com.afterpay.android.model.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.math.BigDecimal
@@ -74,7 +89,7 @@ class AfterpayInstalmentLocaleTest {
         val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.FR_CA)
 
         assertEquals("$30,00 AUD", instalments.aud.instalmentAmount)
-        assertEquals("30,00 $", instalments.cad.instalmentAmount)
+        assertEquals("30,00 $ CA", instalments.cad.instalmentAmount)
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
@@ -85,7 +100,7 @@ class AfterpayInstalmentLocaleTest {
         val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.FR_CA)
 
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
-        assertEquals("10 $", instalments.cad.minimumAmount)
+        assertEquals("10 $ CA", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)

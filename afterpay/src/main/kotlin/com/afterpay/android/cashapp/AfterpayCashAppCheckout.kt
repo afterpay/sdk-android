@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2024 Afterpay
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.afterpay.android.cashapp
 
 import com.afterpay.android.Afterpay
@@ -18,6 +33,37 @@ sealed class CashAppValidationResponse {
 }
 
 object AfterpayCashAppCheckout {
+    suspend fun performSignPaymentRequest(token: String): CashAppSignOrderResult {
+        runCatching {
+            signPayment(token)
+                .let { result: Result<AfterpayCashAppSigningResponse> ->
+                    result.onSuccess { response ->
+                        AfterpayCashAppJwt.decode(response.jwtToken)
+                            .onSuccess { jwtBody ->
+                                val cashApp = AfterpayCashApp(
+                                    amount = jwtBody.amount.amount.toDouble(),
+                                    redirectUri = jwtBody.redirectUrl,
+                                    merchantId = jwtBody.externalMerchantId,
+                                    brandId = response.externalBrandId,
+                                    jwt = response.jwtToken,
+                                )
+
+                                return CashAppSignOrderResult.Success(cashApp)
+                            }
+                            .onFailure {
+                                return CashAppSignOrderResult.Failure(it)
+                            }
+                    }
+                        .onFailure {
+                            return CashAppSignOrderResult.Failure(it)
+                        }
+                }
+        }
+        // should never happen, compiler doesn't know success and failure are only options
+        throw IllegalStateException()
+    }
+
+    // TODO stop using this, no need for suspend *and* callback
     suspend fun performSignPaymentRequest(token: String, complete: (CashAppSignOrderResult) -> Unit) {
         runCatching {
             signPayment(token)

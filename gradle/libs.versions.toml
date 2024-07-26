@@ -1,0 +1,52 @@
+[versions]
+compileSdkVersion = "31"
+exampleCompileSdk = "34"
+minSdk = "24"
+java = "1.8"
+buildTools = "30.0.3"
+
+androidGradlePlugin = "7.4.2"
+kotlin = "1.7.20"
+kotlinx_coroutines = "1.7.1"
+kotlinx_serialization = "1.5.1"
+
+androidx_lifecycle = "2.6.1"
+app_compat = "1.6.1"
+core_ktx = "1.10.1"
+junit = "4.13.2"
+ktlint = "0.48.2"
+material = "1.12.0"
+maven_publish_plugin = "0.17.0"
+mockk = "1.13.5"
+secretsGradlePlugin = "2.0.1"
+tools_desugar_sdk = "1.1.5"
+
+[libraries]
+kotlinCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx_coroutines" }
+kotlinCoroutinesJdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx_coroutines" }
+kotlinCoroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
+kotlinSerializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
+
+androidToolsDesugarJdk = { module = "com.android.tools:desugar_jdk_libs", version.ref = "tools_desugar_sdk" }
+
+androidxAppcompat = { module = "androidx.appcompat:appcompat", version.ref = "app_compat" }
+androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "core_ktx" }
+androidxLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx_lifecycle" }
+
+afterpay-android = "com.afterpay:afterpay-android:4.3.0"
+app-cash-paykit = "app.cash.paykit:core:2.3.0"
+junit = { module = "junit:junit", version.ref = "junit" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+mockK = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[plugins]
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+
+spotless = "com.diffplug.spotless:7.0.0.BETA1"
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven_publish_plugin" }
+secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
+
