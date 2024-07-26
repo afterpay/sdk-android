@@ -21,6 +21,18 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    }
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    }
+}
+
 android {
     compileSdk = libs.versions.compileSdkVersion.get().toInt()
     buildToolsVersion = libs.versions.buildTools.get()
@@ -45,10 +57,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = libs.versions.java.get()
     }
 
     namespace = "com.afterpay.android"

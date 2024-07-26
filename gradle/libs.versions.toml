@@ -2,7 +2,7 @@
 compileSdkVersion = "31"
 exampleCompileSdk = "34"
 minSdk = "24"
-java = "1.8"
+java = "11"
 buildTools = "30.0.3"
 
 androidGradlePlugin = "7.4.2"
