@@ -19,6 +19,18 @@ plugins {
     alias(libs.plugins.secrets.gradle.plugin)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    }
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    }
+}
+
 android {
     namespace = "com.example"
 
@@ -39,9 +51,6 @@ android {
 
         versionCode = 1
         versionName = "1.0"
-    }
-    kotlinOptions {
-        jvmTarget = libs.versions.java.get()
     }
 }
 

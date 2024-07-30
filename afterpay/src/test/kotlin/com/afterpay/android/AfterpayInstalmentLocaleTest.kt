@@ -89,7 +89,7 @@ class AfterpayInstalmentLocaleTest {
         val instalments = createAllAvailableInstalments(oneHundredAndTwenty, Locales.FR_CA)
 
         assertEquals("$30,00 AUD", instalments.aud.instalmentAmount)
-        assertEquals("30,00 $ CA", instalments.cad.instalmentAmount)
+        assertEquals("30,00 $", instalments.cad.instalmentAmount)
         assertEquals("£30,00", instalments.gbp.instalmentAmount)
         assertEquals("$30,00 NZD", instalments.nzd.instalmentAmount)
         assertEquals("$30,00 USD", instalments.usd.instalmentAmount)
@@ -100,7 +100,7 @@ class AfterpayInstalmentLocaleTest {
         val instalments = createAllUnavailableInstalments(oneHundredAndTwenty, Locales.FR_CA)
 
         assertEquals("$10 AUD", instalments.aud.minimumAmount)
-        assertEquals("10 $ CA", instalments.cad.minimumAmount)
+        assertEquals("10 $", instalments.cad.minimumAmount)
         assertEquals("£10", instalments.gbp.minimumAmount)
         assertEquals("$10 NZD", instalments.nzd.minimumAmount)
         assertEquals("$10 USD", instalments.usd.minimumAmount)
