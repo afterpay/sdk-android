@@ -19,7 +19,7 @@ Add `afterpay-android` to your `build.gradle` dependencies.
 
 ``` gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:4.5.1'
+    implementation 'com.afterpay:afterpay-android:4.6.0'
 }
 ```
 
