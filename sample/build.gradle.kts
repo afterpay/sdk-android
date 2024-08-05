@@ -56,8 +56,8 @@ android {
 
 dependencies {
     // toggle between using Maven artifact and local module
-    implementation(projects.afterpay)
-    // implementation(libs.afterpay.android)
+    // implementation(projects.afterpay)
+    implementation(libs.afterpay.android)
 
     implementation(libs.app.cash.paykit)
 
