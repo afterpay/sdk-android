@@ -36,6 +36,7 @@ import app.cash.paykit.core.CashAppPayState.ReadyToAuthorize
 import app.cash.paykit.core.CashAppPayState.Refreshing
 import app.cash.paykit.core.CashAppPayState.RetrievingExistingCustomerRequest
 import app.cash.paykit.core.CashAppPayState.UpdatingCustomerRequest
+import app.cash.paykit.core.models.response.Grant
 import app.cash.paykit.core.models.sdk.CashAppPayCurrency.USD
 import app.cash.paykit.core.models.sdk.CashAppPayPaymentAction
 import com.afterpay.android.Afterpay
@@ -86,13 +87,22 @@ class CashAppV3SampleActivity : AppCompatActivity() {
                          * Step 8: After successful approval, confirm checkout with Afterpay
                          */
                         Log.d(tag, newState.responseData.toString())
-                        // TODO @jatwood what happens if I have multiple grants?
-                        newState.responseData.grants?.get(0)?.let { grant ->
-                            CoroutineScope(Dispatchers.IO).launch {
-                                confirmCheckoutWithAfterpay(
-                                    grantId = grant.id,
-                                    customerId = grant.customerId,
-                                )
+
+                        newState.responseData.apply {
+                            // optionally, retrieve customer's cash tag
+                            val cashTag = customerProfile?.cashTag
+                            showToast(
+                                this@CashAppV3SampleActivity,
+                                "Grant approved for customer: $cashTag",
+                            )
+
+                            grants?.get(0)?.let { grant: Grant ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    confirmCheckoutWithAfterpay(
+                                        grantId = grant.id,
+                                        customerId = grant.customerId,
+                                    )
+                                }
                             }
                         }
                     }
