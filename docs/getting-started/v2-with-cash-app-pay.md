@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Cash App Pay
+title: Checkout V2 with Cash App Pay
 parent: Getting Started
 nav_order: 4
 ---
 
-# Cash App Pay
+# Checkout V2 with Cash App Pay
 {: .d-inline-block .no_toc }
 NEW (v4.3.0)
 {: .label .label-green }
@@ -31,7 +31,7 @@ With our latest enhancements, you can now support taking Cash App Pay payments u
 
 ## Step 1: Import the Cash App Pay Kit Dependency
 
-You can get the the latest version of the SDK from Maven. This is the import definition using Gradle:
+You can get the latest version of the SDK from Maven. This is the import definition using Gradle:
 
 ```gradle
 implementation "app.cash.paykit:core:2.3.0"
@@ -40,7 +40,7 @@ implementation "app.cash.paykit:core:2.3.0"
 For definitions of other build systems, see [Cash App Pay Kit on Maven Central][cash-on-maven]{:target="_blank"}.
 
 {: .info }
-> Version `v2.3.0` of the SDK size is `12.3 kB`.
+> Version `v2.3.0` of the SDK is `12.3 kB`.
 
 ## Step 2: Create a Cash App Pay Kit SDK Instance
 
@@ -48,7 +48,6 @@ To create a new instance of the Cash App Pay Kit SDK, you must pass the `clientI
 
 {: .note }
 > Confirm that the Afterpay SDK is configured per the [instructions][configure-afterpay] before attempting to access `Afterpay.environment.payKitClientId`
-
 
 You should use `CashAppPayFactory` to create an instance of the Cash App Pay Kit SDK. When doing so, you must specify the environment you will use, Sandbox or Production. The function `createSandbox()` will create an SDK instance in the Sandbox environment.
 
@@ -58,12 +57,14 @@ You should use `CashAppPayFactory` to create an instance of the Cash App Pay Kit
 Creating a Sandbox Cash App Pay Kit SDK instance:
 
 ``` kotlin
-val payKit : CashAppPay = CashAppPayFactory.createSandbox(Afterpay.environment.payKitClientId)
+val cashAppPay : CashAppPay =
+  CashAppPayFactory.createSandbox(Afterpay.environment.payKitClientId)
 ```
 
 Creating a Production Cash App Pay Kit SDK instance:
 ``` kotlin
-val payKit : CashAppPay = CashAppPayFactory.create(Afterpay.environment.payKitClientId)
+val cashAppPay : CashAppPay =
+  CashAppPayFactory.create(Afterpay.environment.payKitClientId)
 ```
 
 {: .info }
@@ -82,18 +83,25 @@ interface CashAppPayListener {
 You register with the SDK instance you’ve created above:
 
 ``` kotlin
-payKit.registerForStateUpdates(this)
+private val cashAppPayListener =
+  object : CashAppPayListener {
+    override fun cashAppPayStateDidChange(newState: CashAppPayState) {
+      // TODO
+    }
+  }
+  
+cashAppPay.registerForStateUpdates(cashAppPayListener)
 ```
 
 You should also use the **Unregister** function when you're done with the SDK:
 
 ``` kotlin
-payKit.unregisterFromStateUpdates()
+cashAppPay.unregisterFromStateUpdates()
 ```
 
 ### States
 
-`CashAppPayState` is a sealed class parameter. We suggest that you use a Kotlin `when` statement on it. Some of these possible states are for information only, but most drive the logic of your integration. The most critical states to handle are in the table below:
+`CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. The most critical states to handle are in the table below:
 
 | State  | Description |
 |:-------|:------------|
@@ -104,27 +112,27 @@ payKit.unregisterFromStateUpdates()
 
 ## Step 4: Implement Deep Linking
 
-The authorization flow will bring Cash App to the foreground on the Customer’s device. After the Customer either authorizes or declines, your app must be returned to the foreground, which means we need a way to call your app from Cash App.  This is accomplished by [declaring an incoming intent][intent-filter]{:target="_blank"} filter on your app's Android Manifest and passing a corresponding redirect URI that uses the SDK when creating a customer request (as can be seen on the next step).
+The authorization flow will bring Cash App to the foreground on the Customer’s device. After the Customer either authorizes or declines, the Cash App SDK will attempt to return your app to the foreground.  This is accomplished by [declaring an intent filter][intent-filter]{:target="_blank"} on your app's Android Manifest. You then pass a corresponding redirect URI when launching Cash APP SDK, see next step.
 
-Here’s an example of how this integration looks for your `AndroidManifest`:
-
-``` xml
+```xml
+<!-- Intent filter to allow Cash App Pay SDK to redirect to your app.
+	Consider creating a custom scheme to ensure only your app is launched. -->
 <intent-filter>
   <action android:name="android.intent.action.VIEW" />
+    <data
+       android:host="example.com"
+      android:scheme="example" />
 
-  <category android:name="android.intent.category.DEFAULT" />
   <category android:name="android.intent.category.BROWSABLE" />
-
-  <!-- Register the Cash App Pay Kit redirect URI or URL. Change this accordingly in your app. -->
-  <data
-      android:scheme="cashpaykit"
-      android:host="checkout" />
+  <category android:name="android.intent.category.DEFAULT" />
 </intent-filter>
 ```
 
+You can also use a [Verified App Link](https://developer.android.com/training/app-links/verify-android-applinks) and `https` scheme. However that is outside the scope of example.
+
 ## Step 5: Create a Customer Request
 
-You can create a customer request as soon as you know the amount you’d like to charge or if you'd like to create an on-file payment request. You can create this request as soon as your **checkout view controller** loads, so that your customer can authorize the request without delay.
+You can create a customer request as soon as you know the amount you’d like to charge or if you'd like to create an on-file payment request. You can create this request as soon as your checkout screen loads, so that your customer can authorize the request without delay.
 
 ### Step 5A: Sign the Order Token
 
@@ -159,11 +167,11 @@ To charge a one-time payment, your **Create Request** call might look like this 
 ``` kotlin
 val request = CashAppPayPaymentAction.OneTimeAction(
   currency = CashAppPayCurrency.USD,
-  amount = (cashAppData.amount * 100).toInt(),
+  amount = TODO(), // the amount of the transaction
   scopeId = cashAppData.merchantId,
 )
 
-payKit.createCustomerRequest(request, cashAppData.redirectUri)
+cashAppPay.createCustomerRequest(request, cashAppData.redirectUri)
 ```
 
 ## Step 6: Authorize the Customer Request
@@ -173,7 +181,7 @@ payKit.createCustomerRequest(request, cashAppData.redirectUri)
 Once the Cash App Pay Kit SDK is in the `ReadyToAuthorize` state, you can display the Cash App Pay button. When the customer taps the button, you can authorize the customer request. See [Cash Button Docs][cash-button-docs]{:target='_blank'} to learn more about the Cash App Pay button component.
 
 ``` kotlin
-payKit.authorizeCustomerRequest()
+cashAppPay.authorizeCustomerRequest()
 ```
 
 {: .info }
