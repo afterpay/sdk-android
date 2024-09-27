@@ -20,7 +20,7 @@ nav_order: 5
 
 {: .alert }
 > Checkout V3 is currently available in the following region(s): US, UK, Australia and Canada
-> 
+
 Checkout V3 generates a one-time payment card for every Afterpay order and provides the card number to insert into your credit card checkout. This allows for a front-end-only integration. Unlike V1 and V2, with V3 your server does not directly interact with Afterpay APIs. The one-time payment card is Visa for the US, UK, and Canada. In Australia the one-time payment card is Mastercard.
 
 ## How it works
@@ -88,14 +88,12 @@ registerForActivityResult(
 }
 ```
 
-## Step 4: Receive one-time use card details and pass back to your server for processing
+## Step 4: Receive one-time use card details and process
 
-The success result will contain card details, tokens, and a valid-until time. Pass these back to your own server and process them through your normal card processing infrastructure.
+The success result will contain card details, tokens, and a valid-until time. Pass these back to your own server and process them through your normal card processing infrastructure, or pass them on to another mobile card processing SDK .
 
 ```kotlin
 Afterpay.parseCheckoutSuccessResponseV3(intent)?.let {
-  // pass card details and token to your server for processing with
-  // your existing card processing network
   it.cardDetails
   it.tokens
   it.cardValidUntil
