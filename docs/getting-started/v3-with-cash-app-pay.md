@@ -301,9 +301,9 @@ fun confirmCheckoutWithAfterpay(
 }
 ```
 
-## Step 11: Receive one-time use card details and pass back to your server for processing
+## Step 11: Receive one-time use card details and process
 
-The success result will contain card details, tokens, and a valid-until time. Pass these back to your own server and process them through your normal card processing infrastructure.
+The success result will contain card details, tokens, and a valid-until time. Pass these back to your own server and process them through your normal card processing infrastructure, or pass them on to another mobile card processing SDK .
 
 ```kotlin
 result.onSuccess {

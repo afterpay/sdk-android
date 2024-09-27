@@ -54,9 +54,7 @@ import kotlinx.coroutines.launch
 class CashAppV3SampleActivity : AppCompatActivity() {
 
     private lateinit var bindings: CashAppV3LayoutBinding
-
-    private val cashAppPay: CashAppPay =
-        CashAppPayFactory.createSandbox(AFTERPAY_ENVIRONMENT.payKitClientId)
+    private lateinit var cashAppPay: CashAppPay
 
     private var checkoutV3CashAppPay: CheckoutV3CashAppPay? = null
 
@@ -67,7 +65,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
                 when (newState) {
                     is ReadyToAuthorize -> {
                         /**
-                         * Step 5: Cash App Pay SDK will response when an authorization attempt is ready
+                         * Step 6: Cash App Pay SDK will response when an authorization attempt is ready
                          * We can now enable the button to let customer proceed with checkout
                          */
                         lifecycleScope.launch { // jump back to UI thread to update UI
@@ -77,14 +75,14 @@ class CashAppV3SampleActivity : AppCompatActivity() {
 
                     Authorizing -> {
                         /**
-                         * Step 7: Disable button while auth in process
+                         * Step 8: Disable button while auth in process
                          */
                         bindings.cashappPayButton.isEnabled = false
                     }
 
                     is Approved -> {
                         /**
-                         * Step 8: After successful approval, confirm checkout with Afterpay
+                         * Step 9: After successful approval, confirm checkout with Afterpay
                          */
                         Log.d(tag, newState.responseData.toString())
 
@@ -161,7 +159,6 @@ class CashAppV3SampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cashAppPay.registerForStateUpdates(cashAppPayListener)
         /**
          * The SDK is agnostic to the UI library of your choice: inflate XML, view binding, Compose, etc.
          * Here we use view binding to keep it simple.
@@ -171,7 +168,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
             isEnabled = false
             setOnClickListener { _ ->
                 /**
-                 * Step 6: When customer clicks Cash App Pay button
+                 * Step 7: When customer clicks Cash App Pay button
                  *  begin authorization. This will begin UI flow into Cash App
                  */
                 cashAppPay.authorizeCustomerRequest()
@@ -209,6 +206,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
                          */
                         Log.d(tag, "Fetched merchant configs")
                         Afterpay.setConfigurationV3(merchantConfiguration)
+                        initializeCashAppSDK()
                         beginCheckout()
                     }
 
@@ -221,9 +219,18 @@ class CashAppV3SampleActivity : AppCompatActivity() {
                 }
         }
 
+    private fun initializeCashAppSDK() {
+        /**
+         * Step 2: create and register a state listener with Cash APp Pay SDK
+         */
+        Log.d(tag, "Initializing Cash App Pay SDK")
+        cashAppPay = CashAppPayFactory.createSandbox(AFTERPAY_ENVIRONMENT.payKitClientId)
+        cashAppPay.registerForStateUpdates(cashAppPayListener)
+    }
+
     private suspend fun beginCheckout() {
         /**
-         * Step 2: Begin checkout process by requesting data from Afterpay, to be used later
+         * Step 3: Begin checkout process by requesting data from Afterpay, to be used later
          * with Cash App Pay SDK
          */
         Afterpay.beginCheckoutV3WithCashAppPay(
@@ -234,7 +241,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
         ).let { result: Result<CheckoutV3CashAppPay> ->
             result.onSuccess {
                 /**
-                 * Step 3: Store [CheckoutV3CashAppPay] for use later and create Customer Request
+                 * Step 4: Store [CheckoutV3CashAppPay] for use later and create Customer Request
                  */
                 checkoutV3CashAppPay = it
                 createCashAppPayCustomerRequest(it)
@@ -250,7 +257,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
 
     private fun createCashAppPayCustomerRequest(checkoutV3CashAppPay: CheckoutV3CashAppPay) {
         /**
-         * Step 4: Create customer request with Cash App Pay SDK
+         * Step 5: Create customer request with Cash App Pay SDK
          *
          * [redirectUri] defines where customer returns to after completing Cash App flow
          * You are not required to use [CheckoutV3CashAppPay.redirectUri] . You can set your own
@@ -262,8 +269,10 @@ class CashAppV3SampleActivity : AppCompatActivity() {
         val action = CashAppPayPaymentAction.OneTimeAction(
             currency = USD,
             amount = checkoutV3CashAppPay.amount.toInt(),
-            // This is not the same merchant ID you started with.
-            // This is a specific for use with Cash App Pay SDK.
+            /**
+             * This is not the same merchant ID you set in [CheckoutV3Configuration].
+             * This is a specific for use with Cash App Pay SDK.
+             */
             scopeId = checkoutV3CashAppPay.merchantId,
         )
 
@@ -279,6 +288,10 @@ class CashAppV3SampleActivity : AppCompatActivity() {
     ) {
         requireNotNull(checkoutV3CashAppPay)
         checkoutV3CashAppPay?.let { it ->
+            /**
+             * Step 10: confirm checkout with Afterpay by combining newly received [grantId] and
+             * [customerId] with previously-saved [CheckoutV3CashAppPay].
+             */
             Afterpay.confirmCheckoutV3WithCashAppPay(
                 grantId = grantId,
                 customerId = customerId,
@@ -290,7 +303,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
 
                 result.onSuccess {
                     /**
-                     * Step 9: Receive single-use card details. Pass these back to your server
+                     * Step 11: Receive single-use card details. Pass these back to your server
                      * and on to your payment processor:
                      */
                     Log.d(tag, "Received card details, etc ${it.cardDetails}")
