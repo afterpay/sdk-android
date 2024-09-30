@@ -27,38 +27,38 @@ import com.afterpay.android.internal.Locales.FR_CA
 import java.util.Locale
 
 private val brandLocales = mapOf(
-    setOf(EN_AU, EN_CA, FR_CA, EN_NZ, EN_US) to Brand.AFTERPAY,
-    setOf(EN_GB) to Brand.CLEARPAY,
+  setOf(EN_AU, EN_CA, FR_CA, EN_NZ, EN_US) to Brand.AFTERPAY,
+  setOf(EN_GB) to Brand.CLEARPAY,
 )
 
 internal enum class Brand(
-    @StringRes val title: Int,
-    @StringRes val description: Int,
-    @DrawableRes val badgeForeground: Int,
-    @DrawableRes val badgeForegroundCropped: Int,
-    @DrawableRes val lockup: Int,
+  @StringRes val title: Int,
+  @StringRes val description: Int,
+  @DrawableRes val badgeForeground: Int,
+  @DrawableRes val badgeForegroundCropped: Int,
+  @DrawableRes val lockup: Int,
 ) {
 
-    AFTERPAY(
-        title = R.string.afterpay_service_name,
-        description = R.string.afterpay_service_name_description,
-        badgeForeground = R.drawable.afterpay_badge_fg,
-        badgeForegroundCropped = R.drawable.afterpay_badge_fg_cropped,
-        lockup = R.drawable.afterpay_lockup,
-    ),
+  AFTERPAY(
+    title = R.string.afterpay_service_name,
+    description = R.string.afterpay_service_name_description,
+    badgeForeground = R.drawable.afterpay_badge_fg,
+    badgeForegroundCropped = R.drawable.afterpay_badge_fg_cropped,
+    lockup = R.drawable.afterpay_lockup,
+  ),
 
-    CLEARPAY(
-        title = R.string.clearpay_service_name,
-        description = R.string.clearpay_service_name_description,
-        badgeForeground = R.drawable.clearpay_badge_fg,
-        badgeForegroundCropped = R.drawable.clearpay_badge_fg_cropped,
-        lockup = R.drawable.clearpay_lockup,
-    ),
-    ;
+  CLEARPAY(
+    title = R.string.clearpay_service_name,
+    description = R.string.clearpay_service_name_description,
+    badgeForeground = R.drawable.clearpay_badge_fg,
+    badgeForegroundCropped = R.drawable.clearpay_badge_fg_cropped,
+    lockup = R.drawable.clearpay_lockup,
+  ),
+  ;
 
-    companion object {
+  companion object {
 
-        fun forLocale(locale: Locale): Brand =
-            brandLocales.entries.find { locale in it.key }?.value ?: AFTERPAY
-    }
+    fun forLocale(locale: Locale): Brand =
+      brandLocales.entries.find { locale in it.key }?.value ?: AFTERPAY
+  }
 }

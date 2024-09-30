@@ -30,44 +30,44 @@ import androidx.core.graphics.drawable.DrawableCompat
 import kotlin.math.roundToInt
 
 internal val Float.dp: Float
-    get() = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        this,
-        Resources.getSystem().displayMetrics,
-    )
+  get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_DIP,
+    this,
+    Resources.getSystem().displayMetrics,
+  )
 
 internal val Int.dp: Int
-    get() = toFloat().dp.roundToInt()
+  get() = toFloat().dp.roundToInt()
 
 @ColorInt
 internal fun Context.resolveColorAttr(@AttrRes colorAttr: Int): Int {
-    val attribute = TypedValue().also {
-        theme.resolveAttribute(colorAttr, it, true)
-    }
-    val colorRes = if (attribute.resourceId != 0) attribute.resourceId else attribute.data
-    return ContextCompat.getColor(this, colorRes)
+  val attribute = TypedValue().also {
+    theme.resolveAttribute(colorAttr, it, true)
+  }
+  val colorRes = if (attribute.resourceId != 0) attribute.resourceId else attribute.data
+  return ContextCompat.getColor(this, colorRes)
 }
 
 @ColorInt
 internal fun Context.color(@ColorRes colorResId: Int): Int {
-    return ContextCompat.getColor(this, colorResId)
+  return ContextCompat.getColor(this, colorResId)
 }
 
 internal fun Context.coloredDrawable(
-    @DrawableRes drawableResId: Int,
-    @ColorRes colorResId: Int,
+  @DrawableRes drawableResId: Int,
+  @ColorRes colorResId: Int,
 ): Drawable = ContextCompat.getDrawable(this, drawableResId).let {
-    checkNotNull(it) { "Drawable resource not found" }
-    val wrappedDrawable = DrawableCompat.wrap(it)
-    DrawableCompat.setTint(wrappedDrawable, color(colorResId))
-    return wrappedDrawable
+  checkNotNull(it) { "Drawable resource not found" }
+  val wrappedDrawable = DrawableCompat.wrap(it)
+  DrawableCompat.setTint(wrappedDrawable, color(colorResId))
+  return wrappedDrawable
 }
 
 internal fun Context.rippleDrawable(
-    @ColorRes rippleColorResId: Int,
-    drawable: Drawable,
+  @ColorRes rippleColorResId: Int,
+  drawable: Drawable,
 ): Drawable = RippleDrawable(
-    ColorStateList.valueOf(color(rippleColorResId)),
-    drawable,
-    null,
+  ColorStateList.valueOf(color(rippleColorResId)),
+  drawable,
+  null,
 )

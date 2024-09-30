@@ -21,10 +21,10 @@ import java.util.Currency
 import java.util.Locale
 
 data class Configuration(
-    val minimumAmount: BigDecimal?,
-    val maximumAmount: BigDecimal,
-    val currency: Currency,
-    val locale: Locale,
-    val environment: AfterpayEnvironment,
-    val consumerLocale: Locale? = null,
+  val minimumAmount: BigDecimal?,
+  val maximumAmount: BigDecimal,
+  val currency: Currency,
+  val locale: Locale,
+  val environment: AfterpayEnvironment,
+  val consumerLocale: Locale? = null,
 )

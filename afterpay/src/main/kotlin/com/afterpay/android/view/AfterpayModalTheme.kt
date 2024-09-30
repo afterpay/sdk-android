@@ -16,13 +16,13 @@
 package com.afterpay.android.view
 
 enum class AfterpayModalTheme(val slug: String) {
-    MINT(""),
-    WHITE("-theme-white"),
-    ;
+  MINT(""),
+  WHITE("-theme-white"),
+  ;
 
-    internal companion object {
+  internal companion object {
 
-        @JvmField
-        val DEFAULT = AfterpayModalTheme.MINT
-    }
+    @JvmField
+    val DEFAULT = AfterpayModalTheme.MINT
+  }
 }

@@ -16,8 +16,8 @@
 package com.afterpay.android.internal
 
 object Html {
-    internal const val LOADING: String =
-        """
+  internal const val LOADING: String =
+    """
         <html>
 
         <head>

@@ -38,125 +38,125 @@ import java.lang.reflect.Type
  * most comfortable with.
  */
 interface MerchantApi {
-    // TODO @jatwood handle success/error results, not just response
+  // TODO @jatwood handle success/error results, not just response
 
-    @GET("configuration")
-    suspend fun getConfiguration(): Result<GetConfigurationResponse>
+  @GET("configuration")
+  suspend fun getConfiguration(): Result<GetConfigurationResponse>
 
-    @POST("checkout")
-    suspend fun getToken(
-        @Body request: GetTokenRequest,
-    ): Result<GetTokenResponse>
+  @POST("checkout")
+  suspend fun getToken(
+    @Body request: GetTokenRequest,
+  ): Result<GetTokenResponse>
 }
 
 fun merchantApi() =
-    Retrofit.Builder()
-        .baseUrl(MERCHANT_API_BASE_URL)
-        .addConverterFactory(
-            MoshiConverterFactory.create(
-                Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build(),
-            ),
-        )
-        .addCallAdapterFactory(ResultCallAdapterFactory())
-        .build()
-        .create(MerchantApi::class.java)
+  Retrofit.Builder()
+    .baseUrl(MERCHANT_API_BASE_URL)
+    .addConverterFactory(
+      MoshiConverterFactory.create(
+        Moshi.Builder()
+          .add(KotlinJsonAdapterFactory())
+          .build(),
+      ),
+    )
+    .addCallAdapterFactory(ResultCallAdapterFactory())
+    .build()
+    .create(MerchantApi::class.java)
 
 const val MERCHANT_API_BASE_URL = "http://10.0.2.2:3000" // 10.0.2.2 if using emulator
 
 // Call adapter to get API to return kotlin.Result<T>
 class ResultCallAdapterFactory : CallAdapter.Factory() {
-    override fun get(
-        returnType: Type,
-        annotations: Array<out Annotation>,
-        retrofit: Retrofit,
-    ): CallAdapter<*, *>? {
-        if (getRawType(returnType) != Call::class.java || returnType !is ParameterizedType) {
-            return null
-        }
-        val upperBound = getParameterUpperBound(0, returnType)
-
-        return if (upperBound is ParameterizedType && upperBound.rawType == Result::class.java) {
-            object : CallAdapter<Any, Call<Result<*>>> {
-                override fun responseType(): Type = getParameterUpperBound(0, upperBound)
-
-                override fun adapt(call: Call<Any>): Call<Result<*>> =
-                    ResultCall(call) as Call<Result<*>>
-            }
-        } else {
-            null
-        }
+  override fun get(
+    returnType: Type,
+    annotations: Array<out Annotation>,
+    retrofit: Retrofit,
+  ): CallAdapter<*, *>? {
+    if (getRawType(returnType) != Call::class.java || returnType !is ParameterizedType) {
+      return null
     }
+    val upperBound = getParameterUpperBound(0, returnType)
+
+    return if (upperBound is ParameterizedType && upperBound.rawType == Result::class.java) {
+      object : CallAdapter<Any, Call<Result<*>>> {
+        override fun responseType(): Type = getParameterUpperBound(0, upperBound)
+
+        override fun adapt(call: Call<Any>): Call<Result<*>> =
+          ResultCall(call) as Call<Result<*>>
+      }
+    } else {
+      null
+    }
+  }
 }
 
 class ResultCall<T>(val delegate: Call<T>) :
-    Call<Result<T>> {
+  Call<Result<T>> {
 
-    override fun enqueue(callback: Callback<Result<T>>) {
-        delegate.enqueue(
-            object : Callback<T> {
-                override fun onResponse(call: Call<T>, response: Response<T>) {
-                    if (response.isSuccessful) {
-                        callback.onResponse(
-                            this@ResultCall,
-                            Response.success(
-                                response.code(),
-                                Result.success(response.body()!!),
-                            ),
-                        )
-                    } else {
-                        callback.onResponse(
-                            this@ResultCall,
-                            Response.success(
-                                Result.failure(
-                                    HttpException(response),
-                                ),
-                            ),
-                        )
-                    }
-                }
+  override fun enqueue(callback: Callback<Result<T>>) {
+    delegate.enqueue(
+      object : Callback<T> {
+        override fun onResponse(call: Call<T>, response: Response<T>) {
+          if (response.isSuccessful) {
+            callback.onResponse(
+              this@ResultCall,
+              Response.success(
+                response.code(),
+                Result.success(response.body()!!),
+              ),
+            )
+          } else {
+            callback.onResponse(
+              this@ResultCall,
+              Response.success(
+                Result.failure(
+                  HttpException(response),
+                ),
+              ),
+            )
+          }
+        }
 
-                override fun onFailure(call: Call<T>, t: Throwable) {
-                    val errorMessage = when (t) {
-                        is IOException -> "No internet connection"
-                        is HttpException -> "Something went wrong!"
-                        else -> t.localizedMessage
-                    }
-                    callback.onResponse(
-                        this@ResultCall,
-                        Response.success(Result.failure(RuntimeException(errorMessage, t))),
-                    )
-                }
-            },
-        )
-    }
+        override fun onFailure(call: Call<T>, t: Throwable) {
+          val errorMessage = when (t) {
+            is IOException -> "No internet connection"
+            is HttpException -> "Something went wrong!"
+            else -> t.localizedMessage
+          }
+          callback.onResponse(
+            this@ResultCall,
+            Response.success(Result.failure(RuntimeException(errorMessage, t))),
+          )
+        }
+      },
+    )
+  }
 
-    override fun isExecuted(): Boolean {
-        return delegate.isExecuted
-    }
+  override fun isExecuted(): Boolean {
+    return delegate.isExecuted
+  }
 
-    override fun execute(): Response<Result<T>> {
-        return Response.success(Result.success(delegate.execute().body()!!))
-    }
+  override fun execute(): Response<Result<T>> {
+    return Response.success(Result.success(delegate.execute().body()!!))
+  }
 
-    override fun cancel() {
-        delegate.cancel()
-    }
+  override fun cancel() {
+    delegate.cancel()
+  }
 
-    override fun isCanceled(): Boolean {
-        return delegate.isCanceled
-    }
+  override fun isCanceled(): Boolean {
+    return delegate.isCanceled
+  }
 
-    override fun clone(): Call<Result<T>> {
-        return ResultCall(delegate.clone())
-    }
+  override fun clone(): Call<Result<T>> {
+    return ResultCall(delegate.clone())
+  }
 
-    override fun request(): Request {
-        return delegate.request()
-    }
+  override fun request(): Request {
+    return delegate.request()
+  }
 
-    override fun timeout(): Timeout {
-        return delegate.timeout()
-    }
+  override fun timeout(): Timeout {
+    return delegate.timeout()
+  }
 }
