@@ -22,22 +22,22 @@ const val API_PLUS_SANDBOX_BASE_URL = "https://api-plus.us-sandbox.afterpay.com"
 const val API_PLUS_PRODUCTION_BASE_URL = "https://api-plus.us.afterpay.com"
 
 enum class AfterpayEnvironment(
-    val payKitClientId: String,
-    val cashAppPaymentSigningUrl: URL,
-    val cashAppPaymentValidationUrl: URL,
+  val payKitClientId: String,
+  val cashAppPaymentSigningUrl: URL,
+  val cashAppPaymentValidationUrl: URL,
 ) {
-    SANDBOX(
-        payKitClientId = "CAS-CI_AFTERPAY",
-        cashAppPaymentSigningUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/sign-payment"),
-        cashAppPaymentValidationUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/validate-payment"),
-    ),
+  SANDBOX(
+    payKitClientId = "CAS-CI_AFTERPAY",
+    cashAppPaymentSigningUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/sign-payment"),
+    cashAppPaymentValidationUrl = URL("$API_PLUS_SANDBOX_BASE_URL/v2/payments/validate-payment"),
+  ),
 
-    PRODUCTION(
-        payKitClientId = "CA-CI_AFTERPAY",
-        cashAppPaymentSigningUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/sign-payment"),
-        cashAppPaymentValidationUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/validate-payment"),
-    ),
-    ;
+  PRODUCTION(
+    payKitClientId = "CA-CI_AFTERPAY",
+    cashAppPaymentSigningUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/sign-payment"),
+    cashAppPaymentValidationUrl = URL("$API_PLUS_PRODUCTION_BASE_URL/v2/payments/validate-payment"),
+  ),
+  ;
 
-    override fun toString(): String = name.lowercase(Locale.ROOT)
+  override fun toString(): String = name.lowercase(Locale.ROOT)
 }

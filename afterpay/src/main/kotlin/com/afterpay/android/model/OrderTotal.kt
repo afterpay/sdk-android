@@ -23,10 +23,10 @@ import java.math.BigDecimal
  * - Including the currency code as provided by [AfterpayRegion].
  */
 data class OrderTotal(
-    /** Amount to be charged to consumer, inclusive of [shipping] and [tax]. */
-    val total: BigDecimal,
-    /** The shipping amount, included for fraud detection purposes. */
-    val shipping: BigDecimal,
-    /** The tax amount, included for fraud detection purposes. */
-    val tax: BigDecimal,
+  /** Amount to be charged to consumer, inclusive of [shipping] and [tax]. */
+  val total: BigDecimal,
+  /** The shipping amount, included for fraud detection purposes. */
+  val shipping: BigDecimal,
+  /** The tax amount, included for fraud detection purposes. */
+  val tax: BigDecimal,
 )

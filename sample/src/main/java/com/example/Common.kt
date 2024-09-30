@@ -37,9 +37,9 @@ val AFTERPAY_ENVIRONMENT = AfterpayEnvironment.SANDBOX
 const val MERCHANT_ID = BuildConfig.merchantId
 
 fun createCheckoutV3Configuration(): CheckoutV3Configuration {
-    return CheckoutV3Configuration(
-        shopDirectoryMerchantId = MERCHANT_ID,
-        region = AFTERPAY_REGION,
-        environment = AFTERPAY_ENVIRONMENT,
-    )
+  return CheckoutV3Configuration(
+    shopDirectoryMerchantId = MERCHANT_ID,
+    region = AFTERPAY_REGION,
+    environment = AFTERPAY_ENVIRONMENT,
+  )
 }
