@@ -1,11 +1,10 @@
 [versions]
-compileSdkVersion = "31"
+compileSdkVersion = "33"
 exampleCompileSdk = "34"
 minSdk = "24"
-java = "11"
-buildTools = "30.0.3"
+java = "17" # remember to update java version in .github/workflows as well
 
-androidGradlePlugin = "7.4.2"
+androidGradlePlugin = "8.2.2"
 kotlin = "1.7.20"
 kotlinx_coroutines = "1.7.1"
 kotlinx_serialization = "1.5.1"
