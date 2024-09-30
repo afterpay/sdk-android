@@ -20,7 +20,7 @@ mockk = "1.13.5"
 moshi = "1.14.0" # latest version that is compatible with kotlin 1.7.x
 retrofit = "2.9.0" # latest version that is compatible with kotlin 1.7.x
 secretsGradlePlugin = "2.0.1"
-tools_desugar_sdk = "1.1.5"
+tools_desugar_sdk = "2.1.2"
 
 [libraries]
 kotlinCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx_coroutines" }
