@@ -14,71 +14,71 @@
  * limitations under the License.
  */
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.secrets.gradle.plugin)
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.secrets.gradle.plugin)
 }
 
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
-    }
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+  }
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
-    }
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+  }
 }
 
 android {
-    namespace = "com.example"
+  namespace = "com.example"
 
-    compileSdk = libs.versions.exampleCompileSdk.get().toInt()
+  compileSdk = libs.versions.exampleCompileSdk.get().toInt()
 
-    buildFeatures {
-        buildConfig = true
-        viewBinding = true
-    }
+  buildFeatures {
+    buildConfig = true
+    viewBinding = true
+  }
 
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-    }
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+  }
 
-    defaultConfig {
-        applicationId = "com.afterpay.android.sample"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.exampleCompileSdk.get().toInt()
+  defaultConfig {
+    applicationId = "com.afterpay.android.sample"
+    minSdk = libs.versions.minSdk.get().toInt()
+    targetSdk = libs.versions.exampleCompileSdk.get().toInt()
 
-        versionCode = 1
-        versionName = "1.0"
-    }
+    versionCode = 1
+    versionName = "1.0"
+  }
 }
 
 dependencies {
-    // toggle between using Maven artifact and local module
-    implementation(projects.afterpay)
-    // implementation(libs.afterpay.android)
+  // toggle between using Maven artifact and local module
+  implementation(projects.afterpay)
+  // implementation(libs.afterpay.android)
 
-    implementation(libs.app.cash.paykit)
+  implementation(libs.app.cash.paykit)
 
-    implementation(libs.androidxAppcompat)
-    implementation(libs.androidxCoreKtx)
-    implementation(libs.androidxLifecycleRuntimeKtx)
-    implementation(libs.material)
+  implementation(libs.androidxAppcompat)
+  implementation(libs.androidxCoreKtx)
+  implementation(libs.androidxLifecycleRuntimeKtx)
+  implementation(libs.material)
 
-    /**
-     * Usage of retrofit / moshi is entirely preference to interact with
-     * sample Merchant API
-     */
-    implementation(libs.moshi)
-    implementation(libs.moshi.kotlin)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.moshi)
+  /**
+   * Usage of retrofit / moshi is entirely preference to interact with
+   * sample Merchant API
+   */
+  implementation(libs.moshi)
+  implementation(libs.moshi.kotlin)
+  implementation(libs.retrofit)
+  implementation(libs.retrofit.converter.moshi)
 
-    coreLibraryDesugaring(libs.androidToolsDesugarJdk)
+  coreLibraryDesugaring(libs.androidToolsDesugarJdk)
 }
 
 secrets {
-    defaultPropertiesFileName = "local.defaults.properties"
+  defaultPropertiesFileName = "local.defaults.properties"
 }

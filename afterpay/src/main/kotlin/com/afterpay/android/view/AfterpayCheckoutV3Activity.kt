@@ -46,184 +46,184 @@ import java.lang.Exception
 
 internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
-    private lateinit var viewModel: CheckoutV3ViewModel
+  private lateinit var webView: WebView
+  private lateinit var viewModel: CheckoutV3ViewModel
 
-    @SuppressLint("SetJavaScriptEnabled")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_checkout)
+  @SuppressLint("SetJavaScriptEnabled")
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_web_checkout)
 
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        viewModel = CheckoutV3ViewModel(requireNotNull(intent.getCheckoutV3OptionsExtra()))
-        webView = findViewById<WebView>(R.id.afterpay_webView).apply {
-            setAfterpayUserAgentString()
-            settings.javaScriptEnabled = true
-            settings.setSupportMultipleWindows(true)
-            webViewClient = AfterpayWebViewClientV3(
-                receivedError = ::handleError,
-                received = ::received,
-            )
-            webChromeClient = AfterpayWebChromeClientV3(openExternalLink = ::open)
-            val htmlData = Base64.encodeToString(Html.LOADING.toByteArray(), Base64.NO_PADDING)
-            loadData(htmlData, "text/html", "base64")
-        }
-
-        lifecycleScope.launchWhenStarted {
-            viewModel.performCheckoutRequest()
-                .onSuccess { checkoutRedirectUrl ->
-                    webView.loadUrl(checkoutRedirectUrl.toString())
-                }
-                .onFailure {
-                    received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
-                }
-        }
+    viewModel = CheckoutV3ViewModel(requireNotNull(intent.getCheckoutV3OptionsExtra()))
+    webView = findViewById<WebView>(R.id.afterpay_webView).apply {
+      setAfterpayUserAgentString()
+      settings.javaScriptEnabled = true
+      settings.setSupportMultipleWindows(true)
+      webViewClient = AfterpayWebViewClientV3(
+        receivedError = ::handleError,
+        received = ::received,
+      )
+      webChromeClient = AfterpayWebChromeClientV3(openExternalLink = ::open)
+      val htmlData = Base64.encodeToString(Html.LOADING.toByteArray(), Base64.NO_PADDING)
+      loadData(htmlData, "text/html", "base64")
     }
 
-    override fun onDestroy() {
-        // Prevent WebView from leaking memory when the Activity is destroyed.
-        // The leak appears when enabling JavaScript and is fixed by disabling it.
-        webView.apply {
-            stopLoading()
-            settings.javaScriptEnabled = false
+    lifecycleScope.launchWhenStarted {
+      viewModel.performCheckoutRequest()
+        .onSuccess { checkoutRedirectUrl ->
+          webView.loadUrl(checkoutRedirectUrl.toString())
         }
+        .onFailure {
+          received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
+        }
+    }
+  }
 
-        super.onDestroy()
+  override fun onDestroy() {
+    // Prevent WebView from leaking memory when the Activity is destroyed.
+    // The leak appears when enabling JavaScript and is fixed by disabling it.
+    webView.apply {
+      stopLoading()
+      settings.javaScriptEnabled = false
     }
 
-    override fun onBackPressed() {
+    super.onDestroy()
+  }
+
+  override fun onBackPressed() {
+    received(CancellationStatusV3.USER_INITIATED)
+  }
+
+  private fun open(url: Uri) {
+    val intent = Intent(Intent.ACTION_VIEW, url)
+    if (intent.resolveActivity(packageManager) != null) {
+      startActivity(intent)
+    }
+  }
+
+  private fun handleError() {
+    // Clear default system error from the web view.
+    webView.loadUrl("about:blank")
+
+    AlertDialog.Builder(this)
+      .setTitle(Afterpay.strings.loadErrorTitle)
+      .setMessage(Afterpay.strings.loadErrorMessage)
+      .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
+        val options = intent.getCheckoutV3OptionsExtra()
+        val retryUrl = options?.redirectUrl ?: options?.checkoutUrl
+        retryUrl?.let {
+          webView.loadUrl(it.toString())
+        }
+        dialog.dismiss()
+      }
+      .setNegativeButton(Afterpay.strings.loadErrorCancel) { dialog, _ ->
+        dialog.cancel()
+      }
+      .setOnCancelListener {
         received(CancellationStatusV3.USER_INITIATED)
-    }
+      }
+      .show()
+  }
 
-    private fun open(url: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW, url)
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        }
-    }
-
-    private fun handleError() {
-        // Clear default system error from the web view.
-        webView.loadUrl("about:blank")
-
-        AlertDialog.Builder(this)
-            .setTitle(Afterpay.strings.loadErrorTitle)
-            .setMessage(Afterpay.strings.loadErrorMessage)
-            .setPositiveButton(Afterpay.strings.loadErrorRetry) { dialog, _ ->
-                val options = intent.getCheckoutV3OptionsExtra()
-                val retryUrl = options?.redirectUrl ?: options?.checkoutUrl
-                retryUrl?.let {
-                    webView.loadUrl(it.toString())
-                }
-                dialog.dismiss()
+  private fun received(status: CheckoutStatusV3) {
+    when (status) {
+      is CheckoutStatusV3.Success -> {
+        lifecycleScope.launch {
+          viewModel.performConfirmationRequest(status.ppaConfirmToken)
+            .onSuccess {
+              setResult(Activity.RESULT_OK, Intent().putResultDataV3(it))
+              finish()
             }
-            .setNegativeButton(Afterpay.strings.loadErrorCancel) { dialog, _ ->
-                dialog.cancel()
-            }
-            .setOnCancelListener {
-                received(CancellationStatusV3.USER_INITIATED)
-            }
-            .show()
-    }
-
-    private fun received(status: CheckoutStatusV3) {
-        when (status) {
-            is CheckoutStatusV3.Success -> {
-                lifecycleScope.launch {
-                    viewModel.performConfirmationRequest(status.ppaConfirmToken)
-                        .onSuccess {
-                            setResult(Activity.RESULT_OK, Intent().putResultDataV3(it))
-                            finish()
-                        }
-                        .onFailure {
-                            received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
-                        }
-                }
-            }
-            CheckoutStatusV3.Cancelled -> {
-                received(CancellationStatusV3.USER_INITIATED)
+            .onFailure {
+              received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
             }
         }
+      }
+      CheckoutStatusV3.Cancelled -> {
+        received(CancellationStatusV3.USER_INITIATED)
+      }
     }
+  }
 
-    private fun received(status: CancellationStatusV3, exception: Exception? = null) {
-        val intent = Intent()
-        intent.putCancellationStatusExtraV3(status)
-        exception?.let {
-            intent.putCancellationStatusExtraErrorV3(it)
-        }
-        setResult(Activity.RESULT_CANCELED, intent)
-        finish()
+  private fun received(status: CancellationStatusV3, exception: Exception? = null) {
+    val intent = Intent()
+    intent.putCancellationStatusExtraV3(status)
+    exception?.let {
+      intent.putCancellationStatusExtraErrorV3(it)
     }
+    setResult(Activity.RESULT_CANCELED, intent)
+    finish()
+  }
 }
 
 private class AfterpayWebViewClientV3(
-    private val receivedError: () -> Unit,
-    private val received: (CheckoutStatusV3) -> Unit,
+  private val receivedError: () -> Unit,
+  private val received: (CheckoutStatusV3) -> Unit,
 ) : WebViewClient() {
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        val url = request?.url ?: return false
-        val status = CheckoutStatusV3.fromUrl(url)
+  override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+    val url = request?.url ?: return false
+    val status = CheckoutStatusV3.fromUrl(url)
 
-        return when {
-            status != null -> {
-                received(status)
-                true
-            }
+    return when {
+      status != null -> {
+        received(status)
+        true
+      }
 
-            else -> false
-        }
+      else -> false
     }
+  }
 
-    override fun onReceivedError(
-        view: WebView?,
-        request: WebResourceRequest?,
-        error: WebResourceError?,
-    ) {
-        if (request?.isForMainFrame == true) {
-            receivedError()
-        }
+  override fun onReceivedError(
+    view: WebView?,
+    request: WebResourceRequest?,
+    error: WebResourceError?,
+  ) {
+    if (request?.isForMainFrame == true) {
+      receivedError()
     }
+  }
 }
 
 private class AfterpayWebChromeClientV3(
-    private val openExternalLink: (Uri) -> Unit,
-    private val URL_KEY: String = "url",
+  private val openExternalLink: (Uri) -> Unit,
+  private val URL_KEY: String = "url",
 ) : WebChromeClient() {
 
-    override fun onCreateWindow(
-        view: WebView?,
-        isDialog: Boolean,
-        isUserGesture: Boolean,
-        resultMsg: Message?,
-    ): Boolean {
-        val hrefMessage = view?.handler?.obtainMessage()
-        view?.requestFocusNodeHref(hrefMessage)
+  override fun onCreateWindow(
+    view: WebView?,
+    isDialog: Boolean,
+    isUserGesture: Boolean,
+    resultMsg: Message?,
+  ): Boolean {
+    val hrefMessage = view?.handler?.obtainMessage()
+    view?.requestFocusNodeHref(hrefMessage)
 
-        val url = hrefMessage?.data?.getString(URL_KEY)
-        url?.let { openExternalLink(Uri.parse(it)) }
+    val url = hrefMessage?.data?.getString(URL_KEY)
+    url?.let { openExternalLink(Uri.parse(it)) }
 
-        return false
-    }
+    return false
+  }
 }
 
 private sealed class CheckoutStatusV3 {
-    data class Success(val orderToken: String, val ppaConfirmToken: String) : CheckoutStatusV3()
-    object Cancelled : CheckoutStatusV3()
+  data class Success(val orderToken: String, val ppaConfirmToken: String) : CheckoutStatusV3()
+  object Cancelled : CheckoutStatusV3()
 
-    companion object {
-        fun fromUrl(url: Uri): CheckoutStatusV3? = when (url.getQueryParameter("status")) {
-            "SUCCESS" -> {
-                val success = url.getQueryParameter("orderToken")?.let { token ->
-                    url.getQueryParameter("ppaConfirmToken")?.let { confirmToken ->
-                        Success(token, confirmToken)
-                    }
-                }
-                success
-            }
-            "CANCELLED" -> Cancelled
-            else -> null
+  companion object {
+    fun fromUrl(url: Uri): CheckoutStatusV3? = when (url.getQueryParameter("status")) {
+      "SUCCESS" -> {
+        val success = url.getQueryParameter("orderToken")?.let { token ->
+          url.getQueryParameter("ppaConfirmToken")?.let { confirmToken ->
+            Success(token, confirmToken)
+          }
         }
+        success
+      }
+      "CANCELLED" -> Cancelled
+      else -> null
     }
+  }
 }

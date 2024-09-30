@@ -16,14 +16,14 @@
 package com.afterpay.android.view
 
 enum class AfterpayLogoType(val fontHeightMultiplier: Double) {
-    BADGE(2.5),
-    LOCKUP(1.0),
-    COMPACT_BADGE(1.4),
-    ;
+  BADGE(2.5),
+  LOCKUP(1.0),
+  COMPACT_BADGE(1.4),
+  ;
 
-    internal companion object {
+  internal companion object {
 
-        @JvmField
-        val DEFAULT = BADGE
-    }
+    @JvmField
+    val DEFAULT = BADGE
+  }
 }

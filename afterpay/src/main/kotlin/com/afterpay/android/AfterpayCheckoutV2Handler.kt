@@ -21,15 +21,15 @@ import com.afterpay.android.model.ShippingOptionUpdateResult
 import com.afterpay.android.model.ShippingOptionsResult
 
 interface AfterpayCheckoutV2Handler {
-    fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit)
+  fun didCommenceCheckout(onTokenLoaded: (Result<String>) -> Unit)
 
-    fun shippingAddressDidChange(
-        address: ShippingAddress,
-        onProvideShippingOptions: (ShippingOptionsResult) -> Unit,
-    )
+  fun shippingAddressDidChange(
+    address: ShippingAddress,
+    onProvideShippingOptions: (ShippingOptionsResult) -> Unit,
+  )
 
-    fun shippingOptionDidChange(
-        shippingOption: ShippingOption,
-        onProvideShippingOption: (ShippingOptionUpdateResult?) -> Unit,
-    )
+  fun shippingOptionDidChange(
+    shippingOption: ShippingOption,
+    onProvideShippingOption: (ShippingOptionUpdateResult?) -> Unit,
+  )
 }

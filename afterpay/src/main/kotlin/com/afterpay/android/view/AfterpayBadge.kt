@@ -29,50 +29,50 @@ import com.afterpay.android.internal.dp
 private const val MIN_WIDTH: Int = 64
 
 class AfterpayBadge @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
+  context: Context,
+  attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
-    var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
-        set(value) {
-            field = value
-            update()
-        }
-
-    init {
-        contentDescription = resources.getString(Afterpay.brand.title)
-        importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
-        isFocusable = true
-        scaleType = FIT_CENTER
-        adjustViewBounds = true
-        minimumWidth = MIN_WIDTH.dp
-
-        context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-            colorScheme = AfterpayColorScheme.values()[
-                attributes.getInteger(
-                    R.styleable.Afterpay_afterpayColorScheme,
-                    AfterpayColorScheme.DEFAULT.ordinal,
-                ),
-            ]
-        }
+  var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+    set(value) {
+      field = value
+      update()
     }
 
-    private fun update() {
-        visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
+  init {
+    contentDescription = resources.getString(Afterpay.brand.title)
+    importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
+    isFocusable = true
+    scaleType = FIT_CENTER
+    adjustViewBounds = true
+    minimumWidth = MIN_WIDTH.dp
 
-        setImageDrawable(
-            context.coloredDrawable(
-                drawableResId = Afterpay.brand.badgeForeground,
-                colorResId = colorScheme.foregroundColorResId,
-            ),
-        )
-
-        background = context.coloredDrawable(
-            R.drawable.afterpay_badge_bg,
-            colorScheme.backgroundColorResId,
-        )
-
-        invalidate()
-        requestLayout()
+    context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
+      colorScheme = AfterpayColorScheme.values()[
+        attributes.getInteger(
+          R.styleable.Afterpay_afterpayColorScheme,
+          AfterpayColorScheme.DEFAULT.ordinal,
+        ),
+      ]
     }
+  }
+
+  private fun update() {
+    visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
+
+    setImageDrawable(
+      context.coloredDrawable(
+        drawableResId = Afterpay.brand.badgeForeground,
+        colorResId = colorScheme.foregroundColorResId,
+      ),
+    )
+
+    background = context.coloredDrawable(
+      R.drawable.afterpay_badge_bg,
+      colorScheme.backgroundColorResId,
+    )
+
+    invalidate()
+    requestLayout()
+  }
 }

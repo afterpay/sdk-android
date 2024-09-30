@@ -23,6 +23,6 @@ import java.util.Currency
 
 @Serializable
 data class Money(
-    @Serializable(with = MoneyBigDecimalSerializer::class) val amount: BigDecimal,
-    @Serializable(with = CurrencySerializer::class) val currency: Currency,
+  @Serializable(with = MoneyBigDecimalSerializer::class) val amount: BigDecimal,
+  @Serializable(with = CurrencySerializer::class) val currency: Currency,
 )
