@@ -21,21 +21,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 suspend fun showToastFromBackground(
-    context: Context,
-    message: String,
+  context: Context,
+  message: String,
 ) {
-    withContext(Dispatchers.Main) {
-        showToast(context, message)
-    }
+  withContext(Dispatchers.Main) {
+    showToast(context, message)
+  }
 }
 
 fun showToast(
-    context: Context,
-    message: String,
+  context: Context,
+  message: String,
 ) {
-    Toast.makeText(
-        context,
-        message,
-        Toast.LENGTH_SHORT,
-    ).show()
+  Toast.makeText(
+    context,
+    message,
+    Toast.LENGTH_SHORT,
+  ).show()
 }
