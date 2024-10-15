@@ -2,7 +2,7 @@
 compileSdkVersion = "33"
 exampleCompileSdk = "34"
 minSdk = "21"
-java = "17"
+java = "17" # remember to update java version in .github/workflows as well
 
 androidGradlePlugin = "8.2.2"
 kotlin = "1.7.20"
