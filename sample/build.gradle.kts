@@ -35,15 +35,16 @@ android {
     namespace = "com.example"
 
     compileSdk = libs.versions.exampleCompileSdk.get().toInt()
-    buildToolsVersion = libs.versions.buildTools.get()
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
+
     defaultConfig {
         applicationId = "com.afterpay.android.sample"
         minSdk = libs.versions.minSdk.get().toInt()
@@ -74,6 +75,8 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
+
+    coreLibraryDesugaring(libs.androidToolsDesugarJdk)
 }
 
 secrets {
