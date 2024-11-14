@@ -169,11 +169,7 @@ fun createCashAppPayCustomerRequest(checkoutV3CashAppPay: CheckoutV3CashAppPay) 
     val action = CashAppPayPaymentAction.OneTimeAction(
         currency = USD,
         amount = // TODO transaction amount,
-	    /**
-         * This is not the same merchant ID you set in [CheckoutV3Configuration].
-         * This is a specific for use with Cash App Pay SDK.
-         */
-        scopeId = checkoutV3CashAppPay.merchantId,
+        scopeId = checkoutV3CashAppPay.brandId,
     )
 
     cashAppPay.createCustomerRequest(

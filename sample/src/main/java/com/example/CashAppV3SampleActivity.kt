@@ -269,11 +269,7 @@ class CashAppV3SampleActivity : AppCompatActivity() {
         val action = CashAppPayPaymentAction.OneTimeAction(
             currency = USD,
             amount = checkoutV3CashAppPay.amount.toInt(),
-            /**
-             * This is not the same merchant ID you set in [CheckoutV3Configuration].
-             * This is a specific for use with Cash App Pay SDK.
-             */
-            scopeId = checkoutV3CashAppPay.merchantId,
+            scopeId = checkoutV3CashAppPay.brandId,
         )
 
         cashAppPay.createCustomerRequest(
