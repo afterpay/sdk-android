@@ -89,13 +89,14 @@ class CashAppV3SampleActivity : AppCompatActivity() {
             newState.responseData.apply {
               // optionally, retrieve customer's cash tag
               val cashTag = customerProfile?.cashTag
-              showToast(
-                this@CashAppV3SampleActivity,
-                "Grant approved for customer: $cashTag",
-              )
 
               grants?.get(0)?.let { grant: Grant ->
                 CoroutineScope(Dispatchers.IO).launch {
+                  showToastFromBackground(
+                    this@CashAppV3SampleActivity,
+                    "Grant approved for customer: $cashTag",
+                  )
+
                   confirmCheckoutWithAfterpay(
                     grantId = grant.id,
                     customerId = grant.customerId,
@@ -211,10 +212,9 @@ class CashAppV3SampleActivity : AppCompatActivity() {
           }
 
           result.onFailure {
-            showToastFromBackground(
-              this@CashAppV3SampleActivity,
-              "Failed to fetch merchant configs",
-            )
+            val msg = "Failed to fetch merchant configs"
+            Log.e(tag, msg, it)
+            showToastFromBackground(this@CashAppV3SampleActivity, msg)
           }
         }
     }
@@ -316,10 +316,9 @@ class CashAppV3SampleActivity : AppCompatActivity() {
         }
 
         result.onFailure {
-          showToastFromBackground(
-            this@CashAppV3SampleActivity,
-            "Failed to confirm payment with Afterpay",
-          )
+          val msg = "Failed to confirm payment with Afterpay"
+          Log.e(tag, msg, it)
+          showToastFromBackground(this@CashAppV3SampleActivity, msg)
         }
       }
     }
