@@ -34,7 +34,7 @@ internal fun createItems(): Array<CheckoutV3Item> {
 
 internal fun createOrderTotal(): OrderTotal {
   return OrderTotal(
-    total = BigDecimal(10.00),
+    total = BigDecimal(12.34),
     shipping = BigDecimal(1.00),
     tax = BigDecimal(2.34),
   )
