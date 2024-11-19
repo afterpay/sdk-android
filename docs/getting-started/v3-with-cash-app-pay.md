@@ -42,7 +42,6 @@ For definitions of other build systems, see [Cash App Pay Kit on Maven Central][
 {: .info }
 > Version `v2.3.0` of the SDK is `12.3 kB`.
 
-
 ## Implement Deep Linking
 
 The authorization flow will bring Cash App to the foreground on the Customer’s device. After the Customer either authorizes or declines, the Cash App Pay SDK will attempt to return your app to the foreground.  This is accomplished by [declaring an intent filter][intent-filter]{:target="_blank"} on your app's Android Manifest. You will pass a corresponding redirect URI when launching Cash App Pay SDK, see steps below.
@@ -60,7 +59,6 @@ The authorization flow will bring Cash App to the foreground on the Customer’s
   <category android:name="android.intent.category.DEFAULT" />
 </intent-filter>
 ```
-
 
 # Authorization steps
 
@@ -108,7 +106,6 @@ private fun initializeCashAppSDK() {
 }
 ```
 
-
 ### States
 
 `CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. The most critical states to handle are in the table below:
@@ -122,11 +119,9 @@ private fun initializeCashAppSDK() {
 
 Handling of each of these states is outlined in further detail below.
 
-
 ## Step 3: Begin checkout
 
 Begin checkout process by requesting data from Afterpay. Optionally, supply data on the customer, order total, and items being purchased. Set `configuration` now if you failed to set it previously.
-
 
 ```kotlin
 Afterpay.beginCheckoutV3WithCashAppPay(
@@ -141,8 +136,7 @@ Afterpay.beginCheckoutV3WithCashAppPay(
 
 ## Step 4: Save result
 
-You will receive a `Result<CheckoutV3CashAppPay>` on success or failure. When successful, save the `result` for later and begin the customer request process. 
-
+You will receive a `Result<CheckoutV3CashAppPay>` on success or failure. When successful, save the `result` for later and begin the customer request process.
 
 ```kotlin
 private var checkoutV3CashAppPay: CheckoutV3CashAppPay? = null
@@ -162,13 +156,14 @@ private var checkoutV3CashAppPay: CheckoutV3CashAppPay? = null
 
 Using the `CheckoutV3CashAppPay` from the previous step, create a `OneTimeAction` with Cash App Pay SDK. Also supply the redirect URI which matches the `IntentFilter` defined in your `AndroidManifest.xml` (see above)
 
-
 ```kotlin
 fun createCashAppPayCustomerRequest(checkoutV3CashAppPay: CheckoutV3CashAppPay) {
     val redirectUri = "example://example.com/"
+    // must convert from dollars to cents
+    val cents = (checkoutV3CashAppPay.amount * 100).toInt()
     val action = CashAppPayPaymentAction.OneTimeAction(
         currency = USD,
-        amount = // TODO transaction amount,
+        amount = cents,
         scopeId = checkoutV3CashAppPay.brandId,
     )
 
@@ -177,10 +172,7 @@ fun createCashAppPayCustomerRequest(checkoutV3CashAppPay: CheckoutV3CashAppPay) 
         redirectUri = redirectUri,
     )
 }
-``` 
-
-
-
+```
 
 ## Step 6: Respond to ReadyToAuthorize
 
@@ -202,7 +194,6 @@ private val cashAppPayListener =
     }
 
 ```
-
 
 ## Step 7: Authorize when customer clicks button
 
@@ -233,7 +224,6 @@ private val cashAppPayListener =
         }
     }
 ```
-
 
 ## Step 9: Respond to Approved or Declined
 
@@ -267,9 +257,7 @@ private val cashAppPayListener =
 
 # Step 10: Pass grant back to Afterpay
 
-
 By combining the `CheckoutV3CashAppPay` you stored before, with the newly received `grantId` and `customerId`, you can now confirm checkout with Afterpay
-
 
 ```kotlin
 fun confirmCheckoutWithAfterpay(
@@ -316,7 +304,6 @@ You should also use the **Unregister** function when you're done with the SDK:
 ``` kotlin
 cashAppPay.unregisterFromStateUpdates()
 ```
-
 
 [cash-on-maven]: https://central.sonatype.com/artifact/app.cash.paykit/core/2.3.0/overview
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters

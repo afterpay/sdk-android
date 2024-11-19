@@ -266,9 +266,16 @@ class CashAppV3SampleActivity : AppCompatActivity() {
      * See intent filter in AndroidManifest.xml
      */
     val redirectUri = "example://example.com/"
+
+    /**
+     * Important: Afterpay SDK returns amount in dollars. We need to convert to cents before
+     * passing to Cash App Pay SDK
+     */
+    val cents = (checkoutV3CashAppPay.amount * 100).toInt()
+
     val action = CashAppPayPaymentAction.OneTimeAction(
       currency = USD,
-      amount = checkoutV3CashAppPay.amount.toInt(),
+      amount = cents,
       scopeId = checkoutV3CashAppPay.brandId,
     )
 
