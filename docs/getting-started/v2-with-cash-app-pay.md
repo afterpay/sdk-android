@@ -101,7 +101,7 @@ cashAppPay.unregisterFromStateUpdates()
 
 ### States
 
-`CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. The most critical states to handle are in the table below:
+`CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. See [Cash App Pay SDK documentation][cash-app-event-listener]{:target="_blank"} for a complete list of states. The most critical states to handle are in the table below:
 
 | State  | Description |
 |:-------|:------------|
@@ -143,7 +143,7 @@ After retrieving the token from your server-to-server call, you must sign the or
 ``` kotlin
 Afterpay.signCashAppOrder(token) { cashAppData ->
   when (cashAppData) {
-    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customemr request")
+    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customer request")
     is CashAppSignOrderResult.Failure -> TODO("Display an error and restart payment flow")
   }
 }
@@ -154,7 +154,7 @@ Afterpay.signCashAppOrder(token) { cashAppData ->
 ``` kotlin
 Afterpay.signCashAppOrderAsync(token) { cashAppData ->
   when (cashAppData) {
-    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customemr request")
+    is CashAppSignOrderResult.Success -> TODO("Create the Pay Kit customer request")
     is CashAppSignOrderResult.Failure -> TODO("Display an error and restart payment flow")
   }
 }
@@ -286,7 +286,7 @@ sequenceDiagram
 
   Afterpay API-->>Proxy Server: Capture Payment Response
 
-  Proxy Server-->>App: Capture Payment Respnse
+  Proxy Server-->>App: Capture Payment Response
 
   App->>App: Handle payment<br>capture response
 ```
@@ -299,3 +299,4 @@ sequenceDiagram
 [api-reference-props]: https://developers.afterpay.com/afterpay-online/reference/javascript-afterpayjs#redirect-method
 [cash-button-docs]: https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#cashapppaybutton
 [create-checkout-endpoint-docs]: https://developers.afterpay.com/afterpay-online/reference/create-checkout-1
+[cash-app-event-listener]: https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#states

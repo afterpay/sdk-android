@@ -108,7 +108,7 @@ private fun initializeCashAppSDK() {
 
 ### States
 
-`CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. The most critical states to handle are in the table below:
+`CashAppPayState` is a sealed class. Some states are for information only, but most will drive the logic of your integration. See [Cash App Pay SDK documentation][cash-app-event-listener]{:target="_blank"} for a complete list of states. The most critical states to handle are in the table below:
 
 | State  | Description |
 |:-------|:------------|
@@ -309,3 +309,4 @@ cashAppPay.unregisterFromStateUpdates()
 [intent-filter]: https://developer.android.com/training/app-links/deep-linking#adding-filters
 [custom-url-schemes]: https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app
 [sandbox-app]: https://developers.cash.app/docs/api/technical-documentation/sandbox/sandbox-app
+[cash-app-event-listener]: https://developers.cash.app/docs/api/technical-documentation/sdks/pay-kit/android-getting-started#states
