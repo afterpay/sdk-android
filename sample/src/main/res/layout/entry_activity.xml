@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center"
+  android:orientation="vertical"
+  android:padding="32dp">
+
+  <Button
+    android:id="@+id/button_afterpay_v2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Afterpay V2 Sample" />
+
+  <Button
+    android:id="@+id/button_afterpay_v3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="Afterpay V3 Sample" />
+
+  <Button
+    android:id="@+id/button_cashapp_v3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:text="Cash App V3 Sample" />
+
+</LinearLayout>

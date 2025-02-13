@@ -117,3 +117,4 @@ docs/_site
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+/.idea/AndroidProjectSystem.xml
