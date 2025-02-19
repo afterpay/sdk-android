@@ -43,6 +43,7 @@
 
       <activity android:name=".AfterpayV3SampleActivity" />
       <activity android:name=".CashAppV3SampleActivity" />
+      <activity android:name=".AfterpayUiGalleryActivity" />
 
     </application>
 
