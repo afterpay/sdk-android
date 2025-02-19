@@ -36,5 +36,9 @@ class EntryMainActivity : AppCompatActivity() {
     findViewById<Button>(R.id.button_cashapp_v3).setOnClickListener {
       startActivity(Intent(this, CashAppV3SampleActivity::class.java))
     }
+
+    findViewById<Button>(R.id.button_ui_widgets).setOnClickListener {
+      startActivity(Intent(this, AfterpayUiGalleryActivity::class.java))
+    }
   }
 }
