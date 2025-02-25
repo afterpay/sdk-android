@@ -71,8 +71,8 @@ class AfterpayLockup @JvmOverloads constructor(
       context.coloredDrawable(
         drawableResId = Afterpay.brand.lockupDrawableResIdForColorScheme(colorScheme),
         colorResId = colorScheme.foregroundColorResId.takeIf {
-          colorScheme != AfterpayColorScheme.AfterpayCashAppPreferred
-            && colorScheme != AfterpayColorScheme.AfterpayCashAppAlt
+          colorScheme != AfterpayColorScheme.AfterpayCashAppPreferred &&
+            colorScheme != AfterpayColorScheme.AfterpayCashAppAlt
         },
       ),
     )

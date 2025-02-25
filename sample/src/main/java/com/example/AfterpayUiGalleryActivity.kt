@@ -43,7 +43,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
     // Instantiate an AfterpayPriceBreakdown and fill it with dummy info.
     AfterpayLogoType.values().forEach { logoType ->
 
-      Style.values().forEach {  style ->
+      Style.values().forEach { style ->
         val breakdownView = AfterpayPriceBreakdown(this).apply {
           totalAmount = BigDecimal("100.00")
           this.logoType = logoType

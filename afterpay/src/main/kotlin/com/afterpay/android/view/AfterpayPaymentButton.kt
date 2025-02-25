@@ -118,19 +118,21 @@ class AfterpayPaymentButton @JvmOverloads constructor(
       context.coloredDrawable(
         drawableResId = buttonText.drawableResIdForColorScheme(colorScheme),
         colorResId = colorScheme.foregroundColorResId
-          .takeIf { colorScheme != AfterpayCashAppPreferred},
-      )
+          .takeIf { colorScheme != AfterpayCashAppPreferred },
+      ),
     )
 
     val rippleColorResId = when (colorScheme) {
       AfterpayCashAppPreferred,
       AfterpayCashAppMonochromeLight,
       AfterpayBlackOnMint,
-      AfterpayBlackOnWhite -> R.color.afterpay_ripple_light
+      AfterpayBlackOnWhite,
+      -> R.color.afterpay_ripple_light
       AfterpayCashAppAlt,
       AfterpayCashAppMonochromeDark,
       AfterpayMintOnBlack,
-      AfterpayWhiteOnBlack -> R.color.afterpay_ripple_dark
+      AfterpayWhiteOnBlack,
+      -> R.color.afterpay_ripple_dark
     }
 
     background = context.rippleDrawable(
@@ -142,8 +144,8 @@ class AfterpayPaymentButton @JvmOverloads constructor(
           R.drawable.afterpay_button_bg
         },
         colorResId = colorScheme.backgroundColorResId
-          .takeIf { colorScheme != AfterpayCashAppMonochromeLight }
-      )
+          .takeIf { colorScheme != AfterpayCashAppMonochromeLight },
+      ),
     )
 
     invalidate()
@@ -185,5 +187,3 @@ class AfterpayPaymentButton @JvmOverloads constructor(
     }
   }
 }
-
-

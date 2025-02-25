@@ -30,7 +30,7 @@ import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
 import java.util.Locale
 
 private val brandLocales = mapOf(
-  setOf(EN_AU, EN_CA, FR_CA,  EN_NZ) to Brand.AFTERPAY,
+  setOf(EN_AU, EN_CA, FR_CA, EN_NZ) to Brand.AFTERPAY,
   setOf(EN_GB) to Brand.CLEARPAY,
   setOf(EN_US) to Brand.AFTERPAY_CASH_APP,
 )
