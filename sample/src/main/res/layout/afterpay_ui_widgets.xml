@@ -8,72 +8,58 @@
     android:id="@+id/main_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <!-- Payment Buttons Section -->
-    <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_button_pay_now"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      afterpay:afterpayButtonText="payNow"
-      afterpay:afterpayColorScheme="blackOnMint" />
-
-    <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_button_buy_now"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      afterpay:afterpayButtonText="buyNow"
-      afterpay:afterpayColorScheme="mintOnBlack" />
-
-    <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_button_checkout"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      afterpay:afterpayButtonText="checkout"
-      afterpay:afterpayColorScheme="whiteOnBlack" />
-
-    <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_button_place_order"
+    android:orientation="vertical">
+    <LinearLayout
+      android:id="@+id/logo_lockups_container"
       android:layout_width="match_parent"
-      android:layout_height="54dp"
-      android:layout_marginBottom="16dp"
-      afterpay:afterpayButtonText="placeOrder"
-      afterpay:afterpayColorScheme="blackOnWhite" />
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp">
+      <!-- Section Header Badge and Lockup -->
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="AP Badge and Lockup"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+      <com.afterpay.android.view.AfterpayBadge
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        afterpay:afterpayStyle="preferred"/>
+
+      <com.afterpay.android.view.AfterpayLockup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        afterpay:afterpayStyle="preferred"/>
+
+      <com.afterpay.android.view.AfterpayLockup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        afterpay:afterpayStyle="alt"/>
+
+      <com.afterpay.android.view.AfterpayLockup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        afterpay:afterpayStyle="monochromeLight"/>
+
+      <com.afterpay.android.view.AfterpayLockup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        afterpay:afterpayStyle="monochromeDark"/>
+    </LinearLayout>
 
     <!-- Divider -->
     <View
       android:layout_width="match_parent"
       android:layout_height="1dp"
       android:layout_marginVertical="16dp"
-      android:background="#CCCCCC" />
-
-    <!-- Section Header Badge and Lockup -->
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:text="AP Badge and Lockup"
-      android:textSize="18sp"
-      android:textStyle="bold" />
-
-    <com.afterpay.android.view.AfterpayBadge
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
-
-    <com.afterpay.android.view.AfterpayLockup
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="10dp" />
-
-    <!-- Divider -->
-    <View
-      android:layout_width="match_parent"
-      android:layout_height="1dp"
-      android:layout_marginVertical="16dp"
+      android:padding="16dp"
       android:background="#CCCCCC" />
 
     <!-- Section Header for Logo Types -->
@@ -83,14 +69,183 @@
       android:layout_marginBottom="8dp"
       android:text="Afterpay Price breakdown"
       android:textSize="18sp"
+      android:paddingHorizontal="16dp"
       android:textStyle="bold" />
 
     <!-- Container for programmatically inflated widget -->
     <LinearLayout
       android:id="@+id/logo_container"
       android:layout_width="match_parent"
-      android:layout_height="300dp"
-      android:orientation="vertical" />
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp"/>
 
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginVertical="16dp"
+      android:padding="16dp"
+      android:background="#CCCCCC" />
+
+    <LinearLayout
+      android:id="@+id/button_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp">
+    <!-- Payment Buttons Section -->
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_preferred_button_pay_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="payNow"
+      afterpay:afterpayStyle="preferred" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_preferred_button_buy_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="buyNow"
+      afterpay:afterpayStyle="preferred" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_preferred_button_checkout_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="checkout"
+      afterpay:afterpayStyle="preferred" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_preferred_button_continue_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      afterpay:afterpayButtonText="placeOrder"
+      afterpay:afterpayStyle="preferred" />
+
+    <!-- Divider -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginVertical="16dp"
+      android:background="#CCCCCC" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_alt_pay_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="payNow"
+      afterpay:afterpayStyle="alt" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_alt_buy_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="buyNow"
+      afterpay:afterpayStyle="alt" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_alt_checkout_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="checkout"
+      afterpay:afterpayStyle="alt" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_alt_continue_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      afterpay:afterpayButtonText="placeOrder"
+      afterpay:afterpayStyle="alt" />
+
+    <!-- Divider -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginVertical="16dp"
+      android:background="#CCCCCC" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_dark_pay_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="payNow"
+      afterpay:afterpayStyle="monochromeDark" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_dark_buy_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="buyNow"
+      afterpay:afterpayStyle="monochromeDark" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_dark_checkout_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="checkout"
+      afterpay:afterpayStyle="monochromeDark" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_dark_continue_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      afterpay:afterpayButtonText="placeOrder"
+      afterpay:afterpayStyle="monochromeDark" />
+
+    <!-- Divider -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginVertical="16dp"
+      android:background="#CCCCCC" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_light_pay_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
+      afterpay:afterpayButtonText="payNow"
+      afterpay:afterpayStyle="monochromeLight" />
+
+    <com.afterpay.android.view.AfterpayPaymentButton
+      android:id="@+id/afterpay_cash_app_button_monochrome_light_buy_now"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      afterpay:afterpayButtonText="buyNow"
+      afterpay:afterpayStyle="monochromeLight" />
+  </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/monochrome_light_on_light_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white">
+        <com.afterpay.android.view.AfterpayPaymentButton
+          android:id="@+id/afterpay_cash_app_button_monochrome_light_checkout_now"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          afterpay:afterpayButtonText="checkout"
+          afterpay:afterpayStyle="monochromeLight" />
+
+        <com.afterpay.android.view.AfterpayPaymentButton
+          android:id="@+id/afterpay_cash_app_button_monochrome_light_continue_now"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          afterpay:afterpayButtonText="placeOrder"
+          afterpay:afterpayStyle="monochromeLight" />
+      </LinearLayout>
   </LinearLayout>
 </ScrollView>

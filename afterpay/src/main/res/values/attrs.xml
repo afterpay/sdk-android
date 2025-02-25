@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="Afterpay">
-        <attr name="afterpayColorScheme" format="enum">
-            <enum name="blackOnMint" value="0" />
-            <enum name="mintOnBlack" value="1" />
-            <enum name="whiteOnBlack" value="2" />
-            <enum name="blackOnWhite" value="3" />
+        <attr name="afterpayStyle" format="enum">
+            <enum name="preferred" value="0" />
+            <enum name="alt" value="1" />
+            <enum name="monochromeDark" value="2" />
+            <enum name="monochromeLight" value="3" />
         </attr>
         <attr name="afterpayButtonText" format="enum">
             <enum name="payNow" value="0" />
