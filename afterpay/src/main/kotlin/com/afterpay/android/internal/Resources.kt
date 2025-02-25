@@ -55,13 +55,17 @@ internal fun Context.color(@ColorRes colorResId: Int): Int {
 
 internal fun Context.coloredDrawable(
   @DrawableRes drawableResId: Int,
-  @ColorRes colorResId: Int,
-): Drawable = ContextCompat.getDrawable(this, drawableResId).let {
-  checkNotNull(it) { "Drawable resource not found" }
-  val wrappedDrawable = DrawableCompat.wrap(it)
-  DrawableCompat.setTint(wrappedDrawable, color(colorResId))
-  return wrappedDrawable
-}
+  @ColorRes colorResId: Int?,
+): Drawable = ContextCompat.getDrawable(this, drawableResId)
+  ?.mutate()
+  .let {
+    checkNotNull(it) { "Drawable resource not found" }
+    val wrappedDrawable = DrawableCompat.wrap(it)
+    if (colorResId != null) {
+      DrawableCompat.setTint(wrappedDrawable, color(colorResId))
+    }
+    return wrappedDrawable
+  }
 
 internal fun Context.rippleDrawable(
   @ColorRes rippleColorResId: Int,

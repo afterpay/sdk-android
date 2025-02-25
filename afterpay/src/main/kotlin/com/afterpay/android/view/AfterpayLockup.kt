@@ -33,7 +33,14 @@ class AfterpayLockup @JvmOverloads constructor(
   attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
-  var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+  var style: Style = Style.DEFAULT
+    set(value) {
+      field = value
+      colorScheme = value.toColorScheme(Afterpay.locale)
+      update()
+    }
+
+  private var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
     set(value) {
       field = value
       update()
@@ -48,10 +55,10 @@ class AfterpayLockup @JvmOverloads constructor(
     minimumWidth = MIN_WIDTH.dp
 
     context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-      colorScheme = AfterpayColorScheme.values()[
+      style = Style.values()[
         attributes.getInteger(
-          R.styleable.Afterpay_afterpayColorScheme,
-          AfterpayColorScheme.DEFAULT.ordinal,
+          R.styleable.Afterpay_afterpayStyle,
+          Style.DEFAULT.ordinal,
         ),
       ]
     }
@@ -62,8 +69,11 @@ class AfterpayLockup @JvmOverloads constructor(
 
     setImageDrawable(
       context.coloredDrawable(
-        drawableResId = Afterpay.brand.lockup,
-        colorResId = colorScheme.foregroundColorResId,
+        drawableResId = Afterpay.brand.lockupDrawableResIdForColorScheme(colorScheme),
+        colorResId = colorScheme.foregroundColorResId.takeIf {
+          colorScheme != AfterpayColorScheme.AfterpayCashAppPreferred
+            && colorScheme != AfterpayColorScheme.AfterpayCashAppAlt
+        },
       ),
     )
 

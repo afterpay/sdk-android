@@ -17,32 +17,95 @@ package com.afterpay.android.view
 
 import androidx.annotation.ColorRes
 import com.afterpay.android.R
+import com.afterpay.android.internal.Locales.EN_US
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnMint
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnWhite
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeDark
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeLight
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayMintOnBlack
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayWhiteOnBlack
+import java.util.Locale
 
-enum class AfterpayColorScheme(
+internal enum class AfterpayColorScheme(
   @ColorRes val foregroundColorResId: Int,
-  @ColorRes val backgroundColorResId: Int,
+  @ColorRes val backgroundColorResId: Int
 ) {
-  BLACK_ON_MINT(
+  AfterpayBlackOnMint(
     foregroundColorResId = R.color.afterpay_black,
     backgroundColorResId = R.color.afterpay_mint,
   ),
-  MINT_ON_BLACK(
+  AfterpayMintOnBlack(
     foregroundColorResId = R.color.afterpay_mint,
     backgroundColorResId = R.color.afterpay_black,
   ),
-  WHITE_ON_BLACK(
+  AfterpayWhiteOnBlack(
     foregroundColorResId = R.color.afterpay_white,
     backgroundColorResId = R.color.afterpay_black,
   ),
-  BLACK_ON_WHITE(
+  AfterpayBlackOnWhite(
     foregroundColorResId = R.color.afterpay_black,
     backgroundColorResId = R.color.afterpay_white,
   ),
+  AfterpayCashAppPreferred(
+    foregroundColorResId = R.color.afterpay_white,
+    backgroundColorResId = R.color.afterpay_black,
+  ),
+  AfterpayCashAppAlt(
+    foregroundColorResId = R.color.afterpay_black,
+    backgroundColorResId = R.color.cash_app_brand,
+  ),
+  AfterpayCashAppMonochromeDark(
+    foregroundColorResId = R.color.afterpay_white,
+    backgroundColorResId = R.color.afterpay_black,
+  ),
+  AfterpayCashAppMonochromeLight(
+    foregroundColorResId = R.color.afterpay_black,
+    backgroundColorResId = R.color.afterpay_white
+  ),
   ;
+
+  fun isCashAppScheme() = cashAppSchemes.contains(this)
 
   internal companion object {
 
     @JvmField
-    val DEFAULT = BLACK_ON_MINT
+    val DEFAULT = AfterpayCashAppPreferred
+
+    val cashAppSchemes = listOf(AfterpayCashAppPreferred, AfterpayCashAppAlt, AfterpayCashAppMonochromeDark, AfterpayCashAppMonochromeLight)
+
+  }
+}
+
+/**
+ * Public facing set of styles implementers can choose from.
+ * Mapping from these styles to [AfterpayColorScheme] changes depending on Locale
+ */
+enum class Style {
+  Preferred,
+  Alt,
+  MonochromeDark,
+  MonochromeLight;
+
+  internal fun toColorScheme(locale: Locale): AfterpayColorScheme =
+    when (locale) {
+      EN_US -> when (this) {
+        Preferred -> AfterpayCashAppPreferred
+        Alt -> AfterpayCashAppAlt
+        MonochromeDark -> AfterpayCashAppMonochromeDark
+        MonochromeLight -> AfterpayCashAppMonochromeLight
+      }
+      else -> when (this) {
+        Preferred -> AfterpayBlackOnMint
+        Alt -> AfterpayMintOnBlack
+        MonochromeDark -> AfterpayWhiteOnBlack
+        MonochromeLight -> AfterpayBlackOnWhite
+      }
+    }
+
+  internal companion object {
+    @JvmField
+    val DEFAULT = Preferred
   }
 }
