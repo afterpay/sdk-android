@@ -30,7 +30,7 @@ import java.util.Locale
 
 internal enum class AfterpayColorScheme(
   @ColorRes val foregroundColorResId: Int,
-  @ColorRes val backgroundColorResId: Int
+  @ColorRes val backgroundColorResId: Int,
 ) {
   AfterpayBlackOnMint(
     foregroundColorResId = R.color.afterpay_black,
@@ -62,7 +62,7 @@ internal enum class AfterpayColorScheme(
   ),
   AfterpayCashAppMonochromeLight(
     foregroundColorResId = R.color.afterpay_black,
-    backgroundColorResId = R.color.afterpay_white
+    backgroundColorResId = R.color.afterpay_white,
   ),
   ;
 
@@ -74,7 +74,6 @@ internal enum class AfterpayColorScheme(
     val DEFAULT = AfterpayCashAppPreferred
 
     val cashAppSchemes = listOf(AfterpayCashAppPreferred, AfterpayCashAppAlt, AfterpayCashAppMonochromeDark, AfterpayCashAppMonochromeLight)
-
   }
 }
 
@@ -86,7 +85,8 @@ enum class Style {
   Preferred,
   Alt,
   MonochromeDark,
-  MonochromeLight;
+  MonochromeLight,
+  ;
 
   internal fun toColorScheme(locale: Locale): AfterpayColorScheme =
     when (locale) {
