@@ -41,6 +41,9 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
+import com.afterpay.android.view.AfterpayLogoType.LOCKUP
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Observer
@@ -61,7 +64,14 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       updateText()
     }
 
-  var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+  var style: Style = Style.DEFAULT
+    set(value) {
+      field = value
+      colorScheme = value.toColorScheme(Afterpay.locale)
+      updateText()
+    }
+
+  private var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
     set(value) {
       field = value
       updateText()
@@ -85,7 +95,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       updateText()
     }
 
-  var logoType: AfterpayLogoType = AfterpayLogoType.DEFAULT
+  var logoType: AfterpayLogoType = if (Afterpay.locale == Locales.EN_US) LOCKUP else AfterpayLogoType.DEFAULT
     set(value) {
       field = value
       updateText()
@@ -121,10 +131,10 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     addView(textView)
 
     context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-      colorScheme = AfterpayColorScheme.values()[
+      style = Style.values()[
         attributes.getInteger(
-          R.styleable.Afterpay_afterpayColorScheme,
-          AfterpayColorScheme.DEFAULT.ordinal,
+          R.styleable.Afterpay_afterpayStyle,
+          Style.DEFAULT.ordinal,
         ),
       ]
     }
@@ -147,7 +157,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
   }
 
   private fun updateText() {
-    visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
+    visibility = if (!Afterpay.enabled || (colorScheme.isCashAppScheme() && logoType != LOCKUP)) View.GONE else View.VISIBLE
 
     val drawable: Drawable = generateLogo()
     val instalment = AfterpayInstalment.of(totalAmount, Afterpay.configuration, resources.configuration.locales[0])
@@ -245,9 +255,11 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
 
   private fun generateLogo(): Drawable {
     val drawable = when (logoType) {
-      AfterpayLogoType.LOCKUP -> context.coloredDrawable(
-        drawableResId = Afterpay.brand.lockup,
-        colorResId = colorScheme.foregroundColorResId,
+      LOCKUP -> context.coloredDrawable(
+        drawableResId = Afterpay.brand.lockupDrawableResIdForColorScheme(colorScheme),
+        colorResId = colorScheme.foregroundColorResId.takeIf {
+          colorScheme != AfterpayCashAppPreferred && colorScheme != AfterpayCashAppAlt
+        },
       )
       AfterpayLogoType.COMPACT_BADGE -> {
         val foreGround = Afterpay.brand.badgeForegroundCropped
