@@ -29,11 +29,14 @@ import com.afterpay.android.internal.ConfigurationObservable
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.dp
 import com.afterpay.android.internal.rippleDrawable
-import com.afterpay.android.view.AfterpayColorScheme.BLACK_ON_MINT
-import com.afterpay.android.view.AfterpayColorScheme.BLACK_ON_WHITE
-import com.afterpay.android.view.AfterpayColorScheme.MINT_ON_BLACK
-import com.afterpay.android.view.AfterpayColorScheme.WHITE_ON_BLACK
-import com.afterpay.android.view.AfterpayColorScheme.values
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnMint
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnWhite
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeDark
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeLight
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayMintOnBlack
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayWhiteOnBlack
 import java.util.Observer
 
 private const val PADDING: Int = 0
@@ -49,7 +52,14 @@ class AfterpayPaymentButton @JvmOverloads constructor(
       update()
     }
 
-  var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+  var style: Style = Style.DEFAULT
+    set(value) {
+      field = value
+      colorScheme = value.toColorScheme(Afterpay.locale)
+      update()
+    }
+
+  private var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
     set(value) {
       field = value
       update()
@@ -86,12 +96,12 @@ class AfterpayPaymentButton @JvmOverloads constructor(
         ),
       ]
 
-      colorScheme = values()[
-        attributes.getInteger(
-          R.styleable.Afterpay_afterpayColorScheme,
-          AfterpayColorScheme.DEFAULT.ordinal,
-        ),
-      ]
+      val index = attributes.getInteger(
+        R.styleable.Afterpay_afterpayStyle,
+        Style.DEFAULT.ordinal,
+      )
+      val value = Style.values()[index]
+      style = value
     }
 
     update()
@@ -106,40 +116,74 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
     setImageDrawable(
       context.coloredDrawable(
-        drawableResId = buttonText.drawableResId,
-        colorResId = colorScheme.foregroundColorResId,
-      ),
+        drawableResId = buttonText.drawableResIdForColorScheme(colorScheme),
+        colorResId = colorScheme.foregroundColorResId
+          .takeIf { colorScheme != AfterpayCashAppPreferred},
+      )
     )
 
     val rippleColorResId = when (colorScheme) {
-      BLACK_ON_MINT, BLACK_ON_WHITE -> R.color.afterpay_ripple_light
-      MINT_ON_BLACK, WHITE_ON_BLACK -> R.color.afterpay_ripple_dark
+      AfterpayCashAppPreferred,
+      AfterpayCashAppMonochromeLight,
+      AfterpayBlackOnMint,
+      AfterpayBlackOnWhite -> R.color.afterpay_ripple_light
+      AfterpayCashAppAlt,
+      AfterpayCashAppMonochromeDark,
+      AfterpayMintOnBlack,
+      AfterpayWhiteOnBlack -> R.color.afterpay_ripple_dark
     }
 
     background = context.rippleDrawable(
       rippleColorResId = rippleColorResId,
       drawable = context.coloredDrawable(
-        drawableResId = R.drawable.afterpay_button_bg,
-        colorResId = colorScheme.backgroundColorResId,
-      ),
+        drawableResId = if (colorScheme.isCashAppScheme()) {
+          R.drawable.afterpay_cash_app_button_bg_outlined
+        } else {
+          R.drawable.afterpay_button_bg
+        },
+        colorResId = colorScheme.backgroundColorResId
+          .takeIf { colorScheme != AfterpayCashAppMonochromeLight }
+      )
     )
 
     invalidate()
     requestLayout()
   }
 
-  enum class ButtonText(@DrawableRes val drawableResId: Int) {
+  enum class ButtonText(
+    @DrawableRes val monochromeDrawableResId: Int,
+    @DrawableRes val polychromeDrawableResId: Int,
+  ) {
 
-    PAY_NOW(drawableResId = Afterpay.drawables.buttonPayNowForeground),
-    BUY_NOW(drawableResId = Afterpay.drawables.buttonBuyNowForeground),
-    CHECKOUT(drawableResId = Afterpay.drawables.buttonCheckoutForeground),
-    PLACE_ORDER(drawableResId = Afterpay.drawables.buttonPlaceOrderForeground),
+    PAY(
+      monochromeDrawableResId = Afterpay.drawables.buttonPayNowForegroundMonochrome,
+      polychromeDrawableResId = Afterpay.drawables.buttonPayNowForegroundPolychrome,
+    ),
+    BUY(
+      monochromeDrawableResId = Afterpay.drawables.buttonBuyNowForegroundMonochrome,
+      polychromeDrawableResId = Afterpay.drawables.buttonBuyNowForegroundPolychrome,
+    ),
+    CHECKOUT(
+      monochromeDrawableResId = Afterpay.drawables.buttonCheckoutForegroundMonochrome,
+      polychromeDrawableResId = Afterpay.drawables.buttonCheckoutForegroundPolychrome,
+    ),
+    CONTINUE(
+      monochromeDrawableResId = Afterpay.drawables.buttonPlaceOrderForegroundMonochrome,
+      polychromeDrawableResId = Afterpay.drawables.buttonPlaceOrderForegroundPolychrome,
+    ),
     ;
+
+    internal fun drawableResIdForColorScheme(colorScheme: AfterpayColorScheme) = when (colorScheme) {
+      AfterpayCashAppPreferred -> polychromeDrawableResId
+      else -> monochromeDrawableResId
+    }
 
     companion object {
 
       @JvmField
-      val DEFAULT = PAY_NOW
+      val DEFAULT = PAY
     }
   }
 }
+
+

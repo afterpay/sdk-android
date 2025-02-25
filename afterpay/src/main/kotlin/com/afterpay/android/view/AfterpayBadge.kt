@@ -23,6 +23,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.use
 import com.afterpay.android.Afterpay
 import com.afterpay.android.R
+import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.dp
 
@@ -33,7 +34,14 @@ class AfterpayBadge @JvmOverloads constructor(
   attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
-  var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+  var style: Style = Style.DEFAULT
+    set(value) {
+      field = value
+      colorScheme = value.toColorScheme(Afterpay.locale)
+      update()
+    }
+
+  private var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
     set(value) {
       field = value
       update()
@@ -48,24 +56,27 @@ class AfterpayBadge @JvmOverloads constructor(
     minimumWidth = MIN_WIDTH.dp
 
     context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-      colorScheme = AfterpayColorScheme.values()[
+      style = Style.values()[
         attributes.getInteger(
-          R.styleable.Afterpay_afterpayColorScheme,
-          AfterpayColorScheme.DEFAULT.ordinal,
+          R.styleable.Afterpay_afterpayStyle,
+          Style.DEFAULT.ordinal,
         ),
       ]
     }
   }
 
   private fun update() {
-    visibility = if (!Afterpay.enabled) View.GONE else View.VISIBLE
+    // Badges are not supported in Cash App branding, logo lockup is used instead.
+    visibility = if (!Afterpay.enabled || Afterpay.locale == Locales.EN_US) View.GONE else View.VISIBLE
 
-    setImageDrawable(
-      context.coloredDrawable(
-        drawableResId = Afterpay.brand.badgeForeground,
-        colorResId = colorScheme.foregroundColorResId,
-      ),
-    )
+    Afterpay.brand.badgeForeground?.let {
+      setImageDrawable(
+        context.coloredDrawable(
+          drawableResId = it,
+          colorResId = colorScheme.foregroundColorResId,
+        ),
+      )
+    }
 
     background = context.coloredDrawable(
       R.drawable.afterpay_badge_bg,
