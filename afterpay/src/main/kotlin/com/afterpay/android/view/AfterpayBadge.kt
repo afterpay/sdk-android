@@ -69,14 +69,12 @@ class AfterpayBadge @JvmOverloads constructor(
     // Badges are not supported in Cash App branding, logo lockup is used instead.
     visibility = if (!Afterpay.enabled || Afterpay.locale == Locales.EN_US) View.GONE else View.VISIBLE
 
-    Afterpay.brand.badgeForeground?.let {
-      setImageDrawable(
-        context.coloredDrawable(
-          drawableResId = it,
-          colorResId = colorScheme.foregroundColorResId,
-        ),
-      )
-    }
+    setImageDrawable(
+      context.coloredDrawable(
+        drawableResId = Afterpay.brand.badgeForeground,
+        colorResId = colorScheme.foregroundColorResId,
+      ),
+    )
 
     background = context.coloredDrawable(
       R.drawable.afterpay_badge_bg,
