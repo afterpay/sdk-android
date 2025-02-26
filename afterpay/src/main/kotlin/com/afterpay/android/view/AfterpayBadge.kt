@@ -34,7 +34,7 @@ class AfterpayBadge @JvmOverloads constructor(
   attrs: AttributeSet? = null,
 ) : AppCompatImageView(context, attrs) {
 
-  var style: Style = Style.Default
+  var style: AfterpayWidgetStyle = AfterpayWidgetStyle.Default
     set(value) {
       field = value
       colorScheme = value.toColorScheme(Afterpay.locale)
@@ -56,10 +56,10 @@ class AfterpayBadge @JvmOverloads constructor(
     minimumWidth = MIN_WIDTH.dp
 
     context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-      style = Style.values()[
+      style = AfterpayWidgetStyle.values()[
         attributes.getInteger(
           R.styleable.Afterpay_afterpayStyle,
-          Style.Default.ordinal,
+          AfterpayWidgetStyle.Default.ordinal,
         ),
       ]
     }

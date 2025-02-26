@@ -64,7 +64,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       updateText()
     }
 
-  var style: Style = Style.Default
+  var style: AfterpayWidgetStyle = AfterpayWidgetStyle.Default
     set(value) {
       field = value
       colorScheme = value.toColorScheme(Afterpay.locale)
@@ -131,10 +131,10 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
     addView(textView)
 
     context.theme.obtainStyledAttributes(attrs, R.styleable.Afterpay, 0, 0).use { attributes ->
-      style = Style.values()[
+      style = AfterpayWidgetStyle.values()[
         attributes.getInteger(
           R.styleable.Afterpay_afterpayStyle,
-          Style.Default.ordinal,
+          AfterpayWidgetStyle.Default.ordinal,
         ),
       ]
     }
