@@ -22,7 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayLogoType
 import com.afterpay.android.view.AfterpayPriceBreakdown
-import com.afterpay.android.view.Style
+import com.afterpay.android.view.AfterpayWidgetStyle
 import com.example.api.GetConfigurationResponse
 import com.example.api.merchantApi
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +43,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
     // Instantiate an AfterpayPriceBreakdown and fill it with dummy info.
     AfterpayLogoType.values().forEach { logoType ->
 
-      Style.values().forEach { style ->
+      AfterpayWidgetStyle.values().forEach { style ->
         val breakdownView = AfterpayPriceBreakdown(this).apply {
           totalAmount = BigDecimal("100.00")
           this.logoType = logoType
