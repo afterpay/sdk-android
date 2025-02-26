@@ -82,10 +82,6 @@ internal enum class AfterpayColorScheme(
   fun isCashAppScheme() = cashAppSchemes.contains(this)
 
   internal companion object {
-
-    @JvmField
-    val DEFAULT = AfterpayCashAppDefault
-
     val cashAppSchemes = listOf(AfterpayCashAppDefault, AfterpayCashAppAlt, AfterpayCashAppMonochromeDark, AfterpayCashAppMonochromeLight)
   }
 }

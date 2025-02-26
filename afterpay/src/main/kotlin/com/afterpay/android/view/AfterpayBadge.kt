@@ -41,7 +41,7 @@ class AfterpayBadge @JvmOverloads constructor(
       update()
     }
 
-  private var colorScheme: AfterpayColorScheme = AfterpayColorScheme.DEFAULT
+  private var colorScheme: AfterpayColorScheme = style.toColorScheme(Afterpay.locale)
     set(value) {
       field = value
       update()
