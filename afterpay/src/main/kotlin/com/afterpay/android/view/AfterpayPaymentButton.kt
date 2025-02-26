@@ -52,7 +52,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
       update()
     }
 
-  var style: Style = Style.Default
+  var style: AfterpayWidgetStyle = AfterpayWidgetStyle.Default
     set(value) {
       field = value
       colorScheme = value.toColorScheme(Afterpay.locale)
@@ -98,9 +98,9 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
       val index = attributes.getInteger(
         R.styleable.Afterpay_afterpayStyle,
-        Style.Default.ordinal,
+        AfterpayWidgetStyle.Default.ordinal,
       )
-      val value = Style.values()[index]
+      val value = AfterpayWidgetStyle.values()[index]
       style = value
     }
 

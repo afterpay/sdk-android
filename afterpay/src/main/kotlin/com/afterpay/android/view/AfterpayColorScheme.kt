@@ -28,6 +28,19 @@ import com.afterpay.android.view.AfterpayColorScheme.AfterpayMintOnBlack
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayWhiteOnBlack
 import java.util.Locale
 
+/**
+ * Set of all possible color schemes, encompassing the various branding that exists across all
+ * [Locale]s. Internally, these values are mapped to based on the selected [AfterpayWidgetStyle] and the [Locale],
+ * as in [AfterpayWidgetStyle.toColorScheme].
+ *
+ * Previously, [AfterpayColorScheme] was accessed directly where a different set of options was
+ * available. If migrating from direct use, find the equivalent [AfterpayWidgetStyle] value for the deprecated
+ * [AfterpayColorScheme] value as follows:
+ * - AfterpayColorScheme.mintOnBlack --> [AfterpayWidgetStyle.Default]
+ * - AfterpayColorScheme.blackOnMint --> [AfterpayWidgetStyle.Alt]
+ * - AfterpayColorScheme.whiteOnBlack --> [AfterpayWidgetStyle.MonochromeDark]
+ * - AfterpayColorScheme.blackOnWhite --> [AfterpayWidgetStyle.MonochromeLight]
+ */
 internal enum class AfterpayColorScheme(
   @ColorRes val foregroundColorResId: Int,
   @ColorRes val backgroundColorResId: Int,
@@ -78,10 +91,11 @@ internal enum class AfterpayColorScheme(
 }
 
 /**
- * Public facing set of styles implementers can choose from.
- * Mapping from these styles to [AfterpayColorScheme] changes depending on Locale
+ * Set of semantic styles to apply to the provided widgets.
+ *
+ * Internally, these values are mapped to [AfterpayColorScheme] values based on the current [Locale]
  */
-enum class Style {
+enum class AfterpayWidgetStyle {
   Default,
   Alt,
   MonochromeDark,
