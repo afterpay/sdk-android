@@ -21,9 +21,9 @@ import com.afterpay.android.internal.Locales.EN_US
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnMint
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnWhite
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppDefault
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeDark
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeLight
-import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayMintOnBlack
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayWhiteOnBlack
 import java.util.Locale
@@ -48,7 +48,7 @@ internal enum class AfterpayColorScheme(
     foregroundColorResId = R.color.afterpay_black,
     backgroundColorResId = R.color.afterpay_white,
   ),
-  AfterpayCashAppPreferred(
+  AfterpayCashAppDefault(
     foregroundColorResId = R.color.afterpay_white,
     backgroundColorResId = R.color.afterpay_black,
   ),
@@ -71,9 +71,9 @@ internal enum class AfterpayColorScheme(
   internal companion object {
 
     @JvmField
-    val DEFAULT = AfterpayCashAppPreferred
+    val DEFAULT = AfterpayCashAppDefault
 
-    val cashAppSchemes = listOf(AfterpayCashAppPreferred, AfterpayCashAppAlt, AfterpayCashAppMonochromeDark, AfterpayCashAppMonochromeLight)
+    val cashAppSchemes = listOf(AfterpayCashAppDefault, AfterpayCashAppAlt, AfterpayCashAppMonochromeDark, AfterpayCashAppMonochromeLight)
   }
 }
 
@@ -82,7 +82,7 @@ internal enum class AfterpayColorScheme(
  * Mapping from these styles to [AfterpayColorScheme] changes depending on Locale
  */
 enum class Style {
-  Preferred,
+  Default,
   Alt,
   MonochromeDark,
   MonochromeLight,
@@ -91,21 +91,16 @@ enum class Style {
   internal fun toColorScheme(locale: Locale): AfterpayColorScheme =
     when (locale) {
       EN_US -> when (this) {
-        Preferred -> AfterpayCashAppPreferred
+        Default -> AfterpayCashAppDefault
         Alt -> AfterpayCashAppAlt
         MonochromeDark -> AfterpayCashAppMonochromeDark
         MonochromeLight -> AfterpayCashAppMonochromeLight
       }
       else -> when (this) {
-        Preferred -> AfterpayBlackOnMint
+        Default -> AfterpayBlackOnMint
         Alt -> AfterpayMintOnBlack
         MonochromeDark -> AfterpayWhiteOnBlack
         MonochromeLight -> AfterpayBlackOnWhite
       }
     }
-
-  internal companion object {
-    @JvmField
-    val DEFAULT = Preferred
-  }
 }

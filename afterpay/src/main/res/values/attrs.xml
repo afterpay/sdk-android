@@ -2,7 +2,8 @@
 <resources>
     <declare-styleable name="Afterpay">
         <attr name="afterpayStyle" format="enum">
-            <enum name="preferred" value="0" />
+            <!-- "default" is not a valid resource name (reserved Java keyword) so appending "_style" -->
+            <enum name="default_style" value="0" />
             <enum name="alt" value="1" />
             <enum name="monochromeDark" value="2" />
             <enum name="monochromeLight" value="3" />
