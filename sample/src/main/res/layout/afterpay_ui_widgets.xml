@@ -27,13 +27,13 @@
       <com.afterpay.android.view.AfterpayBadge
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        afterpay:afterpayStyle="preferred"/>
+        afterpay:afterpayStyle="default_style"/>
 
       <com.afterpay.android.view.AfterpayLockup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        afterpay:afterpayStyle="preferred"/>
+        afterpay:afterpayStyle="default_style"/>
 
       <com.afterpay.android.view.AfterpayLockup
         android:layout_width="wrap_content"
@@ -95,35 +95,35 @@
       android:padding="16dp">
     <!-- Payment Buttons Section -->
     <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_cash_app_preferred_button_pay_now"
+      android:id="@+id/afterpay_cash_app_default_button_pay_now"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
       afterpay:afterpayButtonText="payNow"
-      afterpay:afterpayStyle="preferred" />
+      afterpay:afterpayStyle="default_style" />
 
     <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_cash_app_preferred_button_buy_now"
+      android:id="@+id/afterpay_cash_app_default_button_buy_now"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
       afterpay:afterpayButtonText="buyNow"
-      afterpay:afterpayStyle="preferred" />
+      afterpay:afterpayStyle="default_style" />
 
     <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_cash_app_preferred_button_checkout_now"
+      android:id="@+id/afterpay_cash_app_default_button_checkout_now"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
       afterpay:afterpayButtonText="checkout"
-      afterpay:afterpayStyle="preferred" />
+      afterpay:afterpayStyle="default_style" />
 
     <com.afterpay.android.view.AfterpayPaymentButton
-      android:id="@+id/afterpay_cash_app_preferred_button_continue_now"
+      android:id="@+id/afterpay_cash_app_default_button_continue_now"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       afterpay:afterpayButtonText="placeOrder"
-      afterpay:afterpayStyle="preferred" />
+      afterpay:afterpayStyle="default_style" />
 
     <!-- Divider -->
     <View

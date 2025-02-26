@@ -42,7 +42,7 @@ import com.afterpay.android.internal.Locales
 import com.afterpay.android.internal.coloredDrawable
 import com.afterpay.android.internal.resolveColorAttr
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
-import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppDefault
 import com.afterpay.android.view.AfterpayLogoType.LOCKUP
 import java.math.BigDecimal
 import java.util.Currency
@@ -64,7 +64,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       updateText()
     }
 
-  var style: Style = Style.DEFAULT
+  var style: Style = Style.Default
     set(value) {
       field = value
       colorScheme = value.toColorScheme(Afterpay.locale)
@@ -134,7 +134,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       style = Style.values()[
         attributes.getInteger(
           R.styleable.Afterpay_afterpayStyle,
-          Style.DEFAULT.ordinal,
+          Style.Default.ordinal,
         ),
       ]
     }
@@ -258,7 +258,7 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
       LOCKUP -> context.coloredDrawable(
         drawableResId = Afterpay.brand.lockupDrawableResIdForColorScheme(colorScheme),
         colorResId = colorScheme.foregroundColorResId.takeIf {
-          colorScheme != AfterpayCashAppPreferred && colorScheme != AfterpayCashAppAlt
+          colorScheme != AfterpayCashAppDefault && colorScheme != AfterpayCashAppAlt
         },
       )
       AfterpayLogoType.COMPACT_BADGE -> {
