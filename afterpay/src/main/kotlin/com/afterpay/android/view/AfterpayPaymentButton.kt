@@ -32,9 +32,9 @@ import com.afterpay.android.internal.rippleDrawable
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnMint
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayBlackOnWhite
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppDefault
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeDark
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppMonochromeLight
-import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayMintOnBlack
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayWhiteOnBlack
 import java.util.Observer
@@ -52,7 +52,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
       update()
     }
 
-  var style: Style = Style.DEFAULT
+  var style: Style = Style.Default
     set(value) {
       field = value
       colorScheme = value.toColorScheme(Afterpay.locale)
@@ -98,7 +98,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
       val index = attributes.getInteger(
         R.styleable.Afterpay_afterpayStyle,
-        Style.DEFAULT.ordinal,
+        Style.Default.ordinal,
       )
       val value = Style.values()[index]
       style = value
@@ -118,12 +118,12 @@ class AfterpayPaymentButton @JvmOverloads constructor(
       context.coloredDrawable(
         drawableResId = buttonText.drawableResIdForColorScheme(colorScheme),
         colorResId = colorScheme.foregroundColorResId
-          .takeIf { colorScheme != AfterpayCashAppPreferred },
+          .takeIf { colorScheme != AfterpayCashAppDefault },
       ),
     )
 
     val rippleColorResId = when (colorScheme) {
-      AfterpayCashAppPreferred,
+      AfterpayCashAppDefault,
       AfterpayCashAppMonochromeLight,
       AfterpayBlackOnMint,
       AfterpayBlackOnWhite,
@@ -176,7 +176,7 @@ class AfterpayPaymentButton @JvmOverloads constructor(
     ;
 
     internal fun drawableResIdForColorScheme(colorScheme: AfterpayColorScheme) = when (colorScheme) {
-      AfterpayCashAppPreferred -> polychromeDrawableResId
+      AfterpayCashAppDefault -> polychromeDrawableResId
       else -> monochromeDrawableResId
     }
 

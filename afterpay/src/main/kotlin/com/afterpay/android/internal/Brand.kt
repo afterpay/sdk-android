@@ -26,7 +26,7 @@ import com.afterpay.android.internal.Locales.EN_US
 import com.afterpay.android.internal.Locales.FR_CA
 import com.afterpay.android.view.AfterpayColorScheme
 import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppAlt
-import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppPreferred
+import com.afterpay.android.view.AfterpayColorScheme.AfterpayCashAppDefault
 import java.util.Locale
 
 private val brandLocales = mapOf(
@@ -72,7 +72,7 @@ internal enum class Brand(
   ;
 
   fun lockupDrawableResIdForColorScheme(colorScheme: AfterpayColorScheme) = when (colorScheme) {
-    AfterpayCashAppPreferred -> lockupPolychromeLight
+    AfterpayCashAppDefault -> lockupPolychromeLight
     AfterpayCashAppAlt -> lockupPolychromeDark
     else -> lockupMonochrome
   }
