@@ -124,12 +124,16 @@ class AfterpayPaymentButton @JvmOverloads constructor(
 
     val rippleColorResId = when (colorScheme) {
       AfterpayCashAppDefault,
+      AfterpayCashAppMonochromeDark,
+      -> R.color.afterpay_cash_app_ripple_dark
+
+      AfterpayCashAppAlt -> R.color.afterpay_cash_app_ripple_green
+
       AfterpayCashAppMonochromeLight,
       AfterpayBlackOnMint,
       AfterpayBlackOnWhite,
       -> R.color.afterpay_ripple_light
-      AfterpayCashAppAlt,
-      AfterpayCashAppMonochromeDark,
+
       AfterpayMintOnBlack,
       AfterpayWhiteOnBlack,
       -> R.color.afterpay_ripple_dark

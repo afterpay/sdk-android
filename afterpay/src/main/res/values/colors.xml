@@ -5,6 +5,8 @@
     <color name="afterpay_mint">#B2FCE4</color>
     <color name="cash_app_brand">#00D64F</color>
     <color name="afterpay_ripple_light">#1F000000</color>
+    <color name="afterpay_cash_app_ripple_dark">#FF666666</color>
+    <color name="afterpay_cash_app_ripple_green">#FF00A93E</color>
     <color name="afterpay_ripple_dark">#33FFFFFF</color>
     <color name="progress_bar_fg">#B2FCE4</color>
 </resources>
