@@ -57,9 +57,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT,
           )
           logoContainer.addView(breakdownView, params)
-        } catch (e: IllegalStateException) {
-          e.printStackTrace()
-        }
+        } catch (_: IllegalStateException) {}
       }
     }
 
@@ -80,7 +78,9 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
 
         onSuccess { response: GetConfigurationResponse ->
           withContext(Dispatchers.Main) {
-            // Configuration update will trigger another updateText so we need to catch exceptions here as well
+            // Not all logoTypes are valid in each locale (i.e. non-lockup types are not valid in
+            // US locale) so we catch exceptions here since an updateText call is triggered when
+            // configuration updates
             try {
               Afterpay.setConfiguration(
                 minimumAmount = response.minimumAmount?.amount,
@@ -90,9 +90,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
                 Locale(response.locale.language, response.locale.country),
                 environment = AFTERPAY_ENVIRONMENT,
               )
-            } catch (e: IllegalStateException) {
-              e.printStackTrace()
-            }
+            } catch (_: IllegalStateException) {}
           }
         }
       }
