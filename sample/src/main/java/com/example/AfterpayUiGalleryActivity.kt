@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayLogoType
+import com.afterpay.android.view.AfterpayLogoType.LOCKUP
 import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.afterpay.android.view.AfterpayWidgetStyle
 import com.example.api.GetConfigurationResponse
@@ -44,16 +45,22 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
     AfterpayLogoType.values().forEach { logoType ->
 
       AfterpayWidgetStyle.values().forEach { style ->
-        val breakdownView = AfterpayPriceBreakdown(this).apply {
-          totalAmount = BigDecimal("100.00")
-          this.logoType = logoType
-          this.style = style
+        try {
+          // Not all logoTypes are valid in each locale (i.e. non-lockup types are not valid in US locale)
+          // so we catch exceptions here
+          val breakdownView = AfterpayPriceBreakdown(this).apply {
+            totalAmount = BigDecimal("100.00")
+            this.logoType = logoType
+            this.style = style
+          }
+          val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+          )
+          logoContainer.addView(breakdownView, params)
+        } catch (e: IllegalStateException) {
+          e.printStackTrace()
         }
-        val params = LinearLayout.LayoutParams(
-          LinearLayout.LayoutParams.WRAP_CONTENT,
-          LinearLayout.LayoutParams.WRAP_CONTENT,
-        )
-        logoContainer.addView(breakdownView, params)
       }
     }
 
@@ -74,14 +81,19 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
 
         onSuccess { response: GetConfigurationResponse ->
           withContext(Dispatchers.Main) {
-            Afterpay.setConfiguration(
-              minimumAmount = response.minimumAmount?.amount,
-              maximumAmount = response.maximumAmount.amount,
-              currencyCode = response.maximumAmount.currency,
-              locale =
-              Locale(response.locale.language, response.locale.country),
-              environment = AFTERPAY_ENVIRONMENT,
-            )
+            // Configuration update will trigger another updateText so we need to catch exceptions here as well
+            try {
+              Afterpay.setConfiguration(
+                minimumAmount = response.minimumAmount?.amount,
+                maximumAmount = response.maximumAmount.amount,
+                currencyCode = response.maximumAmount.currency,
+                locale =
+                Locale(response.locale.language, response.locale.country),
+                environment = AFTERPAY_ENVIRONMENT,
+              )
+            } catch (e: IllegalStateException) {
+              e.printStackTrace()
+            }
           }
         }
       }

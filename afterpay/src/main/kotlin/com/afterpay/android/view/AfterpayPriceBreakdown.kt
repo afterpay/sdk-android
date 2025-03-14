@@ -34,6 +34,7 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.use
 import com.afterpay.android.Afterpay
+import com.afterpay.android.AfterpayEnvironment.SANDBOX
 import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayInfoSpan
 import com.afterpay.android.internal.AfterpayInstalment
@@ -157,6 +158,9 @@ class AfterpayPriceBreakdown @JvmOverloads constructor(
   }
 
   private fun updateText() {
+    if (Afterpay.environment == SANDBOX && colorScheme.isCashAppScheme() && logoType != LOCKUP) {
+      throw IllegalStateException("Cannot use non-lockup logo types in US locale.\nNote: this will only throw an exception in sandbox environment, the view will be hidden if a non-lockup logo type is used in US locale in production.")
+    }
     visibility = if (!Afterpay.enabled || (colorScheme.isCashAppScheme() && logoType != LOCKUP)) View.GONE else View.VISIBLE
 
     val drawable: Drawable = generateLogo()
