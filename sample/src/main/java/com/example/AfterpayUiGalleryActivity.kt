@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayLogoType
-import com.afterpay.android.view.AfterpayLogoType.LOCKUP
 import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.afterpay.android.view.AfterpayWidgetStyle
 import com.example.api.GetConfigurationResponse
