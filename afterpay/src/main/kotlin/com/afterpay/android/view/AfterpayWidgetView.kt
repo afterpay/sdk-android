@@ -137,6 +137,7 @@ class AfterpayWidgetView @JvmOverloads constructor(
     onPageFinished: () -> Unit,
   ) {
     setAfterpayUserAgentString()
+    settings.allowFileAccess = false
     @SuppressLint("SetJavaScriptEnabled")
     settings.javaScriptEnabled = true
     settings.domStorageEnabled = true

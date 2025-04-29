@@ -59,6 +59,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     viewModel = CheckoutV3ViewModel(requireNotNull(intent.getCheckoutV3OptionsExtra()))
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
       setAfterpayUserAgentString()
+      settings.allowFileAccess = false
       settings.javaScriptEnabled = true
       settings.setSupportMultipleWindows(true)
       webViewClient = AfterpayWebViewClientV3(
