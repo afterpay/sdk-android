@@ -31,8 +31,10 @@ internal class AfterpayInfoActivity : AppCompatActivity() {
 
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-    webView = findViewById<WebView>(R.id.afterpay_webView)
-      .setAfterpayUserAgentString()
+    webView = findViewById<WebView>(R.id.afterpay_webView).apply {
+      setAfterpayUserAgentString()
+      settings.allowFileAccess = false
+    }
 
     loadUrl()
   }

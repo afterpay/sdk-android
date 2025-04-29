@@ -95,6 +95,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
     bootstrapWebView.apply {
       setAfterpayUserAgentString()
+      settings.allowFileAccess = false
       settings.javaScriptEnabled = true
       settings.javaScriptCanOpenWindowsAutomatically = true
       settings.setSupportMultipleWindows(true)
@@ -254,6 +255,7 @@ private class BootstrapWebChromeClient(
     val webView = WebView(context)
     webView.setAfterpayUserAgentString()
     webView.visibility = INVISIBLE
+    webView.settings.allowFileAccess = false
     webView.settings.javaScriptEnabled = true
     webView.settings.setSupportMultipleWindows(true)
     webView.settings.domStorageEnabled = true
