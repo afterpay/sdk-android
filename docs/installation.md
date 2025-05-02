@@ -17,9 +17,38 @@ nav_order: 2
 
 Add `afterpay-android` to your `build.gradle` dependencies.
 
+### Release
+
 ``` gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:4.8.0'
+    implementation 'com.afterpay:afterpay-android:4.8.2'
+}
+```
+
+### Snapshot
+
+{: .alert }
+> Snapshot builds are available for testing and development purposes. These builds are not recommended for production use.
+
+Follow the steps below to add the latest snapshot build to your project.
+
+**Step 1**: Add the maven repository where to download the snapshot to your `build.gradle` file (or any other file where you define your repositories e.g. `settings.gradle`), in the `repositories` block.
+
+``` gradle
+repositories {
+    ...
+    maven {
+        url  = 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+    ...
+}
+```
+
+**Step 2**: Add the dependency to your `build.gradle` file in the `dependencies` block.
+
+``` gradle
+dependencies {
+    implementation 'com.afterpay:afterpay-android:4.8.3-SNAPSHOT' # or specific "vX.X.X-SNAPSHOT" version of this library.
 }
 ```
 
