@@ -65,6 +65,7 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
       setAfterpayUserAgentString()
+      settings.allowFileAccess = false
       settings.javaScriptEnabled = true
       settings.setSupportMultipleWindows(true)
       settings.setDomStorageEnabled(true)
