@@ -118,3 +118,5 @@ docs/_site
 
 !/gradle/wrapper/gradle-wrapper.jar
 /.idea/AndroidProjectSystem.xml
+/.claude
+CLAUDE.md
