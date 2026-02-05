@@ -21,6 +21,7 @@ import android.util.TypedValue
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.view.AfterpayIntroText
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class AfterpayUiGalleryActivity : AppCompatActivity() {
 
@@ -57,8 +59,14 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
   }
 
   private fun populatePriceBreakdowns(container: LinearLayout, isDarkBackground: Boolean) {
-    val captionColor = if (isDarkBackground) 0xFF999999.toInt() else 0xFF666666.toInt()
-    val labelColor = if (isDarkBackground) 0xFFCCCCCC.toInt() else 0xFF333333.toInt()
+    val captionColor = ContextCompat.getColor(
+      this,
+      if (isDarkBackground) R.color.ui_gallery_caption_dark else R.color.ui_gallery_caption_light,
+    )
+    val labelColor = ContextCompat.getColor(
+      this,
+      if (isDarkBackground) R.color.ui_gallery_label_dark else R.color.ui_gallery_label_light,
+    )
 
     // Helper to add a price breakdown with caption
     fun addPriceBreakdown(
@@ -85,8 +93,8 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
           LinearLayout.LayoutParams.WRAP_CONTENT,
           LinearLayout.LayoutParams.WRAP_CONTENT,
         ).apply {
-          topMargin = (4 * resources.displayMetrics.density).toInt()
-          bottomMargin = (20 * resources.displayMetrics.density).toInt()
+          topMargin = (4 * resources.displayMetrics.density).roundToInt()
+          bottomMargin = (20 * resources.displayMetrics.density).roundToInt()
         }
         container.addView(captionView, captionParams)
       } catch (_: IllegalStateException) {
@@ -106,8 +114,8 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
         LinearLayout.LayoutParams.WRAP_CONTENT,
         LinearLayout.LayoutParams.WRAP_CONTENT,
       ).apply {
-        topMargin = (16 * resources.displayMetrics.density).toInt()
-        bottomMargin = (12 * resources.displayMetrics.density).toInt()
+        topMargin = (16 * resources.displayMetrics.density).roundToInt()
+        bottomMargin = (12 * resources.displayMetrics.density).roundToInt()
       }
       container.addView(labelView, labelParams)
     }
@@ -192,8 +200,8 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
         LinearLayout.LayoutParams.WRAP_CONTENT,
         LinearLayout.LayoutParams.WRAP_CONTENT,
       ).apply {
-        topMargin = (4 * resources.displayMetrics.density).toInt()
-        bottomMargin = (20 * resources.displayMetrics.density).toInt()
+        topMargin = (4 * resources.displayMetrics.density).roundToInt()
+        bottomMargin = (20 * resources.displayMetrics.density).roundToInt()
       }
       container.addView(captionView, captionParams)
     } catch (_: IllegalStateException) {}

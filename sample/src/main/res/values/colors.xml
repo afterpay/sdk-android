@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- UI Gallery caption colors -->
+  <color name="ui_gallery_caption_dark">#999999</color>
+  <color name="ui_gallery_caption_light">#666666</color>
+  <color name="ui_gallery_label_dark">#CCCCCC</color>
+  <color name="ui_gallery_label_light">#333333</color>
+
+  <!-- UI Gallery section backgrounds -->
+  <color name="ui_gallery_dark_bg">#1A1A1A</color>
+  <color name="ui_gallery_divider_dark">#333333</color>
+  <color name="ui_gallery_divider_light">#CCCCCC</color>
+</resources>
