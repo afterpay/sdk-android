@@ -16,17 +16,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:background="#1A1A1A">
+      android:background="@color/ui_gallery_dark_bg">
 
       <!-- Section Header -->
       <TextView
+        style="@style/SectionHeader.Dark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Dark Background"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF" />
+        android:text="Dark Background" />
 
       <!-- ===== BADGE SECTION ===== -->
       <LinearLayout
@@ -36,25 +33,20 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayBadge"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#FFFFFF" />
+          android:text="AfterpayBadge" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           afterpay:afterpayStyle="default_style"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayBadge · default" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -62,12 +54,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="alt"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayBadge · alt" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -75,12 +65,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeDark"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayBadge · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -88,12 +76,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeLight"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayBadge · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -101,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#333333" />
+        android:background="@color/ui_gallery_divider_dark" />
 
       <!-- ===== LOCKUP SECTION ===== -->
       <LinearLayout
@@ -111,25 +97,20 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayLockup"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#FFFFFF" />
+          android:text="AfterpayLockup" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           afterpay:afterpayStyle="default_style"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayLockup · default" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -137,12 +118,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="alt"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayLockup · alt" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -150,12 +129,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeDark"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayLockup · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -163,12 +140,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeLight"/>
         <TextView
+          style="@style/WidgetCaption.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayLockup · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -176,7 +151,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#333333" />
+        android:background="@color/ui_gallery_divider_dark" />
 
       <!-- ===== PAYMENT BUTTON SECTION ===== -->
       <LinearLayout
@@ -186,13 +161,10 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayPaymentButton"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#FFFFFF" />
+          android:text="AfterpayPaymentButton" />
 
         <!-- buyNow variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -201,13 +173,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · buyNow · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -215,13 +184,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · buyNow · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -229,13 +195,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · buyNow · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -243,13 +206,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · buyNow · monochromeLight" />
 
         <!-- checkout variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -258,13 +218,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · checkout · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -272,13 +229,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · checkout · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -286,13 +240,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · checkout · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -300,13 +251,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · checkout · monochromeLight" />
 
         <!-- payNow variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -315,13 +263,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · payNow · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -329,13 +274,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · payNow · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -343,13 +285,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · payNow · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -357,13 +296,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · payNow · monochromeLight" />
 
         <!-- placeOrder variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -372,13 +308,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · default"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · placeOrder · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -386,13 +319,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · alt"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · placeOrder · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -400,13 +330,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · placeOrder · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -414,12 +341,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Dark"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayPaymentButton · placeOrder · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#999999" />
+          android:text="AfterpayPaymentButton · placeOrder · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -427,7 +352,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#333333" />
+        android:background="@color/ui_gallery_divider_dark" />
 
       <!-- ===== PRICE BREAKDOWN SECTION (dynamically generated) ===== -->
       <TextView
@@ -459,13 +384,10 @@
 
       <!-- Section Header -->
       <TextView
+        style="@style/SectionHeader.Light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Light Background"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#000000" />
+        android:text="Light Background" />
 
       <!-- ===== BADGE SECTION ===== -->
       <LinearLayout
@@ -475,25 +397,20 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayBadge"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#000000" />
+          android:text="AfterpayBadge" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           afterpay:afterpayStyle="default_style"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayBadge · default" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -501,12 +418,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="alt"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayBadge · alt" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -514,12 +429,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeDark"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayBadge · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayBadge
           android:layout_width="wrap_content"
@@ -527,12 +440,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeLight"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayBadge · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayBadge · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -540,7 +451,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#CCCCCC" />
+        android:background="@color/ui_gallery_divider_light" />
 
       <!-- ===== LOCKUP SECTION ===== -->
       <LinearLayout
@@ -550,25 +461,20 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayLockup"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#000000" />
+          android:text="AfterpayLockup" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           afterpay:afterpayStyle="default_style"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayLockup · default" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -576,12 +482,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="alt"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayLockup · alt" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -589,12 +493,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeDark"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayLockup · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayLockup
           android:layout_width="wrap_content"
@@ -602,12 +504,10 @@
           android:layout_marginTop="14dp"
           afterpay:afterpayStyle="monochromeLight"/>
         <TextView
+          style="@style/WidgetCaption.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayLockup · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayLockup · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -615,7 +515,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#CCCCCC" />
+        android:background="@color/ui_gallery_divider_light" />
 
       <!-- ===== PAYMENT BUTTON SECTION ===== -->
       <LinearLayout
@@ -625,13 +525,10 @@
         android:padding="16dp">
 
         <TextView
+          style="@style/WidgetHeader.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="AfterpayPaymentButton"
-          android:textSize="18sp"
-          android:textStyle="bold"
-          android:textColor="#000000" />
+          android:text="AfterpayPaymentButton" />
 
         <!-- buyNow variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -640,13 +537,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · buyNow · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -654,13 +548,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · buyNow · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -668,13 +559,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · buyNow · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -682,13 +570,10 @@
           afterpay:afterpayButtonText="buyNow"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · buyNow · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · buyNow · monochromeLight" />
 
         <!-- checkout variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -697,13 +582,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · checkout · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -711,13 +593,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · checkout · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -725,13 +604,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · checkout · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -739,13 +615,10 @@
           afterpay:afterpayButtonText="checkout"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · checkout · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · checkout · monochromeLight" />
 
         <!-- payNow variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -754,13 +627,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · payNow · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -768,13 +638,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · payNow · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -782,13 +649,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · payNow · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -796,13 +660,10 @@
           afterpay:afterpayButtonText="payNow"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · payNow · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · payNow · monochromeLight" />
 
         <!-- placeOrder variants -->
         <com.afterpay.android.view.AfterpayPaymentButton
@@ -811,13 +672,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="default_style" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · default"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · placeOrder · default" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -825,13 +683,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="alt" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · alt"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · placeOrder · alt" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -839,13 +694,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="monochromeDark" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="20dp"
-          android:text="AfterpayPaymentButton · placeOrder · monochromeDark"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · placeOrder · monochromeDark" />
 
         <com.afterpay.android.view.AfterpayPaymentButton
           android:layout_width="match_parent"
@@ -853,12 +705,10 @@
           afterpay:afterpayButtonText="placeOrder"
           afterpay:afterpayStyle="monochromeLight" />
         <TextView
+          style="@style/WidgetCaptionWithBottomMargin.Light"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:text="AfterpayPaymentButton · placeOrder · monochromeLight"
-          android:textSize="12sp"
-          android:textColor="#666666" />
+          android:text="AfterpayPaymentButton · placeOrder · monochromeLight" />
       </LinearLayout>
 
       <!-- Divider -->
@@ -866,7 +716,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="16dp"
-        android:background="#CCCCCC" />
+        android:background="@color/ui_gallery_divider_light" />
 
       <!-- ===== PRICE BREAKDOWN SECTION (dynamically generated) ===== -->
       <TextView
