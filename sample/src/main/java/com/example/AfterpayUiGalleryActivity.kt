@@ -98,7 +98,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
         }
         container.addView(captionView, captionParams)
       } catch (_: IllegalStateException) {
-        // Some configurations are not valid in certain locales
+        // For example, in US locale (Cash App scheme) logoType = BADGE or COMPACT_BADGE is invalid; only LOCKUP is allowed.
       }
     }
 
