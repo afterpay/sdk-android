@@ -18,3 +18,27 @@
 -keepclasseswithmembers class com.afterpay.android.** {
     kotlinx.serialization.KSerializer serializer(...);
 }
+
+# Strip all Timber logging calls from release builds
+# Note: Keep these method signatures in sync with Timber APIs used by the SDK
+-assumenosideeffects class timber.log.Timber {
+    public *** d(...);
+    public *** i(...);
+    public *** w(...);
+    public *** e(...);
+    public *** v(...);
+    public *** wtf(...);
+}
+
+# Strip all AfterpayLog logging calls from release builds
+# Note: Keep sanitization helpers as they are pure utility functions
+-assumenosideeffects class com.afterpay.android.internal.AfterpayLog {
+    public *** d(...);
+    public *** i(...);
+    public *** w(...);
+    public *** e(...);
+    public *** apiRequest(...);
+    public *** apiSuccess(...);
+    public *** apiError(...);
+    public *** checkoutEvent(...);
+}

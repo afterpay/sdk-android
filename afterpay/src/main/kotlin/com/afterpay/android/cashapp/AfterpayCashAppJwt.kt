@@ -16,6 +16,7 @@
 package com.afterpay.android.cashapp
 
 import android.util.Base64
+import com.afterpay.android.internal.AfterpayLog
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
@@ -49,12 +50,17 @@ data class AfterpayCashAppJwt(
 ) {
   companion object {
     fun decode(jwt: String): Result<AfterpayCashAppJwt> {
+      AfterpayLog.d { "Starting JWT decode for Cash App: ${AfterpayLog.sanitizeToken(jwt)}" }
       return runCatching {
         val split = jwt.split(".").toTypedArray()
         val jwtBody = getJson(split[1])
 
         val json = Json { ignoreUnknownKeys = true }
-        json.decodeFromString(jwtBody)
+        val result: AfterpayCashAppJwt = json.decodeFromString(jwtBody)
+        AfterpayLog.d("JWT decode successful")
+        result
+      }.onFailure { error ->
+        AfterpayLog.e(error, "JWT decode failed")
       }
     }
 

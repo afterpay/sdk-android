@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Message
 import android.util.Base64
-import android.util.Log
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -47,6 +46,7 @@ import com.afterpay.android.R
 import com.afterpay.android.internal.AfterpayCheckoutCompletion
 import com.afterpay.android.internal.AfterpayCheckoutMessage
 import com.afterpay.android.internal.AfterpayCheckoutV2
+import com.afterpay.android.internal.AfterpayLog
 import com.afterpay.android.internal.CheckoutLogMessage
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
@@ -140,9 +140,14 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
   private fun loadCheckoutToken() {
     if (!Afterpay.enabled) {
+      AfterpayLog.checkoutEvent("V2", "cancelled", "language not supported")
       return finish(LANGUAGE_NOT_SUPPORTED)
     }
-    val handler = Afterpay.checkoutV2Handler ?: return finish(NO_CHECKOUT_HANDLER)
+    val handler = Afterpay.checkoutV2Handler
+    if (handler == null) {
+      AfterpayLog.checkoutEvent("V2", "cancelled", "no checkout handler set")
+      return finish(NO_CHECKOUT_HANDLER)
+    }
     val configuration =
       Afterpay.configuration ?: return finish(CancellationStatus.NO_CONFIGURATION)
     val options = requireNotNull(intent.getCheckoutV2OptionsExtra())
@@ -318,16 +323,20 @@ private class BootstrapJavascriptInterface(
   @JavascriptInterface
   fun postMessage(messageJson: String) {
     runCatching { json.decodeFromString<AfterpayCheckoutMessage>(messageJson) }
-      .onFailure { Log.d(javaClass.simpleName, it.toString()) }
+      .onFailure { AfterpayLog.d("Failed to parse checkout message: ${it.message}") }
       .getOrNull()
       ?.let { message ->
-        val handler = Afterpay.checkoutV2Handler ?: return cancel(NO_CHECKOUT_HANDLER)
+        val handler = Afterpay.checkoutV2Handler
+        if (handler == null) {
+          AfterpayLog.checkoutEvent("V2", "cancelled", "no handler in postMessage")
+          return cancel(NO_CHECKOUT_HANDLER)
+        }
 
         when (message) {
-          is CheckoutLogMessage -> Log.d(
-            javaClass.simpleName,
-            message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" },
-          )
+          is CheckoutLogMessage -> {
+            val logMessage = message.payload.run { "${severity.replaceFirstChar { it.uppercase(Locale.ROOT) }}: $message" }
+            AfterpayLog.d { "Checkout log: $logMessage" }
+          }
 
           is ShippingAddressMessage -> handler.shippingAddressDidChange(message.payload) {
             AfterpayCheckoutMessage
@@ -359,7 +368,7 @@ private class BootstrapJavascriptInterface(
         }
       }
       ?: runCatching { json.decodeFromString<AfterpayCheckoutCompletion>(messageJson) }
-        .onFailure { Log.d(javaClass.simpleName, it.toString()) }
+        .onFailure { AfterpayLog.d("Failed to parse checkout completion: ${it.message}") }
         .getOrNull()
         ?.let(complete)
   }

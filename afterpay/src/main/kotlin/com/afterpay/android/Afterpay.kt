@@ -24,6 +24,7 @@ import com.afterpay.android.cashapp.CashAppSignOrderResult.Failure
 import com.afterpay.android.cashapp.CashAppSignOrderResult.Success
 import com.afterpay.android.cashapp.CashAppValidationResponse
 import com.afterpay.android.internal.AfterpayDrawable
+import com.afterpay.android.internal.AfterpayLog
 import com.afterpay.android.internal.AfterpayString
 import com.afterpay.android.internal.ApiV3
 import com.afterpay.android.internal.Brand
@@ -242,7 +243,16 @@ object Afterpay {
       locale = locale.clone() as Locale,
       environment = environment,
       consumerLocale = consumerLocale,
-    ).also { validateConfiguration(it) }
+    ).also { config ->
+      AfterpayLog.d { "Setting Afterpay configuration: environment=${config.environment.name}, locale=${config.locale}, currency=${config.currency}, maxAmount=${config.maximumAmount}" }
+      try {
+        validateConfiguration(config)
+        AfterpayLog.d("Configuration validated successfully")
+      } catch (e: IllegalArgumentException) {
+        AfterpayLog.e(e, "Configuration validation failed")
+        throw e
+      }
+    }
   }
 
   private fun validateConfiguration(configuration: Configuration) {

@@ -34,6 +34,7 @@ import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
+import com.afterpay.android.internal.AfterpayLog
 import com.afterpay.android.internal.CheckoutV3ViewModel
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.getCheckoutV3OptionsExtra
@@ -72,12 +73,15 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
     }
 
     lifecycleScope.launchWhenStarted {
+      AfterpayLog.checkoutEvent("V3", "started")
       viewModel.performCheckoutRequest()
         .onSuccess { checkoutRedirectUrl ->
+          AfterpayLog.d { "Checkout V3 request successful, loading URL: ${AfterpayLog.sanitizeUrl(checkoutRedirectUrl.toString())}" }
           webView.loadUrl(checkoutRedirectUrl.toString())
         }
-        .onFailure {
-          received(CancellationStatusV3.REQUEST_ERROR, it as? Exception)
+        .onFailure { error ->
+          AfterpayLog.e(error, "Checkout V3 request failed")
+          received(CancellationStatusV3.REQUEST_ERROR, error as? Exception)
         }
     }
   }
@@ -105,6 +109,7 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
   }
 
   private fun handleError() {
+    AfterpayLog.checkoutEvent("V3", "error", "WebView load error")
     // Clear default system error from the web view.
     webView.loadUrl("about:blank")
 

@@ -16,6 +16,7 @@
 package com.afterpay.android.cashapp
 
 import com.afterpay.android.Afterpay
+import com.afterpay.android.internal.AfterpayLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -34,6 +35,7 @@ sealed class CashAppValidationResponse {
 
 object AfterpayCashAppCheckout {
   suspend fun performSignPaymentRequest(token: String): CashAppSignOrderResult {
+    AfterpayLog.d { "Starting Cash App payment signing with token: ${AfterpayLog.sanitizeToken(token)}" }
     runCatching {
       signPayment(token)
         .let { result: Result<AfterpayCashAppSigningResponse> ->
@@ -48,14 +50,17 @@ object AfterpayCashAppCheckout {
                   jwt = response.jwtToken,
                 )
 
+                AfterpayLog.d("Cash App payment signing successful")
                 return CashAppSignOrderResult.Success(cashApp)
               }
-              .onFailure {
-                return CashAppSignOrderResult.Failure(it)
+              .onFailure { error ->
+                AfterpayLog.e(error, "JWT decode failed")
+                return CashAppSignOrderResult.Failure(error)
               }
           }
-            .onFailure {
-              return CashAppSignOrderResult.Failure(it)
+            .onFailure { error ->
+              AfterpayLog.e(error, "Payment signing failed")
+              return CashAppSignOrderResult.Failure(error)
             }
         }
     }
@@ -65,6 +70,7 @@ object AfterpayCashAppCheckout {
 
   // TODO stop using this, no need for suspend *and* callback
   suspend fun performSignPaymentRequest(token: String, complete: (CashAppSignOrderResult) -> Unit) {
+    AfterpayLog.d { "Starting Cash App payment signing (callback) with token: ${AfterpayLog.sanitizeToken(token)}" }
     runCatching {
       signPayment(token)
         .onSuccess { response ->
@@ -78,14 +84,17 @@ object AfterpayCashAppCheckout {
                 jwt = response.jwtToken,
               )
 
+              AfterpayLog.d("Cash App payment signing successful (callback)")
               complete(CashAppSignOrderResult.Success(cashApp))
             }
-            .onFailure {
-              complete(CashAppSignOrderResult.Failure(it))
+            .onFailure { error ->
+              AfterpayLog.e(error, "JWT decode failed (callback)")
+              complete(CashAppSignOrderResult.Failure(error))
             }
         }
-        .onFailure {
-          complete(CashAppSignOrderResult.Failure(it))
+        .onFailure { error ->
+          AfterpayLog.e(error, "Payment signing failed (callback)")
+          complete(CashAppSignOrderResult.Failure(error))
         }
     }
   }
@@ -134,12 +143,19 @@ object AfterpayCashAppCheckout {
         response
           .onSuccess {
             when (it.status) {
-              "SUCCESS" -> complete(CashAppValidationResponse.Success(it))
-              else -> complete(CashAppValidationResponse.Failure(Exception("status is ${it.status}")))
+              "SUCCESS" -> {
+                AfterpayLog.d("Cash App validation successful")
+                complete(CashAppValidationResponse.Success(it))
+              }
+              else -> {
+                AfterpayLog.w { "Cash App validation failed with status: ${it.status}" }
+                complete(CashAppValidationResponse.Failure(Exception("status is ${it.status}")))
+              }
             }
           }
-          .onFailure {
-            complete(CashAppValidationResponse.Failure(Exception(it.message)))
+          .onFailure { error ->
+            AfterpayLog.e(error, "Cash App validation failed")
+            complete(CashAppValidationResponse.Failure(Exception(error.message)))
           }
 
         Unit

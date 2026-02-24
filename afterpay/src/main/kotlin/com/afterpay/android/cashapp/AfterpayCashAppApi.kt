@@ -16,6 +16,7 @@
 package com.afterpay.android.cashapp
 
 import com.afterpay.android.BuildConfig
+import com.afterpay.android.internal.AfterpayLog
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -44,12 +45,15 @@ internal object AfterpayCashAppApi {
         connection.inputStream.bufferedReader().use { reader ->
           val data = reader.readText()
           val result = json.decodeFromString<T>(data)
+          AfterpayLog.d { "Cash App API request successful (HTTP ${connection.responseCode})" }
           Result.success(result)
         }
       } else {
+        AfterpayLog.w { "Cash App API returned unexpected response code: ${connection.responseCode}" }
         throw InvalidObjectException("Unexpected response code: ${connection.responseCode}.")
       }
     } catch (exception: Exception) {
+      AfterpayLog.e(exception, "Cash App API request failed")
       Result.failure(exception)
     }
   }

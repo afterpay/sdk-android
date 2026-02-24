@@ -30,6 +30,7 @@ internal object ApiV3 {
 
   internal inline fun <reified T, reified B> request(url: URL, method: HttpVerb, body: B): Result<T> {
     val connection = url.openConnection() as HttpsURLConnection
+    AfterpayLog.apiRequest(method.name, url.toString())
     return try {
       configure(connection, method)
       val payload = (body as? String) ?: json.encodeToString(body)
@@ -42,14 +43,17 @@ internal object ApiV3 {
       val data = connection.inputStream.bufferedReader().readText()
       connection.inputStream.close()
       val result = json.decodeFromString<T>(data)
+      AfterpayLog.apiSuccess(method.name, connection.responseCode)
       Result.success(result)
     } catch (exception: Exception) {
       try {
         val data = connection.errorStream.bufferedReader().readText()
         connection.errorStream.close()
         val result = json.decodeFromString<ApiErrorV3>(data)
+        AfterpayLog.apiError(result.message, result.httpStatusCode, result.errorCode)
         Result.failure(InvalidObjectException(result.message))
       } catch (_: Exception) {
+        AfterpayLog.e(exception, "API request failed")
         Result.failure(exception)
       }
     } finally {
@@ -59,6 +63,7 @@ internal object ApiV3 {
 
   internal inline fun <reified B> requestUnit(url: URL, method: HttpVerb, body: B): Result<Unit> {
     val connection = url.openConnection() as HttpsURLConnection
+    AfterpayLog.apiRequest(method.name, url.toString())
     return try {
       configure(connection, method)
       val payload = (body as? String) ?: json.encodeToString(body)
@@ -68,6 +73,7 @@ internal object ApiV3 {
       outputStreamWriter.flush()
 
       if (connection.errorStream == null && connection.responseCode < 400) {
+        AfterpayLog.apiSuccess(method.name, connection.responseCode)
         Result.success(Unit)
       } else {
         throw InvalidObjectException("Unexpected response code: ${connection.responseCode}")
@@ -77,8 +83,10 @@ internal object ApiV3 {
         val data = connection.errorStream.bufferedReader().readText()
         connection.errorStream.close()
         val result = json.decodeFromString<ApiErrorV3>(data)
+        AfterpayLog.apiError(result.message, result.httpStatusCode, result.errorCode)
         Result.failure(InvalidObjectException(result.message))
       } catch (_: Exception) {
+        AfterpayLog.e(exception, "API requestUnit failed")
         Result.failure(exception)
       }
     } finally {
@@ -88,20 +96,24 @@ internal object ApiV3 {
 
   internal inline fun <reified T> get(url: URL): Result<T> {
     val connection = url.openConnection() as HttpsURLConnection
+    AfterpayLog.apiRequest("GET", url.toString())
     return try {
       configure(connection, HttpVerb.GET)
 
       val data = connection.inputStream.bufferedReader().readText()
       connection.inputStream.close()
       val result = json.decodeFromString<T>(data)
+      AfterpayLog.apiSuccess("GET", connection.responseCode)
       Result.success(result)
     } catch (exception: Exception) {
       try {
         val data = connection.errorStream.bufferedReader().readText()
         connection.errorStream.close()
         val result = json.decodeFromString<ApiErrorV3>(data)
+        AfterpayLog.apiError(result.message, result.httpStatusCode, result.errorCode)
         Result.failure(InvalidObjectException(result.message))
       } catch (_: Exception) {
+        AfterpayLog.e(exception, "API get failed")
         Result.failure(exception)
       }
     } finally {
