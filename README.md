@@ -1,5 +1,7 @@
 # Afterpay Android SDK
 
+<!-- External PR workflow permission probe; no functional change. -->
+
 ![Build and Test][badge-ci] [![ktlint][badge-ktlint]][ktlint]
 
 The Afterpay Android SDK makes it quick and easy to provide an excellent payment experience in your Android app. We provide powerful and customizable UI elements that can be used out-of-the-box to allow your users to shop now and pay later.
