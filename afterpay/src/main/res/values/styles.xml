@@ -9,4 +9,16 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
+    <!--
+      The information modal renders a fixed-light header above the web content, so it opts out of
+      DayNight to keep the surrounding native dialog chrome light in both system themes.
+    -->
+    <style name="AfterpayInfoDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
 </resources>
