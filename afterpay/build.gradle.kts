@@ -52,6 +52,10 @@ android {
     buildConfig = true
   }
 
+  testOptions {
+    unitTests.isIncludeAndroidResources = true
+  }
+
   buildTypes {
     create("staging") {
       initWith(getByName("debug"))
@@ -78,6 +82,7 @@ dependencies {
   coreLibraryDesugaring(libs.androidToolsDesugarJdk)
   testImplementation(libs.kotlinCoroutinesTest)
   testImplementation(libs.mockK)
+  testImplementation(libs.robolectric)
 }
 
 mavenPublishing {
