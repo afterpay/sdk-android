@@ -19,6 +19,7 @@ maven_publish_plugin = "0.35.0"
 mockk = "1.13.5"
 moshi = "1.14.0"
 retrofit = "2.9.0"
+robolectric = "4.11.1"
 secretsGradlePlugin = "2.0.1"
 tools_desugar_sdk = "2.1.2"
 
@@ -43,6 +44,7 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "retrofit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }

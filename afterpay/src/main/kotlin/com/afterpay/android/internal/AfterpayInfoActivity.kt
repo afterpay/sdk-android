@@ -17,6 +17,7 @@ package com.afterpay.android.internal
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,9 +28,11 @@ internal class AfterpayInfoActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_web_checkout)
+    setContentView(R.layout.activity_afterpay_info)
 
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+    findViewById<View>(R.id.afterpay_close_info).setOnClickListener { dismiss() }
 
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
       setAfterpayUserAgentString()
