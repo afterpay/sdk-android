@@ -18,6 +18,7 @@ package com.example
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.ContextThemeWrapper
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,6 @@ import com.afterpay.android.view.AfterpayPriceBreakdown
 import com.afterpay.android.view.AfterpayWidgetStyle
 import com.example.api.GetConfigurationResponse
 import com.example.api.merchantApi
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,23 +42,18 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.afterpay_ui_widgets)
 
-    val darkContainer = findViewById<LinearLayout>(R.id.price_breakdown_container_dark)
-    val lightContainer = findViewById<LinearLayout>(R.id.price_breakdown_container_light)
-
-    // Populate both containers with price breakdown widgets
-    populatePriceBreakdowns(darkContainer, isDarkBackground = true)
-    populatePriceBreakdowns(lightContainer, isDarkBackground = false)
-
-    // This is needed so that the UI gets inflated.
-    // Right now an AP server needs to for the UI to be inflated.
+    // SDK components must be initialized after merchant configuration is applied.
     lifecycleScope.launch {
-      getConfiguration()
+      loadGallery()
     }
   }
 
   private fun populatePriceBreakdowns(container: LinearLayout, isDarkBackground: Boolean) {
+    val widgetContext = ContextThemeWrapper(
+      this,
+      if (isDarkBackground) R.style.UiGalleryTheme_Dark else R.style.UiGalleryTheme_Light,
+    )
     val captionColor = ContextCompat.getColor(
       this,
       if (isDarkBackground) R.color.ui_gallery_caption_dark else R.color.ui_gallery_caption_light,
@@ -74,7 +69,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
       configure: AfterpayPriceBreakdown.() -> Unit,
     ) {
       try {
-        val breakdownView = AfterpayPriceBreakdown(this).apply {
+        val breakdownView = AfterpayPriceBreakdown(widgetContext).apply {
           totalAmount = BigDecimal("100.00")
           configure()
         }
@@ -182,7 +177,7 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
     addSectionLabel("Amount edge cases")
 
     try {
-      val outOfRangeView = AfterpayPriceBreakdown(this).apply {
+      val outOfRangeView = AfterpayPriceBreakdown(widgetContext).apply {
         totalAmount = BigDecimal("10000000.00") // Out of range amount
       }
       val breakdownParams = LinearLayout.LayoutParams(
@@ -226,32 +221,33 @@ class AfterpayUiGalleryActivity : AppCompatActivity() {
     }
   }
 
-  private fun getConfiguration() {
-    CoroutineScope(Dispatchers.IO).launch {
-      merchantApi().getConfiguration().apply {
-        onFailure { _ ->
-          val msg = "You must run an AP server to fetch configuration."
-          showToastFromBackground(this@AfterpayUiGalleryActivity, msg)
-        }
+  private suspend fun loadGallery() {
+    val result = withContext(Dispatchers.IO) {
+      merchantApi().getConfiguration()
+    }
 
-        onSuccess { response: GetConfigurationResponse ->
-          withContext(Dispatchers.Main) {
-            // Not all logoTypes are valid in each locale (i.e. non-lockup types are not valid in
-            // US locale) so we catch exceptions here since an updateText call is triggered when
-            // configuration updates
-            try {
-              Afterpay.setConfiguration(
-                minimumAmount = response.minimumAmount?.amount,
-                maximumAmount = response.maximumAmount.amount,
-                currencyCode = response.maximumAmount.currency,
-                locale =
-                Locale(response.locale.language, response.locale.country),
-                environment = AFTERPAY_ENVIRONMENT,
-              )
-            } catch (_: IllegalStateException) {}
-          }
-        }
-      }
+    result.onFailure {
+      showToast(this, "You must run an Afterpay server to fetch configuration.")
+    }
+
+    result.onSuccess { response: GetConfigurationResponse ->
+      Afterpay.setConfiguration(
+        minimumAmount = response.minimumAmount?.amount,
+        maximumAmount = response.maximumAmount.amount,
+        currencyCode = response.maximumAmount.currency,
+        locale = Locale(response.locale.language, response.locale.country),
+        environment = AFTERPAY_ENVIRONMENT,
+      )
+
+      setContentView(R.layout.afterpay_ui_widgets)
+      populatePriceBreakdowns(
+        findViewById(R.id.price_breakdown_container_dark),
+        isDarkBackground = true,
+      )
+      populatePriceBreakdowns(
+        findViewById(R.id.price_breakdown_container_light),
+        isDarkBackground = false,
+      )
     }
   }
 }
