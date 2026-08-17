@@ -220,6 +220,8 @@ object Afterpay {
    * [locale] for formatting of terms and conditions and currency, and the [environment] in which
    * to launch the checkout.
    *
+   * A minimum amount of zero is treated as no minimum amount.
+   *
    * Results in a [NumberFormatException] if an amount is not a valid representation of a number
    * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if
    * the minimum and maximum amount isn't correctly ordered, or if the locale is not supported.
@@ -277,6 +279,8 @@ object Afterpay {
   // region: V3
   /**
    * Sets the global checkout configuration object.
+   *
+   * A minimum amount of zero is treated as no minimum amount.
    *
    * Results in a [NumberFormatException] if an amount is not a valid representation of a number
    * or an [IllegalArgumentException] if the currency is not a valid ISO 4217 currency code, if

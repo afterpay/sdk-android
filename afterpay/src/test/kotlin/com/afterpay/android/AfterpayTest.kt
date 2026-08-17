@@ -73,7 +73,7 @@ class AfterpayTest {
   fun `setConfigurationV3 treats a zero minimum amount as no minimum`() {
     Afterpay.setConfigurationV3(
       Configuration(
-        minimumAmount = BigDecimal.ZERO,
+        minimumAmount = BigDecimal("0.00"),
         maximumAmount = BigDecimal("100.00"),
         currency = Currency.getInstance("AUD"),
         locale = Locale.US,
@@ -82,6 +82,21 @@ class AfterpayTest {
     )
 
     Assert.assertNull(Afterpay.configuration?.minimumAmount)
+  }
+
+  @Test
+  fun `setConfigurationV3 throws for minimum order amount less than zero`() {
+    assertThrows(IllegalArgumentException::class.java) {
+      Afterpay.setConfigurationV3(
+        Configuration(
+          minimumAmount = BigDecimal("-10.00"),
+          maximumAmount = BigDecimal("100.00"),
+          currency = Currency.getInstance("AUD"),
+          locale = Locale.US,
+          environment = environment,
+        ),
+      )
+    }
   }
 
   @Test
