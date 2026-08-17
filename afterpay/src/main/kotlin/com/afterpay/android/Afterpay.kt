@@ -235,14 +235,22 @@ object Afterpay {
     environment: AfterpayEnvironment,
     consumerLocale: Locale? = null,
   ) {
-    configuration = Configuration(
-      minimumAmount = minimumAmount?.toBigDecimal(),
-      maximumAmount = maximumAmount.toBigDecimal(),
-      currency = Currency.getInstance(currencyCode),
-      locale = locale.clone() as Locale,
-      environment = environment,
-      consumerLocale = consumerLocale,
-    ).also { validateConfiguration(it) }
+    setValidatedConfiguration(
+      Configuration(
+        minimumAmount = minimumAmount?.toBigDecimal(),
+        maximumAmount = maximumAmount.toBigDecimal(),
+        currency = Currency.getInstance(currencyCode),
+        locale = locale.clone() as Locale,
+        environment = environment,
+        consumerLocale = consumerLocale,
+      ),
+    )
+  }
+
+  private fun setValidatedConfiguration(newConfiguration: Configuration) {
+    configuration = newConfiguration
+      .copy(minimumAmount = newConfiguration.minimumAmount?.takeUnless { it.signum() == 0 })
+      .also { validateConfiguration(it) }
   }
 
   private fun validateConfiguration(configuration: Configuration) {
@@ -276,7 +284,7 @@ object Afterpay {
    */
   @JvmStatic
   fun setConfigurationV3(newConfiguration: Configuration) {
-    configuration = newConfiguration.also { validateConfiguration(it) }
+    setValidatedConfiguration(newConfiguration)
   }
 
   private var checkoutV3Configuration: CheckoutV3Configuration? = null
