@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Afterpay
+ * Copyright (C) 2026 Afterpay
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import com.afterpay.android.R
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -45,6 +46,14 @@ class AfterpayInfoActivityTest {
     assertEquals(activity.dp(48), closeButton.layoutParams.width)
     assertEquals(activity.dp(48), closeButton.layoutParams.height)
     assertEquals(activity.dp(12), closeButton.paddingStart)
+  }
+
+  @Test
+  fun `close control shows the close icon on a borderless ripple`() = withInfoActivity { activity ->
+    val closeButton = activity.findViewById<ImageButton>(R.id.afterpay_close_info)
+
+    assertEquals(R.drawable.afterpay_close, shadowOf(closeButton.drawable).createdFromResId)
+    assertNotNull(closeButton.background)
   }
 
   @Test

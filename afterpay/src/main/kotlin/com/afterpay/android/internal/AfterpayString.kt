@@ -57,6 +57,8 @@ internal enum class AfterpayString(
 
   val paymentButtonContentDescription: String,
 
+  val closeInfoModalContentDescription: String,
+
   val priceBreakdownAvailable: String,
   val priceBreakdownAvailableDescription: String,
   val priceBreakdownWith: String,
@@ -84,6 +86,7 @@ internal enum class AfterpayString(
     loadErrorCancel = "Cancel",
     loadErrorMessage = "Failed to load %1\$s checkout",
     paymentButtonContentDescription = "Pay now with %1\$s",
+    closeInfoModalContentDescription = "Close information modal",
     priceBreakdownAvailable = "%1\$s %2\$s %3\$spayments of %4\$s %5\$s",
     priceBreakdownAvailableDescription = "%1\$s %2\$s %3\$spayments of %4\$s %5\$s%6\$s",
     priceBreakdownWith = "with ",
@@ -111,6 +114,7 @@ internal enum class AfterpayString(
     loadErrorCancel = "Annuler",
     loadErrorMessage = "Échec du chargement de la caisse %1\$s",
     paymentButtonContentDescription = "Payez maintenant avec %1\$s",
+    closeInfoModalContentDescription = "Fermer la fenêtre d'information",
     priceBreakdownAvailable = "%1\$s %2\$s paiements %3\$sde %4\$s %5\$s",
     priceBreakdownAvailableDescription = "%1\$s %2\$s paiements %3\$sde %4\$s %5\$s%6\$s",
     priceBreakdownWith = "avec ",
