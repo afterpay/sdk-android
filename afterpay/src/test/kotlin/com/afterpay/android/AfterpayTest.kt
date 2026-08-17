@@ -15,9 +15,12 @@
  */
 package com.afterpay.android
 
+import com.afterpay.android.model.Configuration
 import org.junit.Assert
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import java.math.BigDecimal
+import java.util.Currency
 import java.util.Locale
 
 class AfterpayTest {
@@ -51,6 +54,34 @@ class AfterpayTest {
       locale = Locale.US,
       environment = environment,
     )
+  }
+
+  @Test
+  fun `setConfiguration treats a zero minimum amount as no minimum`() {
+    Afterpay.setConfiguration(
+      minimumAmount = "0.00",
+      maximumAmount = "100.00",
+      currencyCode = "AUD",
+      locale = Locale.US,
+      environment = environment,
+    )
+
+    Assert.assertNull(Afterpay.configuration?.minimumAmount)
+  }
+
+  @Test
+  fun `setConfigurationV3 treats a zero minimum amount as no minimum`() {
+    Afterpay.setConfigurationV3(
+      Configuration(
+        minimumAmount = BigDecimal.ZERO,
+        maximumAmount = BigDecimal("100.00"),
+        currency = Currency.getInstance("AUD"),
+        locale = Locale.US,
+        environment = environment,
+      ),
+    )
+
+    Assert.assertNull(Afterpay.configuration?.minimumAmount)
   }
 
   @Test
