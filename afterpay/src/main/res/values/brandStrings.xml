@@ -5,5 +5,4 @@
 
     <string name="afterpay_service_name_description" translatable="false">After pay</string>
     <string name="clearpay_service_name_description" translatable="false">Clear pay</string>
-    <string name="afterpay_close_info_modal">Close information modal</string>
 </resources>

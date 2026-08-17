@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- English default only; AfterpayInfoActivity replaces it at runtime with the
+         AfterpayString translation for the configured locale. -->
+    <string name="afterpay_close_info_modal">Close information modal</string>
+</resources>

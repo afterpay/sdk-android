@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import com.afterpay.android.Afterpay
 import com.afterpay.android.R
 
 internal class AfterpayInfoActivity : AppCompatActivity() {
@@ -32,7 +33,12 @@ internal class AfterpayInfoActivity : AppCompatActivity() {
 
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-    findViewById<View>(R.id.afterpay_close_info).setOnClickListener { dismiss() }
+    findViewById<View>(R.id.afterpay_close_info).apply {
+      // The layout's string resource is an English-only default; user-facing SDK strings are
+      // localized in code for the configured locale.
+      contentDescription = Afterpay.strings.closeInfoModalContentDescription
+      setOnClickListener { dismiss() }
+    }
 
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
       setAfterpayUserAgentString()
