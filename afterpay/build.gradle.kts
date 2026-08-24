@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.vanniktech.maven.publish.SonatypeHost
+import org.gradle.plugins.signing.Sign
+
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.android)
@@ -78,15 +81,12 @@ dependencies {
   testImplementation(libs.mockK)
 }
 
+mavenPublishing {
+  publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+  signAllPublications()
+}
+
 tasks.withType<Sign> {
   val version = project.version.toString()
   onlyIf { !version.endsWith("SNAPSHOT") }
-}
-
-signing {
-  useInMemoryPgpKeys(
-    findProperty("signingKeyId").toString(),
-    findProperty("signingKey").toString(),
-    findProperty("signingPassword").toString(),
-  )
 }
