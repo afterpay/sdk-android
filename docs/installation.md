@@ -38,7 +38,7 @@ Follow the steps below to add the latest snapshot build to your project.
 repositories {
     ...
     maven {
-        url  = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        url = 'https://central.sonatype.com/repository/maven-snapshots/'
     }
     ...
 }
@@ -48,7 +48,7 @@ repositories {
 
 ``` gradle
 dependencies {
-    implementation 'com.afterpay:afterpay-android:4.8.3-SNAPSHOT' # or specific "vX.X.X-SNAPSHOT" version of this library.
+    implementation 'com.afterpay:afterpay-android:4.9.0-SNAPSHOT' # or specific "vX.X.X-SNAPSHOT" version of this library.
 }
 ```
 
