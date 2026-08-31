@@ -1,4 +1,4 @@
-name: Validate Maven signing credentials
+name: Validate Maven Central credentials
 
 on:
   push:
@@ -8,24 +8,19 @@ permissions:
   contents: read
 
 jobs:
-  validate-signing:
+  validate-central-authentication:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
-      - name: Clone Repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: 17
-          distribution: 'zulu'
-
-      - name: Sign stable artifacts without publishing
-        run: ./gradlew afterpay:signMavenPublication -PVERSION_NAME=4.9.0 --no-configuration-cache --no-daemon --no-parallel --stacktrace
+      - name: Validate token without publishing
+        shell: bash
+        run: |
+          authorization="$(printf '%s:%s' "$CENTRAL_USERNAME" "$CENTRAL_PASSWORD" | base64 | tr -d '\n')"
+          status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --header "Authorization: Bearer $authorization" \
+            https://central.sonatype.com/api/v1/publisher/deployments)"
+          echo "Central authentication returned HTTP $status"
+          test "$status" = 200
         env:
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.PGP_SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
+          CENTRAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PASSWORD }}
