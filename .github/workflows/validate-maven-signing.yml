@@ -26,5 +26,6 @@ jobs:
       - name: Sign stable artifacts without publishing
         run: ./gradlew afterpay:signMavenPublication -PVERSION_NAME=4.9.0 --no-configuration-cache --no-daemon --no-parallel --stacktrace
         env:
-          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_SECRET_KEY }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_SECRET_PASSPHRASE }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.PGP_SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.PGP_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.PGP_SIGNING_PASSWORD }}
