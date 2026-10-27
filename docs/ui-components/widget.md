@@ -8,6 +8,8 @@ nav_order: 1
 # Widget
 {: .no_toc }
 
+{% include deprecation_notice.md path="android-sdk/ui-components/checkout-widget" %}
+
 <details open markdown="block">
   <summary>
     Table of contents

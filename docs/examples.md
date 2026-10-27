@@ -6,6 +6,8 @@ nav_order: 6
 
 # Examples
 
+{% include deprecation_notice.md path="android-sdk#test-with-the-sample-app" %}
+
 The [example project][example]{:target="_blank"} demonstrates how to include an Afterpay payment flow using our prebuilt UI components. This project is powered by the [example server][example-server]{:target="_blank"} which shows a simple example of integration with the Afterpay API.
 
 [example]: https://github.com/afterpay/sdk-android/tree/master/example

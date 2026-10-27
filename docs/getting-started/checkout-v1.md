@@ -8,6 +8,8 @@ nav_order: 2
 # Checkout V1
 {: .no_toc }
 
+{% include deprecation_notice.md path="android-sdk/present-checkout/web-redirect" %}
+
 <details markdown="block" open>
   <summary>
     Table of contents

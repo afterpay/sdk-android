@@ -7,6 +7,8 @@ nav_order: 1
 
 # Configuring the SDK
 
+{% include deprecation_notice.md path="android-sdk#configure-the-sdk" %}
+
 Each merchant has configuration specific to their account which is accessible from the `/configuration` API endpoint. This configuration is used by the SDK for rendering UI components with the correct branding and assets, T&Cs, web links, and currency formatting, and is applied globally using the [`Afterpay.setConfiguration`][docs-configuration]{:target="_blank"} method.
 
 The following sample demonstrates how the SDK can be configured using the data supplied by the Afterpay API. It is up to you to decide how best to supply the locale.

@@ -1,11 +1,17 @@
 # Afterpay Android SDK
 
+> [!IMPORTANT]
+> The documentation for this SDK has moved. The guides on [afterpay.github.io/sdk-android](https://afterpay.github.io/sdk-android/) are no longer maintained.
+>
+> - US merchants: [Cash App Afterpay developer docs](https://developers.cash.app/afterpay/guides/sdk/android-sdk)
+> - Other regions: [Afterpay developer docs](https://developers.afterpay.com/afterpay-online-developer/guides/sdk/android-sdk)
+
 ![Build and Test][badge-ci] [![ktlint][badge-ktlint]][ktlint]
 
 The Afterpay Android SDK makes it quick and easy to provide an excellent payment experience in your Android app. We provide powerful and customizable UI elements that can be used out-of-the-box to allow your users to shop now and pay later.
 
 ## Documentation
-Documentation for usage can be found [here][docs], including the [getting started][docs-getting-started] guide and [UI component][docs-ui] docs.
+See the [Cash App Afterpay developer docs][docs-cash-app] for US merchants, or the [Afterpay developer docs][docs-afterpay] for other regions. Both include a quickstart, guides to presenting checkout, and the UI components.
 
 ## V3 Documentation
 
@@ -91,6 +97,5 @@ This project is licensed under the terms of the Apache 2.0 license. See the [LIC
 [ktlint]: https://ktlint.github.io
 [contributing]: CONTRIBUTING.md
 [license]: LICENSE
-[docs]: https://afterpay.github.io/sdk-android
-[docs-ui]: https://afterpay.github.io/sdk-android/ui-components/
-[docs-getting-started]: https://afterpay.github.io/sdk-android/getting-started/
+[docs-cash-app]: https://developers.cash.app/afterpay/guides/sdk/android-sdk
+[docs-afterpay]: https://developers.afterpay.com/afterpay-online-developer/guides/sdk/android-sdk

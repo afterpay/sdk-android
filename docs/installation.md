@@ -6,6 +6,8 @@ nav_order: 2
 
 # Installation
 
+{% include deprecation_notice.md path="android-sdk#install-the-sdk" %}
+
 ## Requirements
 
 - Android 7.0 (API level 24) and above

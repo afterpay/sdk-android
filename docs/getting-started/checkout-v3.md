@@ -8,6 +8,8 @@ nav_order: 5
 # Checkout V3
 {: .no_toc }
 
+{% include deprecation_notice.md path="android-sdk/present-checkout/afterpay-button" %}
+
 <details markdown="block" open>
   <summary>
     Table of contents
