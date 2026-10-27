@@ -8,6 +8,8 @@ nav_order: 3
 # Payment Button
 {: .no_toc }
 
+{% include deprecation_notice.md path="android-sdk/ui-components/payment-button" %}
+
 <details open markdown="block">
   <summary>
     Table of contents

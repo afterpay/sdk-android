@@ -6,6 +6,8 @@ nav_order: 5
 
 # Security
 
+{% include deprecation_notice.md path="android-sdk#security" %}
+
 To limit the possibility of a man-in-the-middle attack during the checkout process, certificate pinning can be configured for the Afterpay portal. Please refer to the Android [Network Security Configuration][network-config]{:target="_blank"} documentation for more information.
 
 Add the following configuration to your `res/xml/network_security_configuration.xml` to enforce certificate pinning for the Afterpay portal.

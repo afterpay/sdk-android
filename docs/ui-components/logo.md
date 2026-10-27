@@ -8,6 +8,8 @@ nav_order: 2
 # Logo
 {: .no_toc }
 
+{% include deprecation_notice.md path="android-sdk/ui-components/logo" %}
+
 <details open markdown="block">
   <summary>
     Table of contents

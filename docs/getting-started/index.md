@@ -7,6 +7,8 @@ nav_order: 3
 
 # Getting Started
 
+{% include deprecation_notice.md path="android-sdk/present-checkout" %}
+
 [Checkout V1][checkout-v1] requires a url to be generated using the checkout API and using it to start the intent provided by the SDK. 
 
 [Checkout V2][checkout-v2] requires setting options of type `AfterpayCheckoutV2Options` and creating handler methods for user interactions.
