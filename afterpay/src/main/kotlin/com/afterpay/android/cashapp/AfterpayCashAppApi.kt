@@ -56,7 +56,7 @@ internal object AfterpayCashAppApi {
 
   private fun configure(connection: HttpsURLConnection, type: CashHttpVerb) {
     connection.requestMethod = type.name
-    connection.setRequestProperty("${BuildConfig.AfterpayLibraryVersion}-android", "X-Afterpay-SDK")
+    connection.setRequestProperty("X-Afterpay-SDK", "${BuildConfig.AfterpayLibraryVersion}-android")
     when (type) {
       CashHttpVerb.POST, CashHttpVerb.PUT -> {
         connection.setRequestProperty("Content-Type", "application/json")

@@ -117,7 +117,7 @@ internal object ApiV3 {
 
   private fun configure(connection: HttpsURLConnection, type: HttpVerb) {
     connection.requestMethod = type.name
-    connection.setRequestProperty("${BuildConfig.AfterpayLibraryVersion}-android", "X-Afterpay-SDK")
+    connection.setRequestProperty("X-Afterpay-SDK", "${BuildConfig.AfterpayLibraryVersion}-android")
     when (type) {
       HttpVerb.POST, HttpVerb.PUT -> {
         connection.setRequestProperty("Content-Type", "application/json")
