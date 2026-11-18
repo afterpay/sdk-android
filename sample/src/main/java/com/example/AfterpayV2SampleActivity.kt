@@ -162,6 +162,29 @@ class AfterpayV2SampleActivity : AppCompatActivity() {
           enableSingleShippingOptionUpdate = true,
         )
 
+      if (bindings.browserCheckbox.isChecked) {
+        // In-app browser checkout: create a checkout that redirects to the SDK's redirect URL,
+        // then open it in a Custom Tab.
+        lifecycleScope.launch {
+          merchantApi()
+            .getToken(
+              GetTokenRequest(
+                email = customerEmail,
+                amount = "12.00",
+                mode = CheckoutMode.STANDARD,
+                redirectUrl = Afterpay.browserCheckoutRedirectUrl(this@AfterpayV2SampleActivity),
+              ),
+            )
+            .onSuccess { response ->
+              activityResultLauncher.launch(
+                Afterpay.createBrowserCheckoutIntent(this@AfterpayV2SampleActivity, response.url),
+              )
+            }
+            .onFailure { showToast(this@AfterpayV2SampleActivity, "Failed to create checkout") }
+        }
+        return@setOnClickListener
+      }
+
       val intent =
         Afterpay.createCheckoutV2Intent(
           context = this@AfterpayV2SampleActivity,
