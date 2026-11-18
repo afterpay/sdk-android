@@ -36,6 +36,8 @@ import com.afterpay.android.CancellationStatusV3
 import com.afterpay.android.R
 import com.afterpay.android.internal.CheckoutV3ViewModel
 import com.afterpay.android.internal.Html
+import com.afterpay.android.internal.applyCheckoutPresentationInsets
+import com.afterpay.android.internal.applyCheckoutPresentationTheme
 import com.afterpay.android.internal.getCheckoutV3OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtraErrorV3
 import com.afterpay.android.internal.putCancellationStatusExtraV3
@@ -51,10 +53,12 @@ internal class AfterpayCheckoutV3Activity : AppCompatActivity() {
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onCreate(savedInstanceState: Bundle?) {
+    applyCheckoutPresentationTheme()
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_web_checkout)
 
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    applyCheckoutPresentationInsets(findViewById(R.id.afterpay_webView_frame_layout))
 
     viewModel = CheckoutV3ViewModel(requireNotNull(intent.getCheckoutV3OptionsExtra()))
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
