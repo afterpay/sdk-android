@@ -24,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.afterpay.android.Afterpay
+import com.afterpay.android.AfterpayCheckoutPresentation
 import com.afterpay.android.AfterpayCheckoutV2Handler
 import com.afterpay.android.AfterpayCheckoutV2Options
 import com.afterpay.android.model.ShippingAddress
@@ -161,6 +162,36 @@ class AfterpayV2SampleActivity : AppCompatActivity() {
           shippingOptionRequired = bindings.shippingOptionRequiredCheckbox.isChecked,
           enableSingleShippingOptionUpdate = true,
         )
+
+      Afterpay.setCheckoutPresentation(
+        if (bindings.fullScreenCheckbox.isChecked) {
+          AfterpayCheckoutPresentation.FULL_SCREEN
+        } else {
+          AfterpayCheckoutPresentation.MODAL
+        },
+      )
+
+      if (bindings.standardCheckbox.isChecked) {
+        // Standard (V1) checkout: load the sandbox checkout URL from the merchant server.
+        lifecycleScope.launch {
+          merchantApi()
+            .getToken(
+              GetTokenRequest(
+                email = customerEmail,
+                amount = "12.00",
+                mode = CheckoutMode.STANDARD,
+                isCashAppPay = false,
+              ),
+            )
+            .onSuccess { response ->
+              activityResultLauncher.launch(
+                Afterpay.createCheckoutIntent(this@AfterpayV2SampleActivity, response.url),
+              )
+            }
+            .onFailure { showToast(this@AfterpayV2SampleActivity, "Failed to fetch checkout URL") }
+        }
+        return@setOnClickListener
+      }
 
       val intent =
         Afterpay.createCheckoutV2Intent(
