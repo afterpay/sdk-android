@@ -276,6 +276,18 @@ object Afterpay {
     checkoutV2Handler = handler
   }
 
+  internal var checkoutPresentation = AfterpayCheckoutPresentation.MODAL
+    private set
+
+  /**
+   * Sets how checkout is presented by checkouts started after this call. Defaults to
+   * [AfterpayCheckoutPresentation.MODAL].
+   */
+  @JvmStatic
+  fun setCheckoutPresentation(presentation: AfterpayCheckoutPresentation) {
+    checkoutPresentation = presentation
+  }
+
   // region: V3
   /**
    * Sets the global checkout configuration object.

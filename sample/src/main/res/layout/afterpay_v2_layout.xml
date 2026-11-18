@@ -38,12 +38,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buy_now" />
 
+    <CheckBox
+        android:id="@+id/full_screen_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Full screen checkout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shipping_option_required_checkbox" />
+
+    <CheckBox
+        android:id="@+id/standard_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Standard checkout (V1)"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/full_screen_checkbox" />
+
     <com.afterpay.android.view.AfterpayPaymentButton
         android:id="@+id/afterpay_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/shipping_option_required_checkbox" />
+        app:layout_constraintTop_toBottomOf="@id/standard_checkbox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

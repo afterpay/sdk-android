@@ -21,4 +21,15 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
+    <!--
+      Applied at runtime when the merchant opts in to AfterpayCheckoutPresentation.FULL_SCREEN.
+      The window draws behind transparent system bars and the checkout activity pads its content
+      with the window insets. The background matches the white checkout pages.
+    -->
+    <style name="AfterpayFullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>

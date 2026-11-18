@@ -34,6 +34,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afterpay.android.Afterpay
 import com.afterpay.android.CancellationStatus
 import com.afterpay.android.R
+import com.afterpay.android.internal.applyCheckoutPresentationInsets
+import com.afterpay.android.internal.applyCheckoutPresentationTheme
 import com.afterpay.android.internal.getCheckoutShouldLoadRedirectUrls
 import com.afterpay.android.internal.getCheckoutUrlExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
@@ -58,10 +60,12 @@ internal class AfterpayCheckoutActivity : AppCompatActivity() {
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onCreate(savedInstanceState: Bundle?) {
+    applyCheckoutPresentationTheme()
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_web_checkout)
 
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    applyCheckoutPresentationInsets(findViewById(R.id.afterpay_webView_frame_layout))
 
     webView = findViewById<WebView>(R.id.afterpay_webView).apply {
       setAfterpayUserAgentString()

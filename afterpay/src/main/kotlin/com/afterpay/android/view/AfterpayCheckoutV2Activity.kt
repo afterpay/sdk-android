@@ -51,6 +51,8 @@ import com.afterpay.android.internal.CheckoutLogMessage
 import com.afterpay.android.internal.Html
 import com.afterpay.android.internal.ShippingAddressMessage
 import com.afterpay.android.internal.ShippingOptionMessage
+import com.afterpay.android.internal.applyCheckoutPresentationInsets
+import com.afterpay.android.internal.applyCheckoutPresentationTheme
 import com.afterpay.android.internal.getCheckoutV2OptionsExtra
 import com.afterpay.android.internal.putCancellationStatusExtra
 import com.afterpay.android.internal.putOrderTokenExtra
@@ -69,6 +71,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
   @SuppressLint("SetJavaScriptEnabled")
   override fun onCreate(savedInstanceState: Bundle?) {
+    applyCheckoutPresentationTheme()
     super.onCreate(savedInstanceState)
 
     val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -82,6 +85,7 @@ internal class AfterpayCheckoutV2Activity : AppCompatActivity() {
 
     setContentView(R.layout.activity_express_web_checkout)
     window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    applyCheckoutPresentationInsets(findViewById(R.id.afterpay_webView_frame_layout))
 
     loadingWebView = findViewById<WebView>(R.id.afterpay_loadingWebView).apply {
       val htmlData = Base64.encodeToString(Html.LOADING.toByteArray(), Base64.NO_PADDING)
