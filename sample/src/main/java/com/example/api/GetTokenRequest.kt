@@ -23,6 +23,8 @@ data class GetTokenRequest(
   val amount: String,
   val mode: CheckoutMode,
   val isCashAppPay: Boolean = false,
+  // Overrides the server's redirect URLs, for in-app browser checkout.
+  val redirectUrl: String? = null,
 )
 
 enum class CheckoutMode(val string: String) {

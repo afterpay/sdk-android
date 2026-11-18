@@ -21,6 +21,28 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/AfterpayDialog" />
         <activity
+            android:name=".view.AfterpayBrowserCheckoutActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".view.AfterpayBrowserRedirectActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="checkout"
+                    android:scheme="${applicationId}.afterpay" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".internal.AfterpayInfoActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/AfterpayInfoDialog" />
