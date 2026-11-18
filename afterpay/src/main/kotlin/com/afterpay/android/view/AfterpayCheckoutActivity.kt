@@ -237,7 +237,7 @@ private class AfterpayWebChromeClient(
   }
 }
 
-private sealed class CheckoutStatus {
+internal sealed class CheckoutStatus {
   data class Success(val orderToken: String) : CheckoutStatus()
   object Cancelled : CheckoutStatus()
 

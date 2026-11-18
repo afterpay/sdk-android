@@ -51,6 +51,7 @@ import com.afterpay.android.model.CheckoutV3Tokens
 import com.afterpay.android.model.Configuration
 import com.afterpay.android.model.MerchantConfigurationV3
 import com.afterpay.android.model.OrderTotal
+import com.afterpay.android.view.AfterpayBrowserCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutActivity
 import com.afterpay.android.view.AfterpayCheckoutV2Activity
 import com.afterpay.android.view.AfterpayCheckoutV3Activity
@@ -117,6 +118,31 @@ object Afterpay {
       .putCheckoutUrlExtra(url)
       .putCheckoutShouldLoadRedirectUrls(loadRedirectUrls)
   }
+
+  /**
+   * Returns an [Intent] that opens the given [checkoutUrl] in an in-app browser (a Chrome Custom
+   * Tab) instead of a web view. Pass it to
+   * [startActivityForResult][android.app.Activity.startActivityForResult] and read the result
+   * with [parseCheckoutSuccessResponse] and [parseCheckoutCancellationResponse], as with
+   * [createCheckoutIntent].
+   *
+   * Create the checkout with both `redirectConfirmUrl` and `redirectCancelUrl` set to
+   * [browserCheckoutRedirectUrl], so checkout can return to the app.
+   */
+  @JvmStatic
+  fun createBrowserCheckoutIntent(context: Context, checkoutUrl: String): Intent {
+    val url = if (enabled) checkoutUrl else "LANGUAGE_NOT_SUPPORTED"
+    return Intent(context, AfterpayBrowserCheckoutActivity::class.java).putCheckoutUrlExtra(url)
+  }
+
+  /**
+   * Returns the URL that in-app browser checkout redirects to when it finishes, such as
+   * `com.example.shop.afterpay://checkout`. Send it to your server and use it as both the
+   * `redirectConfirmUrl` and the `redirectCancelUrl` when creating the checkout.
+   */
+  @JvmStatic
+  fun browserCheckoutRedirectUrl(context: Context): String =
+    "${context.packageName}.afterpay://checkout"
 
   /**
    * Returns an [Intent] for the given [context] and [options] that can be passed to

@@ -77,6 +77,7 @@ dependencies {
 
   implementation(libs.androidxCoreKtx)
   implementation(libs.androidxAppcompat)
+  implementation(libs.androidxBrowser)
 
   testImplementation(libs.junit)
   coreLibraryDesugaring(libs.androidToolsDesugarJdk)
